@@ -1,0 +1,9 @@
+LIBRARY rClr.dll
+EXPORTS
+rclr_create_domain
+rclr_load_assembly
+r_create_clr_object
+r_call_static_method
+r_get_sexp_type
+r_show_args
+use_rdotnet
