@@ -26,7 +26,7 @@ startupMsg <- ''
   msDll <- nativeLibsNames[2]
   getFnameNoExt <- function(x) {strsplit(x, '\\.')[[1]][1]}
   rClrPkgDir <- file.path(libname, pkgname)
-  archLibPath <- file.path(rClrPkgDir, 'libs', Sys.getenv('R_ARCH'))
+  archLibPath <- file.path(rClrPkgDir, 'libs')
   srcPkgLibPath <- NULL
   if(!file.exists(archLibPath)) {
     # It may be because this is loaded through the 'document' and 'load_all' functions from devtools,
@@ -34,7 +34,7 @@ startupMsg <- ''
     # try to cater for load_all behavior.
     if( 'rsharp' %in% tolower(list.files(libname))) {
       libname <- file.path(rClrPkgDir, 'inst')
-      archLibPath <- file.path(rClrPkgDir, 'inst/libs', Sys.getenv('R_ARCH'))
+      archLibPath <- file.path(rClrPkgDir, 'inst/libs')
       srcPkgLibPath <- archLibPath
       if(!file.exists(archLibPath)) {
         stop(paste('Looked like rClr source code directory, but directory not found:', archLibPath))

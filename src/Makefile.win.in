@@ -69,9 +69,9 @@ rClrLibComp: rClrNugetRestore
 
 instdir:
 	@for r_architecture in x64; do \
-		rm -rf $(INSTDIR)/libs/$$r_architecture ; \
+		rm -rf $(INSTDIR)/libs/ ; \
 		mkdir -p $(INSTDIR) 2>/dev/null ; \
-		mkdir -p $(INSTDIR)/libs/$$r_architecture 2>/dev/null ; \
+		mkdir -p $(INSTDIR)/libs/ 2>/dev/null ; \
 	done;
 
 rClrLib: rClrLibComp
@@ -79,7 +79,7 @@ rClrLib: rClrLibComp
 	RCLRBINDIR=./x64/$(BuildConfiguration);\
 	bin_dir=$$RCLRBINDIR; \
 	RCLRBINS="$(RCLRMS).dll $(RCLRMS).exp $(RCLRMS).lib $(RCLRMS).pdb $(NETHOST).dll" ; \
-	$(ROBOCP_CMD) $$bin_dir $(INSTDIR)/libs/$$r_architecture/ $$RCLRBINS;
+	$(ROBOCP_CMD) $$bin_dir $(INSTDIR)/libs/ $$RCLRBINS;
 	-$(ROBOCP_CMD) ./ClrFacade/bin/$(BuildConfiguration)/net7.0/ $(INSTDIR)/libs/ $(CLR_FACADE_BINS)
 	-$(ROBOCP_CMD) ./ClrFacade/bin/$(BuildConfiguration)/net7.0/ $(INSTDIR)/libs/ $(RDOTNET_BINS)
 
