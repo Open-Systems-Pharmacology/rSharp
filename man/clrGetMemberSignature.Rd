@@ -20,7 +20,7 @@ Mostly used to interactively search for what arguments to pass to a method.
 }
 \examples{
 \dontrun{
-library(rClr)
+library(rSharp)
 testClassName <- "Rclr.TestObject";
 testObj <- clrNew(testClassName)
 clrReflect(testObj)

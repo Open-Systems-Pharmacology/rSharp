@@ -17,11 +17,11 @@ startupMsg <- ''
 #' @param pkgname the name of the package.
 #' @rdname dotOnLoad
 #' @name dotOnLoad
-.onLoad <- function(libname='~/R', pkgname='rClr') {
+.onLoad <- function(libname='~/R', pkgname='rSharp') {
   rclr_env=Sys.getenv('RCLR')
   monoexepath <- Sys.which('mono')
   ext <- .Platform$dynlib.ext
-  nativeLibsNames <- paste(c('rClrMono', 'rClrMs'), ext, sep='')
+  nativeLibsNames <- paste(c('rClrMono', 'RsharpMs'), ext, sep='')
   monoDll <- nativeLibsNames[1]
   msDll <- nativeLibsNames[2]
   getFnameNoExt <- function(x) {strsplit(x, '\\.')[[1]][1]}
@@ -32,11 +32,13 @@ startupMsg <- ''
     # It may be because this is loaded through the 'document' and 'load_all' functions from devtools,
     # in which case libname is something like "f:/codeplex"
     # try to cater for load_all behavior.
-    if( 'rclr' %in% tolower(list.files(libname))) {
+    if( 'rsharp' %in% tolower(list.files(libname))) {
       libname <- file.path(rClrPkgDir, 'inst')
       archLibPath <- file.path(rClrPkgDir, 'inst/libs', Sys.getenv('R_ARCH'))
       srcPkgLibPath <- archLibPath
-      if(!file.exists(archLibPath)) {stop(paste('Looked like rClr source code directory, but directory not found:', archLibPath))}
+      if(!file.exists(archLibPath)) {
+        stop(paste('Looked like rClr source code directory, but directory not found:', archLibPath))
+      }
     } else {
       stop(paste("Trying to work around devtools, but could not find a folder with lowercase name 'rclr' under ", archLibPath))
     }
@@ -52,7 +54,7 @@ startupMsg <- ''
           sep="\n"))
       }
       if(!(msDll %in% dlls)) {
-        stop(paste('rClr library .NET framework not found - looked under', archLibPath, 'but not found in', paste(dlls, collapse=',')))
+        stop(paste('rSharp library .NET not found - looked under', archLibPath, 'but not found in', paste(dlls, collapse=',')))
       }
       appendStartupMsg('Loading the dynamic library for Microsoft .NET runtime...')
       chname <- getFnameNoExt(msDll)
@@ -61,7 +63,7 @@ startupMsg <- ''
     }
   } else { # not on Windows.
     appendStartupMsg('Loading the dynamic library for Mono runtime...')
-    chname <- "rClr"
+    chname <- "rSharp"
     loadAndInit(chname, pkgname, libname, srcPkgLibPath)
   }
 }
@@ -73,6 +75,10 @@ loadAndInit <- function(chname, pkgname, libname, srcPkgLibPath=NULL) {
     ext <- .Platform$dynlib.ext
     # srcPkgLibPath ends with platform separator (e.g. '/')
     f <- file.path(srcPkgLibPath, paste0(chname, ext))
+
+    setwd(srcPkgLibPath)
+    print(srcPkgLibPath)
+
     dyn.load(f)
   } else {
     library.dynam(chname, pkgname, libname)
@@ -114,7 +120,7 @@ getClrVersionString <- function() {
 #' @name dotOnAttach
 #' @param libname the path to the library from which the package is loaded
 #' @param pkgname the name of the package.
-.onAttach <- function(libname='~/R', pkgname='rClr') {
+.onAttach <- function(libname='~/R', pkgname='rSharp') {
   if(startupMsg!='') {
     packageStartupMessage(startupMsg)
   }

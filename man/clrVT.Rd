@@ -22,7 +22,7 @@ This function is useful for advanced diagnosis; most users should never have to 
 }
 \examples{
 \dontrun{
-library(rClr)
+library(rSharp)
 cTypename <- "Rclr.TestCases"
 #         public static bool IsTrue(bool arg)
 clrVT(cTypename, 'IsTrue', TRUE)

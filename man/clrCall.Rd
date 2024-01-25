@@ -21,7 +21,7 @@ Call a method on an object
 }
 \examples{
 \dontrun{
-library(rClr)
+library(rSharp)
 testClassName <- "Rclr.TestObject";
 (testObj <- clrNew(testClassName))
 clrCall(testObj, 'GetFieldIntegerOne')

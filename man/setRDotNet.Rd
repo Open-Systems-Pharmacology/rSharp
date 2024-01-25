@@ -14,7 +14,7 @@ Turn on or off the usage of the R.NET assemblies to convert CLR objects to R dat
 }
 \examples{
 \dontrun{
-library(rClr)
+library(rSharp)
 ## R.NET is currently used to convert complicated CLR types to sensible R equivalents
 setRDotNet()
 cTypename <- "Rclr.TestCases"

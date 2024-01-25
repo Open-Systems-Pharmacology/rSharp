@@ -12,10 +12,10 @@ clrFacadeTypeName <- 'Rclr.ClrFacade'
 #' @return nothing is returned by this function
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' }
 clrInit <- function(debug=FALSE) {
-  pkgLibsDir <- getLibsPath('rClr')
+  pkgLibsDir <- getLibsPath('rSharp')
   f <- file.path(pkgLibsDir, 'ClrFacade.dll')
   f <- path.expand(f)
   stopifnot( file.exists(f) )

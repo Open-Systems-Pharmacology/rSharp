@@ -3,9 +3,9 @@
 \name{dotOnLoad}
 \alias{dotOnLoad}
 \alias{.onLoad}
-\title{rClr .onLoad}
+\title{rSharp .onLoad}
 \usage{
-.onLoad(libname = "~/R", pkgname = "rClr")
+.onLoad(libname = "~/R", pkgname = "rSharp")
 }
 \arguments{
 \item{libname}{the path to the library from which the package is loaded}

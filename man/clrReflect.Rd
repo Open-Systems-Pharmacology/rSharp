@@ -17,7 +17,7 @@ List the instance members of a CLR object, i.e. its methods, fields and properti
 }
 \examples{
 \dontrun{
-library(rClr)
+library(rSharp)
 testClassName <- "Rclr.TestObject";
 testObj <- clrNew(testClassName)
 clrReflect(testObj)

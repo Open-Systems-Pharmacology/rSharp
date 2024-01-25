@@ -1,4 +1,4 @@
-Package: rClr
+Package: rSharp
 Type: Package
 Title: Accessing the Common Language Runtime (.NET/Mono) from R
 Version: 0.9.5

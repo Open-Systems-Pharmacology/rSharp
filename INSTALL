@@ -21,19 +21,19 @@ set MonoBuildConfiguration=MonoInstallDebug
 set BuildConfiguration=Release
 set MonoBuildConfiguration=MonoInstall
 
-%R% CMD check rClr
-%R% CMD REMOVE rClr
-%R% CMD INSTALL rClr
+%R% CMD check rSharp
+%R% CMD REMOVE rSharp
+%R% CMD INSTALL rSharp
 :: or if you encounter some issues when testing the load, you may bypass it with
-%R% CMD INSTALL --no-test-load rClr
+%R% CMD INSTALL --no-test-load rSharp
 ```
 
 
 Instructions for releases (to update the documentation)
 
 ```
-library(rClr)
-perfMeasureFile <- list.files(system.file("tests", package = "rClr"), pattern = "performance_profiling", 
+library(rSharp)
+perfMeasureFile <- list.files(system.file("tests", package = "rSharp"), pattern = "performance_profiling", 
     full.names = TRUE)
 stopifnot(file.exists(perfMeasureFile))
 source(perfMeasureFile)

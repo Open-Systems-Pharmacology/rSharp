@@ -17,7 +17,7 @@ Gets the type name of an object, given the SEXP external pointer to this CLR obj
 }
 \examples{
 \dontrun{
-library(rClr)
+library(rSharp)
 testClassName <- "Rclr.TestObject";
 testObj <- clrNew(testClassName)
 clrTypeNameExtPtr(clrGetExtPtr(testObj))

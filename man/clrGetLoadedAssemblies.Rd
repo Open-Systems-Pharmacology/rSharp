@@ -19,7 +19,7 @@ List the names of loaded CLR assemblies
 }
 \examples{
 \dontrun{
-library(rClr)
+library(rSharp)
 clrGetLoadedAssemblies()
 }
 }

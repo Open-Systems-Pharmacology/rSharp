@@ -7,7 +7,7 @@
 library(ggplot2)
 # Sys.setenv(RCLR='Mono')
 
-library(rClr)
+library(rSharp)
 
 profClassName <- 'Rclr.PerformanceProfiling'
 prof <- clrNew(profClassName)

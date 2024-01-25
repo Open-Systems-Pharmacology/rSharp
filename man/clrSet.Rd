@@ -18,7 +18,7 @@ Sets the value of a field or property of an object or class
 }
 \examples{
 \dontrun{
-library(rClr)
+library(rSharp)
 testClassName <- "Rclr.TestObject";
 testObj <- clrNew(testClassName)
 clrReflect(testObj)

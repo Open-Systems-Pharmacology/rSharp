@@ -35,7 +35,7 @@ You should start from a new R session; if you have regenerated doc from Roxygen,
 
 ```{r, eval=FALSE}
 library(rClrDevtools) # https://github.com/jmp75/rClr-devtools
-library(rClr)
+library(rSharp)
 pkgDir <- tryFindPkgDir()
 # seem to need to move working directory. Oddities with knitr figure output otherwise
 originalDir <- getwd()
@@ -74,7 +74,7 @@ argument is of length zero
 library(rClrDevtools) 
 cpDebugBins()
 library(testthat)
-test_package('rClr')
+test_package('rSharp')
 ```
 
 Diagnosing
@@ -83,7 +83,7 @@ Diagnosing
 Have warnings, but by defaults could not see where, what. The following treats warnings as errors:
 ```{r, eval=FALSE}
 options(warn=2)
-test_package('rClr')
+test_package('rSharp')
 # restore:
 options(warn=0)
 ```
@@ -91,7 +91,7 @@ options(warn=0)
 Had an issue with memory footprint on 2015-03-26. A way to diagnose things:
 
 ```{r, eval=FALSE}
-library(rClr)
+library(rSharp)
 cTypename <- "Rclr.TestCases"
 testClassName <- "Rclr.TestObject"
 callGcMethname <- "CallGC"

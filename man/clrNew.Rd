@@ -19,7 +19,7 @@ Create a new CLR object
 }
 \examples{
 \dontrun{
-library(rClr)
+library(rSharp)
 testClassName <- "Rclr.TestObject";
 (testObj <- clrNew(testClassName))
 # object with a constructor that has parameters

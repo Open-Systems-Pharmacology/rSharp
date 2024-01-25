@@ -17,7 +17,7 @@ Advanced use only, to diagnose unexpected conditions in CLR method calls. Most u
 }
 \examples{
 \dontrun{
-library(rClr)
+library(rSharp)
 peekClrArgs("a", numeric(0))
 }
 }

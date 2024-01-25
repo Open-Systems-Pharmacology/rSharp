@@ -5,7 +5,7 @@
 \alias{.onAttach}
 \title{rClr .onAttach}
 \usage{
-.onAttach(libname = "~/R", pkgname = "rClr")
+.onAttach(libname = "~/R", pkgname = "rSharp")
 }
 \arguments{
 \item{libname}{the path to the library from which the package is loaded}

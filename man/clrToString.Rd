@@ -18,7 +18,7 @@ This function is here to help quickly test object equivalence from the R interpr
 }
 \examples{
 \dontrun{
-library(rClr)
+library(rSharp)
 dt <- as.POSIXct('2001-01-01 02:03:04', tz='UTC')
 clrToString(dt)
 }

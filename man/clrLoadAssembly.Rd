@@ -14,7 +14,7 @@ Loads an assembly. Note that this is loaded in the single application domain tha
 }
 \examples{
 \dontrun{
-library(rClr)
+library(rSharp)
 clrGetLoadedAssemblies()
 f <- file.path('SomeDirectory', 'YourDotNetBinaryFile.dll')
 f <- path.expand(f)

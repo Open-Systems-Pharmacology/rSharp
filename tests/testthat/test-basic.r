@@ -4,7 +4,7 @@
 wd <- getwd()
 source(file.path(wd, 'load_libs.r'))
 
-context("rClr essentials")
+context("rSharp essentials")
 
 areClrRefEquals <- function(x, y) {clrCallStatic('System.Object', 'ReferenceEquals', x, y)}
 

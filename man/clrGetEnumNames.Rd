@@ -17,7 +17,7 @@ Gets the names of a CLR Enum value type
 }
 \examples{
 \dontrun{
-library(rClr)
+library(rSharp)
 clrGetEnumNames('Rclr.TestEnum')
 }
 }

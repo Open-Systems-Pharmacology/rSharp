@@ -17,13 +17,14 @@ NUGET_CMD=nuget.exe
 MSB=@MSBUILD_EXE_PATH@
 
 INSTDIR= ../inst
+NETHOST=nethost
 
 # This can be helpful to diagnose the msbuild procedure
 DEBUG_BUILD_CMD ?=
 
 CLR_FACADE_BINS=ClrFacade.*
 RDOTNET_BINS=RDotNet.* DynamicInterop.*
-RCLRMS=rClrMs
+RCLRMS=rSharpMs
 
 # I needed to use the -u -p options at some point to avoid odd cases where copying failed.
 # For some odd reasons the files under /libs/ are copied with access rights such that they fail to load with dyn.load
@@ -58,16 +59,16 @@ detailedconfiginfo:
 	-@echo build cmd line: $(MSB) $(SLN) //t:$(MODE) //p:Configuration=$(BuildConfiguration) //p:Platform="replaced_tgt_platform" $(MSB_OPTIONS_EXTRA);
 	-@echo **END Variable**
 
-rClrNugetRestore: rClr.cpp
+rClrNugetRestore: rSharp.cpp
 	-$(NUGET_CMD) restore $(SLN) ;
 
 rClrLibComp: rClrNugetRestore
-	@for tgt_platform in x64 Win32; do \
+	@for tgt_platform in x64; do \
 		$(MSB) $(SLN) //t:$(MODE) //p:Configuration=$(BuildConfiguration) //p:Platform="$$tgt_platform" $(MSB_OPTIONS_EXTRA); \
 	done; \
 
 instdir:
-	@for r_architecture in x64 i386; do \
+	@for r_architecture in x64; do \
 		rm -rf $(INSTDIR)/libs/$$r_architecture ; \
 		mkdir -p $(INSTDIR) 2>/dev/null ; \
 		mkdir -p $(INSTDIR)/libs/$$r_architecture 2>/dev/null ; \
@@ -77,12 +78,7 @@ rClrLib: rClrLibComp
 	r_architecture=x64;\
 	RCLRBINDIR=./x64/$(BuildConfiguration);\
 	bin_dir=$$RCLRBINDIR; \
-	RCLRBINS="$(RCLRMS).dll $(RCLRMS).exp $(RCLRMS).lib $(RCLRMS).pdb" ; \
-	$(ROBOCP_CMD) $$bin_dir $(INSTDIR)/libs/$$r_architecture/ $$RCLRBINS;
-	r_architecture=i386;\
-	RCLRBINDIR=./$(BuildConfiguration);\
-	bin_dir=$$RCLRBINDIR; \
-	RCLRBINS="$(RCLRMS).dll $(RCLRMS).exp $(RCLRMS).lib $(RCLRMS).pdb" ; \
+	RCLRBINS="$(RCLRMS).dll $(RCLRMS).exp $(RCLRMS).lib $(RCLRMS).pdb $(NETHOST).dll" ; \
 	$(ROBOCP_CMD) $$bin_dir $(INSTDIR)/libs/$$r_architecture/ $$RCLRBINS;
 	-$(ROBOCP_CMD) ./ClrFacade/bin/$(BuildConfiguration)/net7.0/ $(INSTDIR)/libs/ $(CLR_FACADE_BINS)
 	-$(ROBOCP_CMD) ./ClrFacade/bin/$(BuildConfiguration)/net7.0/ $(INSTDIR)/libs/ $(RDOTNET_BINS)

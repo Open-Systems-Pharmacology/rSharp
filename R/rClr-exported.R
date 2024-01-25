@@ -16,7 +16,7 @@ clrShutdown <- function() { # TODO: is this even possible given runtime's constr
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' ## R.NET is currently used to convert complicated CLR types to sensible R equivalents
 #' setRDotNet()
 #' cTypename <- "Rclr.TestCases"
@@ -38,7 +38,7 @@ setRDotNet <- function(setit=TRUE) {
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' cTypename <- "Rclr.TestCases"
 #' clrCallStatic(cTypename, "CreateStringDictionary")
 #' setConvertAdvancedTypes(FALSE)
@@ -57,7 +57,7 @@ setConvertAdvancedTypes <- function(enable=TRUE) {
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' clrGetLoadedAssemblies()
 #' f <- file.path('SomeDirectory', 'YourDotNetBinaryFile.dll')
 #' f <- path.expand(f)
@@ -92,7 +92,7 @@ clrGetInnerPkgName <- function() { nativePkgName }
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' testClassName <- "Rclr.TestObject";
 #' testObj <- clrNew(testClassName)
 #' clrReflect(testObj)
@@ -112,7 +112,7 @@ clrReflect <- function( clrobj ) {
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' dt <- as.POSIXct('2001-01-01 02:03:04', tz='UTC')
 #' clrToString(dt)
 #' }
@@ -146,7 +146,7 @@ clrTraceback <- function() {
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' clrGetLoadedAssemblies()
 #' }
 clrGetLoadedAssemblies <- function(fullname=FALSE, filenames=FALSE) {
@@ -167,7 +167,7 @@ clrGetLoadedAssemblies <- function(fullname=FALSE, filenames=FALSE) {
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' clrGetLoadedAssemblies()
 #' clrGetTypesInAssembly('ClrFacade')
 #' }
@@ -185,7 +185,7 @@ clrGetTypesInAssembly <- function(assemblyName) {
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' testClassName <- "Rclr.TestObject";
 #' testObj <- clrNew(testClassName)
 #' clrGetFields(testObj)
@@ -205,7 +205,7 @@ clrGetFields <- function( clrobj, contains = '') {
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' testClassName <- "Rclr.TestObject";
 #' testObj <- clrNew(testClassName)
 #' clrGetProperties(testObj)
@@ -225,7 +225,7 @@ clrGetProperties <- function( clrobj, contains = '') {
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' testClassName <- "Rclr.TestObject";
 #' testObj <- clrNew(testClassName)
 #' clrGetMethods(testObj)
@@ -244,7 +244,7 @@ clrGetMethods <- function( clrobj, contains = '') {
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' testClassName <- "Rclr.TestObject";
 #' clrGetConstructors(testClassName)
 #' }
@@ -263,7 +263,7 @@ clrGetConstructors <- function( type ) {
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' testClassName <- "Rclr.TestObject";
 #' testObj <- clrNew(testClassName)
 #' clrReflect(testObj)
@@ -284,7 +284,7 @@ clrGetMemberSignature <- function( clrobj, memberName ) {
 #' @import methods
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' testClassName <- "Rclr.TestObject";
 #' (testObj <- clrNew(testClassName))
 #' # object with a constructor that has parameters
@@ -328,7 +328,7 @@ getCurrentConvertedObject <- function()
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' testClassName <- "Rclr.TestObject";
 #' (testObj <- clrNew(testClassName))
 #' clrIs(testObj, testClassName)
@@ -367,7 +367,7 @@ clrIs <- function(obj, type) {
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' testClassName <- "Rclr.TestObject";
 #' (testObj <- clrNew(testClassName))
 #' clrCall(testObj, 'GetFieldIntegerOne')
@@ -397,7 +397,7 @@ clrCall <- function(obj,methodName,...)
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' testClassName <- "Rclr.TestObject";
 #' testObj <- clrNew(testClassName)
 #' clrReflect(testObj)
@@ -420,7 +420,7 @@ clrGet <- function(objOrType,name)
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' testClassName <- "Rclr.TestObject";
 #' testObj <- clrNew(testClassName)
 #' clrReflect(testObj)
@@ -446,7 +446,7 @@ clrSet <- function(objOrType, name, value)
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' clrGetEnumNames('Rclr.TestEnum')
 #' }
 clrGetEnumNames <- function(enumType)
@@ -489,7 +489,7 @@ clrGetExtPtr <- function(clrObject) {
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' testClassName <- "Rclr.TestObject";
 #' testObj <- clrNew(testClassName)
 #' clrTypeNameExtPtr(clrGetExtPtr(testObj))
@@ -509,7 +509,7 @@ clrTypeNameExtPtr <- function(extPtr) {
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' testClassName <- "Rclr.TestObject";
 #' testObj <- clrNew(testClassName)
 #' clrTypename(testObj)
@@ -539,7 +539,7 @@ clrGetNativeLibName <- function() {
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' cTypename <- "Rclr.TestCases"
 #' clrCallStatic(cTypename, "IsTrue", TRUE)
 #' }
@@ -565,7 +565,7 @@ clrCallStatic <- function(typename, methodName,...)
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' peekClrArgs("a", numeric(0))
 #' }
 peekClrArgs <- function(...)
@@ -582,7 +582,7 @@ peekClrArgs <- function(...)
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' cTypename <- "Rclr.TestCases"
 #' clrGetStaticMembers(cTypename)
 #' testClassName <- "Rclr.TestObject";
@@ -686,7 +686,7 @@ inspectArgs <- function(...) {
 #' @param ... one or more arguments to pass to the function call
 #' @examples
 #' \dontrun{
-#' library(rClr)
+#' library(rSharp)
 #' cTypename <- "Rclr.TestCases"
 #' #         public static bool IsTrue(bool arg)
 #' clrVT(cTypename, 'IsTrue', TRUE)

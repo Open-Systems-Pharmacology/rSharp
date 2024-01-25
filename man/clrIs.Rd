@@ -19,7 +19,7 @@ Check whether an object is of a certain type. This function is meant to match th
 }
 \examples{
 \dontrun{
-library(rClr)
+library(rSharp)
 testClassName <- "Rclr.TestObject";
 (testObj <- clrNew(testClassName))
 clrIs(testObj, testClassName)

@@ -17,7 +17,7 @@ List the public constructors of a CLR Type
 }
 \examples{
 \dontrun{
-library(rClr)
+library(rSharp)
 testClassName <- "Rclr.TestObject";
 clrGetConstructors(testClassName)
 }
