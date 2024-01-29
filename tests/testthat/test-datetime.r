@@ -236,10 +236,10 @@ test_that("Date and Time objects are marshalled correctly", {
   # The following lines may look puzzling but really do have a purpose.
   # Check  that http://r2clr.codeplex.com/workitem/37 has been fixed The following will crash if not.
   x <- as.Date(testDateStr)
-  clrType = clrCallStatic('Rclr.ClrFacade', 'GetObjectTypeName', x)
+  clrType = clrCallStatic('ClrFacade.ClrFacade', 'GetObjectTypeName', x)
   expect_that( x, equals(as.Date(testDateStr)) );
   x <- as.Date(testDateStr) + 0:3
-  clrType = clrCallStatic('Rclr.ClrFacade', 'GetObjectTypeName', x)
+  clrType = clrCallStatic('ClrFacade.ClrFacade', 'GetObjectTypeName', x)
   expect_that( x[1], equals(as.Date(testDateStr)) );
   expect_that( x[2], equals(as.Date(testDateStr)+1) );
   # End check http://r2clr.codeplex.com/workitem/37

@@ -715,7 +715,7 @@ rToClrType <- function(x) {
     type = typeof(x),
     class = class(x),
     length=length(x),
-    clrType = clrCallStatic('Rclr.ClrFacade', 'GetObjectTypeName', x)
+    clrType = clrCallStatic('ClrFacade.ClrFacade', 'GetObjectTypeName', x)
   )
 }
 

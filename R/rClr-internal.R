@@ -2,7 +2,7 @@
 reflectionHelperTypeName <- 'Rclr.ReflectionHelper'
 
 # Full type name of the main facade to the interop code written in C#
-clrFacadeTypeName <- 'Rclr.ClrFacade'
+clrFacadeTypeName <- 'ClrFacade.ClrFacade'
 
 #' Initialize a new CLR application domain
 #'

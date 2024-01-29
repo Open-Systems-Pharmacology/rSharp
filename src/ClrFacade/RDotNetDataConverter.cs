@@ -174,9 +174,9 @@ namespace Rclr
         public static void SetRDotNet(bool setit, string pathToNativeSharedObj = null)
         {
             if (setit)
-                ClrFacade.DataConverter = GetInstance(pathToNativeSharedObj);
+                ClrFacade.ClrFacade.DataConverter = GetInstance(pathToNativeSharedObj);
             else
-                ClrFacade.DataConverter = null;
+                ClrFacade.ClrFacade.DataConverter = null;
             SetUseRDotNet(setit);
         }
 

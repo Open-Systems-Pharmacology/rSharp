@@ -33,7 +33,7 @@ namespace Rclr
         {
             get
             {
-                var rdotnetconverter = ClrFacade.DataConverter as RDotNetDataConverter;
+                var rdotnetconverter = ClrFacade.ClrFacade.DataConverter as RDotNetDataConverter;
                 if (rdotnetconverter == null)
                     return null;
                 else

@@ -86,7 +86,7 @@ namespace Rclr
 
         public static string[] GetSignature(string typeName, string memberName)
         {
-            Type type = ClrFacade.GetType(typeName);
+            Type type = ClrFacade.ClrFacade.GetType(typeName);
             if (type != null)
                 return GetSignature_Type(type, memberName);
             else
@@ -468,7 +468,7 @@ namespace Rclr
         /// <param name="typeName">type name</param>
         public static string[] GetConstructors(string typeName)
         {
-            return GetConstructors(ClrFacade.GetType(typeName));
+            return GetConstructors(ClrFacade.ClrFacade.GetType(typeName));
         }
 
         /// <summary>
@@ -494,7 +494,7 @@ namespace Rclr
         /// <param name="pattern">The case sensitive string to look for in member names</param>
         public static string[] GetStaticMethods(string typeName, string pattern)
         {
-            Type type = ClrFacade.GetType(typeName);
+            Type type = ClrFacade.ClrFacade.GetType(typeName);
             return getMethods(type, pattern, BindingFlags.Public | BindingFlags.Static);
         }
 
@@ -533,7 +533,7 @@ namespace Rclr
 
         public static string[] GetStaticFields(string typeName, string pattern)
         {
-            Type type = ClrFacade.GetType(typeName);
+            Type type = ClrFacade.ClrFacade.GetType(typeName);
             return getFields(type, pattern, BindingFlags.Public | BindingFlags.Static);
         }
 
@@ -591,7 +591,7 @@ namespace Rclr
 
         public static string[] GetStaticProperties(string typeName, string pattern)
         {
-            Type type = ClrFacade.GetType(typeName);
+            Type type = ClrFacade.ClrFacade.GetType(typeName);
             return getProperties(type, pattern, BindingFlags.Public | BindingFlags.Static);
         }
 
@@ -611,7 +611,7 @@ namespace Rclr
 
 		public static string[] GetEnumNames(string enumTypename)
 		{
-			var t = ClrFacade.GetType(enumTypename);
+			var t = ClrFacade.ClrFacade.GetType(enumTypename);
             if (t==null) throw new ArgumentException(String.Format("Type not found: {0}", enumTypename));
 			return GetEnumNames(t);
 		}

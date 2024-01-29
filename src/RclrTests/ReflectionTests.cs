@@ -70,7 +70,7 @@ namespace RclrTests
         public void TestReflectionTypeLoadException()
         {
             var rtle = new ReflectionTypeLoadException(new[]{this.GetType()}, new[]{new Exception("some inner message")}, "rtle message");
-            string s = ClrFacade.FormatExceptionInnermost(rtle);
+            string s = ClrFacade.ClrFacade.FormatExceptionInnermost(rtle);
             Assert.Contains("some inner message", s);
             Assert.Contains("rtle message", s);
         }
@@ -80,9 +80,9 @@ namespace RclrTests
         {
             var obj = new MyTestClass();
             // Check that passing no parameters to the 'params' parameter (empty array) works
-            var result = ClrFacade.CallInstanceMethod(obj, "UniqueNameStrStrParams", new[] { "", "" });
+            var result = ClrFacade.ClrFacade.CallInstanceMethod(obj, "UniqueNameStrStrParams", new[] { "", "" });
             // However, if it means that there are more than one candidate methods:
-            Assert.Throws<AmbiguousMatchException>(() => { ClrFacade.CallInstanceMethod(obj, "StringSameNameParams", new[] { "" }); });
+            Assert.Throws<AmbiguousMatchException>(() => { ClrFacade.ClrFacade.CallInstanceMethod(obj, "StringSameNameParams", new[] { "" }); });
         }
 
         [Fact]
@@ -130,23 +130,23 @@ namespace RclrTests
         {
             // TODO tighter checks. Start with: it does not bomb...
             var obj = new MyTestClass();
-            ClrFacade.CallInstanceMethod(obj, "OptionalInt", new object[] { });
-            ClrFacade.CallInstanceMethod(obj, "OptionalInt", new object[] { 3 });
+            ClrFacade.ClrFacade.CallInstanceMethod(obj, "OptionalInt", new object[] { });
+            ClrFacade.ClrFacade.CallInstanceMethod(obj, "OptionalInt", new object[] { 3 });
 
-            ClrFacade.CallInstanceMethod(obj, "IntOptionalInt", new object[] { 3 });
-            ClrFacade.CallInstanceMethod(obj, "IntOptionalInt", new object[] { 3, 5 });
+            ClrFacade.ClrFacade.CallInstanceMethod(obj, "IntOptionalInt", new object[] { 3 });
+            ClrFacade.ClrFacade.CallInstanceMethod(obj, "IntOptionalInt", new object[] { 3, 5 });
 
-            ClrFacade.CallInstanceMethod(obj, "DoubleOptionalInt", new object[] { 3.0 });
-            ClrFacade.CallInstanceMethod(obj, "DoubleOptionalInt", new object[] { 3.0, 5 });
+            ClrFacade.ClrFacade.CallInstanceMethod(obj, "DoubleOptionalInt", new object[] { 3.0 });
+            ClrFacade.ClrFacade.CallInstanceMethod(obj, "DoubleOptionalInt", new object[] { 3.0, 5 });
 
-            ClrFacade.CallInstanceMethod(obj, "DoubleOptionalIntDoubleString", new object[] { 3.0, 5, 4.5, "blah" });
-            ClrFacade.CallInstanceMethod(obj, "DoubleOptionalIntDoubleString", new object[] { 3.0, 5, 4.5 });
-            ClrFacade.CallInstanceMethod(obj, "DoubleOptionalIntDoubleString", new object[] { 3.0, 5 });
-            ClrFacade.CallInstanceMethod(obj, "DoubleOptionalIntDoubleString", new object[] { 3.0 });
+            ClrFacade.ClrFacade.CallInstanceMethod(obj, "DoubleOptionalIntDoubleString", new object[] { 3.0, 5, 4.5, "blah" });
+            ClrFacade.ClrFacade.CallInstanceMethod(obj, "DoubleOptionalIntDoubleString", new object[] { 3.0, 5, 4.5 });
+            ClrFacade.ClrFacade.CallInstanceMethod(obj, "DoubleOptionalIntDoubleString", new object[] { 3.0, 5 });
+            ClrFacade.ClrFacade.CallInstanceMethod(obj, "DoubleOptionalIntDoubleString", new object[] { 3.0 });
 
-            Assert.Equal("LevelOneClass", ClrFacade.CallInstanceMethod(obj, "OptionalArgsMatch", new object[] { new LevelOneClass() }));
-            Assert.Equal("LevelTwoClass", ClrFacade.CallInstanceMethod(obj, "OptionalArgsMatch", new object[] { new LevelTwoClass() }));
-            Assert.Equal("IMyInterface", ClrFacade.CallInstanceMethod(obj, "OptionalArgsMatch", new object[] { new OtherLevelOneClass() }));
+            Assert.Equal("LevelOneClass", ClrFacade.ClrFacade.CallInstanceMethod(obj, "OptionalArgsMatch", new object[] { new LevelOneClass() }));
+            Assert.Equal("LevelTwoClass", ClrFacade.ClrFacade.CallInstanceMethod(obj, "OptionalArgsMatch", new object[] { new LevelTwoClass() }));
+            Assert.Equal("IMyInterface", ClrFacade.ClrFacade.CallInstanceMethod(obj, "OptionalArgsMatch", new object[] { new OtherLevelOneClass() }));
         }
 
         private MethodInfo GetSingleMethod(Type classType, string methodName, BindingFlags bf, Binder binder=null, Type[] types=null)

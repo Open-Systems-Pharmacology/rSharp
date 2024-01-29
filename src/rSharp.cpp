@@ -7,14 +7,14 @@
 
 using string_t = std::basic_string<char_t>;
 
-const string_t dotnetlib_path = STR("C:/Users/GeorgiosDaskalakis/Documents/GitHub/rclr_dll_load_test/ClrFacade.dll");
-const auto loadAssemblyDelegate = STR("Rclr.ClrFacade+LoadFromDelegate, ClrFacade");
+const string_t dotnetlib_path = STR("./ClrFacade.dll");
+const auto loadAssemblyDelegate = STR("ClrFacade.ClrFacade+LoadFromDelegate, ClrFacade");
 void* create_instance_fn_ptr = nullptr;
 void* load_from_fn_ptr = nullptr;
 void* call_static_method_fn_ptr = nullptr;
 
 //Definition of Delegates
-typedef RSharpGenericValue* (CORECLR_DELEGATE_CALLTYPE* CallStaticMethodDelegate)(const void*, const char*, ...);
+typedef int (CORECLR_DELEGATE_CALLTYPE* CallStaticMethodDelegate)(const char*, const char*, RSharpGenericValue* objects[], int num_objects, RSharpGenericValue* returnValue);
 typedef RSharpGenericValue* (CORECLR_DELEGATE_CALLTYPE* CreateInstanceDelegate)(const char*, ...);
 typedef void* (CORECLR_DELEGATE_CALLTYPE* LoadFromDelegate)(const char*);
 
@@ -34,7 +34,7 @@ void rclr_create_domain() {
 	//
 	// STEP 2: Initialize and start the .NET Core runtime
 	//
-	const string_t config_path = STR("C:/Users/GeorgiosDaskalakis/Documents/GitHub/rclr_dll_load_test/RSharp.runtimeconfig.json");
+	const string_t config_path = STR("./RSharp.runtimeconfig.json");
 	load_assembly_and_get_function_pointer = nullptr;
 	load_assembly_and_get_function_pointer = get_dotnet_load_assembly(config_path.c_str());
 	assert(load_assembly_and_get_function_pointer != nullptr && "Failure: get_dotnet_load_assembly()");
@@ -164,8 +164,8 @@ namespace {
 
 void initializeCreateInstance()
 {
-	const char_t* dotnet_type = STR("Rclr.ClrFacade, ClrFacade");
-	auto functionDelegate = STR("Rclr.ClrFacade+CreateInstanceDelegate, ClrFacade");
+	const char_t* dotnet_type = STR("ClrFacade.ClrFacade, ClrFacade");
+	auto functionDelegate = STR("ClrFacade.ClrFacade+CreateInstanceDelegate, ClrFacade");
 
 	int rc_1 = load_assembly_and_get_function_pointer(
 		dotnetlib_path.c_str(),
@@ -180,8 +180,8 @@ void initializeCreateInstance()
 
 void initializeLoadAssembly()
 {
-	const char_t* dotnet_type = STR("Rclr.ClrFacade, ClrFacade");
-	auto functionDelegate = STR("Rclr.ClrFacade+LoadFromDelegate, ClrFacade");
+	const char_t* dotnet_type = STR("ClrFacade.ClrFacade, ClrFacade");
+	auto functionDelegate = STR("ClrFacade.ClrFacade+LoadFromDelegate, ClrFacade");
 
 	int rc_1 = load_assembly_and_get_function_pointer(
 		dotnetlib_path.c_str(),
@@ -196,8 +196,8 @@ void initializeLoadAssembly()
 
 void initializeCallStaticFunction()
 {
-	const char_t* dotnet_type = STR("Rclr.ClrFacade, ClrFacade");
-	auto functionDelegate = STR("Rclr.ClrFacade+CallStaticMethodDelegate, ClrFacade");
+	const char_t* dotnet_type = STR("ClrFacade.ClrFacade, ClrFacade");
+	auto functionDelegate = STR("ClrFacade.ClrFacade+CallStaticMethodDelegate, ClrFacade");
 
 	int rc_1 = load_assembly_and_get_function_pointer(
 		dotnetlib_path.c_str(),
@@ -419,13 +419,14 @@ SEXP r_call_static_method(SEXP p) {
 
 	auto call_static = reinterpret_cast<CallStaticMethodDelegate>(call_static_method_fn_ptr);
 
-	auto result = call_static(ns_qualified_typename, mnam, methodParams); //possibly (char *)mnam
+	auto return_value = new RSharpGenericValue(RSharpValueType::BOOL, 0);
+	call_static(ns_qualified_typename, mnam, params, Rf_length(methodParams), return_value); //possibly (char *)mnam
 
 	//free_variant_array(params, argLength);
 	//release_transient_objects();
 	free(ns_qualified_typename);
 
-	return rsharp_object_to_SEXP (result);
+	return rsharp_object_to_SEXP (return_value);
 }
 
 
@@ -700,7 +701,7 @@ RSharpGenericValue ConvertArrayToRSharpGenericValue(SEXP s)
 
 RSharpGenericValue ConvertToRSharpGenericValue(SEXP s) 
 {
-	RSharpGenericValue* result;
+	RSharpGenericValue* result = new RSharpGenericValue(RSharpValueType::OBJECT, 0);
 	result->size = 0; // Default size for non-array types
 
 	switch (TYPEOF(s)) {

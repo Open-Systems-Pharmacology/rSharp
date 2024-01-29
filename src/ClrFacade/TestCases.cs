@@ -448,7 +448,7 @@ namespace Rclr
 
         public static string GetExceptionMessage()
         {
-            return ClrFacade.FormatExceptionInnermost(CreateInnerExceptions());
+            return ClrFacade.ClrFacade.FormatExceptionInnermost(CreateInnerExceptions());
         }
 
         public static Exception CreateInnerExceptions()

@@ -18,6 +18,7 @@ MSB=@MSBUILD_EXE_PATH@
 
 INSTDIR= ../inst
 NETHOST=nethost
+RUNTIMECONFIG=RSharp.runtimeconfig
 
 # This can be helpful to diagnose the msbuild procedure
 DEBUG_BUILD_CMD ?=
@@ -78,8 +79,9 @@ rClrLib: rClrLibComp
 	r_architecture=x64;\
 	RCLRBINDIR=./x64/$(BuildConfiguration);\
 	bin_dir=$$RCLRBINDIR; \
-	RCLRBINS="$(RCLRMS).dll $(RCLRMS).exp $(RCLRMS).lib $(RCLRMS).pdb $(NETHOST).dll" ; \
-	$(ROBOCP_CMD) $$bin_dir $(INSTDIR)/libs/ $$RCLRBINS;
+	RCLRBINS="$(RCLRMS).dll $(RCLRMS).exp $(RCLRMS).lib $(RCLRMS).pdb " ; \
+	$(ROBOCP_CMD) $$bin_dir $(INSTDIR)/libs/ $$RCLRBINS;\
+	$(ROBOCP_CMD) ./libfiles/x64 $(INSTDIR)/libs/ $(NETHOST).dll $(RUNTIMECONFIG).json;
 	-$(ROBOCP_CMD) ./ClrFacade/bin/$(BuildConfiguration)/net7.0/ $(INSTDIR)/libs/ $(CLR_FACADE_BINS)
 	-$(ROBOCP_CMD) ./ClrFacade/bin/$(BuildConfiguration)/net7.0/ $(INSTDIR)/libs/ $(RDOTNET_BINS)
 
