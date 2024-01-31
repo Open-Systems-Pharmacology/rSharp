@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -22,54 +24,34 @@ namespace Rclr
       OBJECT
    }
 
-   public readonly struct RSharpGenericValue
+   public static class RSharpGenericValueExtensions
    {
-      public RSharpValueType Type { get; }
-      public IntPtr Value { get; }
-      public int Size { get; }
-
-      // Constructor for non-array types
-      public RSharpGenericValue(RSharpValueType type, IntPtr value, int size)
+      public static T[] GetArray<T>(this RSharpGenericValue genericValue)
       {
-         Type = type;
-         Value = value;
-         Size = size;
-      }
-
-      // Constructor for array types
-      public RSharpGenericValue(RSharpValueType type, IntPtr value)
-      {
-         Type = type;
-         Value = value;
-         Size = 0; // For non-array types, set size to 0
-      }
-
-      public T[] GetArray<T>()
-      {
-         if (Type == RSharpValueType.INT_ARRAY && typeof(T) == typeof(int))
+         if (genericValue.Type == RSharpValueType.INT_ARRAY && typeof(T) == typeof(int))
          {
-            int[] array = new int[Size];
-            Marshal.Copy(Value, array, 0, Size);
+            int[] array = new int[genericValue.Size];
+            Marshal.Copy(genericValue.Value, array, 0, genericValue.Size);
             return array as T[];
          }
-         else if (Type == RSharpValueType.FLOAT_ARRAY && typeof(T) == typeof(float))
+         else if (genericValue.Type == RSharpValueType.FLOAT_ARRAY && typeof(T) == typeof(float))
          {
-            float[] array = new float[Size];
-            Marshal.Copy(Value, array, 0, Size);
+            float[] array = new float[genericValue.Size];
+            Marshal.Copy(genericValue.Value, array, 0, genericValue.Size);
             return array as T[];
          }
-         else if (Type == RSharpValueType.DOUBLE_ARRAY && typeof(T) == typeof(double))
+         else if (genericValue.Type == RSharpValueType.DOUBLE_ARRAY && typeof(T) == typeof(double))
          {
-            double[] array = new double[Size];
-            Marshal.Copy(Value, array, 0, Size);
+            double[] array = new double[genericValue.Size];
+            Marshal.Copy(genericValue.Value, array, 0, genericValue.Size);
             return array as T[];
          }
-         else if (Type == RSharpValueType.BOOL_ARRAY && typeof(T) == typeof(bool))
+         else if (genericValue.Type == RSharpValueType.BOOL_ARRAY && typeof(T) == typeof(bool))
          {
-            bool[] array = new bool[Size];
-            for (int i = 0; i < Size; i++)
+            bool[] array = new bool[genericValue.Size];
+            for (int i = 0; i < genericValue.Size; i++)
             {
-               array[i] = Marshal.ReadByte(Value, i) != 0;
+               array[i] = Marshal.ReadByte(genericValue.Value, i) != 0;
             }
             return array as T[];
          }
@@ -141,14 +123,18 @@ namespace Rclr
          GCHandle handle = GCHandle.Alloc(obj, GCHandleType.Pinned);
          IntPtr valuePtr = handle.AddrOfPinnedObject();
 
-         return new RSharpGenericValue(type, valuePtr);
+         RSharpGenericValue result = new RSharpGenericValue();
+         result.Value = valuePtr;
+         result.Type = type;
+
+         return result;
       }
 
-      public object GetObject()
+      public static object GetObject(this RSharpGenericValue genericValue)
       {
-         if (Type == RSharpValueType.OBJECT)
+         if (genericValue.Type == RSharpValueType.OBJECT)
          {
-            GCHandle handle = GCHandle.FromIntPtr(Value);
+            GCHandle handle = GCHandle.FromIntPtr(genericValue.Value);
             return handle.Target;
          }
          else
@@ -156,6 +142,31 @@ namespace Rclr
             throw new InvalidOperationException("Invalid object type");
          }
       }
+   }
+
+   [StructLayout(LayoutKind.Sequential)]
+   public struct RSharpGenericValue
+   {
+      public RSharpValueType Type { get; set; }
+      public IntPtr Value { get; set; }
+      public int Size { get; set; }
+
+      // Constructor for non-array types
+      //public RSharpGenericValue(RSharpValueType type, IntPtr value, int size)
+      //{
+      //   Type = type;
+      //   Value = value;
+      //   Size = size;
+      //}
+
+      // Constructor for array types
+      //public RSharpGenericValue(RSharpValueType type, IntPtr value)
+      //{
+      //   Type = type;
+      //   Value = value;
+      //   Size = 0; // For non-array types, set size to 0
+      //}
+
    }
 
 }

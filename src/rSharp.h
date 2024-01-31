@@ -93,10 +93,10 @@ struct RSharpGenericValue
    size_t size;    // Size in case of an array
 
    // Constructor for non-array types
-   RSharpGenericValue(RSharpValueType t, intptr_t v, size_t s) : type(t), value(v), size(s) {}
+   //RSharpGenericValue(RSharpValueType t, intptr_t v, size_t s) : type(t), value(v), size(s) {}
 
    // Constructor for array types
-   RSharpGenericValue(RSharpValueType t, intptr_t v) : type(t), value(v), size(0) {}
+   //RSharpGenericValue(RSharpValueType t, intptr_t v) : type(t), value(v), size(0) {}
 };
 
 typedef struct {

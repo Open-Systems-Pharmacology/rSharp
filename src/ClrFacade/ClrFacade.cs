@@ -85,7 +85,7 @@ namespace ClrFacade
       //    return InternalCallStaticMethod(classType, methodName, true, arguments);
       // }
 
-      internal static object InternalCallStaticMethod(Type classType, string methodName, bool tryUseConverter, params object[] arguments)
+      internal static object InternalCallStaticMethod(Type classType, string methodName, bool tryUseConverter, object[] arguments)
       {
          if (arguments.GetType() == typeof(string[])) // workaround https://r2clr.codeplex.com/workitem/11
             arguments = new object[] { arguments };
@@ -143,26 +143,48 @@ namespace ClrFacade
          return new SymbolicExpressionWrapper(s);
       }
 
-      public delegate int CallStaticMethodDelegate(string typename, string methodName, RSharpGenericValue[] objects, int num_objects, RSharpGenericValue returnValue);
-      public static int CallStaticMethod(string typename, string methodName, RSharpGenericValue[] objects, int num_objects, RSharpGenericValue returnValue)
+      //public delegate int CallStaticMethodDelegate(string typename, string methodName, RSharpGenericValue[] objects, int num_objects, RSharpGenericValue returnValue);
+      //public static int CallStaticMethod(string typename, string methodName, RSharpGenericValue[] objects, int num_objects, RSharpGenericValue returnValue)
+
+      public delegate int CallStaticMethodDelegate(string typename, string methodName, IntPtr objects, int num_objects, IntPtr returnValue);
+      public static int CallStaticMethod(string typename, string methodName, IntPtr objects, int num_objects, IntPtr returnValue)
       {
-         // Type t = null;
-         // RSharpGenericValue result;
+         RSharpGenericValue[] temparr = new RSharpGenericValue[num_objects];
+
+         for (int i = 0; i < num_objects; ++i)
+         {
+            IntPtr structPtr = Marshal.ReadIntPtr(objects, i * IntPtr.Size);
+            temparr[i] = Marshal.PtrToStructure<RSharpGenericValue>(structPtr);
+         }
+
+         var objectArguments = ConvertRSharpParameters(temparr);
+         Type t = null;
+         object result;
+         t = GetType(typename);
+         result = InternalCallStaticMethod(t, methodName, true, objectArguments);
+
+         //RSharpGenericValue tempRetVal = Marshal.PtrToStructure<RSharpGenericValue>(returnValue);
+
+         RSharpGenericValue tempRetVal = RSharpGenericValueExtensions.FromObject(result);
+
+         Marshal.StructureToPtr(tempRetVal, returnValue, false);
+
          // try
          // {
          //     LastCallException = string.Empty;
          //     t = GetType(typename);
          //     if (t == null)
          //         throw new ArgumentException(String.Format("Type not found: {0}", typename));
-         //     result = InternalCallStaticMethod(t, methodName, true, arguments);
+         //         result = InternalCallStaticMethod(t, methodName, true, objectArguments);
          // }
          // catch (Exception ex)
          // {
          //     if (!LogThroughR(ex))
          //         throw;
          // }
-         Console.WriteLine("hi");
-         return 345;
+         //RSharpGenericValue returnValue = RSharpGenericValueExtensions.FromObject(result);
+         
+         return 1234;
       }
 
       /// <summary>
@@ -341,7 +363,13 @@ namespace ClrFacade
                throw;
          }
 
-         return new RSharpGenericValue(RSharpValueType.OBJECT, GCHandle.Alloc(result).AddrOfPinnedObject(), 0);
+         RSharpGenericValue genericValue = new RSharpGenericValue();
+         genericValue.Value = GCHandle.Alloc(result).AddrOfPinnedObject();
+         genericValue.Type = RSharpValueType.OBJECT;
+         genericValue.Size = 0;
+
+         return genericValue;
+         //return new RSharpGenericValue(RSharpValueType.OBJECT, GCHandle.Alloc(result).AddrOfPinnedObject(), 0);
       }
 
       public static Type GetType(string typename)

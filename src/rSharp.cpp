@@ -14,7 +14,8 @@ void* load_from_fn_ptr = nullptr;
 void* call_static_method_fn_ptr = nullptr;
 
 //Definition of Delegates
-typedef int (CORECLR_DELEGATE_CALLTYPE* CallStaticMethodDelegate)(const char*, const char*, RSharpGenericValue* objects[], int num_objects, RSharpGenericValue* returnValue);
+typedef RSharpGenericValue* (CORECLR_DELEGATE_CALLTYPE* CallStaticMethodDelegate)(const char*, const char*, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
+//typedef int (CORECLR_DELEGATE_CALLTYPE* CallStaticMethodDelegate)(const char*, const char*, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
 typedef RSharpGenericValue* (CORECLR_DELEGATE_CALLTYPE* CreateInstanceDelegate)(const char*, ...);
 typedef void* (CORECLR_DELEGATE_CALLTYPE* LoadFromDelegate)(const char*);
 
@@ -316,7 +317,9 @@ RSharpGenericValue** sexp_to_parameters(SEXP args)
 	for (i = 0; args != R_NilValue; i++, args = CDR(args)) {
 		name = isNull(TAG(args)) ? "" : CHAR(PRINTNAME(TAG(args)));
 		el = CAR(args);
-		mparams[i] = &ConvertToRSharpGenericValue(el);
+
+		mparams[i] = new RSharpGenericValue(ConvertToRSharpGenericValue(el));
+		//mparams[i] = &ConvertToRSharpGenericValue(el);
 	}
 	return mparams;
 }
@@ -419,8 +422,8 @@ SEXP r_call_static_method(SEXP p) {
 
 	auto call_static = reinterpret_cast<CallStaticMethodDelegate>(call_static_method_fn_ptr);
 
-	auto return_value = new RSharpGenericValue(RSharpValueType::BOOL, 0);
-	call_static(ns_qualified_typename, mnam, params, Rf_length(methodParams), return_value); //possibly (char *)mnam
+	auto return_value = new RSharpGenericValue();
+	auto result = call_static(ns_qualified_typename, mnam, params, Rf_length(methodParams), return_value); //possibly (char *)mnam
 
 	//free_variant_array(params, argLength);
 	//release_transient_objects();
@@ -701,7 +704,10 @@ RSharpGenericValue ConvertArrayToRSharpGenericValue(SEXP s)
 
 RSharpGenericValue ConvertToRSharpGenericValue(SEXP s) 
 {
-	RSharpGenericValue* result = new RSharpGenericValue(RSharpValueType::OBJECT, 0);
+	//RSharpGenericValue* result = new RSharpGenericValue(RSharpValueType::OBJECT, 0);
+	RSharpGenericValue* result = new RSharpGenericValue();
+	result->type = RSharpValueType::OBJECT;
+	result->value = 0;
 	result->size = 0; // Default size for non-array types
 
 	switch (TYPEOF(s)) {
@@ -730,6 +736,8 @@ RSharpGenericValue ConvertToRSharpGenericValue(SEXP s)
 	case STRSXP: {
 		result->type = RSharpValueType::STRING;
 		result->value = reinterpret_cast<intptr_t>(CHAR(STRING_ELT(s, 0)));
+		auto tempval = STRING_ELT(s, 0);
+		auto tempval2 = CHAR(STRING_ELT(s, 0));
 		break;
 	}
 	default:
