@@ -3,6 +3,8 @@ EXPORTS
 rclr_create_domain
 rclr_load_assembly
 r_create_clr_object
+r_get_typename_externalptr
+r_call_method
 r_call_static_method
 r_get_sexp_type
 r_show_args

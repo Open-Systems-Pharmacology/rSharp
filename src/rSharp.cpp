@@ -365,7 +365,6 @@ SEXP r_get_sexp_type(SEXP par) {
 	return make_int_sexp(1, &typecode);
 }
 
-
 /////////////////////////////////////////
 // Calling ClrFacade methods
 /////////////////////////////////////////
@@ -398,6 +397,59 @@ SEXP r_create_clr_object(SEXP p) {
 	return rsharp_object_to_SEXP(createdObject);
 }
 
+RSharpGenericValue* callStatic(const char* mnam, char* ns_qualified_typename, RSharpGenericValue** params, const R_len_t numberOfObjects)
+{
+	if (call_static_method_fn_ptr == nullptr)
+		initializeCallStaticFunction();
+
+	const auto call_static = reinterpret_cast<CallStaticMethodDelegate>(call_static_method_fn_ptr);
+	const auto return_value = new RSharpGenericValue();
+
+	auto result = call_static(ns_qualified_typename, mnam, params, numberOfObjects, return_value);
+	return return_value;
+}
+
+const char* get_type_full_name(RSharpGenericValue** genericValue) {
+	char* ns_qualified_typename = NULL;
+	auto hr = callStatic("GetObjectTypeName", "ClrFacade.ClrFacade,ClrFacade", genericValue, 1);
+	return reinterpret_cast<char*>(hr->value);
+
+}
+
+RSharpGenericValue* get_RSharp_generic_value(SEXP clrObj);
+
+SEXP r_get_typename_externalptr(SEXP p) {
+	SEXP methodParams;
+	const char* mnam;
+	p = CDR(p); /* skip the first parameter: function name*/
+	methodParams = CAR(p);
+	SEXP el = CAR(methodParams);
+	
+	return make_char_single_sexp(get_type_full_name(reinterpret_cast<RSharpGenericValue**>(el)));
+}
+
+SEXP r_call_method(SEXP par)
+{
+	SEXP p = par, e, methodParams;
+	const char* mnam = 0;
+	// retrieve the class name
+	e = CAR(p);
+	auto something = CHAR(STRING_ELT(e, 0));
+	p = CDR(p);
+	e = CAR(p);
+	auto rSharpGeneric = reinterpret_cast<RSharpGenericValue**>(e);
+
+	p = CDR(p);
+	
+	e = CAR(p); p = CDR(p);
+	mnam = CHAR(STRING_ELT(e, 0));
+	methodParams = p;
+
+	auto return_value = callStatic(mnam, "ClrFacade.ClrFacade,ClrFacade", rSharpGeneric, Rf_length(methodParams));
+
+	return rsharp_object_to_SEXP(return_value);
+}
+
 SEXP r_call_static_method(SEXP p) {
 	SEXP e, methodParams;
 	const char* mnam;
@@ -406,24 +458,22 @@ SEXP r_call_static_method(SEXP p) {
 	p = CDR(p);; /* skip the first parameter: function name*/
 	get_FullTypeName(p, &ns_qualified_typename); p = CDR(p);
 	e = CAR(p); p = CDR(p); // get the method name.
+	methodParams = p;
+
+	RSharpGenericValue** params = sexp_to_parameters(methodParams);
 	if (TYPEOF(e) != STRSXP || LENGTH(e) != 1)
 	{
 		free(ns_qualified_typename);
 		error_return("r_call_static_method: invalid method name");
 	}
 	mnam = CHAR(STRING_ELT(e, 0));
-	methodParams = p;
+	
 
-	RSharpGenericValue** params = sexp_to_parameters(methodParams);
+	
+	const R_len_t numberOfObjects = Rf_length(methodParams);
 
 	//if the function pointer has not been initialized, initialize it
-	if (call_static_method_fn_ptr == nullptr)
-		initializeCallStaticFunction();
-
-	auto call_static = reinterpret_cast<CallStaticMethodDelegate>(call_static_method_fn_ptr);
-
-	auto return_value = new RSharpGenericValue();
-	auto result = call_static(ns_qualified_typename, mnam, params, Rf_length(methodParams), return_value); //possibly (char *)mnam
+	RSharpGenericValue* const return_value = callStatic(mnam, ns_qualified_typename, params, numberOfObjects);
 
 	//free_variant_array(params, argLength);
 	//release_transient_objects();
