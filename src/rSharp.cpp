@@ -437,6 +437,7 @@ SEXP r_call_method(SEXP par)
 	auto something = CHAR(STRING_ELT(e, 0));
 	p = CDR(p);
 	e = CAR(p);
+	e = CAR(e);
 	auto rSharpGeneric = reinterpret_cast<RSharpGenericValue**>(e);
 
 	p = CDR(p);
@@ -445,7 +446,7 @@ SEXP r_call_method(SEXP par)
 	mnam = CHAR(STRING_ELT(e, 0));
 	methodParams = p;
 
-	auto return_value = callStatic(mnam, "ClrFacade.ClrFacade,ClrFacade", rSharpGeneric, Rf_length(methodParams));
+	auto return_value = callStatic(mnam, "ClrFacade.ClrFacade,ClrFacade", rSharpGeneric, 1);
 
 	return rsharp_object_to_SEXP(return_value);
 }
