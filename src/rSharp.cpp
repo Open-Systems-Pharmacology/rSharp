@@ -394,7 +394,7 @@ SEXP r_create_clr_object(SEXP p) {
 
 	auto createdObject = create_instance(ns_qualified_typename, params);
 
-	return rsharp_object_to_SEXP(createdObject);
+	return ConvertToSEXP(createdObject);
 }
 
 RSharpGenericValue* callStatic(const char* mnam, char* ns_qualified_typename, RSharpGenericValue** params, const R_len_t numberOfObjects)
@@ -412,7 +412,9 @@ RSharpGenericValue* callStatic(const char* mnam, char* ns_qualified_typename, RS
 const char* get_type_full_name(RSharpGenericValue** genericValue) {
 	char* ns_qualified_typename = NULL;
 	auto hr = callStatic("GetObjectTypeName", "ClrFacade.ClrFacade,ClrFacade", genericValue, 1);
-	return reinterpret_cast<char*>(hr->value);
+
+	return bstr_to_c_string((const wchar_t*)hr->value);
+	//return reinterpret_cast<char*>(hr->value);
 
 }
 
@@ -428,27 +430,30 @@ SEXP r_get_typename_externalptr(SEXP p) {
 	return make_char_single_sexp(get_type_full_name(reinterpret_cast<RSharpGenericValue**>(el)));
 }
 
+#define TOPOF(A) CAR(A)
+#define POP(A) CDR(A)
+
 SEXP r_call_method(SEXP par)
 {
-	SEXP p = par, e, methodParams;
-	const char* mnam = 0;
+	SEXP sExpressionParameterStack = par, sExpressinParameter, methodParameters, methodParameterStack;
+	const char* methodName = 0;
 	// retrieve the class name
-	e = CAR(p);
-	auto something = CHAR(STRING_ELT(e, 0));
-	p = CDR(p);
-	e = CAR(p);
-	e = CAR(e);
-	auto rSharpGeneric = reinterpret_cast<RSharpGenericValue**>(e);
 
-	p = CDR(p);
+	sExpressinParameter = TOPOF(sExpressionParameterStack);
+	auto something = CHAR(STRING_ELT(sExpressinParameter, 0));
+	sExpressionParameterStack = POP(sExpressionParameterStack);
+
+	methodParameterStack = TOPOF(sExpressionParameterStack);
+	methodParameters = TOPOF(methodParameterStack);
+	auto rSharpGeneric = reinterpret_cast<RSharpGenericValue**>(methodParameters);
+	sExpressionParameterStack = POP(sExpressionParameterStack);
 	
-	e = CAR(p); p = CDR(p);
-	mnam = CHAR(STRING_ELT(e, 0));
-	methodParams = p;
+	sExpressinParameter = TOPOF(sExpressionParameterStack);
+	methodName = CHAR(STRING_ELT(sExpressinParameter, 0));
+	
+	auto return_value = callStatic(methodName, "ClrFacade.ClrFacade,ClrFacade", rSharpGeneric, Rf_length(methodParameterStack));
 
-	auto return_value = callStatic(mnam, "ClrFacade.ClrFacade,ClrFacade", rSharpGeneric, 1);
-
-	return rsharp_object_to_SEXP(return_value);
+	return ConvertToSEXP(return_value);
 }
 
 SEXP r_call_static_method(SEXP p) {
@@ -480,7 +485,7 @@ SEXP r_call_static_method(SEXP p) {
 	//release_transient_objects();
 	free(ns_qualified_typename);
 
-	return rsharp_object_to_SEXP (return_value);
+	return ConvertToSEXP(return_value);
 }
 
 
@@ -564,30 +569,30 @@ SEXP PackDoubleIntoSEXP(double value) {
 }
 
 
-SEXP ConvertToSEXP(RSharpGenericValue value) {
-	switch (value.type) 
+SEXP ConvertToSEXP(RSharpGenericValue* value) {
+	switch (value->type)
 	{
 		case RSharpValueType::INT: {
-			int intValue = *reinterpret_cast<const int*>(value.value);
+			int intValue = *reinterpret_cast<const int*>(value->value);
 			return make_int_sexp(1, &intValue);
 		}
 		case RSharpValueType::FLOAT: {
-			float floatValue = *reinterpret_cast<const float*>(value.value);
+			float floatValue = *reinterpret_cast<const float*>(value->value);
 			return PackFloatIntoSEXP(floatValue);
 		}
 		case RSharpValueType::DOUBLE: {
-			double doubleValue = *reinterpret_cast<const double*>(value.value);
+			double doubleValue = *reinterpret_cast<const double*>(value->value);
 			return PackDoubleIntoSEXP(doubleValue);
 		}
 		case RSharpValueType::BOOL: {
-			bool boolValue = *reinterpret_cast<const bool*>(value.value);
+			bool boolValue = *reinterpret_cast<const bool*>(value->value);
 			return Rf_ScalarLogical(boolValue);
 		}
 		case RSharpValueType::STRING: {
-			const char* stringValue = reinterpret_cast<const char*>(value.value);
+			const char* stringValue = bstr_to_c_string((const wchar_t*)value->value);
 			return Rf_mkChar(stringValue);
 		}
-		case RSharpValueType::INT_ARRAY: {
+		/*case RSharpValueType::INT_ARRAY: {
 			std::vector<int> array = GetArray<int>(value);
 			int length = static_cast<int>(array.size());
 			SEXP result = PROTECT(Rf_allocVector(INTSXP, length));
@@ -628,9 +633,9 @@ SEXP ConvertToSEXP(RSharpGenericValue value) {
 			}
 			UNPROTECT(1);
 			return result;
-		}
+		}*/
 		case RSharpValueType::OBJECT: {
-			return rsharp_object_to_SEXP(&value);
+			return rsharp_object_to_SEXP(value);
 
 		default:
 			return R_NilValue; // Returning NULL for unsupported types
@@ -699,17 +704,17 @@ SEXP rsharp_object_to_SEXP(RSharpGenericValue* objptr) {
 // Functions without R specific constructs
 /////////////////////////////////////////
 
-char * bstr_to_c_string(bstr_t * src) {
+char * bstr_to_c_string(const wchar_t * src) {
 #ifndef  UNICODE                     // r_winnt
 	return src;
 #else
 	// Convert the wchar_t string to a char* string.
 	// see http://msdn.microsoft.com/en-us/library/ms235631.aspx
-	size_t origsize = wcslen(*src) + 1;
+	size_t origsize = wcslen(src) + 1;
 	size_t convertedChars = 0;
 	const size_t newsize = origsize*2;
 	char *nstring = new char[newsize];
-	wcstombs_s(&convertedChars, nstring, newsize, *src, _TRUNCATE);
+	wcstombs_s(&convertedChars, nstring, newsize, src, _TRUNCATE);
 	return nstring;
 #endif
 

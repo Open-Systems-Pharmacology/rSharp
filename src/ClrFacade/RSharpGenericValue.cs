@@ -82,9 +82,15 @@ namespace Rclr
          {
             type = RSharpValueType.BOOL;
          }
-         else if (obj is string)
+         else if (obj is string objString)
          {
             type = RSharpValueType.STRING;
+            
+            RSharpGenericValue tempRes = new RSharpGenericValue();
+            tempRes.Value = Marshal.StringToBSTR(objString);
+            tempRes.Type = type;
+
+            return tempRes;
          }
          else if (obj is Array arrayObj)
          {
@@ -104,7 +110,7 @@ namespace Rclr
             else if (elementType == typeof(bool))
             {
                type = RSharpValueType.BOOL_ARRAY;
-            }
+            } 
             else if (elementType == typeof(string))
             {
                type = RSharpValueType.STRING_ARRAY;

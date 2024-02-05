@@ -42,13 +42,30 @@ getLibsPath <- function(pkgName) {
 #' otherwise returned unchanged if null or not an external pointer.
 #' @import methods
 mkClrObjRef <- function(obj, clrtype=NULL) {
-  if(is(obj, 'cobjRef')) return(obj)
+  	print("mkClrObjRef - start")
+  	print(obj)	
+
+  if(is(obj, 'cobjRef')) {
+  	print("mkClrObjRef - return cobjRef")
+	return(obj)
+  }
+  
   if( is.null(obj) == TRUE ) {
     return(NULL)
-  } else if ("externalptr" %in% class(obj)) {
-    if(is.null(clrtype)) { clrtype <- clrTypeNameExtPtr(obj) }
-		return(new("cobjRef", clrobj=obj, clrtype=clrtype))
-  } else {
+  } 
+  else if ("externalptr" %in% class(obj)) {
+	print("mkClrObjRef - inside externalptr check")
+	print(class(obj))
+    
+	if(is.null(clrtype)) { 
+		print("mkClrObjRef - clrtype is null")
+		clrtype <- clrTypeNameExtPtr(obj) 
+	}
+		
+	return(new("cobjRef", clrobj=obj, clrtype=clrtype))
+  } 
+  else {
+	print("mkClrObjRef - just return obj no check")
     return(obj)
   }
 }

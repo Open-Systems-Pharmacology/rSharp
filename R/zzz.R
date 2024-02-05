@@ -105,9 +105,12 @@ appendStartupMsg <- function(msg) {
 getClrVersionString <- function() {
   print("before getClrVersionString")
   v <- clrGet('System.Environment', 'Version')
-  print(v)
   print("we got v")
-  clrCall(v, 'ToString')
+  print(v)
+  retval <- clrCall(v, 'ToString')
+  print("we got string of v")
+  print(retval)
+  return(retval)
 }
 
 #' rClr .onAttach

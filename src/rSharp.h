@@ -138,7 +138,7 @@ extern "C" {
 RSharpGenericValue ConvertToRSharpGenericValue(SEXP s);
 RSharpGenericValue** sexp_to_parameters(SEXP args);
 SEXP rsharp_object_to_SEXP(RSharpGenericValue* objptr);
-SEXP ConvertToSEXP(RSharpGenericValue value);
+SEXP ConvertToSEXP(RSharpGenericValue* value);
 
 
 #ifndef  __cplusplus
@@ -163,4 +163,4 @@ namespace {
 
 void ms_rclr_cleanup();
 
-char * bstr_to_c_string(bstr_t * src);
+char * bstr_to_c_string(const wchar_t * src);
