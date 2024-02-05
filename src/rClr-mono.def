@@ -4,6 +4,7 @@ rclr_create_domain
 rclr_load_assembly
 r_create_clr_object
 r_call_method
+rsharp_object_to_SEXP
 r_get_typename_externalptr
 r_get_type_name
 r_call_static_method

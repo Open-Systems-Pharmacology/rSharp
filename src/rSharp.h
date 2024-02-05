@@ -82,7 +82,8 @@ enum class RSharpValueType
 	BOOL_ARRAY,
 	STRING,
 	STRING_ARRAY,
-	OBJECT
+	OBJECT,
+	NULL_VALUE
 };
 
 // Struct to store a generic value along with its type
@@ -119,6 +120,7 @@ extern "C" {
 	SEXP r_call_method(SEXP p);
 	SEXP r_get_typename_externalptr(SEXP p);
 	SEXP make_char_single_sexp(const char* str);
+	SEXP rsharp_object_to_SEXP(RSharpGenericValue* objptr);
 
 	/**
 	 * \brief	Gets a SEXP, bypassing the custom data converters e.g. offered by RDotNetDataConverter. Solves issue rClr#33
@@ -130,6 +132,7 @@ extern "C" {
 	void rclr_create_domain();
 	int use_rdotnet = 0;
 
+
 #ifdef __cplusplus
 } // end of extern "C" block
 #endif
@@ -137,7 +140,6 @@ extern "C" {
 
 RSharpGenericValue ConvertToRSharpGenericValue(SEXP s);
 RSharpGenericValue** sexp_to_parameters(SEXP args);
-SEXP rsharp_object_to_SEXP(RSharpGenericValue* objptr);
 SEXP ConvertToSEXP(RSharpGenericValue* value);
 
 

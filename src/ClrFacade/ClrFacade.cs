@@ -143,9 +143,6 @@ namespace ClrFacade
          return new SymbolicExpressionWrapper(s);
       }
 
-      //public delegate int CallStaticMethodDelegate(string typename, string methodName, RSharpGenericValue[] objects, int num_objects, RSharpGenericValue returnValue);
-      //public static int CallStaticMethod(string typename, string methodName, RSharpGenericValue[] objects, int num_objects, RSharpGenericValue returnValue)
-
       public delegate int CallStaticMethodDelegate(string typename, string methodName, IntPtr objects, int num_objects, IntPtr returnValue);
       public static int CallStaticMethod(string typename, string methodName, IntPtr objects, int num_objects, IntPtr returnValue)
       {
@@ -163,26 +160,9 @@ namespace ClrFacade
          t = GetType(typename);
          result = InternalCallStaticMethod(t, methodName, true, objectArguments);
 
-         //RSharpGenericValue tempRetVal = Marshal.PtrToStructure<RSharpGenericValue>(returnValue);
-
          RSharpGenericValue tempRetVal = RSharpGenericValueExtensions.FromObject(result);
 
          Marshal.StructureToPtr(tempRetVal, returnValue, false);
-
-         // try
-         // {
-         //     LastCallException = string.Empty;
-         //     t = GetType(typename);
-         //     if (t == null)
-         //         throw new ArgumentException(String.Format("Type not found: {0}", typename));
-         //         result = InternalCallStaticMethod(t, methodName, true, objectArguments);
-         // }
-         // catch (Exception ex)
-         // {
-         //     if (!LogThroughR(ex))
-         //         throw;
-         // }
-         //RSharpGenericValue returnValue = RSharpGenericValueExtensions.FromObject(result);
          
          return 1234;
       }
@@ -336,19 +316,26 @@ namespace ClrFacade
          get { return DataConverter != null; }
       }
 
-      public delegate RSharpGenericValue CreateInstanceDelegate(string typename, params RSharpGenericValue[] arguments);
+      public delegate int CreateInstanceDelegate(string typename, IntPtr objects, int num_objects, IntPtr returnValue);
 
       /// <summary>
       ///    Creates an instance of an object, given the type name
       /// </summary>
-      public static RSharpGenericValue CreateInstance(string typename, params RSharpGenericValue[] arguments)
+      public static int CreateInstance(string typename, IntPtr objects, int num_objects, IntPtr returnValue)
       {
          object result = null;
          try
          {
+            RSharpGenericValue[] temparr = new RSharpGenericValue[num_objects];
             LastCallException = string.Empty;
 
-            var objectArguments = ConvertRSharpParameters(arguments);
+            for (int i = 0; i < num_objects; ++i)
+            {
+               IntPtr structPtr = Marshal.ReadIntPtr(objects, i * IntPtr.Size);
+               temparr[i] = Marshal.PtrToStructure<RSharpGenericValue>(structPtr);
+            }
+
+            var objectArguments = ConvertRSharpParameters(temparr);
 
             var t = GetType(typename);
             if (t == null)
@@ -363,12 +350,10 @@ namespace ClrFacade
                throw;
          }
 
-         RSharpGenericValue genericValue = new RSharpGenericValue();
-         genericValue.Value = GCHandle.Alloc(result).AddrOfPinnedObject();
-         genericValue.Type = RSharpValueType.OBJECT;
-         genericValue.Size = 0;
+         RSharpGenericValue tempRetVal = RSharpGenericValueExtensions.FromObject(result);
+         Marshal.StructureToPtr(tempRetVal, returnValue, false);
 
-         return genericValue;
+         return 1234;
          //return new RSharpGenericValue(RSharpValueType.OBJECT, GCHandle.Alloc(result).AddrOfPinnedObject(), 0);
       }
 
@@ -666,6 +651,10 @@ namespace ClrFacade
       {
          switch (argument.Type)
          {
+            case RSharpValueType.DOUBLE:
+               return BitConverter.ToDouble(BitConverter.GetBytes(Marshal.ReadInt64(argument.Value)), 0);
+            case RSharpValueType.BOOL:
+               return BitConverter.ToBoolean(BitConverter.GetBytes(Marshal.ReadInt32(argument.Value)), 0);
             case RSharpValueType.INT:
                return Marshal.ReadInt32(argument.Value);
             case RSharpValueType.FLOAT:

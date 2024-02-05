@@ -16,7 +16,7 @@ void* call_static_method_fn_ptr = nullptr;
 //Definition of Delegates
 typedef RSharpGenericValue* (CORECLR_DELEGATE_CALLTYPE* CallStaticMethodDelegate)(const char*, const char*, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
 //typedef int (CORECLR_DELEGATE_CALLTYPE* CallStaticMethodDelegate)(const char*, const char*, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
-typedef RSharpGenericValue* (CORECLR_DELEGATE_CALLTYPE* CreateInstanceDelegate)(const char*, ...);
+typedef int (CORECLR_DELEGATE_CALLTYPE* CreateInstanceDelegate)(const char*, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
 typedef void* (CORECLR_DELEGATE_CALLTYPE* LoadFromDelegate)(const char*);
 
 /////////////////////////////////////////
@@ -391,10 +391,10 @@ SEXP r_create_clr_object(SEXP p) {
 	auto create_instance = reinterpret_cast<CreateInstanceDelegate>(create_instance_fn_ptr);
 
 	RSharpGenericValue** params = sexp_to_parameters(methodParams);
+	const auto return_value = new RSharpGenericValue();
+	create_instance(ns_qualified_typename, params, Rf_length(methodParams), return_value);
 
-	auto createdObject = create_instance(ns_qualified_typename, params);
-
-	return ConvertToSEXP(createdObject);
+	return ConvertToSEXP(return_value);
 }
 
 RSharpGenericValue* callStatic(const char* mnam, char* ns_qualified_typename, RSharpGenericValue** params, const R_len_t numberOfObjects)
@@ -432,6 +432,19 @@ SEXP r_get_typename_externalptr(SEXP p) {
 
 #define TOPOF(A) CAR(A)
 #define POP(A) CDR(A)
+
+SEXP rsharp_object_to_SEXP(RSharpGenericValue* objptr) {
+	SEXP result;
+	RsharpObjectHandle* clroh_ptr;
+	if (objptr == NULL)
+		return R_NilValue;
+	clroh_ptr = (RsharpObjectHandle*)malloc(sizeof(RsharpObjectHandle));
+	clroh_ptr->objptr = objptr;
+	clroh_ptr->handle = 0;
+	result = R_MakeExternalPtr(clroh_ptr, R_NilValue, R_NilValue);
+	R_RegisterCFinalizerEx(result, rsharp_object_finalizer, (Rboolean)1/*TRUE*/);
+	return result;
+}
 
 SEXP r_call_method(SEXP par)
 {
@@ -572,6 +585,9 @@ SEXP PackDoubleIntoSEXP(double value) {
 SEXP ConvertToSEXP(RSharpGenericValue* value) {
 	switch (value->type)
 	{
+		case RSharpValueType::NULL_VALUE: {
+			return R_NilValue;
+		}
 		case RSharpValueType::INT: {
 			int intValue = *reinterpret_cast<const int*>(value->value);
 			return make_int_sexp(1, &intValue);
@@ -590,7 +606,7 @@ SEXP ConvertToSEXP(RSharpGenericValue* value) {
 		}
 		case RSharpValueType::STRING: {
 			const char* stringValue = bstr_to_c_string((const wchar_t*)value->value);
-			return Rf_mkChar(stringValue);
+			return make_char_single_sexp(stringValue);
 		}
 		/*case RSharpValueType::INT_ARRAY: {
 			std::vector<int> array = GetArray<int>(value);
@@ -685,19 +701,6 @@ RSharpGenericValue* get_RSharp_generic_value(SEXP clrObj) {
 		error("Incorrect type of S4 Object: Not of type 'cobjRef'");
 		return NULL;
 	}
-}
-
-SEXP rsharp_object_to_SEXP(RSharpGenericValue* objptr) {
-	SEXP result;
-	RsharpObjectHandle* clroh_ptr;
-	if (objptr == NULL)
-		return R_NilValue;
-	clroh_ptr = (RsharpObjectHandle*)malloc(sizeof(RsharpObjectHandle));
-	clroh_ptr->objptr = objptr;
-	clroh_ptr->handle = 0;
-	result = R_MakeExternalPtr(clroh_ptr, R_NilValue, R_NilValue);
-	R_RegisterCFinalizerEx(result, rsharp_object_finalizer, (Rboolean)1/*TRUE*/);
-	return result;
 }
 
 /////////////////////////////////////////

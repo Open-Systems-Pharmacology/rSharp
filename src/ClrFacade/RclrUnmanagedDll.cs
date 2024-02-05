@@ -16,7 +16,7 @@ namespace Rclr
                 throw new FileNotFoundException(dllName);
             }
             this.dll = new UnmanagedDll(dllName);
-            this.ClrObjectToSexp = dll.GetFunction<ClrObjectToSexpDelegate>("clr_object_to_SEXP");
+            this.ClrObjectToSexp = dll.GetFunction<ClrObjectToSexpDelegate>("rsharp_object_to_SEXP");
         }
 
         public ClrObjectToSexpDelegate ClrObjectToSexp { get; set; }

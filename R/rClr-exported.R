@@ -406,7 +406,6 @@ clrCall <- function(obj,methodName,...)
 #' }
 clrGet <- function(objOrType,name)
 {
-  print("HERE IT FAILS")
   return(clrCallStatic(clrFacadeTypeName, 'GetFieldOrProperty',objOrType, name))
 }
 
@@ -545,14 +544,7 @@ clrGetNativeLibName <- function() {
 #' }
 clrCallStatic <- function(typename, methodName,...)
 {
-  print("trying go get the pointer")
-  print(paste0("typename: ", typename))
-  print(paste0("methodName: ", methodName))
-  print(paste0("PACKAGE: ", nativePkgName))
-  print(paste0("additional args: ", list(...)))
   extPtr <-.External("r_call_static_method", typename, methodName,..., PACKAGE=nativePkgName)
-  print("pointer is:")
-  print(extPtr)
   return(mkClrObjRef(extPtr))
 }
 

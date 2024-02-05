@@ -58,7 +58,6 @@ startupMsg <- ''
       }
       appendStartupMsg('Loading the dynamic library for Microsoft .NET runtime...')
       chname <- getFnameNoExt(msDll)
-      print("before loadAndInit")
       loadAndInit(chname, pkgname, libname, srcPkgLibPath)
     }
   } else { # not on Windows.
@@ -86,9 +85,7 @@ loadAndInit <- function(chname, pkgname, libname, srcPkgLibPath=NULL) {
   # should the init of the mono runtime try to attach to a Monodevelop debugger?
   debug_flag=Sys.getenv('RCLR_DEBUG')
   clrInit(debug_flag!="")
-  print("after clrInit")
   appendStartupMsg(paste('Loaded Common Language Runtime version', getClrVersionString()))
-  print("before setRDotNet")
   setRDotNet(TRUE)
 }
 
@@ -103,14 +100,8 @@ appendStartupMsg <- function(msg) {
 #' @return the version of the common language runtime in use
 #' @export
 getClrVersionString <- function() {
-  print("before getClrVersionString")
   v <- clrGet('System.Environment', 'Version')
-  print("we got v")
-  print(v)
   retval <- clrCall(v, 'ToString')
-  print("we got string of v")
-  print(retval)
-  return(retval)
 }
 
 #' rClr .onAttach

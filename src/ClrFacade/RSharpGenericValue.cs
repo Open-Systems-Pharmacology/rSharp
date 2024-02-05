@@ -21,7 +21,8 @@ namespace Rclr
       BOOL_ARRAY,
       STRING,
       STRING_ARRAY,
-      OBJECT
+      OBJECT,
+      NULL
    }
 
    public static class RSharpGenericValueExtensions
@@ -64,6 +65,8 @@ namespace Rclr
       // Factory method to create RSharpGenericValue from an object
       public static RSharpGenericValue FromObject(object obj)
       {
+         if(obj == null)
+            return new RSharpGenericValue { Type = RSharpValueType.NULL, Value = IntPtr.Zero };
          // Determine the ValueType based on the actual type of the object
          RSharpValueType type;
          if (obj is int)

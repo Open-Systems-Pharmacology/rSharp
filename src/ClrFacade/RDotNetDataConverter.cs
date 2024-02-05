@@ -28,11 +28,10 @@ namespace Rclr
                 var libDir = Path.GetDirectoryName(assmbPath);
 
                 if (NativeUtility.IsUnix)
-                    dllName = Path.Combine(libDir, "rClr.so");
+                    dllName = Path.Combine(libDir, "rSharp.so");
                 else
                 {
-                    dllName = Path.Combine(libDir, Environment.Is64BitProcess ? "x64" : "i386",
-                        ("rClrMs.dll")
+                    dllName = Path.Combine(libDir, "rSharpMs.dll"
                     );
                 }
             }
