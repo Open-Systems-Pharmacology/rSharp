@@ -113,21 +113,6 @@ namespace ClrFacade
          ReflectionHelper.ThrowMissingMethod(classType, methodName, modifier, types);
       }
 
-      /// <summary>
-      ///    Return a reference to the object currently handled by the custom data converter, if any is in use.
-      /// </summary>
-      /// <remarks>
-      ///    See https://rclr.codeplex.com/workitem/33
-      /// </remarks>
-      public static object CurrentObject
-      {
-         get
-         {
-            if (DataConverter == null) return null;
-            return DataConverter.CurrentObject;
-         }
-      }
-
       public delegate SymbolicExpressionWrapper CreateSexpWrapperMsDelegate(long ptrValue);
 
       public static SymbolicExpressionWrapper CreateSexpWrapperMs(long ptrValue)
@@ -158,13 +143,37 @@ namespace ClrFacade
          Type t = null;
          object result;
          t = GetType(typename);
-         result = InternalCallStaticMethod(t, methodName, true, objectArguments);
+         LastCallException = string.Empty;
+         try
+         {
+            result = InternalCallStaticMethod(t, methodName, true, objectArguments);
+
+            RSharpGenericValue tempRetVal = RSharpGenericValueExtensions.FromObject(result);
+
+            Marshal.StructureToPtr(tempRetVal, returnValue, false);
+         }
+         catch (Exception ex)
+         {
+            if (!LogThroughR(ex))
+               return -1;
+         }
+
+         return 1234;
+      }
+
+      /// <summary>
+      ///    Return a reference to the object currently handled by the custom data converter, if any is in use.
+      /// </summary>
+      public delegate int CurrentObjectDelegate(IntPtr returnValue);
+      public static int CurrentObject(IntPtr returnValue)
+      {
+
+         var result = DataConverter?.CurrentObject;
 
          RSharpGenericValue tempRetVal = RSharpGenericValueExtensions.FromObject(result);
 
          Marshal.StructureToPtr(tempRetVal, returnValue, false);
-         
-         return 1234;
+         return 1;
       }
 
       /// <summary>

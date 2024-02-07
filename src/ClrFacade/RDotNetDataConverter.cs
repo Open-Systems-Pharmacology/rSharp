@@ -543,7 +543,7 @@ namespace Rclr
             get
             {
                 if (createClrS4Object == null)
-                    createClrS4Object = engine.Evaluate("invisible(rClr::getCurrentConvertedObject)").AsFunction();
+                    createClrS4Object = engine.Evaluate("invisible(rSharp::getCurrentConvertedObject)").AsFunction();
                 return createClrS4Object;
             }
         }

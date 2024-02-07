@@ -4,6 +4,8 @@
 #include <fstream>
 #include "json.hpp"
 
+#define TOPOF(A) CAR(A)
+#define POP(A) CDR(A)
 
 using string_t = std::basic_string<char_t>;
 
@@ -12,10 +14,11 @@ const auto loadAssemblyDelegate = STR("ClrFacade.ClrFacade+LoadFromDelegate, Clr
 void* create_instance_fn_ptr = nullptr;
 void* load_from_fn_ptr = nullptr;
 void* call_static_method_fn_ptr = nullptr;
+void* get_object_direct_fn_ptr = nullptr;
 
 //Definition of Delegates
-typedef RSharpGenericValue* (CORECLR_DELEGATE_CALLTYPE* CallStaticMethodDelegate)(const char*, const char*, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
-//typedef int (CORECLR_DELEGATE_CALLTYPE* CallStaticMethodDelegate)(const char*, const char*, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
+typedef int (CORECLR_DELEGATE_CALLTYPE* CallStaticMethodDelegate)(const char*, const char*, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
+typedef int (CORECLR_DELEGATE_CALLTYPE* GetObjectDirectDelegate)(RSharpGenericValue* returnValue);
 typedef int (CORECLR_DELEGATE_CALLTYPE* CreateInstanceDelegate)(const char*, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
 typedef void* (CORECLR_DELEGATE_CALLTYPE* LoadFromDelegate)(const char*);
 
@@ -193,6 +196,22 @@ void initializeLoadAssembly()
 		&load_from_fn_ptr);
 
 	assert(rc_1 == 0 && load_from_fn_ptr != nullptr && "Failure: LoadFrom()");
+}
+
+void initializeGetObjectDirectFunction()
+{
+	const char_t* dotnet_type = STR("ClrFacade.ClrFacade, ClrFacade");
+	auto functionDelegate = STR("ClrFacade.ClrFacade+CurrentObjectDelegate, ClrFacade");
+
+	int rc_1 = load_assembly_and_get_function_pointer(
+		dotnetlib_path.c_str(),
+		dotnet_type,
+		STR("CurrentObject"),
+		functionDelegate,//delegate_type_name
+		nullptr,
+		&get_object_direct_fn_ptr);
+
+	assert(rc_1 == 0 && get_object_direct_fn_ptr != nullptr && "Failure: get_CurrentObject()");
 }
 
 void initializeCallStaticFunction()
@@ -397,6 +416,8 @@ SEXP r_create_clr_object(SEXP p) {
 	return ConvertToSEXP(return_value);
 }
 
+
+
 RSharpGenericValue* callStatic(const char* mnam, char* ns_qualified_typename, RSharpGenericValue** params, const R_len_t numberOfObjects)
 {
 	if (call_static_method_fn_ptr == nullptr)
@@ -406,7 +427,26 @@ RSharpGenericValue* callStatic(const char* mnam, char* ns_qualified_typename, RS
 	const auto return_value = new RSharpGenericValue();
 
 	auto result = call_static(ns_qualified_typename, mnam, params, numberOfObjects, return_value);
+
+	if(result < 0)
+		throw std::exception("Error calling static method");
+
 	return return_value;
+}
+
+SEXP r_get_object_direct() {
+	if (get_object_direct_fn_ptr == nullptr)
+		initializeGetObjectDirectFunction();
+
+	const auto call_static = reinterpret_cast<GetObjectDirectDelegate>(get_object_direct_fn_ptr);
+	const auto return_value = new RSharpGenericValue();
+
+	auto result = call_static(return_value);
+
+	if (result < 0)
+		throw std::exception("Error calling get object direct");
+
+	return ConvertToSEXP(return_value);
 }
 
 const char* get_type_full_name(RSharpGenericValue** genericValue) {
@@ -430,8 +470,7 @@ SEXP r_get_typename_externalptr(SEXP p) {
 	return make_char_single_sexp(get_type_full_name(reinterpret_cast<RSharpGenericValue**>(el)));
 }
 
-#define TOPOF(A) CAR(A)
-#define POP(A) CDR(A)
+
 
 SEXP rsharp_object_to_SEXP(RSharpGenericValue* objptr) {
 	SEXP result;
@@ -490,15 +529,19 @@ SEXP r_call_static_method(SEXP p) {
 
 	
 	const R_len_t numberOfObjects = Rf_length(methodParams);
-
+	try{
 	//if the function pointer has not been initialized, initialize it
-	RSharpGenericValue* const return_value = callStatic(mnam, ns_qualified_typename, params, numberOfObjects);
-
-	//free_variant_array(params, argLength);
+		RSharpGenericValue* const return_value = callStatic(mnam, ns_qualified_typename, params, numberOfObjects);
+		free(ns_qualified_typename);
+		return ConvertToSEXP(return_value);
+		//free_variant_array(params, argLength);
 	//release_transient_objects();
-	free(ns_qualified_typename);
 
-	return ConvertToSEXP(return_value);
+	}
+	catch (const std::exception& ex) {
+		free(ns_qualified_typename);
+		error_return(ex.what())
+	}
 }
 
 

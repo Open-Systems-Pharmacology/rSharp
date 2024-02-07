@@ -129,7 +129,7 @@ namespace Rclr
          }
 
          // Convert the object to IntPtr
-         GCHandle handle = GCHandle.Alloc(obj, GCHandleType.Pinned);
+         GCHandle handle = GCHandle.Alloc(obj, GCHandleType.Normal);
          IntPtr valuePtr = (IntPtr)handle;
 
          RSharpGenericValue result = new RSharpGenericValue();

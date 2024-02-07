@@ -117,6 +117,7 @@ extern "C" {
 	SEXP r_create_clr_object( SEXP p );
 	SEXP r_get_null_reference();
 	SEXP r_call_static_method(SEXP p);
+	SEXP r_get_object_direct();
 	SEXP r_call_method(SEXP p);
 	SEXP r_get_typename_externalptr(SEXP p);
 	SEXP make_char_single_sexp(const char* str);

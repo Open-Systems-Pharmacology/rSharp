@@ -7,6 +7,7 @@ r_get_typename_externalptr
 r_call_method
 rsharp_object_to_SEXP
 r_call_static_method
+r_get_object_direct
 r_get_sexp_type
 r_show_args
 use_rdotnet
