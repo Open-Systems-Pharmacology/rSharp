@@ -1,14 +1,9 @@
 # print(paste('current directory is', getwd(), 'and contains files' , paste(list.files( getwd()), collapse=',')))
 
-# adapting to behavior as of testthat_0.11.0
-wd <- getwd()
-source(file.path(wd, 'load_libs.r'))
-source(file.path(wd, 'datetime-functions.r'))
-
 context("Date and times")
 
 test_that("Date and Time objects are marshalled correctly", {
-# TODO:  https://r2clr.codeplex.com/workitem/52 
+# TODO:  https://r2clr.codeplex.com/workitem/52
 
 ########################################################
 # handling date, time and time zone conversions in software is complicated. Doing it naively can quickly lead to nightmarish situation, so let's clarify the essential early, and determine the unambiguous behavior to expect in converting date and time information between R and the CLR.
@@ -17,12 +12,12 @@ test_that("Date and Time objects are marshalled correctly", {
 # http://www.r-project.org/doc/Rnews/Rnews_2001-2.pdf
 # To get information on how R handles time zones: [?Sys.timezone]
 
-# DateTime objects in .NET can have a specified Kind: Unspecified, UTC or Local. DateTime.Now.Kind will be Local, but DateTime(2001,1,1).Kind is Unspecified. Methods converting to UTC seem to assume that Unspecified means Local, however. 
+# DateTime objects in .NET can have a specified Kind: Unspecified, UTC or Local. DateTime.Now.Kind will be Local, but DateTime(2001,1,1).Kind is Unspecified. Methods converting to UTC seem to assume that Unspecified means Local, however.
 # "The DateTimeOffset structure represents a date and time value, together with an offset that indicates how much that value differs from UTC. Thus, the value always unambiguously identifies a single point in time." This seems interesting, but there is no direct, clear equivalent in R
 
 # Time Zone information
 # --------------------
-# Both POSIXlt and POSIXct objects can have a tzone attribute. No tzone info seems to be treated as 'local time'. Note that 
+# Both POSIXlt and POSIXct objects can have a tzone attribute. No tzone info seems to be treated as 'local time'. Note that
 # Conversion in .NET between time zones should be done using TimeZoneInfo objects.
 
 # ------------
@@ -78,7 +73,7 @@ test_that("Date and Time objects are marshalled correctly", {
 # d = DateTime(2000,01,01)
 # d.Kind
 # f(d)
-# f(toUtc(d)) # Looks like unspecified is assumed as a Local if ToUtc is called, and vice-versa 
+# f(toUtc(d)) # Looks like unspecified is assumed as a Local if ToUtc is called, and vice-versa
 # f(toLocal(d))
 
 # HOWEVER: consider the following with Mono 3.0.9
@@ -128,8 +123,8 @@ test_that("Date and Time objects are marshalled correctly", {
   ########################
   # End of R test code:
   ########################
-  
-  
+
+
   ##########
   # .NET to R
   ##########
@@ -138,7 +133,7 @@ test_that("Date and Time objects are marshalled correctly", {
   testSameInteger(posixct_orig_str)
   testSameInteger('1970-01-01 01:00:00')
   testSameInteger('1969-12-31 23:00:00')
-  
+
   # test around two daylight savings dates for the test time zone eastern Australia
   # DST skip one hour
   testDotNetToR('2013-10-06 01:59')
@@ -151,17 +146,17 @@ test_that("Date and Time objects are marshalled correctly", {
   # DST go back one hour; 02:00 to 03:00 happens twice for same date
   testDotNetToR('2013-04-07 01:59')
   # from 02:00 to around 02:32, the CLR base class library and R behave differently when converting to UTC. So be it.
-  
+
   # FIXME:
-  #  Oddly, the following  expect_error() is behaving as expected if run from R, however inside a 
+  #  Oddly, the following  expect_error() is behaving as expected if run from R, however inside a
   # test_that function, this fails twice (test, and then that the expected error is nevertheless not 'detected'
   # expect_error(testDotNetToR('2013-04-07 02:32'))
-  
+
   testDotNetToR('2013-04-07 02:33') #from then on same UTC date is returned.
   testDotNetToR('2013-04-07 03:00')
 
   # we can only test local date times post sometime in 1971 - DST rules for AU EST differ prior to that.
-  # Further illustration: consider the output of the following 5 lines, it looks like there is no DST 
+  # Further illustration: consider the output of the following 5 lines, it looks like there is no DST
   # for summer 1971 (meaning January, down under); only kicks in in 1972.
   # pctToUtc(AUest('1970-01-01 11:00'))
   # pctToUtc(AUest('1971-01-01 11:00'))
@@ -172,7 +167,7 @@ test_that("Date and Time objects are marshalled correctly", {
   pDate <- function(dateStr) {
     if(exists('debug_test') && debug_test) { print(paste('testing', dateStr)) }
   }
-  
+
   for ( dateStr in post1971_DateStr ) {
     testDotNetToR(dateStr)
     pDate(dateStr)
@@ -215,7 +210,7 @@ test_that("Date and Time objects are marshalled correctly", {
 
   testRtoClrNoTz('1980-01-01')
   testRtoClrNoTz('1972-01-01')
-  
+
   # FIXME: expect-error lines pass if run interactively but not if inside a test_that() function call
   # However, there is this DST discrepancy of one hour creeping in sometime in 1971, and before that as well
   # expect_error(testRtoClrNoTz('1971-01-01'))
@@ -248,23 +243,23 @@ test_that("Date and Time objects are marshalled correctly", {
   # Dates
   testDateStr='2001-01-01'; numDays = 5;
   # Note that there no point looking below daily period wuth Date objects. consider:
-  # z <- ISOdate(2010, 04, 13, c(0,12)) 
+  # z <- ISOdate(2010, 04, 13, c(0,12))
   # str(unclass(as.Date(z)))
   expect_true( clrCallStatic(cTypename, "CheckIsDailySequence", as.Date(testDateStr) + 0:(numDays-1), testDateStr, as.integer(numDays)))
- 
+
    # Time spans: R to .NET
   # This seems trickier, at least with the MS CLR hosting API.
   # TODO
-  # Basically, I don't know how I can create a TimeSpan from the C layer, since the hosting API will fail to find a suitable COM type for it. 
+  # Basically, I don't know how I can create a TimeSpan from the C layer, since the hosting API will fail to find a suitable COM type for it.
   # expect_true( clrCallStatic(cTypename, "TimeSpanEquals", threePfive_min, '00:03:30.00'))
- 
- 
+
+
   # further notes, summary, thoughts to elaborate:
   # in .NET DateTime objects of the same Kind (what if different Kind?) are such that one day is always 86400 seconds.
   # In R, a POSIXt object with no time zone information is such that a day length is not 86400 seconds if in a local time zone with daylight savings
   # .NET has objects DateTimeOffset and TimeZoneInfo to deal more strictly with date-time information worldwide.
   # R uses the [TBC] time zone database with identifiers that are different than the ones in .NET/Windows
-  
+
   # ----
   # | R | .NET | Remarks |
   # | POSIXct with tzone = 'UTC' or GMT | Same DateTime with Kind Utc | Easy in C |
@@ -272,23 +267,23 @@ test_that("Date and Time objects are marshalled correctly", {
   # | POSIXct with tzone = '' | Same DateTime with Kind Local | Very difficult to get right in C due to non-linear scale in R representation; locale dependent |
   # | POSIXlt with tzone = '' | Same DateTime with Kind Local | Decomposition alleviates the DST issue, but is more code in C |
   # | Date | Same DateTime | time component 00:00:00 ; Kind Local or Unspecified? |
-  
+
   # | POSIXct with specific tzone = e.g. 'Australia/Sydney' | DateTimeOffset? |  |
   # | POSIXlt with specific tzone = e.g. 'Australia/Sydney' |  |  |
-  
+
   # | .NET | R | Remarks |
   # | DateTime with Kind Utc | POSIXct or POSIXlt with tzone = 'UTC' | |
   # | DateTime with Kind Local | POSIXct or POSIXlt with tzone = '' |  |
   # | DateTime with Kind Unspecified | POSIXct or POSIXlt with tzone = '' | Check what happens on an Unspecified DateTime with ToUniversalTime/ToLocalTime |
-  
+
   # | POSIXct with specific tzone = e.g. 'Australia/Sydney' | DateTimeOffset? |  |
   # | POSIXlt with specific tzone = e.g. 'Australia/Sydney' |  |  |
 
-    
+
   ###########################
   # Notes on leap seconds (.leap.seconds)
   ###########################
-  # I was not sure what was happening with leap seconds. Well, it seems every day is 86400 seconds regardless in both systems. Simpler, but I am curious as to when/where leap seconds should be accounted for. Be aware, but dont seek complications. 
+  # I was not sure what was happening with leap seconds. Well, it seems every day is 86400 seconds regardless in both systems. Simpler, but I am curious as to when/where leap seconds should be accounted for. Be aware, but dont seek complications.
   # in R
   # as.numeric(as.POSIXct('2012-07-01 12:00:00', "GMT")) - as.numeric(as.POSIXct('2012-06-30 12:00:00', "GMT"))
   # as.numeric(as.POSIXct('2012-07-02 12:00:00', "GMT")) - as.numeric(as.POSIXct('2012-07-01 12:00:00', "GMT"))
@@ -296,6 +291,6 @@ test_that("Date and Time objects are marshalled correctly", {
   # getSeconds(utcDate('2012-07-01 12:00:00') - utcDate('2012-06-30 12:00:00'))
   # getSeconds(utcDate('2012-07-02 12:00:00') - utcDate('2012-07-01 12:00:00'))
   ###########################
-  
+
 
 })
