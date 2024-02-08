@@ -37,9 +37,30 @@ namespace ClrFacade
       /// <summary>
       ///    Invoke an instance method of an object
       /// </summary>
-      public static object CallInstanceMethod(object obj, string methodName, object[] arguments)
+      public delegate int CallInstanceMethodDelegate(IntPtr obj, string methodName, IntPtr arguments, int num_objects, IntPtr returnValue);
+      public static int CallInstanceMethod(IntPtr obj, string methodName, IntPtr arguments, int num_objects, IntPtr returnValue)
       {
-         return InternalCallInstanceMethod(obj, methodName, true, arguments);
+
+         RSharpGenericValue[] temparr = new RSharpGenericValue[num_objects];
+
+         for (int i = 0; i < num_objects; ++i)
+         {
+            IntPtr structPtr = Marshal.ReadIntPtr(arguments, i * IntPtr.Size);
+            temparr[i] = Marshal.PtrToStructure<RSharpGenericValue>(structPtr);
+         }
+
+         var objectArguments = ConvertRSharpParameters(temparr);
+         objectArguments = ConvertSpecialObjects(objectArguments);
+
+         IntPtr instPtr = Marshal.ReadIntPtr(obj, 0);
+         var t = Marshal.PtrToStructure<RSharpGenericValue>(instPtr);
+         var instance = ConvertRSharpParameters(new[] { t })[0];
+
+         var result =  InternalCallInstanceMethod(instance, methodName, true, objectArguments);
+         RSharpGenericValue tempRetVal = RSharpGenericValueExtensions.FromObject(result);
+
+         Marshal.StructureToPtr(tempRetVal, returnValue, false);
+         return 1;
       }
 
       internal static object InternalCallInstanceMethod(object obj, string methodName, bool tryUseConverter, object[] arguments)
@@ -113,19 +134,23 @@ namespace ClrFacade
          ReflectionHelper.ThrowMissingMethod(classType, methodName, modifier, types);
       }
 
-      public delegate SymbolicExpressionWrapper CreateSexpWrapperMsDelegate(long ptrValue);
+      public delegate int CreateSexpWrapperDelegate(long ptrValue, IntPtr returnValue);
 
-      public static SymbolicExpressionWrapper CreateSexpWrapperMs(long ptrValue)
+      public static int CreateSexpWrapperLong(long ptrValue, IntPtr returnValue)
       {
-         return CreateSexpWrapper(new IntPtr(ptrValue));
+         return CreateSexpWrapper(new IntPtr(ptrValue), returnValue);
       }
 
-      public static SymbolicExpressionWrapper CreateSexpWrapper(IntPtr sexp)
+      public static int CreateSexpWrapper(IntPtr sexp, IntPtr returnValue)
       {
          if (sexp == IntPtr.Zero)
-            throw new ArgumentNullException("ptrValue", "Pointer value is the null pointer");
-         SymbolicExpression s = DataConverter.CreateSymbolicExpression(sexp);
-         return new SymbolicExpressionWrapper(s);
+            return -1;
+         var  result = new SymbolicExpressionWrapper(DataConverter.CreateSymbolicExpression(sexp));
+         RSharpGenericValue tempRetVal = RSharpGenericValueExtensions.FromObject(result);
+
+         Marshal.StructureToPtr(tempRetVal, returnValue, false);
+
+         return 1;
       }
 
       public delegate int CallStaticMethodDelegate(string typename, string methodName, IntPtr objects, int num_objects, IntPtr returnValue);
@@ -140,6 +165,8 @@ namespace ClrFacade
          }
 
          var objectArguments = ConvertRSharpParameters(temparr);
+         objectArguments = ConvertSpecialObjects(objectArguments);
+
          Type t = null;
          object result;
          t = GetType(typename);
@@ -345,7 +372,7 @@ namespace ClrFacade
             }
 
             var objectArguments = ConvertRSharpParameters(temparr);
-
+            objectArguments = ConvertSpecialObjects(objectArguments);
             var t = GetType(typename);
             if (t == null)
                throw new ArgumentException(string.Format("Could not determine Type from string '{0}'", typename));
@@ -722,5 +749,11 @@ namespace ClrFacade
       ///    A property with the printable format of the innermost exception of the last failed clrCall[...] call.
       /// </summary>
       public static string LastException { get; private set; }
+
+      public static DateTime ForceDateKind(DateTime dateTime, bool utc = false)
+      {
+         return new DateTime(dateTime.Ticks, (utc ? DateTimeKind.Utc : DateTimeKind.Unspecified));
+      }
    }
+
 }

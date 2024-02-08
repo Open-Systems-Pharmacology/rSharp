@@ -22,15 +22,8 @@ createArray <- function(clrType, arrayLength, elementObject) {
 }
 
 expectClrArrayElementType <- function(rObj, expectedClrTypeName) {
-  print('Rclr.TestArrayMemoryHandling')
   tn <- "Rclr.TestArrayMemoryHandling"
-  print('Expect True 1')
-  print(expectedClrTypeName)
-  type <- clrGetType(expectedClrTypeName)
-  print('Call Static')
-  callStatic <- clrCallStatic(tn, 'CheckElementType', rObj , type )
-print('Expect True 2')
-  expect_true( callStatic)
+  expect_true( clrCallStatic(tn, 'CheckElementType', rObj , clrGetType(expectedClrTypeName) ))
 }
 
 callTestCase <- function(...) {
@@ -97,13 +90,11 @@ test_that("Basic types of length zero are marshalled correctly", {
   # class(a) <- c('POSIXct', 'POSIXt')
   # a # <== Curious
   # str(a)
-print('System.Double')
   # check that we fixed https://rclr.codeplex.com/workitem/2
   expectClrArrayElementType( numeric(0)   ,'System.Double')
   expectClrArrayElementType( integer(0)   ,'System.Int32')
   expectClrArrayElementType( raw(0)       ,'System.Byte')
   expectClrArrayElementType( logical(0)   ,'System.Boolean')
- print('System.String')
   expectClrArrayElementType( character(0) ,'System.String')
 
 
