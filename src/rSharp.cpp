@@ -551,26 +551,24 @@ SEXP rsharp_object_to_SEXP(RSharpGenericValue* objptr) {
 
 SEXP r_call_method(SEXP par)
 {
-	SEXP sExpressionParameterStack = par, instance, sExpressinParameter, methodParameters, methodParameterStack;
+	SEXP sExpressionParameterStack = par, instance, sExpressinParameter;
 	const char* methodName = 0;
-	// retrieve the class name
+
 
 	sExpressinParameter = TOPOF(sExpressionParameterStack);
-	auto something = CHAR(STRING_ELT(sExpressinParameter, 0));
+	auto functionName = CHAR(STRING_ELT(sExpressinParameter, 0));	// should be "r_call_method"
 	sExpressionParameterStack = POP(sExpressionParameterStack);
 
-	instance = TOPOF(TOPOF(sExpressionParameterStack));
+	instance = TOPOF(TOPOF(sExpressionParameterStack));				// object instance is the second SEXP
 	sExpressionParameterStack = POP(sExpressionParameterStack);
 
-	sExpressinParameter = TOPOF(sExpressionParameterStack);
+	sExpressinParameter = TOPOF(sExpressionParameterStack);			// instance method name is the third SEXP
 	methodName = CHAR(STRING_ELT(sExpressinParameter, 0));
 	sExpressionParameterStack = POP(sExpressionParameterStack);
 
-	methodParameterStack = TOPOF(sExpressionParameterStack);
-	methodParameters = TOPOF(methodParameterStack);
-	auto rSharpGeneric = reinterpret_cast<RSharpGenericValue**>(methodParameters);
+	RSharpGenericValue** params = sexp_to_parameters(sExpressionParameterStack);
 
-	auto return_value = callInstance(reinterpret_cast<RSharpGenericValue**>(instance), methodName, "ClrFacade.ClrFacade,ClrFacade", rSharpGeneric, Rf_length(methodParameterStack));
+	auto return_value = callInstance(reinterpret_cast<RSharpGenericValue**>(instance), methodName, "ClrFacade.ClrFacade,ClrFacade", params, Rf_length(sExpressionParameterStack));
 
 	return ConvertToSEXP(return_value);
 }
@@ -580,7 +578,7 @@ SEXP r_call_static_method(SEXP p) {
 	const char* mnam;
 	char* ns_qualified_typename = NULL; // My.Namespace.MyClass,MyAssemblyName
 
-	p = CDR(p);; /* skip the first parameter: function name*/
+	p = CDR(p); /* skip the first parameter: function name*/
 	get_FullTypeName(p, &ns_qualified_typename); p = CDR(p);
 	e = CAR(p);
 	mnam = CHAR(STRING_ELT(e, 0));
@@ -837,7 +835,9 @@ char* bstr_to_c_string(const wchar_t* src) {
 
 RSharpGenericValue ConvertArrayToRSharpGenericValue(SEXP s)
 {
-	RSharpGenericValue* result;
+	RSharpGenericValue* result = new RSharpGenericValue();
+	result->type = RSharpValueType::OBJECT;
+	result->value = 0;
 	result->size = 0; // Default size for non-array types
 
 	switch (TYPEOF(s)) {

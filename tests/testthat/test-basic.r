@@ -202,6 +202,7 @@ test_that("Complex numbers are converted", {
 
 test_that("Methods with variable number of parameters with c# 'params' keyword", {
   testObj <- clrNew(testClassName)
+  browser()
   actual <- clrCall(testObj, "TestParams", "Hello, ", "World!", 1L, 2L, 3L, 6L, 5L, 4L)
   expected <- "Hello, World!123654"
   expect_equal(actual, expected=expected)
