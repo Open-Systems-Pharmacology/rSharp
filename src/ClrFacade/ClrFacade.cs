@@ -441,10 +441,16 @@ namespace ClrFacade
       ///    Gets the full name of a type.
       /// </summary>
       /// <remarks>For easier operations from the C code</remarks>
-      public static string GetObjectTypeName(object obj)
+      
+      public delegate IntPtr GetObjectTypeNameDelegate(IntPtr obj);
+
+      public static IntPtr GetObjectTypeName(IntPtr obj)
       {
-         var result = obj.GetType().FullName;
-         return result;
+         IntPtr instPtr = Marshal.ReadIntPtr(obj, 0);
+         var t = Marshal.PtrToStructure<RSharpGenericValue>(instPtr);
+         var instance = ConvertRSharpParameters(new[] { t })[0];
+
+         return Marshal.StringToBSTR(instance.GetType().FullName);
       }
 
       /// <summary>

@@ -16,11 +16,13 @@ void* load_from_fn_ptr = nullptr;
 void* call_static_method_fn_ptr = nullptr;
 void* call_instance_method_fn_ptr = nullptr;
 void* get_object_direct_fn_ptr = nullptr;
+void* get_full_type_name_fn_ptr = nullptr;
 void* create_sexp_wrapper_fn_ptr = nullptr;
 
 //Definition of Delegates
 typedef int (CORECLR_DELEGATE_CALLTYPE* CallStaticMethodDelegate)(const char*, const char*, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
 typedef int (CORECLR_DELEGATE_CALLTYPE* CallInstanceMethodDelegate)(RSharpGenericValue** instance, const char* mname, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
+typedef intptr_t (CORECLR_DELEGATE_CALLTYPE* CallFullTypeNameDelegate)(RSharpGenericValue** instance);
 typedef int (CORECLR_DELEGATE_CALLTYPE* GetObjectDirectDelegate)(RSharpGenericValue* returnValue);
 typedef int (CORECLR_DELEGATE_CALLTYPE* CreateSEXPWrapperDelegate)(LONGLONG pointer, RSharpGenericValue* returnValue);
 typedef int (CORECLR_DELEGATE_CALLTYPE* CreateInstanceDelegate)(const char*, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
@@ -200,6 +202,22 @@ void initializeLoadAssembly()
 		&load_from_fn_ptr);
 
 	assert(rc_1 == 0 && load_from_fn_ptr != nullptr && "Failure: LoadFrom()");
+}
+
+void initializeGetFullTypeNameFunction()
+{
+	const char_t* dotnet_type = STR("ClrFacade.ClrFacade, ClrFacade");
+	auto functionDelegate = STR("ClrFacade.ClrFacade+GetObjectTypeNameDelegate, ClrFacade");
+
+	int rc_1 = load_assembly_and_get_function_pointer(
+		dotnetlib_path.c_str(),
+		dotnet_type,
+		STR("GetObjectTypeName"),
+		functionDelegate,//delegate_type_name
+		nullptr,
+		&get_full_type_name_fn_ptr);
+
+	assert(rc_1 == 0 && get_full_type_name_fn_ptr != nullptr && "Failure: GetObjectTypeName()");
 }
 
 void initializeGetObjectDirectFunction()
@@ -515,11 +533,14 @@ SEXP r_get_object_direct() {
 
 const char* get_type_full_name(RSharpGenericValue** genericValue) {
 	char* ns_qualified_typename = NULL;
-	auto hr = callStatic("GetObjectTypeName", "ClrFacade.ClrFacade,ClrFacade", genericValue, 1);
 
-	return bstr_to_c_string((const wchar_t*)hr->value);
-	//return reinterpret_cast<char*>(hr->value);
+	if(get_full_type_name_fn_ptr == nullptr)
+		initializeGetFullTypeNameFunction();
 
+	const auto call_static = reinterpret_cast<CallFullTypeNameDelegate>(get_full_type_name_fn_ptr);
+
+	auto hr = call_static(genericValue);
+	return bstr_to_c_string((const wchar_t*)hr);
 }
 
 RSharpGenericValue* get_RSharp_generic_value(SEXP clrObj);
