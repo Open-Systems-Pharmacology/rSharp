@@ -83,7 +83,8 @@ enum class RSharpValueType
 	STRING,
 	STRING_ARRAY,
 	OBJECT,
-	NULL_VALUE
+	NULL_VALUE,
+	INTPTR
 };
 
 // Struct to store a generic value along with its type

@@ -22,7 +22,8 @@ namespace Rclr
       STRING,
       STRING_ARRAY,
       OBJECT,
-      NULL
+      NULL,
+      INTPTR
    }
 
    public static class RSharpGenericValueExtensions
@@ -72,6 +73,14 @@ namespace Rclr
          if (obj is int)
          {
             type = RSharpValueType.INT;
+         }
+         else if (obj is IntPtr ptr)
+         {
+            return new RSharpGenericValue
+            {
+               Value = ptr,
+               Type = RSharpValueType.INTPTR
+            };
          }
          else if (obj is float)
          {

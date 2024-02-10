@@ -5,10 +5,10 @@
 context("rSharp essentials")
 
 test_that("Booleans are marshalled correctly", {
-  expect_that( callTestCase( "GetFalse"), is_false() )
-  expect_that( callTestCase( "GetTrue"), is_true() )
-  expect_that( callTestCase( "IsTrue", TRUE), is_true() )
-  expect_that( callTestCase( "IsTrue", FALSE), is_false() )
+  expect_false( callTestCase( "GetFalse") )
+  expect_true( callTestCase( "GetTrue") )
+  expect_true( callTestCase( "IsTrue", TRUE) )
+  expect_false( callTestCase( "IsTrue", FALSE) )
 })
 
 test_that("Object constructors calls work", {
@@ -27,11 +27,11 @@ test_that("Object constructors calls work", {
 })
 
 test_that("Basic types of length one are marshalled correctly", {
-  expect_that( callTestCase( "DoubleEquals", 123.0 ), is_true() )
+  expect_true( callTestCase( "DoubleEquals", 123.0 ) )
   expect_that( callTestCase( "CreateDouble"), equals(123.0) )
-  expect_that( callTestCase( "IntEquals", as.integer(123) ), is_true() )
+  expect_true( callTestCase( "IntEquals", as.integer(123) ) )
   expect_that( callTestCase( "CreateInt"), equals(as.integer(123)) )
-  expect_that( callTestCase( "StringEquals", 'ab' ), is_true() )
+  expect_true( callTestCase( "StringEquals", 'ab' ) )
   expect_that( callTestCase( "CreateString"), equals('ab') )
 # TODO: test unicode characters: what is happening then
 })
@@ -64,23 +64,18 @@ test_that("Basic types of length zero are marshalled correctly", {
   # class(a) <- c('POSIXct', 'POSIXt')
   # a # <== Curious
   # str(a)
-print('System.Double')
   # check that we fixed https://rclr.codeplex.com/workitem/2
   expectClrArrayElementType( numeric(0)   ,'System.Double')
   expectClrArrayElementType( integer(0)   ,'System.Int32')
   expectClrArrayElementType( raw(0)       ,'System.Byte')
   expectClrArrayElementType( logical(0)   ,'System.Boolean')
- print('System.String')
   expectClrArrayElementType( character(0) ,'System.String')
 
 
   aPosixCt <- numeric(0)
   attributes(aPosixCt) <- list(tzone='UTC')
-  print('POSIXCT')
   class(aPosixCt) <- c('POSIXct', 'POSIXt')
-
   expect_equal( clrCallStatic(tn, 'CreateArray_DateTime', 0L ), aPosixCt )
-print('tdiff')
   tdiff <- numeric(0)
   class(tdiff) <- 'difftime'
   attr(tdiff, 'units') <- 'secs'
@@ -128,7 +123,7 @@ if(clrGetInnerPkgName()=="rClrMs")
 
 test_that("String arrays are marshalled correctly", {
   ltrs = paste(letters[1:5], letters[2:6], sep='')
-  expect_that( callTestCase( "StringArrayEquals", ltrs), is_true() )
+  expect_true( callTestCase( "StringArrayEquals", ltrs) )
   expect_that( callTestCase( "CreateStringArray"), equals(ltrs) )
 
   ltrs[3] = NA
@@ -152,14 +147,14 @@ test_that("Numeric arrays are marshalled correctly", {
   ## Expected, but 5e-8 is more difference than I'd have guessed. Some watch point.
   # expect_that( callTestCase( "CreateFloatArray"), equals(expectedNumArray) )
   expect_equal( callTestCase( "CreateFloatArray"), expected = expectedNumArray, tolerance = 5e-8, scale = 2)
-  expect_that( callTestCase( "NumArrayEquals", expectedNumArray ), is_true() )
+  expect_true( callTestCase( "NumArrayEquals", expectedNumArray ) )
 
   numDays = 5
   expect_equal( callTestCase( "CreateIntArray", as.integer(numDays)), expected = 0:(numDays-1))
 
   expectedNumArray[3] = NA
   expect_that( callTestCase( "CreateNumArrayMissingVal"), equals(expectedNumArray) )
-  expect_that( callTestCase( "NumArrayMissingValsEquals", expectedNumArray ), is_true() )
+  expect_true( callTestCase( "NumArrayMissingValsEquals", expectedNumArray ) )
 
 })
 
@@ -178,6 +173,7 @@ test_that("Complex numbers are converted", {
 
 test_that("Methods with variable number of parameters with c# 'params' keyword", {
   testObj <- clrNew(testClassName)
+  browser()
   actual <- clrCall(testObj, "TestParams", "Hello, ", "World!", 1L, 2L, 3L, 6L, 5L, 4L)
   expected <- "Hello, World!123654"
   expect_equal(actual, expected=expected)
@@ -296,16 +292,16 @@ test_that("Basic objects are created correctly", {
 #  expect_that("externalptr" %in% class(extptr), is_true())
 #  expect_that(clrTypeNameExtPtr(extptr), equals(testClassName))
 	testObj <-.External("r_call_static_method", cTypename, "CreateTestObject",PACKAGE=clrGetNativeLibName())
-  expect_that(is.null(testObj), is_false())
+	expect_false(is.null(testObj))
   expect_that( testObj@clrtype, equals(testClassName))
   rm(testObj)
 	testObj <- callTestCase( "CreateTestObject")
-  expect_that(is.null(testObj), is_false())
+	expect_false(is.null(testObj))
   expect_that( testObj@clrtype, equals(testClassName))
 
   # cover part of the issue https://rclr.codeplex.com/workitem/39
 	testObj <- callTestCase( "CreateTestObjectGenericInstance")
-  expect_that(is.null(testObj), is_false())
+	expect_false(is.null(testObj))
 
 
   testObj <- callTestCase( "CreateTestArrayGenericObjects")
@@ -333,13 +329,13 @@ test_that("CLR type compatibility checking", {
 })
 
 test_that("Loaded assemblies discovery", {
-  expect_that(all(c('ClrFacade', 'mscorlib') %in% clrGetLoadedAssemblies()), is_true())
+  expect_true(all(c('ClrFacade', 'mscorlib') %in% clrGetLoadedAssemblies()))
   d <- clrGetLoadedAssemblies(fullname=TRUE, filenames=TRUE)
   expect_true(is.data.frame(d))
 })
 
 test_that("Object members discovery behaves as expected", {
-  expect_that('Rclr.TestObject' %in% clrGetTypesInAssembly('ClrFacade'), is_true())
+  expect_true('Rclr.TestObject' %in% clrGetTypesInAssembly('ClrFacade'))
   testObj = clrNew(testClassName)
   members = clrReflect(testObj)
 
@@ -355,7 +351,7 @@ test_that("Object members discovery behaves as expected", {
     actual_mnames <- getM(obj_or_tname, 'IntegerOne')
 
     expect_that( length(actual_mnames), equals(length(expected_mnames)))
-    expect_that( all( actual_mnames %in% expected_mnames), is_true())
+    expect_true( all( actual_mnames %in% expected_mnames))
 
     sig_prefix = ifelse(static, 'Static, ', '')
     expect_that(clrGetMemberSignature(obj_or_tname, p('GetFieldIntegerOne')),
