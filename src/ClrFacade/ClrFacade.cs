@@ -752,5 +752,23 @@ namespace ClrFacade
       {
          return new DateTime(dateTime.Ticks, (utc ? DateTimeKind.Utc : DateTimeKind.Unspecified));
       }
+
+      private static readonly DateTime RDateOrigin = new DateTime(1970, 1, 1);
+
+      private static TimeSpan GetUtcTimeSpanRorigin(ref DateTime date)
+      {
+         date = date.ToUniversalTime();
+         //            Console.WriteLine("date: {0}", date); 
+         var tspan = date - RDateOrigin; // POSIXct internal representation is always a linear scale with UTC origin RDateOrigin
+         return tspan;
+      }
+
+      public static double GetRPosixCtDoubleRepresentation(DateTime date)
+      {
+         var tspan = GetUtcTimeSpanRorigin(ref date);
+         var res = tspan.TotalSeconds;
+         //            Console.WriteLine(res);
+         return res;
+      }
    }
 }

@@ -137,6 +137,8 @@ namespace ClrFacade
          converterFunctions.Add(typeof(bool), ConvertBool);
          converterFunctions.Add(typeof(int), ConvertInt);
          converterFunctions.Add(typeof(string), ConvertString);
+         converterFunctions.Add(typeof(DateTime), ConvertDateTime);
+         converterFunctions.Add(typeof(TimeSpan), ConvertTimeSpan);
          converterFunctions.Add(typeof(Complex), ConvertComplex);
 
          converterFunctions.Add(typeof(float[]), ConvertArraySingle);
@@ -146,6 +148,8 @@ namespace ClrFacade
          converterFunctions.Add(typeof(int[]), ConvertArrayInt);
          converterFunctions.Add(typeof(string[]), ConvertArrayString);
          converterFunctions.Add(typeof(char[]), ConvertArrayChar);
+         converterFunctions.Add(typeof(DateTime[]), ConvertArrayDateTime);
+         converterFunctions.Add(typeof(TimeSpan[]), ConvertArrayTimeSpan);
          converterFunctions.Add(typeof(Complex[]), ConvertArrayComplex);
       }
 
@@ -438,6 +442,17 @@ namespace ClrFacade
          return engine.CreateComplexVector(array);
       }
 
+      private SymbolicExpression ConvertArrayDateTime(object obj)
+      {
+         if (!ConvertVectors) return null;
+         if (!ConvertValueTypes) return null;
+         DateTime[] array = (DateTime[])obj;
+         var doubleArray = Array.ConvertAll(array, ClrFacade.GetRPosixCtDoubleRepresentation);
+         var result = ConvertArrayDouble(doubleArray);
+         AddPosixctAttributes(result);
+         return result;
+      }
+
       private SymbolicExpression ConvertArrayTimeSpan(object obj)
       {
          if (!ConvertVectors) return null;
@@ -496,6 +511,28 @@ namespace ClrFacade
          if (!ConvertVectors) return null;
          string value = (string)obj;
          return engine.CreateCharacter(value);
+      }
+
+      private SymbolicExpression ConvertTimeSpan(object obj)
+      {
+         if (!ConvertVectors) return null;
+         if (!ConvertValueTypes) return null;
+         TimeSpan value = (TimeSpan)obj;
+         var doubleValue = value.TotalSeconds;
+         var result = ConvertDouble(doubleValue);
+         AddDiffTimeAttributes(result);
+         return result;
+      }
+
+      private SymbolicExpression ConvertDateTime(object obj)
+      {
+         if (!ConvertVectors) return null;
+         if (!ConvertValueTypes) return null;
+         DateTime value = (DateTime)obj;
+         var doubleValue = ClrFacade.GetRPosixCtDoubleRepresentation(value);
+         var result = ConvertDouble(doubleValue);
+         AddPosixctAttributes(result);
+         return result;
       }
 
       private SymbolicExpression ConvertComplex(object obj)
