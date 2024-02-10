@@ -681,17 +681,6 @@ inspectArgs <- function(...) {
 #' library(rSharp)
 #' cTypename <- "ClrFacade.TestCases"
 #' #         public static bool IsTrue(bool arg)
-#' clrVT(cTypename, 'IsTrue', TRUE)
-#' clrVT('System.Convert', 'ToInt64', 123L)
-#' clrVT('System.Convert', 'ToUInt64', 123L)
-#' }
-#' @return A string
-#' @export
-clrVT <- function(objOrType, methodName, ...) {
-  if(nativePkgName!='rClrMs') {stop("The CLR is not Microsoft's. This function is CLR specific")}
-  return(clrCallStatic('ClrFacade.DataConversionHelper', 'GetReturnedVariantTypename',objOrType, methodName, ...))
-  # return(mkClrObjRef(extPtr))
-}
 
 #' Gets the type of a CLR object resulting from converting an R object
 #'

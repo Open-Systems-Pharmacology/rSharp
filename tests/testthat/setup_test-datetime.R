@@ -2,23 +2,23 @@
 # Define a few test helper functions
 ########################
 
-clrDateEquals <- function(d, isoDateTimeStr, tzIdClr) { clrCallStatic(cTypename, "UtcDateEquals", d, isoDateTimeStr, tzIdClr) } 
+clrDateEquals <- function(d, isoDateTimeStr, tzIdClr) { clrCallStatic(cTypename, "UtcDateEquals", d, isoDateTimeStr, tzIdClr) }
 createDotNetDate <- function(...) { clrCallStatic(cTypename, "CreateDate", ...) }
 createUtcDate <- function(isoDateTimeStr, tzIdClr) { clrCallStatic(cTypename, "UtcDateForTimeZone", isoDateTimeStr, tzIdClr) }
 # convertClrTime <- function(isoDateTimeStr, tzIdClr_from, tzIdClr_to ) { clrCallStatic(cTypename, "ConvertTime", isoDateTimeStr, tzIdClr_from, tzIdClr_to) }
 
 
-# ?Sys.timezone, See the examples 
+# ?Sys.timezone, See the examples
 tzIdR_AUest = "Australia/Sydney"
 
 # IronPython: tz = [x for x in TimeZoneInfo.GetSystemTimeZones()]
-tzId_AUest <- 
+tzId_AUest <-
 ifelse( tolower(Sys.info()['sysname'])== 'windows',
-    ifelse(clrGetNativeLibName()=='rClrMono', 
+    ifelse(clrGetNativeLibName()=='rClrMono',
       # As of Mono 3.8.0, and probably earlier releases including 3.4.0, the time zone names have changed. Not Olson DB anymore. Not MS.NET either. *Sigh*
-      'E. Australia Standard Time', 
+      'E. Australia Standard Time',
       # I think even on Linux Mono does not use the Olson DB names. If still, use something like the following line
-      #  'E. Australia Standard Time', tzIdR_AUest), 
+      #  'E. Australia Standard Time', tzIdR_AUest),
       "AUS Eastern Standard Time") # TODO: is 'Australia/Sydney' also OK for MS.NET?
     ,
 tzIdR_AUest # on Linux, use the Olson DB.
@@ -38,21 +38,21 @@ pctToUtc <- function(dtPosixct) {
   result
 }
 
-# Given a date ISO 8601 string formatted, check that the marshalling is as expected. 
+# Given a date ISO 8601 string formatted, check that the marshalling is as expected.
 # Equality tests are done in the CLR, not in R, for this function, so this function tests the R POSIXt to CLR conversion
 testRtoClr <- function(dateStr, pfun=as.POSIXct, tzIdR=tzIdR_AUest, tzId=tzId_AUest) {
-    
+
   #### First, a whole day. Test that Date object, then POSIXt objects are converted to the right .NET value
   # Date objects: from R to .NET:
   rdate <- as.Date(dateStr)
   dayComponent <- format(rdate, '%Y-%m-%d')
-  # when converting an R Date to a POSIXct it becomes encoded as the date plus 00:00:00 UTC. 
+  # when converting an R Date to a POSIXct it becomes encoded as the date plus 00:00:00 UTC.
   # Let's check this is the equivalent seen from the CLR
-  expect_that( clrDateEquals(rdate, dayComponent, tzIdClr='UTC'), is_true(), label=paste('R Date',rdate,'becomes UTC DateTime',dayComponent));
-  
+  expect_true( clrDateEquals(rdate, dayComponent, tzIdClr='UTC'), label=paste('R Date',rdate,'becomes UTC DateTime',dayComponent));
+
   # if an R POSIXct date is created for a timezone, it is equal to a DateTime time zone
   dr <- pfun(dateStr, tz=tzIdR)
-  expect_that( clrDateEquals( dr, dateStr, tzIdClr=tzId ), is_true(), label=paste('R POSIXct',pctToString(dr),'becomes',tzId,'DateTime',dateStr));
+  expect_true( clrDateEquals( dr, dateStr, tzIdClr=tzId ), label=paste('R POSIXct',pctToString(dr),'becomes',tzId,'DateTime',dateStr));
 }
 
 expect_posixct_equal <- function(actual, expected, mAct='Actual', mExp='Expected') {
@@ -101,7 +101,7 @@ testBothDirections <- function(dateStr) {
 post1971_DateStr <- c('2001-01-01',
   '2001-01-01 23:22:21',
   # Testing proper function around a daylight saving time
-  # http://www.timeanddate.com/worldclock/clockchange.html?n=57 
+  # http://www.timeanddate.com/worldclock/clockchange.html?n=57
   # Daylight savings time changes in Australia for 2013
 
   # Sunday, 7 April 2013	2:59:57 AM	+1h	UTC+11h	AEDT
@@ -119,7 +119,7 @@ post1971_DateStr <- c('2001-01-01',
   # 3:00:02 AM	+1h	UTC+11h	AEDT
   '2013-10-06 01:59', # DST starts in Canberra
   '2013-10-06 03:01',
-  '2013-04-07 01:59',  # DST ends in Canberra. See also notes below for peculiarities over the twice run over 02:00 to 03:00 
+  '2013-04-07 01:59',  # DST ends in Canberra. See also notes below for peculiarities over the twice run over 02:00 to 03:00
   '2013-04-07 02:33',
   '2013-04-07 03:00',
   # Around one of the leap seconds (that is, when the UTC/GMT is tested
@@ -128,7 +128,7 @@ post1971_DateStr <- c('2001-01-01',
   '1994-07-01 00:00:00',
   '1994-07-01 00:00:01',
   '1994-07-01 01:00:00',
-  '3000-01-01' 
+  '3000-01-01'
 )
 
 # The origin of the POSIXct structure, '1970-01-01 00:00', 'UTC' is zero
@@ -149,15 +149,15 @@ pre1971_DateStr <- c(
   '1899-12-30',
   '1899-12-30 00:00:01',
   '1899-12-31',
-  '1789-07-14', 
+  '1789-07-14',
   '0200-01-01'
 )
 
 problem_DateStr <- c(
-  '0020-01-01', # MS CLR hosting method invokation fails if such a DateTime is returned. 
+  '0020-01-01', # MS CLR hosting method invokation fails if such a DateTime is returned.
   '0001-01-01' # MS CLR hosting in C shows an OLEAUT VT_DATE of numeric value 0.0. Supposed to be for 1899-12-30
  )
- 
+
 testDatesStr <- c(post1971_DateStr, pre1971_DateStr)
 
 testSameInteger <- function(datestr) {

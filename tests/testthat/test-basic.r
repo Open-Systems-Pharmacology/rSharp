@@ -75,6 +75,7 @@ test_that("Basic types of length zero are marshalled correctly", {
   aPosixCt <- numeric(0)
   attributes(aPosixCt) <- list(tzone='UTC')
   class(aPosixCt) <- c('POSIXct', 'POSIXt')
+
   expect_equal( clrCallStatic(tn, 'CreateArray_DateTime', 0L ), aPosixCt )
   tdiff <- numeric(0)
   class(tdiff) <- 'difftime'
@@ -106,20 +107,6 @@ test_that("non-empty arrays of non-basic .NET objects are handled", {
   actual <- clrCallStatic(tn, "CreateArray_Type", 3L, aType)
   testListEqual(aType, 3L, actual)
 })
-
-
-if(clrGetInnerPkgName()=="rClrMs")
-{
-  test_that("MS CLR: check that the variant types are reported correctly", {
-    #         public static bool IsTrue(bool arg)clrCallStatic(tn, "CreateArray_double", 0L )
-    expect_equal(clrVT(cTypename, 'IsTrue', TRUE), "VT_BOOL")
-    expect_equal(clrVT('System.Convert', 'ToInt64', 123L), "VT_I8")
-    expect_equal(clrVT('System.Convert', 'ToUInt64', 123L), "VT_UI8")
-    tn <- "ClrFacade.TestArrayMemoryHandling"
-    expect_equal( clrVT(tn, "CreateArray_DateTime", 0L ), "VT_ARRAY | VT_DATE" )
-    # expect_equal( clrVT(tn, "CreateArray_Type", 3L, clrGetType('System.Double')), "VT_ARRAY | VT_DATE" )
-  })
-}
 
 test_that("String arrays are marshalled correctly", {
   ltrs = paste(letters[1:5], letters[2:6], sep='')
@@ -178,7 +165,6 @@ test_that("Methods with variable number of parameters with c# 'params' keyword",
   expect_equal(actual, expected=expected)
   actual <- clrCall(testObj, "TestParams", "Hello, ", "World!", as.integer(1:6))
   expected <- "Hello, World!123456"
-  browser()
   expect_equal(actual, expected=expected)
 })
 
@@ -228,6 +214,7 @@ test_that("Correct method binding based on parameter types", {
     expect_equal( f(letters[1:3], 'a'), c(mkArrayTypeName(stringName), stringName) )
     expect_equal( f(letters[1:3], letters[4:6]), c(mkArrayTypeName(stringName), mkArrayTypeName(stringName)) )
   }
+
   testMethodBinding()
   obj <- clrNew('ClrFacade.TestMethodBinding')
   f <- function(...){ clrCall(obj, 'SomeInstanceMethod', ...) }
@@ -237,7 +224,6 @@ test_that("Correct method binding based on parameter types", {
   f <- function(...){ clrCall(obj, 'SomeExplicitlyImplementedMethod', ...) }
   testMethodBinding()
 })
-
 
 test_that("Numerical bi-dimensional arrays are marshalled correctly", {
   numericMat = matrix(as.numeric(1:15), nrow=3, ncol=5, byrow=TRUE)
@@ -266,6 +252,7 @@ testSmartDictConversion <- function(){
   # expect_true
 }
 
+
 test_that("CLI dictionaries are marshalled as expected", {
   testSmartDictConversion()
 })
@@ -291,6 +278,7 @@ test_that("Basic objects are created correctly", {
 #  expect_that(is.null(extptr), is_false())
 #  expect_that("externalptr" %in% class(extptr), is_true())
 #  expect_that(clrTypeNameExtPtr(extptr), equals(testClassName))
+
 	testObj <-.External("r_call_static_method", cTypename, "CreateTestObject",PACKAGE=clrGetNativeLibName())
 	expect_false(is.null(testObj))
   expect_that( testObj@clrtype, equals(testClassName))
@@ -329,10 +317,12 @@ test_that("CLR type compatibility checking", {
 })
 
 test_that("Loaded assemblies discovery", {
-  expect_true(all(c('ClrFacade', 'mscorlib') %in% clrGetLoadedAssemblies()))
+  expect_true(all(c('ClrFacade', 'System.Private.CoreLib') %in% clrGetLoadedAssemblies()))
   d <- clrGetLoadedAssemblies(fullname=TRUE, filenames=TRUE)
   expect_true(is.data.frame(d))
 })
+
+
 
 test_that("Object members discovery behaves as expected", {
   expect_true('ClrFacade.TestObject' %in% clrGetTypesInAssembly('ClrFacade'))

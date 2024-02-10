@@ -720,13 +720,45 @@ namespace ClrFacade
       {
          if (DataConverterIsSet)
             arguments = DataConverter.ConvertSymbolicExpressions(arguments);
+         arguments = makeDatesUtcKind(arguments);
          return arguments;
+      }
+
+      private static object[] makeDatesUtcKind(object[] arguments)
+      {
+         object[] newArgs = (object[])arguments.Clone();
+         for (int i = 0; i < arguments.Length; i++)
+         {
+            var obj = arguments[i];
+            if (obj is DateTime)
+               newArgs[i] = ForceUtcKind((DateTime)obj);
+            else if (obj is DateTime[])
+               newArgs[i] = forceUtcKind((DateTime[])obj);
+         }
+         return newArgs;
+      }
+
+      private static DateTime[] forceUtcKind(DateTime[] dateTimes)
+      {
+         var result = new DateTime[dateTimes.Length];
+         for (int i = 0; i < result.Length; i++)
+         {
+            result[i] = ForceUtcKind(dateTimes[i]);
+         }
+         return result;
+      }
+
+      public static DateTime ForceUtcKind(DateTime dateTime)
+      {
+         return ForceDateKind(dateTime, utc: true);
       }
 
       private static object ConvertSpecialObject(object obj)
       {
          if (DataConverterIsSet)
             obj = DataConverter.ConvertSymbolicExpression(obj);
+         if (obj is DateTime)
+            obj = ForceUtcKind((DateTime)obj);
          return obj;
       }
 

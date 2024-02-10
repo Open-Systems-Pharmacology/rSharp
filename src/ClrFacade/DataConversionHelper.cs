@@ -40,10 +40,6 @@ namespace ClrFacade
         }
        
         public static IUnmanagedDll RclrNativeDll= null;
-        static Int32 VariantClear(IntPtr pvarg)
-        { 
-           return VariantClearMs(pvarg);
-        }
 
         [Obsolete("Could not make to work overall (it works itself, just not in the method is it associated with)", true)]
         static IntPtr ClrObjectToSexp(IntPtr variant)
@@ -54,10 +50,6 @@ namespace ClrFacade
                 return ClrObjectToSexpMs(variant);
             return RclrNativeDll.ClrObjectToSexp(variant);
         }
-
-        // TODO I will likely need some conditional compilation for Mono
-        [DllImport(@"oleaut32.dll", EntryPoint = "VariantClear", SetLastError = true, CallingConvention = CallingConvention.StdCall)]
-        private static extern Int32 VariantClearMs(IntPtr pvarg);
 
         const Int32 SizeOfNativeVariant = 16;
 
@@ -72,51 +64,23 @@ namespace ClrFacade
         /// <returns></returns>
         public static IntPtr ClrObjectToSexp(object obj)
         {
-            throw new NotImplementedException();
-            //try
-            //{
-            //    // Trying to solve https://rclr.codeplex.com/workitem/33. 
-            //    // Not sure whether I can ignore the returned handle or not, however, so treat as experimental.
-            //    //GCHandle.Alloc(obj, GCHandleType.Pinned);
-            //    // pVariant = CreateNativeVariantForObject(obj);
-            //    // return ClrObjectToSexp(pVariant);
-            //}
-            //catch
-            //{
-            //    // We want to deallocate memory on error, but not on successful completion.
-            //    // since the creation of a native variant for obj is what creates a handle in the CLR hosting
-            //    // to prevent the garbage collection.
-            //    //FreeVariantMem(pVariant);
-            //    throw;
-            //}
-        }
-
-        /// <summary>
-        /// Gets a string helping to identify the COM variant to which an object is converted to an unmanaged data structure, if at all.
-        /// </summary>
-        /// <param name="obj">The object to check</param>
-        /// <returns>A string such as "VT_ARRAY | VT_BOOL"</returns>
-        public static string GetVariantTypename(object obj)
-        {
-            string vtString = "??";
-            // GetNativeVariantForObject cannot deal with generic types.
-            if (obj != null)
-            {
-                var t = obj.GetType();
-                if (t.IsGenericType)
-                    return string.Format("{0} cannot be converted to a native variant type as it is a generic type", t.FullName);
-            }
-            IntPtr pVariant = IntPtr.Zero;
-            try
-            {
-                pVariant = CreateNativeVariantForObject(obj);
-                vtString = GetVariantTypeString(pVariant);
-            }
-            finally
-            {
-                FreeVariantMem(pVariant);
-            }
-            return vtString;
+           throw new NotImplementedException();
+           //try
+           //{
+           //    // Trying to solve https://rclr.codeplex.com/workitem/33. 
+           //    // Not sure whether I can ignore the returned handle or not, however, so treat as experimental.
+           //    //GCHandle.Alloc(obj, GCHandleType.Pinned);
+           //    // pVariant = CreateNativeVariantForObject(obj);
+           //    // return ClrObjectToSexp(pVariant);
+           //}
+           //catch
+           //{
+           //    // We want to deallocate memory on error, but not on successful completion.
+           //    // since the creation of a native variant for obj is what creates a handle in the CLR hosting
+           //    // to prevent the garbage collection.
+           //    //FreeVariantMem(pVariant);
+           //    throw;
+           //}
         }
 
         private static string GetVariantTypeString( IntPtr pVariant)
@@ -140,50 +104,6 @@ namespace ClrFacade
 
         private const bool useCoTaskMem = true;
 
-        private static void FreeVariantMem(IntPtr pVariant)
-        {
-            if (pVariant != IntPtr.Zero)
-            {
-                VariantClear(pVariant);
-                if(useCoTaskMem)
-                    Marshal.FreeCoTaskMem(pVariant);
-                else
-                    Marshal.FreeHGlobal(pVariant);
-            }
-        }
-
-        private static IntPtr CreateNativeVariantForObject(object obj)
-        {
-            IntPtr pVariant = IntPtr.Zero;
-            if (obj.GetType().IsGenericType) // Marshal.GetNativeVariantForObject cannot handle this case
-                return IntPtr.Zero;
-            // GCHandle.Alloc(obj, GCHandleType.Pinned);
-            if (useCoTaskMem)
-                pVariant = Marshal.AllocCoTaskMem(SizeOfNativeVariant);
-            else
-                pVariant = Marshal.AllocHGlobal(SizeOfNativeVariant);
-            Marshal.GetNativeVariantForObject(obj, pVariant);
-            return pVariant;
-        }
-
-        /// <summary>
-        /// Gets a string helping to identify the COM variant to which an object is converted to an unmanaged data structure, if at all.
-        /// </summary>
-        /// <param name="obj">An object or type name, from which to call a method</param>
-        /// <param name="methodName">the name of a method to call on the object or class</param>
-        /// <param name="arguments">The arguments to the method call</param>
-        /// <returns>A string such as "VT_ARRAY | VT_BOOL" if the method call returns a bool[]</returns>
-        public static string GetReturnedVariantTypename(object obj, string methodName, params object[] arguments)
-        {
-            if (obj == null)
-                throw new ArgumentNullException("obj");
-            else if (obj is Type)
-                return GetVariantTypename(global::ClrFacade.ClrFacade.InternalCallStaticMethod((Type)obj, methodName, false, arguments));
-            else if (obj is string)
-                return GetVariantTypename(global::ClrFacade.ClrFacade.InternalCallStaticMethod(global::ClrFacade.ClrFacade.GetType((string)obj), methodName, false, arguments));
-            else
-                return GetVariantTypename(global::ClrFacade.ClrFacade.InternalCallInstanceMethod(obj, methodName, false, arguments));
-        }
 
         private static string GetVariantTypeString(VarEnum vt)
         {

@@ -43,7 +43,7 @@ namespace ClrFacade
          {
             var s = assemblyNames[i];
             var a = loadedAssemblies.First(x => matchAssemblyName(x, s));
-            result[i] = a == null ? "<not found>" : a.EscapedCodeBase;
+            result[i] = a == null ? "<not found>" : a.Location;
          }
 
          return result;
