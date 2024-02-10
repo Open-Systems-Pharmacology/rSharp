@@ -41,7 +41,7 @@ To start with, the customary "Hello" example follows:
 
 ```{r methods, tidy=TRUE}
 library(rSharp)
-clrCallStatic('Rclr.HelloWorld', 'Hello')
+clrCallStatic('ClrFacade.HelloWorld', 'Hello')
 ```
 
 To demonstrate something marginally snazzier:
@@ -62,7 +62,7 @@ Main functions
 Most functions in the package are prefixed with `"clr"` for mnemonic. `clrNew` creates a new object, and returns an R object, either of (S4) class `cobjRef` or one of the common R data structures if a natural conversion is found, e.g. a System.String to an R character vector.
 
 ```{r clrNew}
-testClassName <- "Rclr.TestObject";
+testClassName <- "ClrFacade.TestObject";
 (testObj <- clrNew(testClassName))
 ```
 
@@ -77,13 +77,13 @@ Calling the instance methods on objects is done by specifying the method name as
 
 ```{r}
 clrCall(testObj, "GetFieldIntegerOne")
-clrGetMemberSignature('Rclr.TestCases', 'CreateDateArray')
+clrGetMemberSignature('ClrFacade.TestCases', 'CreateDateArray')
 ```
 
 Two arguments are passed to the function `clrCallStatic`: a string in an ISO date time format, and a numeric cast as an integer. **rClr** will transparently convert these to CLR types. Note that if the last argument had just been `4`, the mode of the R vector would have been `numeric`, not `integer`. To avoid ambiguity in method calls you must pass an integer vector. The returned value of the .NET method is a `DateTime[]` i.e. an array of `System.DateTime` objects. Again **rClr** transparently converts these to a standard R vector with the appropriate POSIX time class attribute.
 
 ```{r}
-dates <- clrCallStatic('Rclr.TestCases', 'CreateDateArray', '2001-01-01', as.integer(4))
+dates <- clrCallStatic('ClrFacade.TestCases', 'CreateDateArray', '2001-01-01', as.integer(4))
 str(dates)
 class(dates)
 ```
@@ -101,7 +101,7 @@ There are functions to list static members (a.k.a. class members). The discovery
 ```{r clrGetStatic}
 # clrGetStaticMembers(testObj)
 # would have the same result as:
-clrGetStaticMembers('Rclr.TestObject')
+clrGetStaticMembers('ClrFacade.TestObject')
 ```
 
 `clrGet` and `clrSet` can also set static fields and properties, but only if the argument is the name of a class (Type). To avoid risks of ambiguity and confusion, you cannot do this with a concrete object. 
@@ -110,8 +110,8 @@ clrGetStaticMembers('Rclr.TestObject')
 # the following call would fail
 # clrGet(testObj,  "StaticFieldIntegerOne") 
 # This is less ambiguous, and is supported
-clrGet('Rclr.TestObject',  "StaticFieldIntegerOne")
-clrSet('Rclr.TestObject',  "StaticFieldIntegerOne", as.integer(3))
+clrGet('ClrFacade.TestObject',  "StaticFieldIntegerOne")
+clrSet('ClrFacade.TestObject',  "StaticFieldIntegerOne", as.integer(3))
 ```
 
 Data conversion
@@ -161,7 +161,7 @@ Fortunately, it is easier to handle these directly from C#, using the library **
 
 ```{r cache = F, tidy = TRUE}
 # setRDotNet(TRUE)  # this should be the default package state after 0.7.0
-cTypename <- "Rclr.TestCases"
+cTypename <- "ClrFacade.TestCases"
 clrGetMemberSignature(cTypename, "CreateRectDoubleArray")
 clrCallStatic(cTypename, "CreateRectDoubleArray")
 ```
@@ -206,7 +206,7 @@ public static int TestParams(string a, string b, params int[] c)
 
 You can call such a method qith a variable number of arguments; however the types must match that in the CLR method.
 ```{r}
-testObj <- clrNew('Rclr.TestObject')
+testObj <- clrNew('ClrFacade.TestObject')
 clrCall(testObj, 'TestParams', "Hello, ", "World!", 1L, 2L, 3L, 6L, 5L, 4L, 9L)
 # As in C#, it also works if passing a vector
 clrCall(testObj, 'TestParams', "Hello, ", "World!", 1:5)

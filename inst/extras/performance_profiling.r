@@ -9,7 +9,7 @@ library(ggplot2)
 
 library(rSharp)
 
-profClassName <- 'Rclr.PerformanceProfiling'
+profClassName <- 'ClrFacade.PerformanceProfiling'
 prof <- clrNew(profClassName)
 nRepsColname <- 'numReps'
 arrayLenColname <- 'arrLen'
@@ -31,7 +31,7 @@ rToClrDataTransferFUNGEN <- function(numArray, arrLen) {
 
 sw <- clrNew('System.Diagnostics.Stopwatch')
 startSw <- function () { clrCall(sw,'Stop'); clrCall(sw,'Reset'); clrCall(sw, 'Start') }
-stopSw <- function () { clrCall(sw,'Stop'); clrCallStatic('Rclr.PerformanceProfiling', 'GetElapsedSeconds', sw) }
+stopSw <- function () { clrCall(sw,'Stop'); clrCallStatic('ClrFacade.PerformanceProfiling', 'GetElapsedSeconds', sw) }
 
 measure <- function(numReps, FUN, normalize=TRUE) {
   blah = numeric(0)
@@ -84,7 +84,7 @@ doMeasure <- function(trials, trow, FUNGEN, dataClass,direction,tag=NA) {
 }
 
 doMeasureFun <- function(trials, FUNGEN, dataClass,direction,tag=NA) {
-  clrCallStatic('Rclr.TestCases', 'CallGC') # minimize the risk of cases such that we end up with negative runtimes...
+  clrCallStatic('ClrFacade.TestCases', 'CallGC') # minimize the risk of cases such that we end up with negative runtimes...
   res <- doMeasure(trials, 1, FUNGEN=FUNGEN, dataClass, direction, tag)
   for (trow in 2:nrow(trials)) {
     res <- rbind(res, doMeasure(trials, trow, FUNGEN=FUNGEN, dataClass, direction, tag))

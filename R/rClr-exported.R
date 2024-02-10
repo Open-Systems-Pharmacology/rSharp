@@ -19,14 +19,14 @@ clrShutdown <- function() { # TODO: is this even possible given runtime's constr
 #' library(rSharp)
 #' ## R.NET is currently used to convert complicated CLR types to sensible R equivalents
 #' setRDotNet()
-#' cTypename <- "Rclr.TestCases"
+#' cTypename <- "ClrFacade.TestCases"
 #' clrCallStatic(cTypename, "CreateStringDictionary")
 #' setRDotNet(FALSE)
 #' clrCallStatic(cTypename, "CreateStringDictionary")
 #' }
 setRDotNet <- function(setit=TRUE) {
   print("during setRDotNet")
-  invisible(clrCallStatic('Rclr.RDotNetDataConverter', 'SetRDotNet', setit))
+  invisible(clrCallStatic('ClrFacade.RDotNetDataConverter', 'SetRDotNet', setit))
 }
 
 #' Turn on/off the conversion of advanced data types with R.NET
@@ -39,13 +39,13 @@ setRDotNet <- function(setit=TRUE) {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' cTypename <- "Rclr.TestCases"
+#' cTypename <- "ClrFacade.TestCases"
 #' clrCallStatic(cTypename, "CreateStringDictionary")
 #' setConvertAdvancedTypes(FALSE)
 #' clrCallStatic(cTypename, "CreateStringDictionary")
 #' }
 setConvertAdvancedTypes <- function(enable=TRUE) {
-  invisible(clrCallStatic('Rclr.RDotNetDataConverter', 'SetConvertAdvancedTypes', enable))
+  invisible(clrCallStatic('ClrFacade.RDotNetDataConverter', 'SetConvertAdvancedTypes', enable))
 }
 
 #' Loads a Common Language assembly.
@@ -93,7 +93,7 @@ clrGetInnerPkgName <- function() { nativePkgName }
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "Rclr.TestObject";
+#' testClassName <- "ClrFacade.TestObject";
 #' testObj <- clrNew(testClassName)
 #' clrReflect(testObj)
 #' }
@@ -128,7 +128,7 @@ clrToString <- function(x) {
 #' @export
 #' @examples
 #' \dontrun{
-#' clrCallStatic("Rclr.TestCases", "ThrowException", 10L) # will be truncated by the Rf_error API
+#' clrCallStatic("ClrFacade.TestCases", "ThrowException", 10L) # will be truncated by the Rf_error API
 #' clrTraceback() # prints the full stack trace
 #' }
 clrTraceback <- function() {
@@ -186,7 +186,7 @@ clrGetTypesInAssembly <- function(assemblyName) {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "Rclr.TestObject";
+#' testClassName <- "ClrFacade.TestObject";
 #' testObj <- clrNew(testClassName)
 #' clrGetFields(testObj)
 #' clrGetFields(testObj, 'ieldInt')
@@ -206,7 +206,7 @@ clrGetFields <- function( clrobj, contains = '') {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "Rclr.TestObject";
+#' testClassName <- "ClrFacade.TestObject";
 #' testObj <- clrNew(testClassName)
 #' clrGetProperties(testObj)
 #' clrGetProperties(testObj, 'One')
@@ -226,7 +226,7 @@ clrGetProperties <- function( clrobj, contains = '') {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "Rclr.TestObject";
+#' testClassName <- "ClrFacade.TestObject";
 #' testObj <- clrNew(testClassName)
 #' clrGetMethods(testObj)
 #' clrGetMethods(testObj, 'Get')
@@ -245,7 +245,7 @@ clrGetMethods <- function( clrobj, contains = '') {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "Rclr.TestObject";
+#' testClassName <- "ClrFacade.TestObject";
 #' clrGetConstructors(testClassName)
 #' }
 clrGetConstructors <- function( type ) {
@@ -264,7 +264,7 @@ clrGetConstructors <- function( type ) {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "Rclr.TestObject";
+#' testClassName <- "ClrFacade.TestObject";
 #' testObj <- clrNew(testClassName)
 #' clrReflect(testObj)
 #' clrGetMemberSignature(testObj, 'set_PropertyIntegerOne')
@@ -285,7 +285,7 @@ clrGetMemberSignature <- function( clrobj, memberName ) {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "Rclr.TestObject";
+#' testClassName <- "ClrFacade.TestObject";
 #' (testObj <- clrNew(testClassName))
 #' # object with a constructor that has parameters
 #' (testObj <- clrNew(testClassName, as.integer(123)))
@@ -329,16 +329,16 @@ getCurrentConvertedObject <- function()
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "Rclr.TestObject";
+#' testClassName <- "ClrFacade.TestObject";
 #' (testObj <- clrNew(testClassName))
 #' clrIs(testObj, testClassName)
 #' clrIs(testObj, 'System.Object')
 #' clrIs(testObj, 'System.Double')
-#' (testObj <- clrNew('Rclr.TestMethodBinding'))
+#' (testObj <- clrNew('ClrFacade.TestMethodBinding'))
 #' # Test for interface definitions
-#' clrIs(testObj, 'Rclr.ITestMethodBindings')
-#' clrIs(testObj, clrGetType('Rclr.ITestMethodBindings'))
-#' clrIs(testObj, clrGetType('Rclr.TestMethodBinding'))
+#' clrIs(testObj, 'ClrFacade.ITestMethodBindings')
+#' clrIs(testObj, clrGetType('ClrFacade.ITestMethodBindings'))
+#' clrIs(testObj, clrGetType('ClrFacade.TestMethodBinding'))
 #' clrIs(testObj, clrGetType('System.Reflection.Assembly'))
 #' }
 clrIs <- function(obj, type) {
@@ -368,12 +368,12 @@ clrIs <- function(obj, type) {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "Rclr.TestObject";
+#' testClassName <- "ClrFacade.TestObject";
 #' (testObj <- clrNew(testClassName))
 #' clrCall(testObj, 'GetFieldIntegerOne')
 #' ## derived from unit test for matching the right method (function) to call.
 #' f <- function(...){ paste( 'This called a method with arguments:',
-#'   paste(clrCallStatic('Rclr.TestMethodBinding', 'SomeStaticMethod', ...), collapse=', ')) }
+#'   paste(clrCallStatic('ClrFacade.TestMethodBinding', 'SomeStaticMethod', ...), collapse=', ')) }
 #' f(1:3)
 #' f(3)
 #' f('a')
@@ -398,7 +398,7 @@ clrCall <- function(obj,methodName,...)
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "Rclr.TestObject";
+#' testClassName <- "ClrFacade.TestObject";
 #' testObj <- clrNew(testClassName)
 #' clrReflect(testObj)
 #' clrGet(testObj, 'FieldIntegerOne')
@@ -420,7 +420,7 @@ clrGet <- function(objOrType,name)
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "Rclr.TestObject";
+#' testClassName <- "ClrFacade.TestObject";
 #' testObj <- clrNew(testClassName)
 #' clrReflect(testObj)
 #' clrSet(testObj, 'FieldIntegerOne', 42)
@@ -446,7 +446,7 @@ clrSet <- function(objOrType, name, value)
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' clrGetEnumNames('Rclr.TestEnum')
+#' clrGetEnumNames('ClrFacade.TestEnum')
 #' }
 clrGetEnumNames <- function(enumType)
 {
@@ -489,7 +489,7 @@ clrGetExtPtr <- function(clrObject) {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "Rclr.TestObject";
+#' testClassName <- "ClrFacade.TestObject";
 #' testObj <- clrNew(testClassName)
 #' clrTypeNameExtPtr(clrGetExtPtr(testObj))
 #' }
@@ -509,7 +509,7 @@ clrTypeNameExtPtr <- function(extPtr) {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "Rclr.TestObject";
+#' testClassName <- "ClrFacade.TestObject";
 #' testObj <- clrNew(testClassName)
 #' clrTypename(testObj)
 #' }
@@ -539,7 +539,7 @@ clrGetNativeLibName <- function() {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' cTypename <- "Rclr.TestCases"
+#' cTypename <- "ClrFacade.TestCases"
 #' clrCallStatic(cTypename, "IsTrue", TRUE)
 #' }
 clrCallStatic <- function(typename, methodName,...)
@@ -575,9 +575,9 @@ peekClrArgs <- function(...)
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' cTypename <- "Rclr.TestCases"
+#' cTypename <- "ClrFacade.TestCases"
 #' clrGetStaticMembers(cTypename)
-#' testClassName <- "Rclr.TestObject";
+#' testClassName <- "ClrFacade.TestObject";
 #' testObj <- clrNew(testClassName)
 #' clrGetStaticMembers(testObj)
 #' }
@@ -679,7 +679,7 @@ inspectArgs <- function(...) {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' cTypename <- "Rclr.TestCases"
+#' cTypename <- "ClrFacade.TestCases"
 #' #         public static bool IsTrue(bool arg)
 #' clrVT(cTypename, 'IsTrue', TRUE)
 #' clrVT('System.Convert', 'ToInt64', 123L)
@@ -689,7 +689,7 @@ inspectArgs <- function(...) {
 #' @export
 clrVT <- function(objOrType, methodName, ...) {
   if(nativePkgName!='rClrMs') {stop("The CLR is not Microsoft's. This function is CLR specific")}
-  return(clrCallStatic('Rclr.DataConversionHelper', 'GetReturnedVariantTypename',objOrType, methodName, ...))
+  return(clrCallStatic('ClrFacade.DataConversionHelper', 'GetReturnedVariantTypename',objOrType, methodName, ...))
   # return(mkClrObjRef(extPtr))
 }
 

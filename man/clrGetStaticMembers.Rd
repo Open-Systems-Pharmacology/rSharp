@@ -15,9 +15,9 @@ Gets the static members for a type
 \examples{
 \dontrun{
 library(rClr)
-cTypename <- "Rclr.TestCases"
+cTypename <- "ClrFacade.TestCases"
 clrGetStaticMembers(cTypename)
-testClassName <- "Rclr.TestObject";
+testClassName <- "ClrFacade.TestObject";
 testObj <- clrNew(testClassName)
 clrGetStaticMembers(testObj)
 }

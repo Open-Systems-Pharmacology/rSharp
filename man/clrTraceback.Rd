@@ -11,7 +11,7 @@ Prints the last CLR exception. This is roughly the equivalent of the traceback f
 }
 \examples{
 \dontrun{
-clrCallStatic("Rclr.TestCases", "ThrowException", 10L) # will be truncated by the Rf_error API
+clrCallStatic("ClrFacade.TestCases", "ThrowException", 10L) # will be truncated by the Rf_error API
 clrTraceback() # prints the full stack trace
 }
 }

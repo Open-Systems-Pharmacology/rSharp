@@ -33,7 +33,7 @@ NUGET_CMD=nuget
 
 ######## O/S dependent config
 ifeq "$(R_OSTYPE)" "windows"
-SLN=rClr.sln
+SLN=rSharp.sln
 
 ifeq "$(BUILDTYPE)" "Release"
 BuildConfiguration=Release

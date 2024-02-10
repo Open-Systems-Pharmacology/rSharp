@@ -8,7 +8,7 @@ MODE ?= Build
 MSB_OPTIONS_CONSOLELOGGER ?= //consoleloggerparameters:ErrorsOnly
 ## /consoleloggerparameters:ErrorsOnly;WarningsOnly;Verbosity=minimal
 
-SLN= rClr.sln
+SLN= rSharp.sln
 
 # NOTE: do NOT use a nuget.exe under c:\bin\ even if in your path
 # somehow nuget would not be found because /bin has a special meaning in RTools.

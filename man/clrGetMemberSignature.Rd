@@ -21,7 +21,7 @@ Mostly used to interactively search for what arguments to pass to a method.
 \examples{
 \dontrun{
 library(rSharp)
-testClassName <- "Rclr.TestObject";
+testClassName <- "ClrFacade.TestObject";
 testObj <- clrNew(testClassName)
 clrReflect(testObj)
 clrGetMemberSignature(testObj, 'set_PropertyIntegerOne')

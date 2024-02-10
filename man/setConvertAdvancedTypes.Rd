@@ -16,7 +16,7 @@ as these are not bidirectional and you may want to see and manipulate external p
 \examples{
 \dontrun{
 library(rSharp)
-cTypename <- "Rclr.TestCases"
+cTypename <- "ClrFacade.TestCases"
 clrCallStatic(cTypename, "CreateStringDictionary")
 setConvertAdvancedTypes(FALSE)
 clrCallStatic(cTypename, "CreateStringDictionary")

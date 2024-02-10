@@ -92,8 +92,8 @@ Had an issue with memory footprint on 2015-03-26. A way to diagnose things:
 
 ```{r, eval=FALSE}
 library(rSharp)
-cTypename <- "Rclr.TestCases"
-testClassName <- "Rclr.TestObject"
+cTypename <- "ClrFacade.TestCases"
+testClassName <- "ClrFacade.TestObject"
 callGcMethname <- "CallGC"
 forceDotNetGc <- function() { callTestCase( callGcMethname) }
 forceGc <- function() {gc() ; forceDotNetGc() ; gc() ; forceDotNetGc() ; }

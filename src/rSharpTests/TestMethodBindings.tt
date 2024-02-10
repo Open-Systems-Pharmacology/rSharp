@@ -5,7 +5,7 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="Rclr" #>
-<#@ import namespace="Rclr.Tests" #>
+<#@ import namespace="ClrFacade.Tests" #>
 <#@ output extension=".cs" #>
 using System;
 using System.Reflection;

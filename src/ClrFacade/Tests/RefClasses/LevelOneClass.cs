@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Rclr.Tests.RefClasses
+﻿namespace ClrFacade.Tests.RefClasses
 {
     public class LevelOneClass : BaseAbstractClassOne, InterfaceOne
     {

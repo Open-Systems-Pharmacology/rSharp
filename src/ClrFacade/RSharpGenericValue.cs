@@ -1,13 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
+﻿using System;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Rclr
+namespace ClrFacade
 {
    public enum RSharpValueType
    {
@@ -55,6 +49,7 @@ namespace Rclr
             {
                array[i] = Marshal.ReadByte(genericValue.Value, i) != 0;
             }
+
             return array as T[];
          }
          else
@@ -66,7 +61,7 @@ namespace Rclr
       // Factory method to create RSharpGenericValue from an object
       public static RSharpGenericValue FromObject(object obj)
       {
-         if(obj == null)
+         if (obj == null)
             return new RSharpGenericValue { Type = RSharpValueType.NULL, Value = IntPtr.Zero };
          // Determine the ValueType based on the actual type of the object
          RSharpValueType type;
@@ -97,7 +92,7 @@ namespace Rclr
          else if (obj is string objString)
          {
             type = RSharpValueType.STRING;
-            
+
             RSharpGenericValue tempRes = new RSharpGenericValue();
             tempRes.Value = Marshal.StringToBSTR(objString);
             tempRes.Type = type;
@@ -122,7 +117,7 @@ namespace Rclr
             else if (elementType == typeof(bool))
             {
                type = RSharpValueType.BOOL_ARRAY;
-            } 
+            }
             else if (elementType == typeof(string))
             {
                type = RSharpValueType.STRING_ARRAY;
@@ -184,7 +179,5 @@ namespace Rclr
       //   Value = value;
       //   Size = 0; // For non-array types, set size to 0
       //}
-
    }
-
 }

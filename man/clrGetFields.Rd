@@ -20,7 +20,7 @@ List the instance fields of a CLR object
 \examples{
 \dontrun{
 library(rSharp)
-testClassName <- "Rclr.TestObject";
+testClassName <- "ClrFacade.TestObject";
 testObj <- clrNew(testClassName)
 clrGetFields(testObj)
 clrGetFields(testObj, 'ieldInt')

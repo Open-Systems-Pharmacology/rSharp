@@ -17,7 +17,7 @@ Turn on or off the usage of the R.NET assemblies to convert CLR objects to R dat
 library(rSharp)
 ## R.NET is currently used to convert complicated CLR types to sensible R equivalents
 setRDotNet()
-cTypename <- "Rclr.TestCases"
+cTypename <- "ClrFacade.TestCases"
 clrCallStatic(cTypename, "CreateStringDictionary")
 setRDotNet(FALSE)
 clrCallStatic(cTypename, "CreateStringDictionary")

@@ -20,7 +20,7 @@ Create a new CLR object
 \examples{
 \dontrun{
 library(rSharp)
-testClassName <- "Rclr.TestObject";
+testClassName <- "ClrFacade.TestObject";
 (testObj <- clrNew(testClassName))
 # object with a constructor that has parameters
 (testObj <- clrNew(testClassName, as.integer(123)))

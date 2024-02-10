@@ -21,9 +21,9 @@
 # })
 
 # test_that("Basic types of length one are marshalled correctly", {
-  # tNameLOne <- 'Rclr.Tests.RefClasses.LevelOneClass'
-  # tNameLTwo <- 'Rclr.Tests.RefClasses.LevelTwoClass'
-  # tNameLThree <- 'Rclr.Tests.RefClasses.LevelThreeClass'
+  # tNameLOne <- 'ClrFacade.Tests.RefClasses.LevelOneClass'
+  # tNameLTwo <- 'ClrFacade.Tests.RefClasses.LevelTwoClass'
+  # tNameLThree <- 'ClrFacade.Tests.RefClasses.LevelThreeClass'
 
   # obj <- clrNew(tNameLTwo)
   # obj <- clrCobj(obj)

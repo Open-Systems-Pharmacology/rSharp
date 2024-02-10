@@ -5,8 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using Rclr;
-using RDotNet;
 
 namespace ClrFacade
 {
@@ -38,9 +36,9 @@ namespace ClrFacade
       ///    Invoke an instance method of an object
       /// </summary>
       public delegate int CallInstanceMethodDelegate(IntPtr obj, string methodName, IntPtr arguments, int num_objects, IntPtr returnValue);
+
       public static int CallInstanceMethod(IntPtr obj, string methodName, IntPtr arguments, int num_objects, IntPtr returnValue)
       {
-
          RSharpGenericValue[] temparr = new RSharpGenericValue[num_objects];
 
          for (int i = 0; i < num_objects; ++i)
@@ -56,7 +54,7 @@ namespace ClrFacade
          var t = Marshal.PtrToStructure<RSharpGenericValue>(instPtr);
          var instance = ConvertRSharpParameters(new[] { t })[0];
 
-         var result =  InternalCallInstanceMethod(instance, methodName, true, objectArguments);
+         var result = InternalCallInstanceMethod(instance, methodName, true, objectArguments);
          RSharpGenericValue tempRetVal = RSharpGenericValueExtensions.FromObject(result);
 
          Marshal.StructureToPtr(tempRetVal, returnValue, false);
@@ -105,7 +103,6 @@ namespace ClrFacade
       // {
       //    return InternalCallStaticMethod(classType, methodName, true, arguments);
       // }
-
       internal static object InternalCallStaticMethod(Type classType, string methodName, bool tryUseConverter, object[] arguments)
       {
          if (arguments.GetType() == typeof(string[])) // workaround https://r2clr.codeplex.com/workitem/11
@@ -145,7 +142,7 @@ namespace ClrFacade
       {
          if (sexp == IntPtr.Zero)
             return -1;
-         var  result = new SymbolicExpressionWrapper(DataConverter.CreateSymbolicExpression(sexp));
+         var result = new SymbolicExpressionWrapper(DataConverter.CreateSymbolicExpression(sexp));
          RSharpGenericValue tempRetVal = RSharpGenericValueExtensions.FromObject(result);
 
          Marshal.StructureToPtr(tempRetVal, returnValue, false);
@@ -154,6 +151,7 @@ namespace ClrFacade
       }
 
       public delegate int CallStaticMethodDelegate(string typename, string methodName, IntPtr objects, int num_objects, IntPtr returnValue);
+
       public static int CallStaticMethod(string typename, string methodName, IntPtr objects, int num_objects, IntPtr returnValue)
       {
          RSharpGenericValue[] temparr = new RSharpGenericValue[num_objects];
@@ -192,9 +190,9 @@ namespace ClrFacade
       ///    Return a reference to the object currently handled by the custom data converter, if any is in use.
       /// </summary>
       public delegate int CurrentObjectDelegate(IntPtr returnValue);
+
       public static int CurrentObject(IntPtr returnValue)
       {
-
          var result = DataConverter?.CurrentObject;
 
          RSharpGenericValue tempRetVal = RSharpGenericValueExtensions.FromObject(result);
@@ -755,5 +753,4 @@ namespace ClrFacade
          return new DateTime(dateTime.Ticks, (utc ? DateTimeKind.Utc : DateTimeKind.Unspecified));
       }
    }
-
 }

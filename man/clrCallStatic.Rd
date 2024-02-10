@@ -22,7 +22,7 @@ Call a static method on a CLR type
 \examples{
 \dontrun{
 library(rSharp)
-cTypename <- "Rclr.TestCases"
+cTypename <- "ClrFacade.TestCases"
 clrCallStatic(cTypename, "IsTrue", TRUE)
 }
 }

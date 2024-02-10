@@ -20,7 +20,7 @@ List the instance methods of a CLR object
 \examples{
 \dontrun{
 library(rSharp)
-testClassName <- "Rclr.TestObject";
+testClassName <- "ClrFacade.TestObject";
 testObj <- clrNew(testClassName)
 clrGetMethods(testObj)
 clrGetMethods(testObj, 'Get')

@@ -19,7 +19,7 @@ Sets the value of a field or property of an object or class
 \examples{
 \dontrun{
 library(rSharp)
-testClassName <- "Rclr.TestObject";
+testClassName <- "ClrFacade.TestObject";
 testObj <- clrNew(testClassName)
 clrReflect(testObj)
 clrSet(testObj, 'FieldIntegerOne', 42)

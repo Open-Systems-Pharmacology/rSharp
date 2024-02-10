@@ -1,12 +1,10 @@
-﻿using RDotNet;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
+using RDotNet;
 using RDotNet.Internals;
 
-namespace Rclr
+namespace ClrFacade
 {
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate IntPtr ClrObjectToSexpDelegate(IntPtr variant);
@@ -180,11 +178,11 @@ namespace Rclr
             if (obj == null)
                 throw new ArgumentNullException("obj");
             else if (obj is Type)
-                return GetVariantTypename(ClrFacade.ClrFacade.InternalCallStaticMethod((Type)obj, methodName, false, arguments));
+                return GetVariantTypename(global::ClrFacade.ClrFacade.InternalCallStaticMethod((Type)obj, methodName, false, arguments));
             else if (obj is string)
-                return GetVariantTypename(ClrFacade.ClrFacade.InternalCallStaticMethod(ClrFacade.ClrFacade.GetType((string)obj), methodName, false, arguments));
+                return GetVariantTypename(global::ClrFacade.ClrFacade.InternalCallStaticMethod(global::ClrFacade.ClrFacade.GetType((string)obj), methodName, false, arguments));
             else
-                return GetVariantTypename(ClrFacade.ClrFacade.InternalCallInstanceMethod(obj, methodName, false, arguments));
+                return GetVariantTypename(global::ClrFacade.ClrFacade.InternalCallInstanceMethod(obj, methodName, false, arguments));
         }
 
         private static string GetVariantTypeString(VarEnum vt)
@@ -297,7 +295,7 @@ namespace Rclr
                  v =>
                  {
                     bool utc = isUtc(tz);
-                    return ClrFacade.ClrFacade.ForceDateKind(RDateOrigin + TimeSpan.FromTicks((long)(TimeSpan.TicksPerSecond * v)), utc);
+                    return global::ClrFacade.ClrFacade.ForceDateKind(RDateOrigin + TimeSpan.FromTicks((long)(TimeSpan.TicksPerSecond * v)), utc);
                  }
              );
       }

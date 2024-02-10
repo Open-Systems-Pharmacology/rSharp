@@ -20,7 +20,7 @@ List the instance properties of a CLR object
 \examples{
 \dontrun{
 library(rSharp)
-testClassName <- "Rclr.TestObject";
+testClassName <- "ClrFacade.TestObject";
 testObj <- clrNew(testClassName)
 clrGetProperties(testObj)
 clrGetProperties(testObj, 'One')

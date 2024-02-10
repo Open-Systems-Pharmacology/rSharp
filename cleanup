@@ -23,7 +23,7 @@ fi
 
 rm -f $RCLR_SRC_DIR/*.o
 rm -f $RCLR_SRC_DIR/*.rds
-rm -f $RCLR_SRC_DIR/rClr.dll
+rm -f $RCLR_SRC_DIR/rSharp.dll
 rm -rf $RCLR_SRC_DIR/x64
 rm -rf $RCLR_SRC_DIR/Debug
 rm -rf $RCLR_SRC_DIR/MonoInstall

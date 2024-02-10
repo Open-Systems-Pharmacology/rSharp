@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Rclr.Tests
+namespace ClrFacade.Tests
 {
     /// <summary>
     /// Utilities used for testing purposes.

@@ -1,64 +1,66 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using RDotNet;
 
-namespace Rclr
+namespace ClrFacade
 {
-    public class RdotnetDataConverterTests
-    {
-        public class MemTestObjectRDotnet : RDotNet.NumericVector
-        {
-            public static int counter = 0;
-            public MemTestObjectRDotnet(double[] values)
-                : base(RdotnetDataConverterTests.REngine, values)
-            {
-                counter++;
-            }
-            ~MemTestObjectRDotnet() { counter--; }
-        }
+   public class RdotnetDataConverterTests
+   {
+      public class MemTestObjectRDotnet : NumericVector
+      {
+         public static int counter = 0;
 
-        public static int GetMemTestObjCounterRDotnet()
-        {
-            return MemTestObjectRDotnet.counter;
-        }
+         public MemTestObjectRDotnet(double[] values)
+            : base(REngine, values)
+         {
+            counter++;
+         }
 
-        public static object CreateMemTestObjRDotnet()
-        {
-            return new MemTestObjectRDotnet(Rclr.TestCases.CreateNumArray());
-        }
+         ~MemTestObjectRDotnet()
+         {
+            counter--;
+         }
+      }
 
-        internal static REngine REngine
-        {
-            get
-            {
-                var rdotnetconverter = ClrFacade.ClrFacade.DataConverter as RDotNetDataConverter;
-                if (rdotnetconverter == null)
-                    return null;
-                else
-                    return RDotNetDataConverter.GetEngine();
-            }
-        }
+      public static int GetMemTestObjCounterRDotnet()
+      {
+         return MemTestObjectRDotnet.counter;
+      }
 
-        private static Tuple<string, SymbolicExpression> tc(string name, double[] values)
-        {
-            return Tuple.Create<string, SymbolicExpression>(name, REngine.CreateNumericVector(values));
-        }
+      public static object CreateMemTestObjRDotnet()
+      {
+         return new MemTestObjectRDotnet(TestCases.CreateNumArray());
+      }
 
-        private static Tuple<string, SymbolicExpression> tc(string name, string[] values)
-        {
-            return Tuple.Create<string, SymbolicExpression>(name, REngine.CreateCharacterVector(values));
-        }
+      internal static REngine REngine
+      {
+         get
+         {
+            var rdotnetconverter = ClrFacade.DataConverter as RDotNetDataConverter;
+            if (rdotnetconverter == null)
+               return null;
+            else
+               return RDotNetDataConverter.GetEngine();
+         }
+      }
 
-        public static SymbolicExpression CreateTestDataFrame()
-        {
-            var dfFun = REngine.Evaluate("data.frame").AsFunction();
-            var result = dfFun.InvokeNamed(
-                tc("name", new[] {"a","b","c"}),
-                tc("a", new[] {1.0, 2.0, 3.0})
-                );
-            return result;
-        }
-    }
+      private static Tuple<string, SymbolicExpression> tc(string name, double[] values)
+      {
+         return Tuple.Create<string, SymbolicExpression>(name, REngine.CreateNumericVector(values));
+      }
+
+      private static Tuple<string, SymbolicExpression> tc(string name, string[] values)
+      {
+         return Tuple.Create<string, SymbolicExpression>(name, REngine.CreateCharacterVector(values));
+      }
+
+      public static SymbolicExpression CreateTestDataFrame()
+      {
+         var dfFun = REngine.Evaluate("data.frame").AsFunction();
+         var result = dfFun.InvokeNamed(
+            tc("name", new[] { "a", "b", "c" }),
+            tc("a", new[] { 1.0, 2.0, 3.0 })
+         );
+         return result;
+      }
+   }
 }

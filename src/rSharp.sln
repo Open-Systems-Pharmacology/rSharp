@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rClr", "rClr.vcxproj", "{1EE5689F-F71E-49E1-874A-0DF63E174635}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rSharp", "rSharp.vcxproj", "{1EE5689F-F71E-49E1-874A-0DF63E174635}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClrFacade", "ClrFacade\ClrFacade.csproj", "{024B0C26-BED0-467D-B332-E9796B756133}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RclrTests", "RclrTests\RclrTests.csproj", "{D07290EB-5755-453C-8CD6-5CDDED3400BE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rSharpTests", "rSharpTests\rSharpTests.csproj", "{D07290EB-5755-453C-8CD6-5CDDED3400BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

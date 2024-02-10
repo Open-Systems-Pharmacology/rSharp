@@ -20,16 +20,16 @@ Check whether an object is of a certain type. This function is meant to match th
 \examples{
 \dontrun{
 library(rSharp)
-testClassName <- "Rclr.TestObject";
+testClassName <- "ClrFacade.TestObject";
 (testObj <- clrNew(testClassName))
 clrIs(testObj, testClassName)
 clrIs(testObj, 'System.Object')
 clrIs(testObj, 'System.Double')
-(testObj <- clrNew('Rclr.TestMethodBinding'))
+(testObj <- clrNew('ClrFacade.TestMethodBinding'))
 # Test for interface definitions
-clrIs(testObj, 'Rclr.ITestMethodBindings')
-clrIs(testObj, clrGetType('Rclr.ITestMethodBindings'))
-clrIs(testObj, clrGetType('Rclr.TestMethodBinding'))
+clrIs(testObj, 'ClrFacade.ITestMethodBindings')
+clrIs(testObj, clrGetType('ClrFacade.ITestMethodBindings'))
+clrIs(testObj, clrGetType('ClrFacade.TestMethodBinding'))
 clrIs(testObj, clrGetType('System.Reflection.Assembly'))
 }
 }

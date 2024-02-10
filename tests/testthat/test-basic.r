@@ -12,7 +12,7 @@ test_that("Booleans are marshalled correctly", {
 })
 
 test_that("Object constructors calls work", {
-  tName <- 'Rclr.TestObject'
+  tName <- 'ClrFacade.TestObject'
   i1 <- as.integer(23) ; i2 <- as.integer(42)
   d1 <- 1.234; d2 <- 2.345;
   obj <- clrNew(tName)
@@ -37,7 +37,7 @@ test_that("Basic types of length one are marshalled correctly", {
 })
 
 test_that("Basic types of length zero are marshalled correctly", {
-  tn <- "Rclr.TestArrayMemoryHandling"
+  tn <- "ClrFacade.TestArrayMemoryHandling"
 
   expectEmptyArrayConv <- function(clrType, expectedRObj) {
     expectArrayTypeConv( clrType, 0L , expectedRObj )
@@ -89,8 +89,8 @@ test_that("Basic types of length zero are marshalled correctly", {
 
 
 test_that("non-empty arrays of non-basic .NET objects are handled", {
-  tn <- "Rclr.TestArrayMemoryHandling"
-  tName <- 'Rclr.TestObject'
+  tn <- "ClrFacade.TestArrayMemoryHandling"
+  tName <- 'ClrFacade.TestObject'
 
   testListEqual <- function(expectObj, expectedLength, actual) {
     expect_equal(expectedLength, length(actual))
@@ -115,7 +115,7 @@ if(clrGetInnerPkgName()=="rClrMs")
     expect_equal(clrVT(cTypename, 'IsTrue', TRUE), "VT_BOOL")
     expect_equal(clrVT('System.Convert', 'ToInt64', 123L), "VT_I8")
     expect_equal(clrVT('System.Convert', 'ToUInt64', 123L), "VT_UI8")
-    tn <- "Rclr.TestArrayMemoryHandling"
+    tn <- "ClrFacade.TestArrayMemoryHandling"
     expect_equal( clrVT(tn, "CreateArray_DateTime", 0L ), "VT_ARRAY | VT_DATE" )
     # expect_equal( clrVT(tn, "CreateArray_Type", 3L, clrGetType('System.Double')), "VT_ARRAY | VT_DATE" )
   })
@@ -173,18 +173,18 @@ test_that("Complex numbers are converted", {
 
 test_that("Methods with variable number of parameters with c# 'params' keyword", {
   testObj <- clrNew(testClassName)
-  browser()
   actual <- clrCall(testObj, "TestParams", "Hello, ", "World!", 1L, 2L, 3L, 6L, 5L, 4L)
   expected <- "Hello, World!123654"
   expect_equal(actual, expected=expected)
   actual <- clrCall(testObj, "TestParams", "Hello, ", "World!", as.integer(1:6))
   expected <- "Hello, World!123456"
+  browser()
   expect_equal(actual, expected=expected)
 })
 
 test_that("Correct method binding based on parameter types", {
   mkArrayTypeName <- function(typeName) { paste(typeName, '[]', sep='') }
-  f <- function(...){ clrCallStatic('Rclr.TestMethodBinding', 'SomeStaticMethod', ...) }
+  f <- function(...){ clrCallStatic('ClrFacade.TestMethodBinding', 'SomeStaticMethod', ...) }
   printIfDifferent <- function( got, expected ) { if(any(got != expected)) {print( paste( "got", got, ", expected", expected))} }
   g <- function(values, typeName) {
     if(is.list(values)) { # this is what one gets with a concatenation of S4 objects, when we use c(testObj,testObj) with CLR objects
@@ -229,7 +229,7 @@ test_that("Correct method binding based on parameter types", {
     expect_equal( f(letters[1:3], letters[4:6]), c(mkArrayTypeName(stringName), mkArrayTypeName(stringName)) )
   }
   testMethodBinding()
-  obj <- clrNew('Rclr.TestMethodBinding')
+  obj <- clrNew('ClrFacade.TestMethodBinding')
   f <- function(...){ clrCall(obj, 'SomeInstanceMethod', ...) }
   testMethodBinding()
   # Test that methods implemented to comply with an interface are found, even if the method is explicitely implemented.
@@ -320,10 +320,10 @@ test_that("CLR type compatibility checking", {
   expect_true(clrIs(testObj, testClassName))
   expect_true(clrIs(testObj, 'System.Object'))
   expect_false(clrIs(testObj, 'System.Double'))
-  testObj <- clrNew('Rclr.TestMethodBinding')
-  expect_true(clrIs(testObj, 'Rclr.ITestMethodBindings'))
-  expect_true(clrIs(testObj, clrGetType('Rclr.ITestMethodBindings')))
-  expect_true(clrIs(testObj, clrGetType('Rclr.TestMethodBinding')))
+  testObj <- clrNew('ClrFacade.TestMethodBinding')
+  expect_true(clrIs(testObj, 'ClrFacade.ITestMethodBindings'))
+  expect_true(clrIs(testObj, clrGetType('ClrFacade.ITestMethodBindings')))
+  expect_true(clrIs(testObj, clrGetType('ClrFacade.TestMethodBinding')))
   expect_false(clrIs(testObj, clrGetType('System.Reflection.Assembly')))
   expect_error(clrIs(testObj, testObj))
 })
@@ -335,7 +335,7 @@ test_that("Loaded assemblies discovery", {
 })
 
 test_that("Object members discovery behaves as expected", {
-  expect_true('Rclr.TestObject' %in% clrGetTypesInAssembly('ClrFacade'))
+  expect_true('ClrFacade.TestObject' %in% clrGetTypesInAssembly('ClrFacade'))
   testObj = clrNew(testClassName)
   members = clrReflect(testObj)
 
@@ -398,7 +398,7 @@ test_that("Retrieval of object or class (i.e. static) members values behaves as 
 
 test_that("enums get/set", {
   # very basic support for the time being. Behavior to be defined for cases such as enums with binary operators ([FlagsAttribute])
-  eType <- 'Rclr.TestEnum'
+  eType <- 'ClrFacade.TestEnum'
   expect_that(clrGetEnumNames(eType), equals(c('A','B','C')))
 #  TODO, but problematic.
 #  e <- clrCall(cTypename, 'GetTestEnum', 'B')
