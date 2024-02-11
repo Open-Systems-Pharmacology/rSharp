@@ -55,16 +55,6 @@ typedef bool RSHARP_BOOL;
 #pragma comment(lib, "mscoree.lib")
 
 
-// DO WE NEED THIS????
-#ifdef MS_CLR_TLB
-//Import mscorlib.tlb (Microsoft Common Language Runtime Class Library).
-#import <mscorlib.tlb> raw_interfaces_only				\
-	high_property_prefixes("_get","_put","_putref")		\
-	rename("ReportEvent", "InteropServices_ReportEvent")
-#else
-#import "mscorlib.tlh"
-#endif
-using namespace mscorlib;
 
 #endif
 

@@ -141,7 +141,7 @@ test_that("Numeric arrays are marshalled correctly", {
 
   expectedNumArray[3] = NA
   expect_that( callTestCase( "CreateNumArrayMissingVal"), equals(expectedNumArray) )
-  expect_true( callTestCase( "NumArrayMissingValsEquals", expectedNumArray ) )
+  expect_true( callTestCase( "NumArrayMissingValuesEquals", expectedNumArray ) )
 
 })
 

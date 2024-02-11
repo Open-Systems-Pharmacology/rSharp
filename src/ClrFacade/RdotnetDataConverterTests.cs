@@ -7,23 +7,23 @@ namespace ClrFacade
    {
       public class MemTestObjectRDotnet : NumericVector
       {
-         public static int counter = 0;
+         public static int Counter = 0;
 
          public MemTestObjectRDotnet(double[] values)
             : base(REngine, values)
          {
-            counter++;
+            Counter++;
          }
 
          ~MemTestObjectRDotnet()
          {
-            counter--;
+            Counter--;
          }
       }
 
       public static int GetMemTestObjCounterRDotnet()
       {
-         return MemTestObjectRDotnet.counter;
+         return MemTestObjectRDotnet.Counter;
       }
 
       public static object CreateMemTestObjRDotnet()
@@ -35,11 +35,8 @@ namespace ClrFacade
       {
          get
          {
-            var rdotnetconverter = ClrFacade.DataConverter as RDotNetDataConverter;
-            if (rdotnetconverter == null)
-               return null;
-            else
-               return RDotNetDataConverter.GetEngine();
+            var rDotNetConverter = Internal.DataConverter as RDotNetDataConverter;
+            return rDotNetConverter == null ? null : RDotNetDataConverter.GetEngine();
          }
       }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using ClrFacade.Tests.RefClasses;
+// ReSharper disable UnusedMember.Global called dynamically
 
 namespace ClrFacade
 {
@@ -777,17 +778,19 @@ namespace ClrFacade
 
       public static string[] GetOptionalParamsTestCases()
       {
-         var list = new List<string>();
-         list.Add("int p1, int p2, params int [] p3");
-         list.Add("object p1, int p2, params int [] p3");
-         list.Add("int p1, object p2, params int [] p3");
-         list.Add("object p1, object p2, params int [] p3");
-         list.Add("int p1, int p2, params object [] p3");
-         list.Add("object p1, int p2, params object [] p3");
-         list.Add("int p1, object p2, params object [] p3");
-         list.Add("object p1, object p2, params object [] p3");
-         list.Add("object p1");
-         list.Add("int p1");
+         var list = new List<string>
+         {
+            "int p1, int p2, params int [] p3",
+            "object p1, int p2, params int [] p3",
+            "int p1, object p2, params int [] p3",
+            "object p1, object p2, params int [] p3",
+            "int p1, int p2, params object [] p3",
+            "object p1, int p2, params object [] p3",
+            "int p1, object p2, params object [] p3",
+            "object p1, object p2, params object [] p3",
+            "object p1",
+            "int p1"
+         };
          return list.ToArray();
       }
 

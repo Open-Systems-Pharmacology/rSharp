@@ -758,7 +758,7 @@ setClrRefClass <- function(typeName,
                            # as.list(class$getInterfaces()))
 
           # If the type is the type for an interface, then GetInterfacesFullnames will not return 'itself', so no need to deal with infinite recursion here.
-          interfaces <- clrCallStatic(reflectionHelperTypeName, 'GetInterfacesFullnames', type)
+          interfaces <- clrCallStatic(reflectionHelperTypeName, 'GetInterfacesFullNames', type)
 
           for (ifname in interfaces)
            setClrRefClass(ifname, env)

@@ -4,7 +4,7 @@ using RDotNet;
 namespace ClrFacade
 {
    /// <summary>
-   ///    Interface for objects that are convering CLR objects to a representation in R
+   ///    Interface for objects that are converting CLR objects to a representation in R
    /// </summary>
    /// <remarks>
    ///    Currently the only concrete implementation is a data converter that uses RDotNet
@@ -13,14 +13,11 @@ namespace ClrFacade
    public interface IDataConverter
    {
       object ConvertToR(object obj);
-      object ConvertFromR(IntPtr pointer, int sexptype);
+      object ConvertFromR(IntPtr pointer, int sExpressionType);
 
       /// <summary>
       ///    Return a reference to the object currently handled by the custom data converter, if any is in use.
       /// </summary>
-      /// <remarks>
-      ///    See https://rclr.codeplex.com/workitem/33 for why we need this.
-      /// </remarks>
       object CurrentObject { get; }
 
       // TODO: this should not be here, but for now a convenient way to access Rf_error via R.NET

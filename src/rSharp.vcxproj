@@ -46,6 +46,9 @@
     <ClCompile Include="rSharp.cpp">
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="rSharp.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1EE5689F-F71E-49E1-874A-0DF63E174635}</ProjectGuid>
     <RootNamespace>rClr</RootNamespace>

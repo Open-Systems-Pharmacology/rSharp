@@ -8,806 +8,745 @@ using System.Runtime.InteropServices;
 using RDotNet;
 using RDotNet.NativeLibrary;
 
-namespace ClrFacade
+namespace ClrFacade;
+
+public class RDotNetDataConverter : IDataConverter
 {
-//    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-//    internal delegate void Rf_error(string msg);
-
-   public class RDotNetDataConverter : IDataConverter
+   private RDotNetDataConverter(string pathToNativeSharedObj)
    {
-      private RDotNetDataConverter(string pathToNativeSharedObj)
+      var dllName = pathToNativeSharedObj;
+      // HACK - this feels wrong, at least not clean. All I have time for.
+      if (string.IsNullOrEmpty(dllName))
       {
-         var dllName = pathToNativeSharedObj;
-         // HACK - this feels wrong, at least not clean. All I have time for.
-         if (string.IsNullOrEmpty(dllName))
-         {
-            string assmbPath = Assembly.GetAssembly(this.GetType()).Location;
-            assmbPath = Path.GetFullPath(assmbPath);
-            var libDir = Path.GetDirectoryName(assmbPath);
+         var assemblyPath = Assembly.GetAssembly(GetType()).Location;
+         assemblyPath = Path.GetFullPath(assemblyPath);
+         var libDir = Path.GetDirectoryName(assemblyPath);
 
-            if (NativeUtility.IsUnix)
-               dllName = Path.Combine(libDir, "rSharp.so");
-            else
-            {
-               dllName = Path.Combine(libDir, "rSharpMs.dll"
-               );
-            }
-         }
-
-         DataConversionHelper.RclrNativeDll = new RclrUnmanagedDll(dllName);
-
-         SetupREngine();
-         // The Mono API already has some unhandled exception reporting.
-         // TODO Use the following if it works well for both CLRuntimes.
-//#if !MONO
-         // OBSOLETE? SetupExceptionHandling();
-//#endif
-         converterFunctions = new Dictionary<Type, Func<object, SymbolicExpression>>();
-
-         ConvertVectors = true;
-         ConvertValueTypes = true;
-
-         addBijectiveConversions();
-         addMultidimensionalArrays();
-
-         ConvertAdvancedTypes = true;
+         dllName = Path.Combine(libDir, NativeUtility.IsUnix ? "rSharp.so" : "rSharpMs.dll");
       }
 
-      private void addGeneralTypes()
+      DataConversionHelper.RclrNativeDll = new RSharpUnmanagedDll(dllName);
+
+      setupREngine();
+      _converterFunctions = new Dictionary<Type, Func<object, SymbolicExpression>>();
+
+      ConvertVectors = true;
+      ConvertValueTypes = true;
+
+      addBijectiveConversions();
+      addMultidimensionalArrays();
+
+      ConvertAdvancedTypes = true;
+   }
+
+   private void addGeneralTypes()
+   {
+      // Add some default converters for more general types
+      if (_converterFunctions.ContainsKey(typeof(Array))) return;
+      _converterFunctions.Add(typeof(Array), convertArrayObject);
+      _converterFunctions.Add(typeof(object), convertObject);
+   }
+
+   private void removeGeneralTypes()
+   {
+      if (!_converterFunctions.ContainsKey(typeof(Array))) return;
+      _converterFunctions.Remove(typeof(Array));
+      _converterFunctions.Remove(typeof(object));
+   }
+
+   private void addDictionaries()
+   {
+      if (_converterFunctions.ContainsKey(typeof(Dictionary<string, double>))) return;
+      _converterFunctions.Add(typeof(Dictionary<string, double>), convertDictionary<double>);
+      _converterFunctions.Add(typeof(Dictionary<string, float>), convertDictionary<float>);
+      _converterFunctions.Add(typeof(Dictionary<string, string>), convertDictionary<string>);
+      _converterFunctions.Add(typeof(Dictionary<string, int>), convertDictionary<int>);
+      _converterFunctions.Add(typeof(Dictionary<string, DateTime>), convertDictionary<DateTime>);
+
+      _converterFunctions.Add(typeof(Dictionary<string, double[]>), convertDictionary<double[]>);
+      _converterFunctions.Add(typeof(Dictionary<string, float[]>), convertDictionary<float[]>);
+      _converterFunctions.Add(typeof(Dictionary<string, string[]>), convertDictionary<string[]>);
+      _converterFunctions.Add(typeof(Dictionary<string, int[]>), convertDictionary<int[]>);
+      _converterFunctions.Add(typeof(Dictionary<string, DateTime[]>), convertDictionary<DateTime[]>);
+   }
+
+   private void removeDictionaries()
+   {
+      if (!_converterFunctions.ContainsKey(typeof(Dictionary<string, double>))) return;
+      _converterFunctions.Remove(typeof(Dictionary<string, double>));
+      _converterFunctions.Remove(typeof(Dictionary<string, float>));
+      _converterFunctions.Remove(typeof(Dictionary<string, string>));
+      _converterFunctions.Remove(typeof(Dictionary<string, int>));
+      _converterFunctions.Remove(typeof(Dictionary<string, DateTime>));
+
+      _converterFunctions.Remove(typeof(Dictionary<string, double[]>));
+      _converterFunctions.Remove(typeof(Dictionary<string, float[]>));
+      _converterFunctions.Remove(typeof(Dictionary<string, string[]>));
+      _converterFunctions.Remove(typeof(Dictionary<string, int[]>));
+      _converterFunctions.Remove(typeof(Dictionary<string, DateTime[]>));
+   }
+
+   private void addMultidimensionalArrays()
+   {
+      if (_converterFunctions.ContainsKey(typeof(float[,]))) return;
+      _converterFunctions.Add(typeof(float[,]), convertMatrixSingle);
+      _converterFunctions.Add(typeof(double[,]), convertMatrixDouble);
+      _converterFunctions.Add(typeof(int[,]), convertMatrixInt);
+      _converterFunctions.Add(typeof(string[,]), convertMatrixString);
+
+      _converterFunctions.Add(typeof(float[][]), convertMatrixJaggedSingle);
+      _converterFunctions.Add(typeof(double[][]), convertMatrixJaggedDouble);
+      _converterFunctions.Add(typeof(int[][]), convertMatrixJaggedInt);
+      _converterFunctions.Add(typeof(string[][]), convertMatrixJaggedString);
+   }
+
+   private void removeMultidimensionalArrays()
+   {
+      if (!_converterFunctions.ContainsKey(typeof(float[,]))) return;
+      _converterFunctions.Remove(typeof(float[,]));
+      _converterFunctions.Remove(typeof(double[,]));
+      _converterFunctions.Remove(typeof(int[,]));
+      _converterFunctions.Remove(typeof(string[,]));
+
+      _converterFunctions.Remove(typeof(float[][]));
+      _converterFunctions.Remove(typeof(double[][]));
+      _converterFunctions.Remove(typeof(int[][]));
+      _converterFunctions.Remove(typeof(string[][]));
+   }
+
+   private void addBijectiveConversions()
+   {
+      _converterFunctions.Add(typeof(float), convertSingle);
+      _converterFunctions.Add(typeof(double), convertDouble);
+      _converterFunctions.Add(typeof(byte), convertByte);
+      _converterFunctions.Add(typeof(char), convertChar);
+      _converterFunctions.Add(typeof(bool), convertBool);
+      _converterFunctions.Add(typeof(int), convertInt);
+      _converterFunctions.Add(typeof(string), convertString);
+      _converterFunctions.Add(typeof(DateTime), convertDateTime);
+      _converterFunctions.Add(typeof(TimeSpan), convertTimeSpan);
+      _converterFunctions.Add(typeof(Complex), convertComplex);
+
+      _converterFunctions.Add(typeof(float[]), convertArraySingle);
+      _converterFunctions.Add(typeof(double[]), convertArrayDouble);
+      _converterFunctions.Add(typeof(byte[]), convertArrayByte);
+      _converterFunctions.Add(typeof(bool[]), convertArrayBool);
+      _converterFunctions.Add(typeof(int[]), convertArrayInt);
+      _converterFunctions.Add(typeof(string[]), convertArrayString);
+      _converterFunctions.Add(typeof(char[]), convertArrayChar);
+      _converterFunctions.Add(typeof(DateTime[]), convertArrayDateTime);
+      _converterFunctions.Add(typeof(TimeSpan[]), convertArrayTimeSpan);
+      _converterFunctions.Add(typeof(Complex[]), convertArrayComplex);
+   }
+
+   public void Error(string msg)
+   {
+      // TODO consider removing; since this looked like not working.
+      throw new NotSupportedException();
+   }
+
+   public object CurrentObject => CurrentObjectToConvert;
+
+   private static void setUseRDotNet(bool useIt)
+   {
+      var useRDotNet = DataConversionHelper.RclrNativeDll.GetFunctionAddress("use_rdotnet");
+      if (useRDotNet == IntPtr.Zero)
       {
-         // Add some default converters for more general types
-         if (converterFunctions.ContainsKey(typeof(Array))) return;
-         converterFunctions.Add(typeof(Array), ConvertArrayObject);
-         converterFunctions.Add(typeof(object), ConvertObject);
+         throw new EntryPointNotFoundException("Native symbol use_rdotnet not found");
       }
 
-      private void removeGeneralTypes()
-      {
-         if (!converterFunctions.ContainsKey(typeof(Array))) return;
-         converterFunctions.Remove(typeof(Array));
-         converterFunctions.Remove(typeof(object));
-      }
+      Marshal.WriteInt32(useRDotNet, useIt ? 1 : 0);
+   }
 
-      private void addDictionaries()
-      {
-         if (converterFunctions.ContainsKey(typeof(Dictionary<string, double>))) return;
-         converterFunctions.Add(typeof(Dictionary<string, double>), ConvertDictionary<double>);
-         converterFunctions.Add(typeof(Dictionary<string, float>), ConvertDictionary<float>);
-         converterFunctions.Add(typeof(Dictionary<string, string>), ConvertDictionary<string>);
-         converterFunctions.Add(typeof(Dictionary<string, int>), ConvertDictionary<int>);
-         converterFunctions.Add(typeof(Dictionary<string, DateTime>), ConvertDictionary<DateTime>);
+   /// <summary>
+   ///    Enable/disable the use of this data converter in the R-CLR interop data marshalling.
+   /// </summary>
+   public static void SetRDotNet(bool setIt, string pathToNativeSharedObj = null)
+   {
+      Internal.DataConverter = setIt ? getInstance(pathToNativeSharedObj) : null;
+      setUseRDotNet(setIt);
+   }
 
-         converterFunctions.Add(typeof(Dictionary<string, double[]>), ConvertDictionary<double[]>);
-         converterFunctions.Add(typeof(Dictionary<string, float[]>), ConvertDictionary<float[]>);
-         converterFunctions.Add(typeof(Dictionary<string, string[]>), ConvertDictionary<string[]>);
-         converterFunctions.Add(typeof(Dictionary<string, int[]>), ConvertDictionary<int[]>);
-         converterFunctions.Add(typeof(Dictionary<string, DateTime[]>), ConvertDictionary<DateTime[]>);
-      }
+   /// <summary>
+   ///    Enable/disable the use of this data converter for more "advanced" but unidirectional.
+   /// </summary>
+   public static void SetConvertAdvancedTypes(bool enable)
+   {
+      getInstance(null).ConvertAdvancedTypes = enable;
+   }
 
-      private void removeDictionaries()
-      {
-         if (!converterFunctions.ContainsKey(typeof(Dictionary<string, double>))) return;
-         converterFunctions.Remove(typeof(Dictionary<string, double>));
-         converterFunctions.Remove(typeof(Dictionary<string, float>));
-         converterFunctions.Remove(typeof(Dictionary<string, string>));
-         converterFunctions.Remove(typeof(Dictionary<string, int>));
-         converterFunctions.Remove(typeof(Dictionary<string, DateTime>));
-
-         converterFunctions.Remove(typeof(Dictionary<string, double[]>));
-         converterFunctions.Remove(typeof(Dictionary<string, float[]>));
-         converterFunctions.Remove(typeof(Dictionary<string, string[]>));
-         converterFunctions.Remove(typeof(Dictionary<string, int[]>));
-         converterFunctions.Remove(typeof(Dictionary<string, DateTime[]>));
-      }
-
-      private void addMultidimensionalArrays()
-      {
-         if (converterFunctions.ContainsKey(typeof(float[,]))) return;
-         converterFunctions.Add(typeof(float[,]), ConvertMatrixSingle);
-         converterFunctions.Add(typeof(double[,]), ConvertMatrixDouble);
-         converterFunctions.Add(typeof(int[,]), ConvertMatrixInt);
-         converterFunctions.Add(typeof(string[,]), ConvertMatrixString);
-
-         converterFunctions.Add(typeof(float[][]), ConvertMatrixJaggedSingle);
-         converterFunctions.Add(typeof(double[][]), ConvertMatrixJaggedDouble);
-         converterFunctions.Add(typeof(int[][]), ConvertMatrixJaggedInt);
-         converterFunctions.Add(typeof(string[][]), ConvertMatrixJaggedString);
-      }
-
-      private void removeMultidimensionalArrays()
-      {
-         if (!converterFunctions.ContainsKey(typeof(float[,]))) return;
-         converterFunctions.Remove(typeof(float[,]));
-         converterFunctions.Remove(typeof(double[,]));
-         converterFunctions.Remove(typeof(int[,]));
-         converterFunctions.Remove(typeof(string[,]));
-
-         converterFunctions.Remove(typeof(float[][]));
-         converterFunctions.Remove(typeof(double[][]));
-         converterFunctions.Remove(typeof(int[][]));
-         converterFunctions.Remove(typeof(string[][]));
-      }
-
-      private void addBijectiveConversions()
-      {
-         converterFunctions.Add(typeof(float), ConvertSingle);
-         converterFunctions.Add(typeof(double), ConvertDouble);
-         converterFunctions.Add(typeof(byte), ConvertByte);
-         converterFunctions.Add(typeof(char), ConvertChar);
-         converterFunctions.Add(typeof(bool), ConvertBool);
-         converterFunctions.Add(typeof(int), ConvertInt);
-         converterFunctions.Add(typeof(string), ConvertString);
-         converterFunctions.Add(typeof(DateTime), ConvertDateTime);
-         converterFunctions.Add(typeof(TimeSpan), ConvertTimeSpan);
-         converterFunctions.Add(typeof(Complex), ConvertComplex);
-
-         converterFunctions.Add(typeof(float[]), ConvertArraySingle);
-         converterFunctions.Add(typeof(double[]), ConvertArrayDouble);
-         converterFunctions.Add(typeof(byte[]), ConvertArrayByte);
-         converterFunctions.Add(typeof(bool[]), ConvertArrayBool);
-         converterFunctions.Add(typeof(int[]), ConvertArrayInt);
-         converterFunctions.Add(typeof(string[]), ConvertArrayString);
-         converterFunctions.Add(typeof(char[]), ConvertArrayChar);
-         converterFunctions.Add(typeof(DateTime[]), ConvertArrayDateTime);
-         converterFunctions.Add(typeof(TimeSpan[]), ConvertArrayTimeSpan);
-         converterFunctions.Add(typeof(Complex[]), ConvertArrayComplex);
-      }
-
-      public void Error(string msg)
-      {
-         // TODO consider removing; since this looked like not working.
-         throw new NotSupportedException();
-         //engine.Error(msg);
-      }
-
-      public object CurrentObject
-      {
-         get { return CurrentObjectToConvert; }
-      }
-
-      private static void SetUseRDotNet(bool useIt)
-      {
-         IntPtr UseRDotNet = DataConversionHelper.RclrNativeDll.GetFunctionAddress("use_rdotnet");
-         if (UseRDotNet == IntPtr.Zero)
-         {
-            throw new EntryPointNotFoundException("Native symbol use_rdotnet not found");
-         }
-
-         Marshal.WriteInt32(UseRDotNet, useIt ? 1 : 0);
-      }
-
-      /// <summary>
-      ///    Enable/disable the use of this data converter in the R-CLR interop data marshalling.
-      /// </summary>
-      public static void SetRDotNet(bool setit, string pathToNativeSharedObj = null)
-      {
-         if (setit)
-            ClrFacade.DataConverter = GetInstance(pathToNativeSharedObj);
-         else
-            ClrFacade.DataConverter = null;
-         SetUseRDotNet(setit);
-      }
-
-      /// <summary>
-      ///    Enable/disable the use of this data converter for more "advanced" but unidirectional.
-      /// </summary>
-      public static void SetConvertAdvancedTypes(bool enable)
-      {
-         GetInstance(null).ConvertAdvancedTypes = enable;
-      }
-
-      /// <summary>
-      ///    Convert an object, if possible, using RDotNet capabilities
-      /// </summary>
-      /// <remarks>
-      ///    If a conversion to an RDotNet SymbolicExpression was possible,
-      ///    this returns the IntPtr SafeHandle.DangerousGetHandle() to be passed to R.
-      ///    If the object is null or such that no known conversion is possible, the same object
-      ///    as the input parameter is returned.
-      /// </remarks>
-      public object ConvertToR(object obj)
-      {
-         ClearSexpHandles();
-         if (obj == null)
-            return null;
-         var sexp = obj as SymbolicExpression;
-         if (sexp != null)
-            return ReturnHandle(sexp);
-
-         sexp = TryConvertToSexp(obj);
-
-         if (sexp == null)
-            return obj;
-         return ReturnHandle(sexp);
-      }
-
-      private void ClearSexpHandles()
-      {
-         handles.Clear();
-      }
-
-      private static object ReturnHandle(SymbolicExpression sexp)
-      {
-         AddSexpHandle(sexp);
-         return sexp.DangerousGetHandle();
-      }
-
-      private static void AddSexpHandle(SymbolicExpression sexp)
-      {
-         handles.Add(sexp);
-      }
-
-      /// <summary>
-      ///    A list to reference to otherwise transient SEXP created by this class.
-      ///    This is to prevent .NET and R to trigger GC before rClr function calls have returned to R.
-      /// </summary>
-      private static readonly List<SymbolicExpression> handles = new List<SymbolicExpression>();
-
-      public object ConvertFromR(IntPtr pointer, int sexptype)
-      {
-         throw new NotImplementedException();
-         //return new DataFrame(engine, pointer);
-      }
-
-      /// <summary>
-      ///    Gets/sets whether to convert vectors using R.NET. Most users should never need to modify the default.
-      /// </summary>
-      public bool ConvertVectors { get; set; }
-
-      /// <summary>
-      ///    Gets/sets whether to convert non-primitive value types and vector thereof, e.g. TimeSpan and DateTime.
-      ///    Most users should never need to modify the default.
-      /// </summary>
-      public bool ConvertValueTypes { get; set; }
-
-      private bool convertAdvancedTypes;
-
-      /// <summary>
-      ///    Gets/sets whether to convert more complicated types such as dictionaries, arrays of reference types, etc.
-      /// </summary>
-      public bool ConvertAdvancedTypes
-      {
-         get { return convertAdvancedTypes; }
-         set
-         {
-            convertAdvancedTypes = value;
-            if (value)
-            {
-               addDictionaries();
-               addGeneralTypes();
-            }
-            else
-            {
-               removeDictionaries();
-               removeGeneralTypes();
-            }
-         }
-      }
-
-      private void SetupREngine()
-      {
-         if (engine == null)
-         {
-            engine = REngine.GetInstance(initialize: false);
-            engine.Initialize(setupMainLoop: false);
-            engine.AutoPrint = false;
-         }
-      }
-
-      private static RDotNetDataConverter singleton;
-
-      private static RDotNetDataConverter GetInstance(string pathToNativeSharedObj)
-      {
-         // Make sure this is set only once (RDotNet known limitation to one engine per session, effectively a singleton).
-         if (singleton == null)
-            singleton = new RDotNetDataConverter(pathToNativeSharedObj);
-         return singleton;
-      }
-
-      private readonly Dictionary<Type, Func<object, SymbolicExpression>> converterFunctions;
-
-      private SymbolicExpression TryConvertToSexp(object obj)
-      {
-         SymbolicExpression sHandle = null;
-         if (obj == null)
-            throw new ArgumentNullException("object to convert to R must not be a null reference");
-         var converter = TryGetConverter(obj);
-         sHandle = (converter == null ? null : converter.Invoke(obj));
-         return sHandle;
-      }
-
-      private Func<object, SymbolicExpression> TryGetConverter(object obj)
-      {
-         var t = obj.GetType();
-         Func<object, SymbolicExpression> converter;
-         if (converterFunctions.TryGetValue(t, out converter))
-            return converter;
-         if (TryGetGenericConverters(obj, out converter))
-            return converter;
+   /// <summary>
+   ///    Convert an object, if possible, using RDotNet capabilities
+   /// </summary>
+   /// <remarks>
+   ///    If a conversion to an RDotNet SymbolicExpression was possible,
+   ///    this returns the IntPtr SafeHandle.DangerousGetHandle() to be passed to R.
+   ///    If the object is null or such that no known conversion is possible, the same object
+   ///    as the input parameter is returned.
+   /// </remarks>
+   public object ConvertToR(object obj)
+   {
+      clearSexpHandles();
+      if (obj == null)
          return null;
+
+      if (obj is SymbolicExpression sexp)
+         return returnHandle(sexp);
+
+      sexp = tryConvertToSexp(obj);
+
+      return sexp == null ? obj : returnHandle(sexp);
+   }
+
+   private void clearSexpHandles()
+   {
+      _handles.Clear();
+   }
+
+   private static object returnHandle(SymbolicExpression sexp)
+   {
+      addSexpHandle(sexp);
+      return sexp.DangerousGetHandle();
+   }
+
+   private static void addSexpHandle(SymbolicExpression sexp)
+   {
+      _handles.Add(sexp);
+   }
+
+   /// <summary>
+   ///    A list to reference to otherwise transient SEXP created by this class.
+   ///    This is to prevent .NET and R to trigger GC before rClr function calls have returned to R.
+   /// </summary>
+   private static readonly List<SymbolicExpression> _handles = new();
+
+   public object ConvertFromR(IntPtr pointer, int sExpressionType)
+   {
+      throw new NotImplementedException();
+      //return new DataFrame(engine, pointer);
+   }
+
+   /// <summary>
+   ///    Gets/sets whether to convert vectors using R.NET. Most users should never need to modify the default.
+   /// </summary>
+   public bool ConvertVectors { get; set; }
+
+   /// <summary>
+   ///    Gets/sets whether to convert non-primitive value types and vector thereof, e.g. TimeSpan and DateTime.
+   ///    Most users should never need to modify the default.
+   /// </summary>
+   public bool ConvertValueTypes { get; set; }
+
+   private bool _convertAdvancedTypes;
+
+   /// <summary>
+   ///    Gets/sets whether to convert more complicated types such as dictionaries, arrays of reference types, etc.
+   /// </summary>
+   public bool ConvertAdvancedTypes
+   {
+      get => _convertAdvancedTypes;
+      set
+      {
+         _convertAdvancedTypes = value;
+         if (value)
+         {
+            addDictionaries();
+            addGeneralTypes();
+         }
+         else
+         {
+            removeDictionaries();
+            removeGeneralTypes();
+         }
+      }
+   }
+
+   private void setupREngine()
+   {
+      if (_engine == null)
+      {
+         _engine = REngine.GetInstance(initialize: false);
+         _engine.Initialize(setupMainLoop: false);
+         _engine.AutoPrint = false;
+      }
+   }
+
+   private static RDotNetDataConverter _singleton;
+
+   private static RDotNetDataConverter getInstance(string pathToNativeSharedObj)
+   {
+      // Make sure this is set only once (RDotNet known limitation to one engine per session, effectively a singleton).
+      return _singleton ??= new RDotNetDataConverter(pathToNativeSharedObj);
+   }
+
+   private readonly Dictionary<Type, Func<object, SymbolicExpression>> _converterFunctions;
+
+   private SymbolicExpression tryConvertToSexp(object obj)
+   {
+      if (obj == null)
+         throw new ArgumentNullException("object to convert to R must not be a null reference");
+
+      var converter = tryGetConverter(obj);
+      var sHandle = converter?.Invoke(obj);
+      return sHandle;
+   }
+
+   private Func<object, SymbolicExpression> tryGetConverter(object obj)
+   {
+      var t = obj.GetType();
+      if (_converterFunctions.TryGetValue(t, out var converter))
+         return converter;
+
+      if (tryGetGenericConverters(obj, out converter))
+         return converter;
+
+      return null;
+   }
+
+   private Func<object, SymbolicExpression> tryGetConverter(Type t)
+   {
+      return _converterFunctions.TryGetValue(t, out var converter) ? converter : null;
+   }
+
+   private bool tryGetGenericConverters(object obj, out Func<object, SymbolicExpression> converter)
+   {
+      var t = obj.GetType();
+      if (typeof(Array).IsAssignableFrom(t))
+      {
+         var array = obj as Array;
+         if (array.Rank == 1)
+            return _converterFunctions.TryGetValue(typeof(Array), out converter);
       }
 
-      private Func<object, SymbolicExpression> TryGetConverter(Type t)
-      {
-         Func<object, SymbolicExpression> converter;
-         if (converterFunctions.TryGetValue(t, out converter))
-            return converter;
+      converter = null;
+      return _converterFunctions.TryGetValue(typeof(object), out converter);
+   }
+
+   private SymbolicExpression convertToSexp(object obj)
+   {
+      if (obj == null) return null;
+      var result = tryConvertToSexp(obj);
+
+      if (result == null)
+         throw new NotSupportedException($"Cannot yet expose type {obj.GetType().FullName} as a SEXP");
+
+      return result;
+   }
+
+   private GenericVector convertDictionary<T>(object obj)
+   {
+      var dict = (IDictionary<string, T>)obj;
+      if (!_converterFunctions.ContainsKey(typeof(T[])))
+         throw new NotSupportedException("Cannot convert a dictionary of type " + dict.GetType());
+
+      var values = _converterFunctions[typeof(T[])].Invoke(dict.Values.ToArray());
+      SetAttribute(values, dict.Keys.ToArray());
+      return values.AsList();
+   }
+
+   private SymbolicExpression convertAll(IReadOnlyList<object> objects, Func<object, SymbolicExpression> converter = null)
+   {
+      var sexpArray = new SymbolicExpression[objects.Count];
+
+      for (var i = 0; i < objects.Count; i++)
+         sexpArray[i] = converter == null ? convertToSexp(objects[i]) : converter(objects[i]);
+
+      return new GenericVector(_engine, sexpArray);
+   }
+
+   private SymbolicExpression convertArrayDouble(object obj)
+   {
+      if (!ConvertVectors) 
          return null;
-      }
 
-      private bool TryGetGenericConverters(object obj, out Func<object, SymbolicExpression> converter)
+      var array = (double[])obj;
+      return _engine.CreateNumericVector(array);
+   }
+
+   private SymbolicExpression convertArrayBool(object obj)
+   {
+      if (!ConvertVectors) 
+         return null;
+
+      var array = (bool[])obj;
+      return _engine.CreateLogicalVector(array);
+   }
+
+   private SymbolicExpression convertArrayByte(object obj)
+   {
+      if (!ConvertVectors) 
+         return null;
+
+      var array = (byte[])obj;
+      return _engine.CreateRawVector(array);
+   }
+
+   private SymbolicExpression convertArraySingle(object obj)
+   {
+      if (!ConvertVectors) 
+         return null;
+
+      var array = (float[])obj;
+      return convertArrayDouble(Array.ConvertAll(array, x => (double)x));
+   }
+
+   private SymbolicExpression convertArrayInt(object obj)
+   {
+      if (!ConvertVectors) 
+         return null;
+
+      var array = (int[])obj;
+      return _engine.CreateIntegerVector(array);
+   }
+
+   private SymbolicExpression convertArrayString(object obj)
+   {
+      if (!ConvertVectors) 
+         return null;
+
+      var array = (string[])obj;
+      return _engine.CreateCharacterVector(array);
+   }
+
+   private SymbolicExpression convertArrayChar(object obj)
+   {
+      if (!ConvertVectors) 
+         return null;
+
+      var array = (char[])obj;
+      return _engine.CreateCharacterVector(Array.ConvertAll(array, x => x.ToString()));
+   }
+
+   private SymbolicExpression convertArrayComplex(object obj)
+   {
+      if (!ConvertVectors) 
+         return null;
+
+      if (!ConvertValueTypes) 
+         return null;
+
+      var array = (Complex[])obj;
+      return _engine.CreateComplexVector(array);
+   }
+
+   private SymbolicExpression convertArrayDateTime(object obj)
+   {
+      if (!ConvertVectors) 
+         return null;
+
+      if (!ConvertValueTypes) 
+         return null;
+
+      var array = (DateTime[])obj;
+
+      var doubleArray = Array.ConvertAll(array, Internal.GetRPosixCtDoubleRepresentation);
+      var result = convertArrayDouble(doubleArray);
+      AddPOSIXctAttributes(result);
+      return result;
+   }
+
+   private SymbolicExpression convertArrayTimeSpan(object obj)
+   {
+      if (!ConvertVectors) 
+         return null;
+
+      if (!ConvertValueTypes) 
+         return null;
+
+      var array = (TimeSpan[])obj;
+      var doubleArray = Array.ConvertAll(array, x => x.TotalSeconds);
+      var result = convertArrayDouble(doubleArray);
+      AddDiffTimeAttributes(result);
+      return result;
+   }
+
+   private SymbolicExpression convertDouble(object obj)
+   {
+      if (!ConvertVectors) 
+         return null;
+
+      var value = (double)obj;
+      return _engine.CreateNumeric(value);
+   }
+
+   private SymbolicExpression convertSingle(object obj)
+   {
+      if (!ConvertVectors) 
+         return null;
+
+      var value = (float)obj;
+      return convertArrayDouble((double)value);
+   }
+
+   private SymbolicExpression convertByte(object obj)
+   {
+      if (!ConvertVectors) 
+         return null;
+
+      var value = (byte)obj;
+      return _engine.CreateRaw(value);
+   }
+
+   private SymbolicExpression convertChar(object obj)
+   {
+      if (!ConvertVectors) 
+         return null;
+
+      var value = (char)obj;
+      return _engine.CreateCharacter(value.ToString());
+   }
+
+   private SymbolicExpression convertBool(object obj)
+   {
+      if (!ConvertVectors) 
+         return null;
+
+      var value = (bool)obj;
+      return _engine.CreateLogical(value);
+   }
+
+   private SymbolicExpression convertInt(object obj)
+   {
+      if (!ConvertVectors) 
+         return null;
+
+      var value = (int)obj;
+      return _engine.CreateInteger(value);
+   }
+
+   private SymbolicExpression convertString(object obj)
+   {
+      if (!ConvertVectors) 
+         return null;
+
+      var value = (string)obj;
+      return _engine.CreateCharacter(value);
+   }
+
+   private SymbolicExpression convertTimeSpan(object obj)
+   {
+      if (!ConvertVectors) 
+         return null;
+
+      if (!ConvertValueTypes) 
+         return null;
+
+      var value = (TimeSpan)obj;
+      var doubleValue = value.TotalSeconds;
+      var result = convertDouble(doubleValue);
+      AddDiffTimeAttributes(result);
+      return result;
+   }
+
+   private SymbolicExpression convertDateTime(object obj)
+   {
+      if (!ConvertVectors) 
+         return null;
+
+      if (!ConvertValueTypes) 
+         return null;
+
+      var value = (DateTime)obj;
+      var doubleValue = Internal.GetRPosixCtDoubleRepresentation(value);
+      var result = convertDouble(doubleValue);
+      AddPOSIXctAttributes(result);
+      return result;
+   }
+
+   private SymbolicExpression convertComplex(object obj)
+   {
+      if (!ConvertVectors) 
+         return null;
+
+      if (!ConvertValueTypes) 
+         return null;
+
+      var value = (Complex)obj;
+      return _engine.CreateComplex(value);
+   }
+
+   private SymbolicExpression convertArrayObject(object obj)
+   {
+      var a = (Array)obj;
+      return convertToList(a);
+   }
+
+   private SymbolicExpression convertObject(object obj)
+   {
+      return obj == null ? _engine.NilValue : createClrObj(obj);
+   }
+
+   private Function _createClrS4Object;
+
+   public Function CreateClrS4Object => _createClrS4Object ??= _engine.Evaluate("invisible(rSharp::getCurrentConvertedObject)").AsFunction();
+
+   public static object CurrentObjectToConvert { get; private set; }
+
+   private S4Object createClrObj(object obj)
+   {
+      CurrentObjectToConvert = obj;
+      var result = CreateClrS4Object.Invoke().AsS4();
+      CurrentObjectToConvert = null;
+      return result;
+   }
+
+   private SymbolicExpression convertToList(Array array)
+   {
+      if (array.Rank > 1)
+         throw new NotSupportedException("Generic array converter is limited to uni-dimensional arrays");
+
+      // CAUTION: The following, while efficient, means that more specialized converters
+      // will not be picked up.
+      var elementConverter = tryGetConverter(array.GetType().GetElementType());
+      var tmp = new object[array.GetLength(0)];
+      Array.Copy(array, tmp, tmp.Length);
+      return convertAll(tmp, elementConverter);
+   }
+
+   private SymbolicExpression convertMatrixJaggedSingle(object obj)
+   {
+      var array = (float[][])obj;
+      return array.IsRectangular() ? convertMatrixDouble(array.ToDoubleRect()) : convertToList(array.ToDouble());
+   }
+
+   private SymbolicExpression convertMatrixJaggedDouble(object obj)
+   {
+      var array = (double[][])obj;
+      return array.IsRectangular() ? convertMatrixDouble(array.ToRect()) : convertToList(array);
+   }
+
+   private SymbolicExpression convertMatrixJaggedInt(object obj)
+   {
+      var array = (int[][])obj;
+      return array.IsRectangular() ? convertMatrixInt(array.ToRect()) : convertToList(array);
+   }
+
+   private SymbolicExpression convertMatrixJaggedString(object obj)
+   {
+      var array = (string[][])obj;
+      return array.IsRectangular() ? convertMatrixString(array.ToRect()) : convertToList(array);
+   }
+
+   private NumericMatrix convertMatrixSingle(object obj)
+   {
+      var array = (float[,])obj;
+      return convertMatrixDouble(array.ToDoubleRect());
+   }
+
+   private NumericMatrix convertMatrixDouble(object obj)
+   {
+      var array = (double[,])obj;
+      return _engine.CreateNumericMatrix(array);
+   }
+
+   private IntegerMatrix convertMatrixInt(object obj)
+   {
+      var array = (int[,])obj;
+      return _engine.CreateIntegerMatrix(array);
+   }
+
+   private CharacterMatrix convertMatrixString(object obj)
+   {
+      var array = (string[,])obj;
+      return _engine.CreateCharacterMatrix(array);
+   }
+
+   public static void SetTimeZoneAttribute(SymbolicExpression sexp, string timeZoneId)
+   {
+      SetAttribute(sexp, new[] { timeZoneId }, attributeName: "tzone");
+   }
+
+   public static void SetUnitsAttribute(SymbolicExpression sexp, string units)
+   {
+      SetAttribute(sexp, new[] { units }, attributeName: "units");
+   }
+
+   public static void SetClassAttribute(SymbolicExpression sexp, params string[] classes)
+   {
+      SetAttribute(sexp, classes, attributeName: "class");
+   }
+
+   public static void SetAttribute(SymbolicExpression sexp, string[] attributeValues, string attributeName = "names")
+   {
+      var names = new CharacterVector(_engine, attributeValues);
+      sexp.SetAttribute(attributeName, names);
+   }
+
+   public static void AddPOSIXctAttributes(SymbolicExpression result)
+   {
+      SetClassAttribute(result, "POSIXct", "POSIXt");
+      SetTimeZoneAttribute(result, "UTC");
+   }
+
+   public static bool IsOfClass(SymbolicExpression sexp, string className)
+   {
+      var classNames = GetClassAttribute(sexp);
+      return classNames != null && classNames.Contains(className);
+   }
+
+   public static string[] GetAttribute(SymbolicExpression sexp, string attributeName)
+   {
+      var classes = sexp.GetAttribute(attributeName);
+      var classNames = classes?.AsCharacter().ToArray();
+      return classNames;
+   }
+
+   public static string[] GetClassAttribute(SymbolicExpression sexp)
+   {
+      return GetAttribute(sexp, "class");
+   }
+
+   public static string GetTimeZoneAttribute(SymbolicExpression sexp)
+   {
+      var v = GetAttribute(sexp, "tzone");
+      if (v == null) return null;
+      else return v[0];
+   }
+
+   public static void AddDiffTimeAttributes(SymbolicExpression result)
+   {
+      SetClassAttribute(result, "difftime");
+      SetUnitsAttribute(result, "secs");
+   }
+
+   private static string getRDllName()
+   {
+      return NativeUtility.GetRLibraryFileName();
+   }
+
+   public static REngine GetEngine()
+   {
+      return _engine;
+   }
+
+   private static REngine _engine;
+
+   public SymbolicExpression CreateSymbolicExpression(IntPtr sexp)
+   {
+      return _engine.CreateFromNativeSexp(sexp);
+   }
+
+   public object[] ConvertSymbolicExpressions(object[] arguments)
+   {
+      var result = (object[])arguments.Clone();
+      for (var i = 0; i < result.Length; i++)
       {
-         var t = obj.GetType();
-         if (typeof(Array).IsAssignableFrom(t))
-         {
-            Array a = obj as Array;
-            if (a.Rank == 1)
-               return (converterFunctions.TryGetValue(typeof(Array), out converter));
-         }
-
-         converter = null;
-         return (converterFunctions.TryGetValue(typeof(object), out converter));
+         result[i] = ConvertSymbolicExpression(arguments[i]);
       }
 
-      //private bool TryGetValueAssignableValue(Type t, out Func<object, SymbolicExpression> converter)
-      //{
-      //    var assignable = converterFunctions.Keys.Where(x => x.IsAssignableFrom(t)).FirstOrDefault();
-      //    if(assignable!=null)
-      //    {
-      //        assignable.
-      //    if(converterFunctions.TryGetValue(t, out converter)
-      //}
+      return result;
+   }
 
-      private SymbolicExpression ConvertToSexp(object obj)
-      {
-         if (obj == null) return null;
-         var result = TryConvertToSexp(obj);
-         if (result == null)
-            throw new NotSupportedException(string.Format("Cannot yet expose type {0} as a SEXP", obj.GetType().FullName));
-         return result;
-      }
+   public object ConvertSymbolicExpression(object obj)
+   {
+      if (obj is SymbolicExpressionWrapper wrapper)
+         return convertSymbolicExpression(wrapper);
 
-      private GenericVector ConvertDictionary<U>(object obj)
-      {
-         var dict = (IDictionary<string, U>)obj;
-         if (!converterFunctions.ContainsKey(typeof(U[])))
-            throw new NotSupportedException("Cannot convert a dictionary of type " + dict.GetType());
-         var values = converterFunctions[typeof(U[])].Invoke(dict.Values.ToArray());
-         SetAttribute(values, dict.Keys.ToArray());
-         return values.AsList();
-      }
+      return obj;
+   }
 
-      private SymbolicExpression ConvertAll(object[] objects, Func<object, SymbolicExpression> converter = null)
-      {
-         var sexpArray = new SymbolicExpression[objects.Length];
-         for (int i = 0; i < objects.Length; i++)
-            sexpArray[i] = converter == null ? ConvertToSexp(objects[i]) : converter(objects[i]);
-         return new GenericVector(engine, sexpArray);
-      }
-
-      private SymbolicExpression ConvertArrayDouble(object obj)
-      {
-         if (!ConvertVectors) return null;
-         double[] array = (double[])obj;
-         return engine.CreateNumericVector(array);
-      }
-
-      private SymbolicExpression ConvertArrayBool(object obj)
-      {
-         if (!ConvertVectors) return null;
-         bool[] array = (bool[])obj;
-         return engine.CreateLogicalVector(array);
-      }
-
-      private SymbolicExpression ConvertArrayByte(object obj)
-      {
-         if (!ConvertVectors) return null;
-         byte[] array = (byte[])obj;
-         return engine.CreateRawVector(array);
-      }
-
-      private SymbolicExpression ConvertArraySingle(object obj)
-      {
-         if (!ConvertVectors) return null;
-         float[] array = (float[])obj;
-         return ConvertArrayDouble(Array.ConvertAll(array, x => (double)x));
-      }
-
-      private SymbolicExpression ConvertArrayInt(object obj)
-      {
-         if (!ConvertVectors) return null;
-         int[] array = (int[])obj;
-         return engine.CreateIntegerVector(array);
-      }
-
-      private SymbolicExpression ConvertArrayString(object obj)
-      {
-         if (!ConvertVectors) return null;
-         string[] array = (string[])obj;
-         return engine.CreateCharacterVector(array);
-      }
-
-      private SymbolicExpression ConvertArrayChar(object obj)
-      {
-         if (!ConvertVectors) return null;
-         char[] array = (char[])obj;
-         return engine.CreateCharacterVector(Array.ConvertAll(array, x => x.ToString()));
-      }
-
-      private SymbolicExpression ConvertArrayComplex(object obj)
-      {
-         if (!ConvertVectors) return null;
-         if (!ConvertValueTypes) return null;
-         Complex[] array = (Complex[])obj;
-         return engine.CreateComplexVector(array);
-      }
-
-      private SymbolicExpression ConvertArrayDateTime(object obj)
-      {
-         if (!ConvertVectors) return null;
-         if (!ConvertValueTypes) return null;
-         DateTime[] array = (DateTime[])obj;
-         var doubleArray = Array.ConvertAll(array, ClrFacade.GetRPosixCtDoubleRepresentation);
-         var result = ConvertArrayDouble(doubleArray);
-         AddPosixctAttributes(result);
-         return result;
-      }
-
-      private SymbolicExpression ConvertArrayTimeSpan(object obj)
-      {
-         if (!ConvertVectors) return null;
-         if (!ConvertValueTypes) return null;
-         TimeSpan[] array = (TimeSpan[])obj;
-         var doubleArray = Array.ConvertAll(array, (x => x.TotalSeconds));
-         var result = ConvertArrayDouble(doubleArray);
-         AddDiffTimeAttributes(result);
-         return result;
-      }
-
-      private SymbolicExpression ConvertDouble(object obj)
-      {
-         if (!ConvertVectors) return null;
-         double value = (double)obj;
-         return engine.CreateNumeric(value);
-      }
-
-      private SymbolicExpression ConvertSingle(object obj)
-      {
-         if (!ConvertVectors) return null;
-         float value = (float)obj;
-         return ConvertArrayDouble((double)value);
-      }
-
-      private SymbolicExpression ConvertByte(object obj)
-      {
-         if (!ConvertVectors) return null;
-         byte value = (byte)obj;
-         return engine.CreateRaw(value);
-      }
-
-      private SymbolicExpression ConvertChar(object obj)
-      {
-         if (!ConvertVectors) return null;
-         char value = (char)obj;
-         return engine.CreateCharacter(value.ToString());
-      }
-
-      private SymbolicExpression ConvertBool(object obj)
-      {
-         if (!ConvertVectors) return null;
-         bool value = (bool)obj;
-         return engine.CreateLogical(value);
-      }
-
-      private SymbolicExpression ConvertInt(object obj)
-      {
-         if (!ConvertVectors) return null;
-         int value = (int)obj;
-         return engine.CreateInteger(value);
-      }
-
-      private SymbolicExpression ConvertString(object obj)
-      {
-         if (!ConvertVectors) return null;
-         string value = (string)obj;
-         return engine.CreateCharacter(value);
-      }
-
-      private SymbolicExpression ConvertTimeSpan(object obj)
-      {
-         if (!ConvertVectors) return null;
-         if (!ConvertValueTypes) return null;
-         TimeSpan value = (TimeSpan)obj;
-         var doubleValue = value.TotalSeconds;
-         var result = ConvertDouble(doubleValue);
-         AddDiffTimeAttributes(result);
-         return result;
-      }
-
-      private SymbolicExpression ConvertDateTime(object obj)
-      {
-         if (!ConvertVectors) return null;
-         if (!ConvertValueTypes) return null;
-         DateTime value = (DateTime)obj;
-         var doubleValue = ClrFacade.GetRPosixCtDoubleRepresentation(value);
-         var result = ConvertDouble(doubleValue);
-         AddPosixctAttributes(result);
-         return result;
-      }
-
-      private SymbolicExpression ConvertComplex(object obj)
-      {
-         if (!ConvertVectors) return null;
-         if (!ConvertValueTypes) return null;
-         Complex value = (Complex)obj;
-         return engine.CreateComplex(value);
-      }
-
-      private SymbolicExpression ConvertArrayObject(object obj)
-      {
-         Array a = (Array)obj;
-         return ConvertToList(a);
-      }
-
-      private SymbolicExpression ConvertObject(object obj)
-      {
-         if (obj == null)
-            return engine.NilValue;
-         return CreateClrObj(obj);
-         //var ptr = DataConversionHelper.ClrObjectToSexp(obj);
-         //if (ptr == IntPtr.Zero)
-         //    return null; // we did not manage to convert here. Fallback on native layer of rClr used later on.
-         //var externalPtr = new ExternalPointer(engine, ptr);
-         // At this point, we have a loop from managed to unmanaged to managed memory.
-         //  ExternalPointer -> externalptr -> ClrObjectHandle -> Variant(if Microsoft) -> obj
-         // This is not quite what we want to return: we need to produce an S4 object
-         //  S4Object -> ExternalPointer -> externalptr -> ClrObjectHandle -> Variant(if Microsoft) -> obj
-         // return CreateClrObj(externalPtr, obj.GetType().FullName);
-      }
-
-      private Function createClrS4Object;
-
-      public Function CreateClrS4Object_obsolete
-      {
-         get
-         {
-            if (createClrS4Object == null)
-               createClrS4Object = engine.Evaluate("invisible(function(objExtPtr, typename) { new('cobjRef', clrobj=objExtPtr, clrtype=typename) })").AsFunction();
-            return createClrS4Object;
-         }
-      }
-
-      public Function CreateClrS4Object
-      {
-         get
-         {
-            if (createClrS4Object == null)
-               createClrS4Object = engine.Evaluate("invisible(rSharp::getCurrentConvertedObject)").AsFunction();
-            return createClrS4Object;
-         }
-      }
-
-      private S4Object CreateClrObj_obsolete(ExternalPointer ptr, string typename)
-      {
-         return CreateClrS4Object.Invoke(ptr, engine.CreateCharacter(typename)).AsS4();
-      }
-
-      public static object CurrentObjectToConvert { get; private set; }
-
-      private S4Object CreateClrObj(object obj)
-      {
-         CurrentObjectToConvert = obj;
-         var result = CreateClrS4Object.Invoke().AsS4();
-         CurrentObjectToConvert = null;
-         return result;
-      }
-
-      private class ClrObjectWrapper : S4Object
-      {
-         public ClrObjectWrapper(REngine engine, IntPtr pointer)
-            : base(engine, pointer)
-         {
-         }
-      }
-
-      private class ExternalPointer : SymbolicExpression
-      {
-         public ExternalPointer(REngine engine, IntPtr pointer)
-            : base(engine, pointer)
-         {
-         }
-      }
-
-      private SymbolicExpression ConvertToList(Array a)
-      {
-         if (a.Rank > 1)
-            throw new NotSupportedException("Generic array converter is limited to uni-dimensional arrays");
-         // CAUTION: The following, while efficient, means that mroe specialised converters
-         // will not be picked up.
-         var elementConverter = TryGetConverter(a.GetType().GetElementType());
-         object[] tmp = new object[a.GetLength(0)];
-         Array.Copy(a, tmp, tmp.Length);
-         return ConvertAll(tmp, elementConverter);
-      }
-
-      private SymbolicExpression ConvertMatrixJaggedSingle(object obj)
-      {
-         float[][] array = (float[][])obj;
-         if (array.IsRectangular())
-            return ConvertMatrixDouble(array.ToDoubleRect());
-         else
-            return ConvertToList(array.ToDouble());
-      }
-
-      private SymbolicExpression ConvertMatrixJaggedDouble(object obj)
-      {
-         double[][] array = (double[][])obj;
-         if (array.IsRectangular())
-            return ConvertMatrixDouble(array.ToRect());
-         else
-            return ConvertToList(array);
-      }
-
-      private SymbolicExpression ConvertMatrixJaggedInt(object obj)
-      {
-         int[][] array = (int[][])obj;
-         if (array.IsRectangular())
-            return ConvertMatrixInt(array.ToRect());
-         else
-            return ConvertToList(array);
-      }
-
-      private SymbolicExpression ConvertMatrixJaggedString(object obj)
-      {
-         string[][] array = (string[][])obj;
-         if (array.IsRectangular())
-            return ConvertMatrixString(array.ToRect());
-         else
-            return ConvertToList(array);
-      }
-
-      private NumericMatrix ConvertMatrixSingle(object obj)
-      {
-         float[,] array = (float[,])obj;
-         return ConvertMatrixDouble(array.ToDoubleRect());
-      }
-
-      private NumericMatrix ConvertMatrixDouble(object obj)
-      {
-         double[,] array = (double[,])obj;
-         return engine.CreateNumericMatrix(array);
-      }
-
-      private IntegerMatrix ConvertMatrixInt(object obj)
-      {
-         int[,] array = (int[,])obj;
-         return engine.CreateIntegerMatrix(array);
-      }
-
-      private CharacterMatrix ConvertMatrixString(object obj)
-      {
-         string[,] array = (string[,])obj;
-         return engine.CreateCharacterMatrix(array);
-      }
-
-      public static void SetTzoneAttribute(SymbolicExpression sexp, string tzoneId)
-      {
-         SetAttribute(sexp, new[] { tzoneId }, attributeName: "tzone");
-      }
-
-      public static void SetUnitsAttribute(SymbolicExpression sexp, string units)
-      {
-         SetAttribute(sexp, new[] { units }, attributeName: "units");
-      }
-
-      public static void SetClassAttribute(SymbolicExpression sexp, params string[] classes)
-      {
-         SetAttribute(sexp, classes, attributeName: "class");
-      }
-
-      public static void SetAttribute(SymbolicExpression sexp, string[] attribValues, string attributeName = "names")
-      {
-         var names = new CharacterVector(engine, attribValues);
-         sexp.SetAttribute(attributeName, names);
-      }
-
-      public static void AddPosixctAttributes(SymbolicExpression result)
-      {
-         SetClassAttribute(result, "POSIXct", "POSIXt");
-         SetTzoneAttribute(result, "UTC");
-      }
-
-      public static bool IsOfClass(SymbolicExpression sexp, string className)
-      {
-         var classNames = GetClassAttrib(sexp);
-         if (classNames == null) return false;
-         return classNames.Contains(className);
-      }
-
-      public static string[] GetAttrib(SymbolicExpression sexp, string attribName)
-      {
-         var classes = sexp.GetAttribute(attribName);
-         if (classes == null) return null;
-         var classNames = classes.AsCharacter().ToArray();
-         return classNames;
-      }
-
-      public static string[] GetClassAttrib(SymbolicExpression sexp)
-      {
-         return GetAttrib(sexp, "class");
-      }
-
-      public static string GetTzoneAttrib(SymbolicExpression sexp)
-      {
-         var v = GetAttrib(sexp, "tzone");
-         if (v == null) return null;
-         else return v[0];
-      }
-
-      public static void AddDiffTimeAttributes(SymbolicExpression result)
-      {
-         SetClassAttribute(result, "difftime"); // class(as.difftime(3.5, units='secs'))
-         SetUnitsAttribute(result, "secs"); // unclass(as.difftime(3.5, units='secs'))
-      }
-
-      [Obsolete()]
-      private static void CheckEnvironmentVariables()
-      {
-         var rlibFilename = getRDllName();
-         var searchPaths = (Environment.GetEnvironmentVariable("PATH") ?? "").Split(Path.PathSeparator);
-//            if( !searchPaths.Contains("/usr/lib"))
-//                searchPaths.ToList().Add()
-         var pathsWithRdll = searchPaths.Where((x => File.Exists(Path.Combine(x, rlibFilename))));
-         bool rdllInPath = (pathsWithRdll.Count() > 0);
-         if (!rdllInPath)
-            throw new Exception(string.Format("'{0}' not found in any of the paths in environment variable PATH", rlibFilename));
-         var rhome = (Environment.GetEnvironmentVariable("R_HOME") ?? "");
-         if (string.IsNullOrEmpty(rhome))
-         {
-            // It is OK: the call to Initialize on the REngine will set up R_HOME.
-            //throw new Exception("environment variable R_HOME is not set");
-         }
-      }
-
-      private static string getRDllName()
-      {
-         return NativeUtility.GetRLibraryFileName();
-      }
-
-      public static REngine GetEngine()
-      {
-         return engine;
-      }
-
-      private static REngine engine;
-
-      public SymbolicExpression CreateSymbolicExpression(IntPtr sexp)
-      {
-         return engine.CreateFromNativeSexp(sexp);
-      }
-
-      public object[] ConvertSymbolicExpressions(object[] arguments)
-      {
-         object[] result = (object[])arguments.Clone();
-         for (int i = 0; i < result.Length; i++)
-         {
-            result[i] = ConvertSymbolicExpression(arguments[i]);
-         }
-
-         return result;
-      }
-
-      public object ConvertSymbolicExpression(object obj)
-      {
-         if (obj is SymbolicExpressionWrapper)
-            return ConvertSymbolicExpression(obj as SymbolicExpressionWrapper);
-         else
-            return obj;
-      }
-
-      private object ConvertSymbolicExpression(SymbolicExpressionWrapper sexpWrap)
-      {
-         return sexpWrap.ToClrEquivalent();
-      }
+   private object convertSymbolicExpression(SymbolicExpressionWrapper sexpWrap)
+   {
+      return sexpWrap.ToClrEquivalent();
    }
 }

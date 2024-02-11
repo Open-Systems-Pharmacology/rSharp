@@ -7,11 +7,11 @@ namespace rSharpTests
    public class RdotnetTests
    {
       [Fact]
-      public void TestSexpWrapper()
+      public void test_sexp_wrapper()
       {
          var e = REngine.GetInstance();
          var pi = e.CreateNumeric(3.1415);
-         var sxpw = new SymbolicExpressionWrapper(pi);
+         var symbolicExpressionWrapper = new SymbolicExpressionWrapper(pi);
       }
    }
 }
