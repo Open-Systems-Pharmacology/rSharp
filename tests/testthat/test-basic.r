@@ -115,7 +115,7 @@ test_that("String arrays are marshalled correctly", {
 
   ltrs[3] = NA
   # expect_that( callTestCase( "CreateStringArrayMissingVal"), equals(ltrs) )
-  # expect_that(callTestCase( "StringArrayMissingValsEquals", ltrs), is_true() )
+  # expect_that(callTestCase( "StringArrayMissingValuesEquals", ltrs), is_true() )
 
 })
 
