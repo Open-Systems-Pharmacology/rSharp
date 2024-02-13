@@ -1,0 +1,12 @@
+C:/Users/GeorgiosDaskalakis/Documents/GitHub/latest_rClr_test/creating a dll/dll_test/test_lib/test_lib/bin/Debug/net7.0/test_lib.dll
+assembly exists
+assemblies
+System.Private.CoreLib, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e
+ClrFacade, Version=0.8.1.0, Culture=neutral, PublicKeyToken=null
+System.Runtime, Version=7.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a
+test_lib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+
+
+we call
+test_lib.YourClass
+we get the typename

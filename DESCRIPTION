@@ -1,0 +1,37 @@
+Package: rSharp
+Type: Package
+Title: Accessing the Common Language Runtime (.NET/Mono) from R
+Version: 0.9.5
+Authors@R: c(person("Jean-Michel", "Perraud", email =
+    "jean-michel.perraud@csiro.au", role = c("aut", "cre")),
+    person("Open-Systems-Pharmacology Community", role = "cph"),
+      person("Michael", "Sevestre", role = c("aut", "cre"), email = "michael@design2code.ca"),
+      person("Pavel", "Balazki", role = "aut"),
+      person("Juri", "Solodenko", role = "aut", comment = c(ORCID = "0000-0001-6922-588X")),
+      person("Georgios", "Daskalakis", role = "aut"))
+Author: Jean-Michel Perraud [aut, cre], Kosei Abe, [aut] (R.NET), Nigel
+    <http://www.codeplex.com/site/users/view/evolvedmicrobe> [ctb] (fix for
+    finding the path to package libraries), R Core team [ctb] (showArgs
+    extracted from R extension manual)
+Maintainer: J-M <jean-michel.perraud@csiro.au>
+Description: rClr is a package for low-level access from R to a Common Language
+    Runtime (CLR). The supported CLR implementations are Microsoft '.NET'
+    framework on Windows and Mono on several platforms, currently Windows and
+    at least Debian Linux. rClr has been used at least in scientific modelling
+    work since 2013-06. Running it on Mono has been relatively experimental,
+    but as of November 2014 several factors have enabled very near functional
+    parity with the Windows/.NET.
+VignetteBuilder: knitr
+Suggests:
+    testthat,
+    knitr,
+    xtable,
+    markdown
+URL: https://github.com/jmp75/rClr
+License: LGPL-3
+Depends:
+    R (>= 3.6),
+    methods
+RoxygenNote: 7.2.0
+SystemRequirements: GNU make
+NeedsCompilation: yes
