@@ -81,7 +81,10 @@ rSharpLib: rSharpLibComp
 	bin_dir=$$RSHARPBINDIR; \
 	RSHARPBINS="$(rSharpMs).dll $(rSharpMs).exp $(rSharpMs).lib $(rSharpMs).pdb " ; \
 	$(ROBOCP_CMD) $$bin_dir $(INSTDIR)/libs/ $$RSHARPBINS;\
-	$(ROBOCP_CMD) ./libfiles/x64 $(INSTDIR)/libs/ $(NETHOST).dll $(RUNTIMECONFIG).json;
+	
+	
+	$(ROBOCP_CMD) ./packages/Microsoft.NETCore.App.Host.win-x64.8.0.1/runtimes/win-x64/native $(INSTDIR)/libs/ $(NETHOST).dll
+	$(ROBOCP_CMD) ./libfiles/x64 $(INSTDIR)/libs/ $(RUNTIMECONFIG).json;
 	-$(ROBOCP_CMD) ./ClrFacade/bin/$(BuildConfiguration)/net7.0/ $(INSTDIR)/libs/ $(CLR_FACADE_BINS)
 	-$(ROBOCP_CMD) ./ClrFacade/bin/$(BuildConfiguration)/net7.0/ $(INSTDIR)/libs/ $(RDOTNET_BINS)
 
