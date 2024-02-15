@@ -1,10 +1,9 @@
 #!/bin/sh
 
-RCLR_SRC_DIR=./src
-RCLR_NUGET_EXE=${RCLR_SRC_DIR}/.nuget/NuGet.exe
-if [ ! -e ${RCLR_SRC_DIR} ] 
+RSHARP_SRC_DIR=./src
+if [ ! -e ${RSHARP_SRC_DIR} ] 
 then
-	echo "error: no suitable package src dir found - last tried ${RCLR_SRC_DIR}"
+	echo "error: no suitable package src dir found - last tried ${RSHARP_SRC_DIR}"
 	CURDIR=`pwd`
 	echo "Current directory (pwd) is $CURDIR"	       
 	exit 1
@@ -15,7 +14,7 @@ fi
 # IGNORE_VISUALSTUDIO=1
 
 ./cleanup
-MAKEVARS_FILE=$RCLR_SRC_DIR/Makevars
+MAKEVARS_FILE=$RSHARP_SRC_DIR/Makevars
 MAKEVARS_INFILE=$MAKEVARS_FILE.in
 
 # In order to write dos-style paths to the generated Makefile.win and co, needs multiple backslashes...
@@ -56,14 +55,6 @@ then
 	echo "error: glib-2.0 not found"
 	exit 1
 fi
-
-# I do not think the following is needed. The solution file would trigger a Target RestorePackages:
-#if [ -e ${RCLR_NUGET_EXE} ] 
-#then
-#	echo "Found ${RCLR_NUGET_EXE}"
-#	echo "Trying nuget package restore..."
-#    mono ${RCLR_NUGET_EXE} restore -NonInteractive ${RCLR_SRC_DIR}/rClr_monodev.sln
-#fi
 	
 subst_1="s|@MONO_INSTALL_PATH@|$MONO_INSTALL_PATH|g"
 subst_2="s|@MONO_INSTALL_PATH64@|$MONO_INSTALL_PATH64|g"

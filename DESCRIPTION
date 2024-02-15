@@ -14,10 +14,10 @@ Author: Jean-Michel Perraud [aut, cre], Kosei Abe, [aut] (R.NET), Nigel
     finding the path to package libraries), R Core team [ctb] (showArgs
     extracted from R extension manual)
 Maintainer: J-M <jean-michel.perraud@csiro.au>
-Description: rClr is a package for low-level access from R to a Common Language
+Description: rSharp is a package for low-level access from R to a Common Language
     Runtime (CLR). The supported CLR implementations are Microsoft '.NET'
     framework on Windows and Mono on several platforms, currently Windows and
-    at least Debian Linux. rClr has been used at least in scientific modelling
+    at least Debian Linux. rSharp has been used at least in scientific modelling
     work since 2013-06. Running it on Mono has been relatively experimental,
     but as of November 2014 several factors have enabled very near functional
     parity with the Windows/.NET.
@@ -27,7 +27,7 @@ Suggests:
     knitr,
     xtable,
     markdown
-URL: https://github.com/jmp75/rClr
+URL: https://github.com/Open-Systems-Pharmacology/rsharp/
 License: LGPL-3
 Depends:
     R (>= 3.6),

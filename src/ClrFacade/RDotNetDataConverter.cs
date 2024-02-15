@@ -25,7 +25,7 @@ public class RDotNetDataConverter : IDataConverter
          dllName = Path.Combine(libDir, NativeUtility.IsUnix ? "rSharp.so" : "rSharpMs.dll");
       }
 
-      DataConversionHelper.RclrNativeDll = new RSharpUnmanagedDll(dllName);
+      DataConversionHelper.rSharpNativeDll = new RSharpUnmanagedDll(dllName);
 
       setupREngine();
       _converterFunctions = new Dictionary<Type, Func<object, SymbolicExpression>>();
@@ -149,7 +149,7 @@ public class RDotNetDataConverter : IDataConverter
 
    private static void setUseRDotNet(bool useIt)
    {
-      var useRDotNet = DataConversionHelper.RclrNativeDll.GetFunctionAddress("use_rdotnet");
+      var useRDotNet = DataConversionHelper.rSharpNativeDll.GetFunctionAddress("use_rdotnet");
       if (useRDotNet == IntPtr.Zero)
       {
          throw new EntryPointNotFoundException("Native symbol use_rdotnet not found");
@@ -216,7 +216,7 @@ public class RDotNetDataConverter : IDataConverter
 
    /// <summary>
    ///    A list to reference to otherwise transient SEXP created by this class.
-   ///    This is to prevent .NET and R to trigger GC before rClr function calls have returned to R.
+   ///    This is to prevent .NET and R to trigger GC before rSharp function calls have returned to R.
    /// </summary>
    private static readonly List<SymbolicExpression> _handles = new();
 

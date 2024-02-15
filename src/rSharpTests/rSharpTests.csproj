@@ -8,14 +8,14 @@
     <TargetFramework>net7.0</TargetFramework>
     <Version>0.8.1</Version>
     <Copyright>(c) 2014-2019 Jean-Michel Perraud</Copyright>
-    <Description>.NET interoperability on top of R.NET for the rClr package</Description>
-    <Product>rClr</Product>
+    <Description>.NET interoperability on top of R.NET for the rSharp package</Description>
+    <Product>rSharp</Product>
     <Company />
     <Authors>Jean-Michel Perraud</Authors>
-    <Title>RclrTests; embed .NET in R</Title>
-    <PackageLicenseUrl>https://github.com/jmp75/rclr/blob/master/License.txt</PackageLicenseUrl>
-    <RepositoryUrl>https://github.com/jmp75/rclr</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/jmp75/rclr</PackageProjectUrl>
+    <Title>rSharpTests; embed .NET in R</Title>
+    <PackageLicenseUrl>https://github.com/Open-Systems-Pharmacology/rsharp/blob/master/License.txt</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/Open-Systems-Pharmacology/rsharp</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Open-Systems-Pharmacology/rsharp</PackageProjectUrl>
     <PackageReleaseNotes>Migration to .NET Standard 2.0 and supporting R 3.5.x</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>

@@ -31,7 +31,7 @@ typedef void* (CORECLR_DELEGATE_CALLTYPE* LoadFromDelegate)(const char*);
 /////////////////////////////////////////
 // Initialisation and disposal of the CLR
 /////////////////////////////////////////
-void rclr_create_domain() {
+void rSharp_create_domain() {
 	//
 	// STEP 1: Load HostFxr and get exported hosting functions
 	//
@@ -50,12 +50,12 @@ void rclr_create_domain() {
 	assert(load_assembly_and_get_function_pointer != nullptr && "Failure: get_dotnet_load_assembly()");
 }
 
-void rclr_shutdown_clr()
+void rSharp_shutdown_clr()
 {
-	ms_rclr_cleanup();
+	ms_rSharp_cleanup();
 }
 
-void ms_rclr_cleanup()
+void ms_rSharp_cleanup()
 {
 	close_fptr(cxt);
 }
@@ -443,7 +443,7 @@ SEXP r_get_sexp_type(SEXP par) {
 // Calling ClrFacade methods
 /////////////////////////////////////////
 
-void rclr_load_assembly(char** filename) {
+void rSharp_load_assembly(char** filename) {
 	if (load_from_fn_ptr == nullptr)
 		initializeLoadAssembly();
 

@@ -25,7 +25,7 @@ namespace ClrFacade
     /// </remarks>
     public static class DataConversionHelper
     {
-        public static IUnmanagedDll RclrNativeDll= null;
+        public static IUnmanagedDll rSharpNativeDll= null;
     }
 
     /// <summary>

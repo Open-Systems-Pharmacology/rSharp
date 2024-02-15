@@ -9,7 +9,7 @@ using ClrFacade.Tests;
 namespace ClrFacade
 {
    /// <summary>
-   ///    Gathers the reflection operations on objects performed by rClr, as well as discovery operations on the CLR.
+   ///    Gathers the reflection operations on objects performed by rSharp, as well as discovery operations on the CLR.
    /// </summary>
    public static class ReflectionHelper
    {
@@ -212,7 +212,7 @@ namespace ClrFacade
             var closestMatches = getLowestParameterMatch(mi, types, getFirstExactMatchVarargMethods);
             if (closestMatches.Count <= 1)
                return closestMatches.FirstOrDefault();
-            closestMatches = getHighestParameterMatch(closestMatches, types, getLastExactMatchVarargMethods); // See https://rclr.codeplex.com/workitem/30
+            closestMatches = getHighestParameterMatch(closestMatches, types, getLastExactMatchVarargMethods);
             if (closestMatches.Count <= 1)
                return closestMatches.FirstOrDefault();
 

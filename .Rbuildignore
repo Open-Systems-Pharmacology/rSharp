@@ -24,9 +24,6 @@
 .*/obj/.*
 .*src/packages/.*
 .*src/libfiles/.*
-.*src/rClr.opensdf
-./src/RclrTests/bin
-./src/RclrTests/obj/.*
 ./inst/libs/.*
 .*/.vs/.*
 ./src/.vs/.*

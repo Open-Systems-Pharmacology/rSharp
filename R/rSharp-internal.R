@@ -19,7 +19,7 @@ clrInit <- function(debug=FALSE) {
   f <- file.path(pkgLibsDir, 'ClrFacade.dll')
   f <- path.expand(f)
   stopifnot( file.exists(f) )
-  result <- .C("rclr_create_domain", pkgLibsDir, f, as.integer(debug), PACKAGE=nativePkgName)
+  result <- .C("rSharp_create_domain", pkgLibsDir, f, as.integer(debug), PACKAGE=nativePkgName)
 }
 
 checkIsExtPtr <- function(extPtr) {
@@ -34,10 +34,10 @@ getLibsPath <- function(pkgName) {
 #' Create if possible an S4 CLR object.
 #'
 #' Create if possible and adequate the S4 object that wraps the external pointer to a CLR object.
-#' Currently not exported, as this is unlikely to be recommended for use outside of unit tests and internal to rClr.
+#' Currently not exported, as this is unlikely to be recommended for use outside of unit tests and internal to rSharp.
 #'
 #' @param obj the presumed external pointer.
-#' @param clrtype character; the name of the CLR type for the object. If NULL, rClr retrieves the type name.
+#' @param clrtype character; the name of the CLR type for the object. If NULL, rSharp retrieves the type name.
 #' @return a cobjRef S4 object if the argument is indeed an external pointer,
 #' otherwise returned unchanged if null or not an external pointer.
 #' @import methods

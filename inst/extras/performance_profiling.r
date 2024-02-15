@@ -5,7 +5,6 @@
 
 # library(utils)
 library(ggplot2)
-# Sys.setenv(RCLR='Mono')
 
 library(rSharp)
 
@@ -42,7 +41,7 @@ measure <- function(numReps, FUN, normalize=TRUE) {
     }
     e = stopSw()
     delta = e
-    # Fiendish: the for() construct is surprisingly expensive compared to rClr...
+    # Fiendish: the for() construct is surprisingly expensive compared to rSharp...
     startSw()
     for (i in 1:numReps) {
       blah <- 0
@@ -118,14 +117,14 @@ createCases <- function(numReps=10, maxArrayLen=7.5e6) {
 }
 
 
-rclrNumericPerf <- function(trials, tag) {
+rSharpNumericPerf <- function(trials, tag) {
   fgen <- clrToRDataTransferFUNGEN
   bench <- doMeasureFun(trials, FUNGEN=fgen, dataClass='numeric', direction="CLR->R",tag=tag)
   bench <- rbind(bench, doMeasureFun(trials, FUNGEN=fgen, dataClass='numeric', direction="R->CLR",tag=tag))
   bench
 }
 
-rclrNumericPerfAll <- function(numReps=10, maxArrayLen=7.5e6) {
+rSharpNumericPerfAll <- function(numReps=10, maxArrayLen=7.5e6) {
   trials <- createCases(numReps=numReps, maxArrayLen=maxArrayLen)
   setRDotNet(FALSE)
   bench <- doMeasureFun(trials, FUNGEN=clrToRDataTransferFUNGEN, dataClass='numeric', direction="CLR->R",tag="no.r.net")
@@ -155,7 +154,7 @@ plotRate <- function(bench, case = 'R->CLR', dataType='numeric', logy=TRUE) {
 
 # options(error=recover)
 # trials <- createCases(numReps=10, maxArrayLen=7.5e6)
-# bench <- rclrNumericPerf(trials, tag='no.r.net')
+# bench <- rSharpNumericPerf(trials, tag='no.r.net')
 
 ## REPRO: this crashes Rgui. All in R.dll, and likely related to R.NET; unclear where/why
 # behaves for a length of 100000; above, trouble start.

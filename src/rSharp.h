@@ -115,13 +115,13 @@ extern "C" {
 	SEXP rsharp_object_to_SEXP(RSharpGenericValue* objptr);
 
 	/**
-	 * \brief	Gets a SEXP, bypassing the custom data converters e.g. offered by RDotNetDataConverter. Solves issue rClr#33
+	 * \brief	Gets a SEXP, bypassing the custom data converters e.g. offered by RDotNetDataConverter.
 	 *
 	 * \return	a SEXP representing the object handled by the CLR conversion facade, if any.
 	 */
 	void get_FullTypeName( SEXP p, char ** tname);
-	void rclr_load_assembly(char ** filename);
-	void rclr_create_domain();
+	void rSharp_load_assembly(char ** filename);
+	void rSharp_create_domain();
 	int use_rdotnet = 0;
 
 
@@ -155,6 +155,6 @@ namespace {
 	load_assembly_and_get_function_pointer_fn load_assembly_and_get_function_pointer;
 }
 
-void ms_rclr_cleanup();
+void ms_rSharp_cleanup();
 
 char * bstr_to_c_string(const wchar_t * src);
