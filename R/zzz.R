@@ -4,13 +4,13 @@ nativePkgName <- ''
 # An internal variable to buffer startup messages
 startupMsg <- ''
 
-#' rClr .onLoad
+#' rSharp .onLoad
 #'
-#' Function called when loading the rClr package with 'library'.
+#' Function called when loading the rSharp package with 'library'.
 #'
-#' The function looks by default for the rClr native library for the Mono runtime.
+#' The function looks by default for the rSharp native library for the Mono runtime.
 #' If the platform is Linux, this is the only option. If the platform is Windows, using the
-#' Microsoft .NET runtime is an option. If the rClr native library for MS.NET is detected,
+#' Microsoft .NET runtime is an option. If the rSharp native library for MS.NET is detected,
 #' the Microsoft .NET runtime is loaded in preference to Mono.
 #'
 #' @param libname the path to the library from which the package is loaded
@@ -18,34 +18,34 @@ startupMsg <- ''
 #' @rdname dotOnLoad
 #' @name dotOnLoad
 .onLoad <- function(libname='~/R', pkgname='rSharp') {
-  rclr_env=Sys.getenv('RCLR')
+  rSharp_env=Sys.getenv('RSHARP')
   monoexepath <- Sys.which('mono')
   ext <- .Platform$dynlib.ext
-  nativeLibsNames <- paste(c('rClrMono', 'RsharpMs'), ext, sep='')
+  nativeLibsNames <- paste(c('rSharpMono', 'RsharpMs'), ext, sep='')
   monoDll <- nativeLibsNames[1]
   msDll <- nativeLibsNames[2]
   getFnameNoExt <- function(x) {strsplit(x, '\\.')[[1]][1]}
-  rClrPkgDir <- file.path(libname, pkgname)
-  archLibPath <- file.path(rClrPkgDir, 'libs')
+  rSharpPkgDir <- file.path(libname, pkgname)
+  archLibPath <- file.path(rSharpPkgDir, 'libs')
   srcPkgLibPath <- NULL
   if(!file.exists(archLibPath)) {
     # It may be because this is loaded through the 'document' and 'load_all' functions from devtools,
     # in which case libname is something like "f:/codeplex"
     # try to cater for load_all behavior.
     if( 'rsharp' %in% tolower(list.files(libname))) {
-      libname <- file.path(rClrPkgDir, 'inst')
-      archLibPath <- file.path(rClrPkgDir, 'inst/libs')
+      libname <- file.path(rSharpPkgDir, 'inst')
+      archLibPath <- file.path(rSharpPkgDir, 'inst/libs')
       srcPkgLibPath <- archLibPath
       if(!file.exists(archLibPath)) {
-        stop(paste('Looked like rClr source code directory, but directory not found:', archLibPath))
+        stop(paste('Looked like rSharp source code directory, but directory not found:', archLibPath))
       }
     } else {
-      stop(paste("Trying to work around devtools, but could not find a folder with lowercase name 'rclr' under ", archLibPath))
+      stop(paste("Trying to work around devtools, but could not find a folder with lowercase name 'rSharp' under ", archLibPath))
     }
   }
   dlls <- list.files(archLibPath, pattern=ext)
   if ( Sys.info()[['sysname']] == 'Windows') {
-    if ( rclr_env!='Mono') {
+    if ( rSharp_env!='Mono') {
       msvcrFileName <- 'msvcp140.dll'
       if( Sys.which(msvcrFileName) == '') {
         stop(paste(msvcrFileName, "was not found on this Windows system.",
@@ -87,7 +87,7 @@ loadAndInit <- function(chname, pkgname, libname, srcPkgLibPath=NULL) {
     library.dynam(chname, pkgname, libname)
   }
   # should the init of the mono runtime try to attach to a Monodevelop debugger?
-  debug_flag=Sys.getenv('RCLR_DEBUG')
+  debug_flag=Sys.getenv('RSHARP_DEBUG')
   clrInit(debug_flag!="")
   appendStartupMsg(paste('Loaded Common Language Runtime version', getClrVersionString()))
   setRDotNet(TRUE)
@@ -113,7 +113,7 @@ getClrVersionString <- function() {
   retval <- clrCall(v, 'ToString')
 }
 
-#' rClr .onAttach
+#' rSharp .onAttach
 #'
 #' Print startup messages from package onLoad
 #'

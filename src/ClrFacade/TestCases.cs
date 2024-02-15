@@ -96,7 +96,7 @@ public class TestCases
    }
 
    /// <summary>
-   ///    A method to help test whether memory is not leaking in rClr when passing objects.
+   ///    A method to help test whether memory is not leaking in rSharp when passing objects.
    /// </summary>
    public static void SinkLargeObject(object obj)
    {
@@ -659,9 +659,6 @@ public class TestCases
       return e.CreateNumericVector(new[] { 1.0, 2, 3, 4, 5, 6 });
    }
 
-   /// <summary>
-   ///    cover part of the issue https://rclr.codeplex.com/workitem/39
-   /// </summary>
    public static TestObjectGeneric<string> CreateTestObjectGenericInstance()
    {
       return new TestObjectGeneric<string>("Hi");

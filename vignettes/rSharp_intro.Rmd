@@ -1,9 +1,9 @@
 <!--
 %\VignetteEngine{knitr}
-%\VignetteIndexEntry{An Introduction to the rClr package}
+%\VignetteIndexEntry{An Introduction to the rSharp package}
 -->
 
-An Introduction to the **rClr** package
+An Introduction to the **rSharp** package
 =======================================
 
 ```{r setup, include=FALSE}
@@ -14,9 +14,9 @@ opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="cente
 Introduction
 ------------
 
-The **rClr** package is a low-level interoperability bridge between R and a Common Language Runtime (CLR), the Microsoft .NET CLR or the Mono implementation. **rClr** is to a CLR the equivalent of what **rJava** is to a Java runtime.
+The **rSharp** package is a low-level interoperability bridge between R and a Common Language Runtime (CLR), the Microsoft .NET CLR or the Mono implementation. **rSharp** is to a CLR the equivalent of what **rJava** is to a Java runtime.
 
-A few overarching principles in the design of **rClr** are:
+A few overarching principles in the design of **rSharp** are:
 * Limit the syntactic tedium
 * Stay as close as possible to the expected behaviors of R code and R data structures
 * Have transparent bi-directional data conversion for commonly used data types e.g. numeric vectors
@@ -27,14 +27,14 @@ Release 0.7 has major changes compared to the 0.5 series released in 2013. Major
 
 ## Date-time handling and known limitations
 
-Several use cases for **rClr** involve the handling of time series. A lot of effort was devoted to handling the conversion of date and time between R and .NET representations. A large portion of the unit tests is devoted to these. Some conversions that are known to pass the test on Microsoft .NET do not pass on Mono, mostly if not solely because of daylight savings (at least for the Australia/Canberra time zone...). It may be wise to stick as much as possible to handling UTC dates, and you should exert caution and double-check if you are handling date-time in another time zone than UTC.
+Several use cases for **rSharp** involve the handling of time series. A lot of effort was devoted to handling the conversion of date and time between R and .NET representations. A large portion of the unit tests is devoted to these. Some conversions that are known to pass the test on Microsoft .NET do not pass on Mono, mostly if not solely because of daylight savings (at least for the Australia/Canberra time zone...). It may be wise to stick as much as possible to handling UTC dates, and you should exert caution and double-check if you are handling date-time in another time zone than UTC.
 
 Getting Started
 ----------------------------
 
 On loading, the package attempts to detect and initialise the CLR. 
 
-* On Windows the package looks by default for the Microsoft .NET runtime. If not available the Mono CLR is sought. Note that at the time of writing, the Mono installer for Windows includes only 32 bits binaries and will not be available from a 64 bits R application. It is however feasible to compile and install a 64 bit Mono runtime. If both CLR implementations are present, it is possible to force the use of Mono with "Sys.setenv(RCLR='Mono')" prior to loading the library. In practice, Mono is not a primary target on Windows given the ubiquity of Microsoft .NET, but this may be useful to diagnose Mono-specific issues with Visual Studio.
+* On Windows the package looks by default for the Microsoft .NET runtime. If not available the Mono CLR is sought. Note that at the time of writing, the Mono installer for Windows includes only 32 bits binaries and will not be available from a 64 bits R application. It is however feasible to compile and install a 64 bit Mono runtime. If both CLR implementations are present, it is possible to force the use of Mono with "Sys.setenv(RSHARP='Mono')" prior to loading the library. In practice, Mono is not a primary target on Windows given the ubiquity of Microsoft .NET, but this may be useful to diagnose Mono-specific issues with Visual Studio.
 * On Unix-alike, Mono is the only supported runtime (there may be more in 2015).
 
 To start with, the customary "Hello" example follows:
@@ -73,14 +73,14 @@ clrGetProperties(testObj)
 clrGetMemberSignature(testObj, 'GetMethodWithParameters')
 ```
 
-Calling the instance methods on objects is done by specifying the method name as a string - convenience R functions may appear when the package is more mature. Static methods are called by specifying the type name, at least namespace qualified. We can determine the parameters necessary for calling the public method `CreateDateArray` on the class Rclr.TestCases. The method signature is expressed using CLR types, not R types.  The .NET method expects a `String` and an `Int32`.
+Calling the instance methods on objects is done by specifying the method name as a string - convenience R functions may appear when the package is more mature. Static methods are called by specifying the type name, at least namespace qualified. We can determine the parameters necessary for calling the public method `CreateDateArray` on the class rSharp.TestCases. The method signature is expressed using CLR types, not R types.  The .NET method expects a `String` and an `Int32`.
 
 ```{r}
 clrCall(testObj, "GetFieldIntegerOne")
 clrGetMemberSignature('ClrFacade.TestCases', 'CreateDateArray')
 ```
 
-Two arguments are passed to the function `clrCallStatic`: a string in an ISO date time format, and a numeric cast as an integer. **rClr** will transparently convert these to CLR types. Note that if the last argument had just been `4`, the mode of the R vector would have been `numeric`, not `integer`. To avoid ambiguity in method calls you must pass an integer vector. The returned value of the .NET method is a `DateTime[]` i.e. an array of `System.DateTime` objects. Again **rClr** transparently converts these to a standard R vector with the appropriate POSIX time class attribute.
+Two arguments are passed to the function `clrCallStatic`: a string in an ISO date time format, and a numeric cast as an integer. **rSharp** will transparently convert these to CLR types. Note that if the last argument had just been `4`, the mode of the R vector would have been `numeric`, not `integer`. To avoid ambiguity in method calls you must pass an integer vector. The returned value of the .NET method is a `DateTime[]` i.e. an array of `System.DateTime` objects. Again **rSharp** transparently converts these to a standard R vector with the appropriate POSIX time class attribute.
 
 ```{r}
 dates <- clrCallStatic('ClrFacade.TestCases', 'CreateDateArray', '2001-01-01', as.integer(4))
@@ -119,7 +119,7 @@ Data conversion
 
 Where there is an obvious and natural conversion between CLR and R data types, the conversion is done in preference to passing pointer to external data structures. Most of the basic modes in R (`character`,`numeric`,`integer` etc.) have relatively obvious equivalents in the CLR. For basic these basic modes, a bijection (i.e. round-trip) with these CLR conterparts is defined if possible.
 
-The notion of time is important for many application, notably for the processing of time series. In order to facilitate the mapping of more complex types by packages that depend on **rClr**, it supports the conversion of some chosen R date and time types. A choice was made to convert R date and time classes found in the **base** package (see (Ripley and Hornik, 2001)). Other packages such as **lubridate** offer compelling features and you should consider using these. Note that the R classes `Date` and `POSIXct` both map to a `System.DateTime` in the CLR, and a strict bijection is not possible. `DateTime` in the CLR is converted to a `POSIXct` object, as this is the most appropriate to retain the original information. Date, time and time zone software constructs are fraught with oddities and inconsistent between software systems. While considerable effort was devoted to achieve a sensible conversion behavior in **rClr**, you should double check conversions on your data and in your time zone, and you should prefer the use of UTC time zone for conversion.
+The notion of time is important for many application, notably for the processing of time series. In order to facilitate the mapping of more complex types by packages that depend on **rSharp**, it supports the conversion of some chosen R date and time types. A choice was made to convert R date and time classes found in the **base** package (see (Ripley and Hornik, 2001)). Other packages such as **lubridate** offer compelling features and you should consider using these. Note that the R classes `Date` and `POSIXct` both map to a `System.DateTime` in the CLR, and a strict bijection is not possible. `DateTime` in the CLR is converted to a `POSIXct` object, as this is the most appropriate to retain the original information. Date, time and time zone software constructs are fraught with oddities and inconsistent between software systems. While considerable effort was devoted to achieve a sensible conversion behavior in **rSharp**, you should double check conversions on your data and in your time zone, and you should prefer the use of UTC time zone for conversion.
 
 The rationale for converting data to native types at the boundary of R and the CLR is that this limits the leakage of concepts and behaviors between the two systems. This is particularly important when the expect behavior differs significantly between systems e.g. copying objects versus passing references to objects. Things behave 'as expected' on each side of the boundary.
 
@@ -155,9 +155,9 @@ print(xtable(result),type='html')
 
 ### More advanced data types
 
-Most basic vector data types can be handled in rClr in the native code layer written in C/C++. However, limitations and difficulties appear to handle for instance multidimensional arrays, and matching more complicated types between the CLR and R.
+Most basic vector data types can be handled in rSharp in the native code layer written in C/C++. However, limitations and difficulties appear to handle for instance multidimensional arrays, and matching more complicated types between the CLR and R.
 
-Fortunately, it is easier to handle these directly from C#, using the library **R.NET**, the close relative of **rClr**. The following code demonstrate how this allows the conversion of multi-dimensional arrays from the CLR to R matrices.
+Fortunately, it is easier to handle these directly from C#, using the library **R.NET**, the close relative of **rSharp**. The following code demonstrate how this allows the conversion of multi-dimensional arrays from the CLR to R matrices.
 
 ```{r cache = F, tidy = TRUE}
 # setRDotNet(TRUE)  # this should be the default package state after 0.7.0
@@ -166,7 +166,7 @@ clrGetMemberSignature(cTypename, "CreateRectDoubleArray")
 clrCallStatic(cTypename, "CreateRectDoubleArray")
 ```
 
-There are some cases where, as of version 0.7, automatic conversion can be turned on or off. An example is for CLR dictionaries and arrays, for which an R list is a sensible equivalent. However, a priori converting R lists to CLR equivalent is not well defined. You may also want to manipulate CLR objects from R without **rClr** converting to an R data representation. This can be achieved with the function `setConvertAdvancedTypes`. Consider the following behavior converting a few types of dictionaries and arrays:
+There are some cases where, as of version 0.7, automatic conversion can be turned on or off. An example is for CLR dictionaries and arrays, for which an R list is a sensible equivalent. However, a priori converting R lists to CLR equivalent is not well defined. You may also want to manipulate CLR objects from R without **rSharp** converting to an R data representation. This can be achieved with the function `setConvertAdvancedTypes`. Consider the following behavior converting a few types of dictionaries and arrays:
 
 ```{r cache = F, tidy = TRUE, comment = NA, results = "asis"}
 library(stringr)
@@ -192,9 +192,9 @@ Method binding in the CLR
 
 In the common language infrastructure methods can be overloaded, that is have the same names but varying types of arguments. The feature is common to other languages such as Java and C++. R has a partly similar behavior throught the use of default argument values.
 
-An important difference between most languages running on the CLR (C#, F#, etc.) and R is that the former are statically typed (or statically inferred) whereas R is dynamically typed. **rClr** tries hard to use R idioms, but without clashing with the strongly typed languages targeting the CLR.
+An important difference between most languages running on the CLR (C#, F#, etc.) and R is that the former are statically typed (or statically inferred) whereas R is dynamically typed. **rSharp** tries hard to use R idioms, but without clashing with the strongly typed languages targeting the CLR.
 
-The **rClr** functions `clrCall` and `clrCallStatic` currently relies mostly on the default behavior of the CLR to find the best method to call for the arguments passed to these functions. The .NET lingo for this is "method binding". In the future, there may be additional behaviors added to facilitate the operations from R. A typical case is that, in order to emulate the behavior expected by R users with respect to vectorized operations.
+The **rSharp** functions `clrCall` and `clrCallStatic` currently relies mostly on the default behavior of the CLR to find the best method to call for the arguments passed to these functions. The .NET lingo for this is "method binding". In the future, there may be additional behaviors added to facilitate the operations from R. A typical case is that, in order to emulate the behavior expected by R users with respect to vectorized operations.
 
 ### `params` keywords
 
@@ -246,14 +246,14 @@ The following code and figures show the effective transfer rate for numeric vect
 
 ```{r cache = T, tidy = TRUE, comment = NA, results = "asis", fig.width=11}
 perfMeasureFile <- list.files(system.file('extras', package='rSharp'), pattern='performance_profiling', full.names=TRUE)
-if(length(perfMeasureFile)==0) {stop('performance_profiling file not found in the installed rClr package')}
+if(length(perfMeasureFile)==0) {stop('performance_profiling file not found in the installed rSharp package')}
 stopifnot(file.exists(perfMeasureFile[1]))
 source(perfMeasureFile[1])
 maxArrayLen<-7.5e6
 # need to reduce the size if we run this on 32 bits machines:
 if(Sys.info()['machine'] == 'x86') {maxArrayLen<-6.5e6}
 trials <- createCases(numReps=10, maxArrayLen=maxArrayLen)
-bench <- rclrNumericPerf(trials, tag='no.r.net')
+bench <- rSharpNumericPerf(trials, tag='no.r.net')
 plotRate(bench, case = 'CLR->R')
 plotRate(bench, case = 'CLR->R', logy=FALSE)
 ```
@@ -268,9 +268,9 @@ plotRate(bench, case = 'R->CLR', logy=FALSE)
 Related work
 -----------------------------
 
-* [R.NET](http://rdotnet.codeplex.com) is a library to embed R in .NET applications. It is now the preferred mechanism for **rClr** to perform data conversion.
+* [R.NET](http://rdotnet.codeplex.com) is a library to embed R in .NET applications. It is now the preferred mechanism for **rSharp** to perform data conversion.
 * rJava is by nature quite similar in purpose, though the code and usage are actually quite different.
-* [rsqlserver](https://github.com/agstudy/rsqlserver) uses **rClr**
+* [rsqlserver](https://github.com/agstudy/rsqlserver) uses **rSharp**
 * Rcpp notably with intended use of reference classes.
 
 Acknowledgements

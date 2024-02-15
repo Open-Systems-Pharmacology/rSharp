@@ -5,7 +5,7 @@
 #' @return nothing is returned by this function
 #' @export
 clrShutdown <- function() { # TODO: is this even possible given runtime's constraints?
-  result <- .C("rclr_shutdown_clr", PACKAGE=nativePkgName)
+  result <- .C("rSharp_shutdown_clr", PACKAGE=nativePkgName)
 }
 
 #' Turn on/off R.NET
@@ -50,7 +50,7 @@ setConvertAdvancedTypes <- function(enable=TRUE) {
 
 #' Loads a Common Language assembly.
 #'
-#' Loads an assembly. Note that this is loaded in the single application domain that is created by rClr, not a separate application domain.
+#' Loads an assembly. Note that this is loaded in the single application domain that is created by rSharp, not a separate application domain.
 #'
 #' @param name a character vector of length one. It can be the full file name of the assembly to load, or a fully qualified assembly name, or as a last resort a partial name.
 #' @seealso \code{\link{.C}} which this function wraps
@@ -72,12 +72,12 @@ setConvertAdvancedTypes <- function(enable=TRUE) {
 #' }
 clrLoadAssembly <- function(name) {
   # if( !file.exists(name) ) stop(paste("File not found: ", name))
-  result <- .C("rclr_load_assembly", name, PACKAGE=nativePkgName)
+  result <- .C("rSharp_load_assembly", name, PACKAGE=nativePkgName)
 }
 
 #' Gets the inner name used for the package
 #'
-#' Gets the inner name used for the package (rClrMono or rClrMs). This is not intented for use by most users.
+#' Gets the inner name used for the package (rSharpMono or rSharpMs). This is not intented for use by most users.
 #'
 #' @return the short name of the library currently loaded, depending on the runtime used (Mono or Microsoft .NET)
 #' @export
@@ -98,7 +98,7 @@ clrGetInnerPkgName <- function() { nativePkgName }
 #' clrReflect(testObj)
 #' }
 clrReflect <- function( clrobj ) {
-  # .Call("r_reflect_on_object", clrobj@clrobj, silent=FALSE, PACKAGE="rClr")
+  # .Call("r_reflect_on_object", clrobj@clrobj, silent=FALSE, PACKAGE="rSharp")
   list(Methods=clrGetMethods(clrobj), Fields=clrGetFields(clrobj), Properties=clrGetProperties(clrobj))
 }
 
@@ -308,7 +308,6 @@ clrNew <- function(typename, ...)
 #'
 #' This function needs to be exported, but is highly unlikely to be of any use to an end user, even an advanced one.
 #' This is indirectly needed to unlock the benefits of using R.NET convert data structures between R and .NET.
-#' Using this function is a critical part of solving the rather complicated issue rClr #33.
 #'
 #' @return a CLR object
 #' @export
@@ -523,7 +522,7 @@ clrTypename <- function(clrobj) {
 #'
 #' Gets the name of the native library currently loaded. Used only for unit tests.
 #'
-#' @return the name of the native library currently loaded: rClrMs or rClrMono
+#' @return the name of the native library currently loaded: rSharpMs or rSharpMono
 #' @export
 clrGetNativeLibName <- function() {
   nativePkgName
@@ -548,7 +547,7 @@ clrCallStatic <- function(typename, methodName,...)
   return(mkClrObjRef(extPtr))
 }
 
-#' Peek into the types of CLR objects arguments are converted to by rClr
+#' Peek into the types of CLR objects arguments are converted to by rSharp
 #'
 #' Advanced use only, to diagnose unexpected conditions in CLR method calls. Most users would not ever need it.
 #'
@@ -624,14 +623,14 @@ clrGetStaticMemberSignature <- function( typename, memberName ) {
   clrCallStatic(reflectionHelperTypeName, 'GetSignature', typename, memberName)
 }
 
-#' Architecture dependent path to the rClr native library
+#' Architecture dependent path to the rSharp native library
 #'
 #' Guess the directory where to expect the architecture dependent native library of a specified package
-#' e.g. for the package rClr, ${R_HOME}/library/rClr/libs/x64
-#' This is a utility that is not specific to the rClr package
+#' e.g. for the package rSharp, ${R_HOME}/library/rSharp/libs/x64
+#' This is a utility that is not specific to the rSharp package
 #'
-#' @param pkgName the name of a package, e.g. 'rClr'
-#' @return the prospective path in which a native library would be found, e.g. c:/R/library/rClr/libs/x64
+#' @param pkgName the name of a package, e.g. 'rSharp'
+#' @return the prospective path in which a native library would be found, e.g. c:/R/library/rSharp/libs/x64
 #' @export
 getNativeLibsPath <- function(pkgName) {
   r_arch=Sys.getenv("R_ARCH")
@@ -657,7 +656,7 @@ getSexpType <- function(sexp) {
 #' Peek into the structure of R objects 'as seen from C code'
 #'
 #' Inspect one or more R object to get information on its representation in the engine.
-#' This function is mostly useful for R/rClr developers. It is derived from the 'showArgs'
+#' This function is mostly useful for R/rSharp developers. It is derived from the 'showArgs'
 #' example in the R extension manual
 #'
 #' @param ... one or more R objects

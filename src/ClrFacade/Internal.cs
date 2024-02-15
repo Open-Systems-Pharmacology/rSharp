@@ -296,7 +296,7 @@ public static class Internal
 
       var additionalMsg = checkSehExceptionAdditionalErrorMessage(innermost);
 
-      var reflectionTypeLoadException = innermost as ReflectionTypeLoadException; // https://rclr.codeplex.com/workitem/26
+      var reflectionTypeLoadException = innermost as ReflectionTypeLoadException;
       var sb = new StringBuilder();
       sb.Append(!string.IsNullOrEmpty(additionalMsg) ? formatCustomMessage(additionalMsg) : formatExceptionMessage(innermost));
 
@@ -427,7 +427,7 @@ public static class Internal
 
    /// <summary>
    ///    A default binder for finding methods; a placeholder for a way to customize or refine the method selection process
-   ///    for rClr.
+   ///    for rSharp.
    /// </summary>
    private static readonly Binder _methodBinder = Type.DefaultBinder; // reverting; this causes problems for parameters with the params keyword
 

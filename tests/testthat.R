@@ -1,5 +1,5 @@
 library(testthat)
-library(rClr)
+library(rSharp)
 
 debug_test = FALSE
 # debug_test = TRUE

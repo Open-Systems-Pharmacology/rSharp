@@ -64,7 +64,6 @@ test_that("Basic types of length zero are marshalled correctly", {
   # class(a) <- c('POSIXct', 'POSIXt')
   # a # <== Curious
   # str(a)
-  # check that we fixed https://rclr.codeplex.com/workitem/2
   expectClrArrayElementType( numeric(0)   ,'System.Double')
   expectClrArrayElementType( integer(0)   ,'System.Int32')
   expectClrArrayElementType( raw(0)       ,'System.Byte')
@@ -287,7 +286,6 @@ test_that("Basic objects are created correctly", {
 	expect_false(is.null(testObj))
   expect_that( testObj@clrtype, equals(testClassName))
 
-  # cover part of the issue https://rclr.codeplex.com/workitem/39
 	testObj <- callTestCase( "CreateTestObjectGenericInstance")
 	expect_false(is.null(testObj))
 
@@ -299,7 +297,6 @@ test_that("Basic objects are created correctly", {
 })
 
 test_that("Creation of SEXP via R.NET", {
-  # cover issue https://rclr.codeplex.com/workitem/42. Just check that the stack imbalance warning does not show up (could not find a way to check this via testthat; warnings() is not affected by the warning given by the stack imbalance checking mechanism in R itself. This is probably because check_stack_balance uses the function REprintf instead of warningcall
   aDataFrame <- callTestCase("CreateTestDataFrame")
 })
 
