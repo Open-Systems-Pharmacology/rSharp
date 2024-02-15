@@ -165,70 +165,70 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath);C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\7.0.15\runtimes\win-x64\native;$(VCInstallDir)atlmfc\include;$(RInstallPath)\include;$(SolutionDir)\inc</IncludePath>
+    <IncludePath>$(IncludePath);packages\Microsoft.NETCore.App.Host.win-x64.8.0.1\runtimes\win-x64\native;$(VCInstallDir)atlmfc\include;$(RInstallPath)\include;$(SolutionDir)\inc</IncludePath>
     <LibraryPath>$(LibraryPath);$(VSInstallDir);$(VSInstallDir)lib;.\libfiles\i386;$(RInstallPath)\bin\i386</LibraryPath>
     <ReferencePath>.\libfiles\i386;$(RInstallPath)\bin\i386</ReferencePath>
     <TargetName>$(ProjectName)Ms</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MonoDebug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath);C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\7.0.15\runtimes\win-x64\native;$(RInstallPath)\include;$(MonoSrcPath);$(MonoSrcPath)\eglib\src</IncludePath>
+    <IncludePath>$(IncludePath);packages\Microsoft.NETCore.App.Host.win-x64.8.0.1\runtimes\win-x64\native;$(RInstallPath)\include;$(MonoSrcPath);$(MonoSrcPath)\eglib\src</IncludePath>
     <LibraryPath>$(LibraryPath);$(VSInstallDir);$(VSInstallDir)lib;.\libfiles\i386;$(RInstallPath)\bin\i386;$(MonoSrcPath)\msvc\Win32\lib</LibraryPath>
     <ReferencePath>.\libfiles\i386;$(RInstallPath)\bin\i386</ReferencePath>
     <TargetName>$(ProjectName)Mono</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MonoInstallDebug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath);C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\7.0.15\runtimes\win-x64\native;$(RInstallPath)\include;$(MonoInstallPath)\include;$(MonoInstallPath)\include\mono-2.0;$(MonoInstallPath)\include\glib-2.0;$(MonoInstallPath)\lib\glib-2.0\include</IncludePath>
+    <IncludePath>$(IncludePath);packages\Microsoft.NETCore.App.Host.win-x64.8.0.1\runtimes\win-x64\native;$(RInstallPath)\include;$(MonoInstallPath)\include;$(MonoInstallPath)\include\mono-2.0;$(MonoInstallPath)\include\glib-2.0;$(MonoInstallPath)\lib\glib-2.0\include</IncludePath>
     <LibraryPath>$(LibraryPath);$(VSInstallDir);$(VSInstallDir)lib;.\libfiles\i386;$(RInstallPath)\bin\i386;$(MonoInstallPath)\lib;$(MonoInstallPath)\bin</LibraryPath>
     <ReferencePath>.\libfiles\i386;$(RInstallPath)\bin\i386</ReferencePath>
     <TargetName>$(ProjectName)Mono</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MonoInstall|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath);C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\7.0.15\runtimes\win-x64\native;$(RInstallPath)\include;$(MonoInstallPath)\include;$(MonoInstallPath)\include\mono-2.0;$(MonoInstallPath)\include\glib-2.0;$(MonoInstallPath)\lib\glib-2.0\include</IncludePath>
+    <IncludePath>$(IncludePath);packages\Microsoft.NETCore.App.Host.win-x64.8.0.1\runtimes\win-x64\native;$(RInstallPath)\include;$(MonoInstallPath)\include;$(MonoInstallPath)\include\mono-2.0;$(MonoInstallPath)\include\glib-2.0;$(MonoInstallPath)\lib\glib-2.0\include</IncludePath>
     <LibraryPath>$(LibraryPath);$(VSInstallDir);$(VSInstallDir)lib;.\libfiles\i386;$(RInstallPath)\bin\i386;$(MonoInstallPath)\lib;$(MonoInstallPath)\bin</LibraryPath>
     <ReferencePath>.\libfiles\i386;$(RInstallPath)\bin\i386</ReferencePath>
     <TargetName>$(ProjectName)Mono</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath);C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\7.0.15\runtimes\win-x64\native;$(VCInstallDir)atlmfc\include;$(RInstallPath)\include;$(SolutionDir)\inc</IncludePath>
+    <IncludePath>$(IncludePath);packages\Microsoft.NETCore.App.Host.win-x64.8.0.1\runtimes\win-x64\native;$(VCInstallDir)atlmfc\include;$(RInstallPath)\include;$(SolutionDir)\inc</IncludePath>
     <LibraryPath>$(LibraryPath);$(VSInstallDir);$(VSInstallDir)lib;.\libfiles\x64;$(RInstallPath)\bin\x64</LibraryPath>
     <ReferencePath>.\libfiles\x64;$(RInstallPath)\bin\x64</ReferencePath>
     <TargetName>$(ProjectName)Ms</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MonoDebug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath);C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\7.0.15\runtimes\win-x64\native;$(RInstallPath)\include;$(MonoSrcPath);$(MonoSrcPath)\eglib\src</IncludePath>
+    <IncludePath>$(IncludePath);packages\Microsoft.NETCore.App.Host.win-x64.8.0.1\runtimes\win-x64\native;$(RInstallPath)\include;$(MonoSrcPath);$(MonoSrcPath)\eglib\src</IncludePath>
     <LibraryPath>$(LibraryPath);$(VSInstallDir);$(VSInstallDir)lib;.\libfiles\x64;$(RInstallPath)\bin\x64;$(MonoSrcPath)\msvc\x64\lib</LibraryPath>
     <ReferencePath>.\libfiles\x64;$(RInstallPath)\bin\x64</ReferencePath>
     <TargetName>$(ProjectName)Mono</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MonoInstallDebug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath);C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\7.0.15\runtimes\win-x64\native;$(RInstallPath)\include;$(MonoInstallPath)\include;$(MonoInstallPath)\include\mono-2.0;$(MonoInstallPath)\include\glib-2.0;$(MonoInstallPath)\lib\glib-2.0\include</IncludePath>
+    <IncludePath>$(IncludePath);packages\Microsoft.NETCore.App.Host.win-x64.8.0.1\runtimes\win-x64\native;$(RInstallPath)\include;$(MonoInstallPath)\include;$(MonoInstallPath)\include\mono-2.0;$(MonoInstallPath)\include\glib-2.0;$(MonoInstallPath)\lib\glib-2.0\include</IncludePath>
     <LibraryPath>$(LibraryPath);$(VSInstallDir);$(VSInstallDir)lib;.\libfiles\x64;$(RInstallPath)\bin\x64;$(MonoInstallPath)\lib;$(MonoInstallPath)\bin</LibraryPath>
     <ReferencePath>.\libfiles\x64;$(RInstallPath)\bin\x64</ReferencePath>
     <TargetName>$(ProjectName)Mono</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MonoInstall|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath);C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\7.0.15\runtimes\win-x64\native;$(RInstallPath)\include;$(MonoInstallPath)\include;$(MonoInstallPath)\include\mono-2.0;$(MonoInstallPath)\include\glib-2.0;$(MonoInstallPath)\lib\glib-2.0\include</IncludePath>
+    <IncludePath>$(IncludePath);packages\Microsoft.NETCore.App.Host.win-x64.8.0.1\runtimes\win-x64\native;$(RInstallPath)\include;$(MonoInstallPath)\include;$(MonoInstallPath)\include\mono-2.0;$(MonoInstallPath)\include\glib-2.0;$(MonoInstallPath)\lib\glib-2.0\include</IncludePath>
     <LibraryPath>$(LibraryPath);$(VSInstallDir);$(VSInstallDir)lib;.\libfiles\x64;$(RInstallPath)\bin\x64;$(MonoInstallPath)\lib;$(MonoInstallPath)\bin</LibraryPath>
     <ReferencePath>.\libfiles\x64;$(RInstallPath)\bin\x64</ReferencePath>
     <TargetName>$(ProjectName)Mono</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(IncludePath);C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\7.0.15\runtimes\win-x64\native;$(VCInstallDir)atlmfc\include;$(RInstallPath)\include</IncludePath>
+    <IncludePath>$(IncludePath);packages\Microsoft.NETCore.App.Host.win-x64.8.0.1\runtimes\win-x64\native;$(VCInstallDir)atlmfc\include;$(RInstallPath)\include</IncludePath>
     <LibraryPath>$(LibraryPath);$(VSInstallDir);$(VSInstallDir)lib;.\libfiles\i386;$(RInstallPath)\bin\i386</LibraryPath>
     <ReferencePath>.\libfiles\i386;$(RInstallPath)\bin\i386</ReferencePath>
     <TargetName>$(ProjectName)Ms</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(IncludePath);C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\7.0.15\runtimes\win-x64\native;$(VCInstallDir)atlmfc\include;$(RInstallPath)\include</IncludePath>
+    <IncludePath>$(IncludePath);packages\Microsoft.NETCore.App.Host.win-x64.8.0.1\runtimes\win-x64\native;$(VCInstallDir)atlmfc\include;$(RInstallPath)\include</IncludePath>
     <LibraryPath>$(LibraryPath);$(VSInstallDir);$(VSInstallDir)lib;.\libfiles\x64;$(RInstallPath)\bin\x64</LibraryPath>
     <ReferencePath>.\libfiles\x64;$(RInstallPath)\bin\x64</ReferencePath>
     <TargetName>$(ProjectName)Ms</TargetName>
@@ -246,7 +246,7 @@
     <Link>
       <SubSystem>NotSet</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Rdll.lib;C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\7.0.15\runtimes\win-x64\native\nethost.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Rdll.lib;packages\Microsoft.NETCore.App.Host.win-x64.8.0.1\runtimes\win-x64\native\nethost.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
       <ModuleDefinitionFile>rSharp-win.def</ModuleDefinitionFile>
@@ -265,7 +265,7 @@
     <Link>
       <SubSystem>NotSet</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\7.0.15\runtimes\win-x64\native\nethost.lib;mono-2.0.lib;Rdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>packages\Microsoft.NETCore.App.Host.win-x64.8.0.1\runtimes\win-x64\native\nethost.lib;mono-2.0.lib;Rdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
       <ModuleDefinitionFile>rSharp-mono.def</ModuleDefinitionFile>
@@ -286,7 +286,7 @@
     <Link>
       <SubSystem>NotSet</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\7.0.15\runtimes\win-x64\native\nethost.lib;mono-2.0.lib;Rdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>packages\Microsoft.NETCore.App.Host.win-x64.8.0.1\runtimes\win-x64\native\nethost.lib;mono-2.0.lib;Rdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
       <ModuleDefinitionFile>rSharp-mono.def</ModuleDefinitionFile>
@@ -307,7 +307,7 @@
     <Link>
       <SubSystem>NotSet</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Rdll.lib;C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\7.0.15\runtimes\win-x64\native\nethost.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Rdll.lib;packages\Microsoft.NETCore.App.Host.win-x64.8.0.1\runtimes\win-x64\native\nethost.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
       <ModuleDefinitionFile>rSharp-win.def</ModuleDefinitionFile>
@@ -328,7 +328,7 @@
     <Link>
       <SubSystem>NotSet</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\7.0.15\runtimes\win-x64\native\nethost.lib;mono-2.0.lib;Rdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>packages\Microsoft.NETCore.App.Host.win-x64.8.0.1\runtimes\win-x64\native\nethost.lib;mono-2.0.lib;Rdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
       <ModuleDefinitionFile>rSharp-mono.def</ModuleDefinitionFile>
@@ -349,7 +349,7 @@
     <Link>
       <SubSystem>NotSet</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\7.0.15\runtimes\win-x64\native\nethost.lib;mono-2.0.lib;Rdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>packages\Microsoft.NETCore.App.Host.win-x64.8.0.1\runtimes\win-x64\native\nethost.lib;mono-2.0.lib;Rdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
       <ModuleDefinitionFile>rSharp-mono.def</ModuleDefinitionFile>
@@ -370,7 +370,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\7.0.15\runtimes\win-x64\native\nethost.lib;mono-2.0.lib;Rdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>packages\Microsoft.NETCore.App.Host.win-x64.8.0.1\runtimes\win-x64\native\nethost.lib;mono-2.0.lib;Rdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>rSharp-mono.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
@@ -389,7 +389,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\7.0.15\runtimes\win-x64\native\nethost.lib;mono-2.0.lib;Rdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>packages\Microsoft.NETCore.App.Host.win-x64.8.0.1\runtimes\win-x64\native\nethost.lib;mono-2.0.lib;Rdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>rSharp-mono.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
@@ -404,7 +404,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\7.0.15\runtimes\win-x64\native\nethost.lib;Rdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>packages\Microsoft.NETCore.App.Host.win-x64.8.0.1\runtimes\win-x64\native\nethost.lib;Rdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>rSharp-win.def</ModuleDefinitionFile>
@@ -423,7 +423,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Host.win-x64\7.0.15\runtimes\win-x64\native\nethost.lib;Rdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>packages\Microsoft.NETCore.App.Host.win-x64.8.0.1\runtimes\win-x64\native\nethost.lib;Rdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>rSharp-win.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
