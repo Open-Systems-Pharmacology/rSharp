@@ -27,3 +27,20 @@ set MonoBuildConfiguration=MonoInstall
 :: or if you encounter some issues when testing the load, you may bypass it with
 %R% CMD INSTALL --no-test-load rSharp
 ```
+
+
+Instructions for releases (to update the documentation)
+
+```
+library(rSharp)
+perfMeasureFile <- list.files(system.file("tests", package = "rSharp"), pattern = "performance_profiling", 
+    full.names = TRUE)
+stopifnot(file.exists(perfMeasureFile))
+source(perfMeasureFile)
+library(rClrDevtools) # https://github.com/jmp75/rClr-devtools
+# rClrDevtools::roxyRclr()
+rClrDevtools::vignettesRclr()
+```
+
+Then rebuild/reinstall the package.
+

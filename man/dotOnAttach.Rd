@@ -3,7 +3,7 @@
 \name{dotOnAttach}
 \alias{dotOnAttach}
 \alias{.onAttach}
-\title{rClr .onAttach}
+\title{rSharp .onAttach}
 \usage{
 .onAttach(libname = "~/R", pkgname = "rSharp")
 }
