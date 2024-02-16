@@ -181,13 +181,18 @@ public static class Internal
       return 1234;
    }
 
+   public static string GetObjectTypeName(object instance)
+   {
+      return instance.GetType().FullName;
+   }
+
    public static IntPtr GetObjectTypeName(IntPtr obj)
    {
       var instPtr = Marshal.ReadIntPtr(obj, 0);
       var t = Marshal.PtrToStructure<RSharpGenericValue>(instPtr);
       var instance = convertRSharpParameters(new[] { t })[0];
 
-      return Marshal.StringToBSTR(instance.GetType().FullName);
+      return Marshal.StringToBSTR(GetObjectTypeName(instance));
    }
 
    public static Assembly LoadFrom(string pathOrAssemblyName)
@@ -653,5 +658,14 @@ public static class Internal
       var timeSpan = getUtcTimeSpanROrigin(ref date);
       var res = timeSpan.TotalSeconds;
       return res;
+   }
+
+   public static void FreeObject(IntPtr instPtr)
+   {
+      var genericValue = Marshal.PtrToStructure<RSharpGenericValue>(instPtr);
+      if(genericValue.Type == RSharpValueType.String)
+         Marshal.FreeBSTR(genericValue.Value);
+      else if (genericValue.Type == RSharpValueType.Object)
+         ((GCHandle)genericValue.Value).Free();
    }
 }

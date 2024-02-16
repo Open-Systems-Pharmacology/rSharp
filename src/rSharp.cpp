@@ -15,6 +15,7 @@ void* create_instance_fn_ptr = nullptr;
 void* load_from_fn_ptr = nullptr;
 void* call_static_method_fn_ptr = nullptr;
 void* call_instance_method_fn_ptr = nullptr;
+void* call_free_object_method_ptr = nullptr;
 void* get_object_direct_fn_ptr = nullptr;
 void* get_full_type_name_fn_ptr = nullptr;
 void* create_sexp_wrapper_fn_ptr = nullptr;
@@ -22,28 +23,33 @@ void* create_sexp_wrapper_fn_ptr = nullptr;
 //Definition of Delegates
 typedef int (CORECLR_DELEGATE_CALLTYPE* CallStaticMethodDelegate)(const char*, const char*, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
 typedef int (CORECLR_DELEGATE_CALLTYPE* CallInstanceMethodDelegate)(RSharpGenericValue** instance, const char* mname, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
+typedef void (CORECLR_DELEGATE_CALLTYPE* FreeObjectDelegate)(intptr_t instance);
 typedef intptr_t (CORECLR_DELEGATE_CALLTYPE* CallFullTypeNameDelegate)(RSharpGenericValue** instance);
 typedef int (CORECLR_DELEGATE_CALLTYPE* GetObjectDirectDelegate)(RSharpGenericValue* returnValue);
 typedef int (CORECLR_DELEGATE_CALLTYPE* CreateSEXPWrapperDelegate)(LONGLONG pointer, RSharpGenericValue* returnValue);
 typedef int (CORECLR_DELEGATE_CALLTYPE* CreateInstanceDelegate)(const char*, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
 typedef void* (CORECLR_DELEGATE_CALLTYPE* LoadFromDelegate)(const char*);
 
+
+void freeObject(RSharpGenericValue* instance);
+
 /////////////////////////////////////////
-// Initialisation and disposal of the CLR
+// Initialization and disposal of the CLR
 /////////////////////////////////////////
 void rSharp_create_domain() {
-	//
+
+	// if already loaded in this process, do not load again
+	if(load_assembly_and_get_function_pointer!= nullptr)
+		return;
+
 	// STEP 1: Load HostFxr and get exported hosting functions
-	//
 	if (!load_hostfxr())
 	{
 		assert(false && "Failure: load_hostfxr()");
 		return;
 	}
 
-	//
 	// STEP 2: Initialize and start the .NET Core runtime
-	//
 	const string_t config_path = STR("./RSharp.runtimeconfig.json");
 	load_assembly_and_get_function_pointer = nullptr;
 	load_assembly_and_get_function_pointer = get_dotnet_load_assembly(config_path.c_str());
@@ -66,10 +72,12 @@ void ms_rSharp_cleanup()
 
 static void rsharp_object_finalizer(SEXP clrSexp) {
 	RsharpObjectHandle* clroh_ptr;
+	
 	if (TYPEOF(clrSexp) == EXTPTRSXP) {
 		RSharpGenericValue* objptr;
 		clroh_ptr = static_cast<RsharpObjectHandle*> (R_ExternalPtrAddr(clrSexp));
 		objptr = clroh_ptr->objptr;
+		freeObject(objptr);
 		delete objptr;
 	}
 }
@@ -267,6 +275,23 @@ void initializeCallInstanceFunction()
 		&call_instance_method_fn_ptr);
 
 	assert(rc_1 == 0 && call_instance_method_fn_ptr != nullptr && "Failure: CallStatic()");
+}
+
+void initializeFreeObjectFunction()
+{
+	const char_t* dotnet_type = STR("ClrFacade.ClrFacade, ClrFacade");
+	auto functionDelegate = STR("ClrFacade.ClrFacade+FreeObjectDelegate, ClrFacade");
+
+	int rc_1 = load_assembly_and_get_function_pointer(
+		dotnetlib_path.c_str(),
+		dotnet_type,
+		STR("FreeObject"),
+		functionDelegate,//delegate_type_name
+		nullptr,
+		&call_free_object_method_ptr);
+
+	assert(rc_1 == 0 && call_free_object_method_ptr != nullptr && "Failure: FreeObject()");
+
 }
 
 void initializeCallStaticFunction()
@@ -485,6 +510,15 @@ RSharpGenericValue* callInstance(RSharpGenericValue** instance, const char* mnam
 		throw std::exception("Error calling instance method");
 
 	return return_value;
+}
+
+void freeObject(RSharpGenericValue* instance)
+{
+	if (call_free_object_method_ptr == nullptr)
+		initializeFreeObjectFunction();
+
+	const auto free_object = reinterpret_cast<FreeObjectDelegate>(call_free_object_method_ptr);
+	free_object(reinterpret_cast<intptr_t>(instance));
 }
 
 RSharpGenericValue* callStatic(const char* mnam, char* ns_qualified_typename, RSharpGenericValue** params, const R_len_t numberOfObjects)

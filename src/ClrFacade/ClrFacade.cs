@@ -47,6 +47,11 @@ namespace ClrFacade
          return Internal.GetObjectTypeName(obj);
       }
 
+      public static string GetObjectTypeName(object obj)
+      {
+         return Internal.GetObjectTypeName(obj);
+      }
+
       public delegate Assembly LoadFromDelegate(string pathOrAssemblyName);
 
       public static Assembly LoadFrom(string pathOrAssemblyName)
@@ -77,6 +82,12 @@ namespace ClrFacade
       public static Type GetType(string typename)
       {
          return Internal.GetType(typename);
+      }
+
+      public delegate void FreeObjectDelegate(IntPtr obj);
+      public static void FreeObject(IntPtr obj)
+      {
+         Internal.FreeObject(obj);
       }
       // ReSharper restore UnusedMember.Global
    }
