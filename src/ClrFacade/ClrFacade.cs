@@ -47,6 +47,11 @@ namespace ClrFacade
          return Internal.GetObjectTypeName(obj);
       }
 
+      public static string GetObjectTypeName(object obj)
+      {
+         return Internal.GetObjectTypeName(obj);
+      }
+
       public delegate Assembly LoadFromDelegate(string pathOrAssemblyName);
 
       public static Assembly LoadFrom(string pathOrAssemblyName)

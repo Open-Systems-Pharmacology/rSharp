@@ -181,13 +181,18 @@ public static class Internal
       return 1234;
    }
 
+   public static string GetObjectTypeName(object instance)
+   {
+      return instance.GetType().FullName;
+   }
+
    public static IntPtr GetObjectTypeName(IntPtr obj)
    {
       var instPtr = Marshal.ReadIntPtr(obj, 0);
       var t = Marshal.PtrToStructure<RSharpGenericValue>(instPtr);
       var instance = convertRSharpParameters(new[] { t })[0];
 
-      return Marshal.StringToBSTR(instance.GetType().FullName);
+      return Marshal.StringToBSTR(GetObjectTypeName(instance));
    }
 
    public static Assembly LoadFrom(string pathOrAssemblyName)

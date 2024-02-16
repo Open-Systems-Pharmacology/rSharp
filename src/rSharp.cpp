@@ -29,21 +29,22 @@ typedef int (CORECLR_DELEGATE_CALLTYPE* CreateInstanceDelegate)(const char*, RSh
 typedef void* (CORECLR_DELEGATE_CALLTYPE* LoadFromDelegate)(const char*);
 
 /////////////////////////////////////////
-// Initialisation and disposal of the CLR
+// Initialization and disposal of the CLR
 /////////////////////////////////////////
 void rSharp_create_domain() {
-	//
+
+	// if already loaded in this process, do not load again
+	if(load_assembly_and_get_function_pointer!= nullptr)
+		return;
+
 	// STEP 1: Load HostFxr and get exported hosting functions
-	//
 	if (!load_hostfxr())
 	{
 		assert(false && "Failure: load_hostfxr()");
 		return;
 	}
 
-	//
 	// STEP 2: Initialize and start the .NET Core runtime
-	//
 	const string_t config_path = STR("./RSharp.runtimeconfig.json");
 	load_assembly_and_get_function_pointer = nullptr;
 	load_assembly_and_get_function_pointer = get_dotnet_load_assembly(config_path.c_str());
