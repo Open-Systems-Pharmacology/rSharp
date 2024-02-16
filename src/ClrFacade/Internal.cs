@@ -659,4 +659,13 @@ public static class Internal
       var res = timeSpan.TotalSeconds;
       return res;
    }
+
+   public static void FreeObject(IntPtr instPtr)
+   {
+      var genericValue = Marshal.PtrToStructure<RSharpGenericValue>(instPtr);
+      if(genericValue.Type == RSharpValueType.String)
+         Marshal.FreeBSTR(genericValue.Value);
+      else if (genericValue.Type == RSharpValueType.Object)
+         ((GCHandle)genericValue.Value).Free();
+   }
 }

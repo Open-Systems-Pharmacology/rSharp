@@ -83,6 +83,12 @@ namespace ClrFacade
       {
          return Internal.GetType(typename);
       }
+
+      public delegate void FreeObjectDelegate(IntPtr obj);
+      public static void FreeObject(IntPtr obj)
+      {
+         Internal.FreeObject(obj);
+      }
       // ReSharper restore UnusedMember.Global
    }
 }
