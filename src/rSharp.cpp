@@ -24,7 +24,7 @@ void* create_sexp_wrapper_fn_ptr = nullptr;
 typedef int (CORECLR_DELEGATE_CALLTYPE* CallStaticMethodDelegate)(const char*, const char*, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
 typedef int (CORECLR_DELEGATE_CALLTYPE* CallInstanceMethodDelegate)(RSharpGenericValue** instance, const char* mname, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
 typedef void (CORECLR_DELEGATE_CALLTYPE* FreeObjectDelegate)(intptr_t instance);
-typedef intptr_t (CORECLR_DELEGATE_CALLTYPE* CallFullTypeNameDelegate)(RSharpGenericValue** instance);
+typedef intptr_t(CORECLR_DELEGATE_CALLTYPE* CallFullTypeNameDelegate)(RSharpGenericValue** instance);
 typedef int (CORECLR_DELEGATE_CALLTYPE* GetObjectDirectDelegate)(RSharpGenericValue* returnValue);
 typedef int (CORECLR_DELEGATE_CALLTYPE* CreateSEXPWrapperDelegate)(LONGLONG pointer, RSharpGenericValue* returnValue);
 typedef int (CORECLR_DELEGATE_CALLTYPE* CreateInstanceDelegate)(const char*, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
@@ -39,7 +39,7 @@ void freeObject(RSharpGenericValue* instance);
 void rSharp_create_domain() {
 
 	// if already loaded in this process, do not load again
-	if(load_assembly_and_get_function_pointer!= nullptr)
+	if (load_assembly_and_get_function_pointer != nullptr)
 		return;
 
 	// STEP 1: Load HostFxr and get exported hosting functions
@@ -72,7 +72,7 @@ void ms_rSharp_cleanup()
 
 static void rsharp_object_finalizer(SEXP clrSexp) {
 	RsharpObjectHandle* clroh_ptr;
-	
+
 	if (TYPEOF(clrSexp) == EXTPTRSXP) {
 		RSharpGenericValue* objptr;
 		clroh_ptr = static_cast<RsharpObjectHandle*> (R_ExternalPtrAddr(clrSexp));
@@ -246,7 +246,7 @@ void initializeGetObjectDirectFunction()
 
 void initializeCreateSEXPFunction()
 {
-		const char_t* dotnet_type = STR("ClrFacade.ClrFacade, ClrFacade");
+	const char_t* dotnet_type = STR("ClrFacade.ClrFacade, ClrFacade");
 	auto functionDelegate = STR("ClrFacade.ClrFacade+CreateSexpWrapperDelegate, ClrFacade");
 
 	int rc_1 = load_assembly_and_get_function_pointer(
@@ -398,6 +398,15 @@ SEXP make_char_single_sexp(const char* str) {
 	return mkString(str);
 }
 
+void free_params_array(RSharpGenericValue** parameterArray, int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		free(parameterArray[i]);
+	}
+	delete[] parameterArray;
+}
+
 RSharpGenericValue** sexp_to_parameters(SEXP args)
 {
 	int i;
@@ -406,19 +415,17 @@ RSharpGenericValue** sexp_to_parameters(SEXP args)
 	SEXP el;
 	const char* name;
 
-	RSharpGenericValue** mparams;
 	if (nargs == 0) {
 		return NULL;
 	}
 
-	mparams = new RSharpGenericValue * [nargs];
+	auto mparams = new RSharpGenericValue * [nargs];
 
 	for (i = 0; args != R_NilValue; i++, args = CDR(args)) {
 		name = isNull(TAG(args)) ? "" : CHAR(PRINTNAME(TAG(args)));
 		el = CAR(args);
 
 		mparams[i] = new RSharpGenericValue(ConvertToRSharpGenericValue(el));
-		//mparams[i] = &ConvertToRSharpGenericValue(el);
 	}
 	return mparams;
 }
@@ -478,6 +485,7 @@ void rSharp_load_assembly(char** filename) {
 
 SEXP r_create_clr_object(SEXP p) {
 	SEXP methodParams;
+	RSharpGenericValue return_value;
 	char* ns_qualified_typename = NULL;
 	p = CDR(p); /* skip the first parameter: function name*/
 	get_FullTypeName(p, &ns_qualified_typename); p = CDR(p);
@@ -490,21 +498,24 @@ SEXP r_create_clr_object(SEXP p) {
 	auto create_instance = reinterpret_cast<CreateInstanceDelegate>(create_instance_fn_ptr);
 
 	RSharpGenericValue** params = sexp_to_parameters(methodParams);
-	const auto return_value = new RSharpGenericValue();
-	create_instance(ns_qualified_typename, params, Rf_length(methodParams), return_value);
+	R_len_t num_objects = Rf_length(methodParams);
 
+	create_instance(ns_qualified_typename, params, num_objects, &return_value);
+
+	free_params_array(params, num_objects);
 	return ConvertToSEXP(return_value);
 }
 
-RSharpGenericValue* callInstance(RSharpGenericValue** instance, const char* mnam, char* ns_qualified_typename, RSharpGenericValue** params, const R_len_t numberOfObjects)
+RSharpGenericValue callInstance(RSharpGenericValue** instance, const char* mnam, char* ns_qualified_typename, RSharpGenericValue** params, const R_len_t numberOfObjects)
 {
+	RSharpGenericValue return_value;
+
 	if (call_instance_method_fn_ptr == nullptr)
 		initializeCallInstanceFunction();
 
 	const auto call_instance = reinterpret_cast<CallInstanceMethodDelegate>(call_instance_method_fn_ptr);
-	const auto return_value = new RSharpGenericValue();
 
-	auto result = call_instance(instance, mnam, params, numberOfObjects, return_value);
+	auto result = call_instance(instance, mnam, params, numberOfObjects, &return_value);
 
 	if (result < 0)
 		throw std::exception("Error calling instance method");
@@ -521,15 +532,15 @@ void freeObject(RSharpGenericValue* instance)
 	free_object(reinterpret_cast<intptr_t>(instance));
 }
 
-RSharpGenericValue* callStatic(const char* mnam, char* ns_qualified_typename, RSharpGenericValue** params, const R_len_t numberOfObjects)
+RSharpGenericValue callStatic(const char* mnam, char* ns_qualified_typename, RSharpGenericValue** params, const R_len_t numberOfObjects)
 {
+	RSharpGenericValue return_value;
 	if (call_static_method_fn_ptr == nullptr)
 		initializeCallStaticFunction();
 
 	const auto call_static = reinterpret_cast<CallStaticMethodDelegate>(call_static_method_fn_ptr);
-	const auto return_value = new RSharpGenericValue();
 
-	auto result = call_static(ns_qualified_typename, mnam, params, numberOfObjects, return_value);
+	auto result = call_static(ns_qualified_typename, mnam, params, numberOfObjects, &return_value);
 
 	if (result < 0)
 		throw std::exception("Error calling static method");
@@ -537,27 +548,28 @@ RSharpGenericValue* callStatic(const char* mnam, char* ns_qualified_typename, RS
 	return return_value;
 }
 
-RSharpGenericValue*  rclr_convert_element_rdotnet(SEXP p)
+RSharpGenericValue rclr_convert_element_rdotnet(SEXP p)
 {
+	RSharpGenericValue return_value;
+
 	if (create_sexp_wrapper_fn_ptr == nullptr)
 		initializeCreateSEXPFunction();
 
 	const auto call_static = reinterpret_cast<CreateSEXPWrapperDelegate>(create_sexp_wrapper_fn_ptr);
-	const auto return_value = new RSharpGenericValue();
 
-	auto result = call_static(reinterpret_cast<LONGLONG>(p), return_value);
+	auto result = call_static(reinterpret_cast<LONGLONG>(p), &return_value);
 
 	return return_value;
 }
 
 SEXP r_get_object_direct() {
+	RSharpGenericValue return_value;
 	if (get_object_direct_fn_ptr == nullptr)
 		initializeGetObjectDirectFunction();
 
 	const auto call_static = reinterpret_cast<GetObjectDirectDelegate>(get_object_direct_fn_ptr);
-	const auto return_value = new RSharpGenericValue();
 
-	auto result = call_static(return_value);
+	auto result = call_static(&return_value);
 
 	if (result < 0)
 		throw std::exception("Error calling get object direct");
@@ -568,7 +580,7 @@ SEXP r_get_object_direct() {
 const char* get_type_full_name(RSharpGenericValue** genericValue) {
 	char* ns_qualified_typename = NULL;
 
-	if(get_full_type_name_fn_ptr == nullptr)
+	if (get_full_type_name_fn_ptr == nullptr)
 		initializeGetFullTypeNameFunction();
 
 	const auto call_static = reinterpret_cast<CallFullTypeNameDelegate>(get_full_type_name_fn_ptr);
@@ -591,15 +603,18 @@ SEXP r_get_typename_externalptr(SEXP p) {
 
 
 
-SEXP rsharp_object_to_SEXP(RSharpGenericValue* objptr) {
-	SEXP result;
+SEXP rsharp_object_to_SEXP(RSharpGenericValue& objptr) {
 	RsharpObjectHandle* clroh_ptr;
-	if (objptr == NULL)
+
+	const auto returnPointer = new RSharpGenericValue(objptr);
+
+	if (objptr.type == RSharpValueType::NULL_VALUE)
 		return R_NilValue;
-	clroh_ptr = (RsharpObjectHandle*)malloc(sizeof(RsharpObjectHandle));
-	clroh_ptr->objptr = objptr;
+
+	clroh_ptr = static_cast<RsharpObjectHandle*>(malloc(sizeof(RsharpObjectHandle)));
+	clroh_ptr->objptr = returnPointer;
 	clroh_ptr->handle = 0;
-	result = R_MakeExternalPtr(clroh_ptr, R_NilValue, R_NilValue);
+	SEXP result = R_MakeExternalPtr(clroh_ptr, R_NilValue, R_NilValue);
 	R_RegisterCFinalizerEx(result, rsharp_object_finalizer, (Rboolean)1/*TRUE*/);
 	return result;
 }
@@ -623,8 +638,9 @@ SEXP r_call_method(SEXP par)
 
 	RSharpGenericValue** params = sexp_to_parameters(sExpressionParameterStack);
 
-	auto return_value = callInstance(reinterpret_cast<RSharpGenericValue**>(instance), methodName, "ClrFacade.ClrFacade,ClrFacade", params, Rf_length(sExpressionParameterStack));
-
+	const R_len_t number_of_objects = Rf_length(sExpressionParameterStack);
+	auto return_value = callInstance(reinterpret_cast<RSharpGenericValue**>(instance), methodName, "ClrFacade.ClrFacade,ClrFacade", params, number_of_objects);
+	free_params_array(params, number_of_objects);
 	return ConvertToSEXP(return_value);
 }
 
@@ -650,12 +666,10 @@ SEXP r_call_static_method(SEXP p) {
 	const R_len_t numberOfObjects = Rf_length(methodParams);
 	try {
 		//if the function pointer has not been initialized, initialize it
-		RSharpGenericValue* const return_value = callStatic(mnam, ns_qualified_typename, params, numberOfObjects);
+		auto return_value = callStatic(mnam, ns_qualified_typename, params, numberOfObjects);
 		free(ns_qualified_typename);
+		free_params_array(params, numberOfObjects);
 		return ConvertToSEXP(return_value);
-		//free_variant_array(params, argLength);
-	//release_transient_objects();
-
 	}
 	catch (const std::exception& ex) {
 		free(ns_qualified_typename);
@@ -744,33 +758,33 @@ SEXP PackDoubleIntoSEXP(double value) {
 }
 
 
-SEXP ConvertToSEXP(RSharpGenericValue* value) {
-	switch (value->type)
+SEXP ConvertToSEXP(RSharpGenericValue& value) {
+	switch (value.type)
 	{
 	case RSharpValueType::NULL_VALUE: {
 		return R_NilValue;
 	}
 	case RSharpValueType::INTPTR: {
-		return reinterpret_cast<SEXP>(value->value);
+		return reinterpret_cast<SEXP>(value.value);
 	}
 	case RSharpValueType::INT: {
-		int intValue = *reinterpret_cast<const int*>(value->value);
+		int intValue = *reinterpret_cast<const int*>(value.value);
 		return make_int_sexp(1, &intValue);
 	}
 	case RSharpValueType::FLOAT: {
-		float floatValue = *reinterpret_cast<const float*>(value->value);
+		float floatValue = *reinterpret_cast<const float*>(value.value);
 		return PackFloatIntoSEXP(floatValue);
 	}
 	case RSharpValueType::DOUBLE: {
-		double doubleValue = *reinterpret_cast<const double*>(value->value);
+		double doubleValue = *reinterpret_cast<const double*>(value.value);
 		return PackDoubleIntoSEXP(doubleValue);
 	}
 	case RSharpValueType::BOOL: {
-		bool boolValue = *reinterpret_cast<const bool*>(value->value);
+		bool boolValue = *reinterpret_cast<const bool*>(value.value);
 		return Rf_ScalarLogical(boolValue);
 	}
 	case RSharpValueType::STRING: {
-		const char* stringValue = bstr_to_c_string((const wchar_t*)value->value);
+		const char* stringValue = bstr_to_c_string((const wchar_t*)value.value);
 		return make_char_single_sexp(stringValue);
 	}
 								/*case RSharpValueType::INT_ARRAY: {
@@ -930,54 +944,49 @@ RSharpGenericValue ConvertArrayToRSharpGenericValue(SEXP s)
 
 RSharpGenericValue ConvertToRSharpGenericValue(SEXP s)
 {
-	//RSharpGenericValue* result = new RSharpGenericValue(RSharpValueType::OBJECT, 0);
-	RSharpGenericValue* result = new RSharpGenericValue();
-	result->type = RSharpValueType::OBJECT;
-	result->value = 0;
-	result->size = 0; // Default size for non-array types
+	RSharpGenericValue result;
 
-	switch (TYPEOF(s)) {
+	int typeof = TYPEOF(s);
+	switch (typeof) {
 	case S4SXP:
 		return *get_RSharp_generic_value(s);
 	case VECSXP:
-		result = &ConvertArrayToRSharpGenericValue(s);
-		result->value = reinterpret_cast<intptr_t>(INTEGER(s));
-		result->size = LENGTH(s);
-		return *result;
+		result = ConvertArrayToRSharpGenericValue(s);
+		result.value = reinterpret_cast<intptr_t>(INTEGER(s));
+		result.size = LENGTH(s);
+		return result;
 	}
 
 	if (use_rdotnet)
 	{
-		return *rclr_convert_element_rdotnet(s);
+		return rclr_convert_element_rdotnet(s);
 	}
 
-	switch (TYPEOF(s)) {
+	switch (typeof) {
 	case INTSXP: {
-		result->type = RSharpValueType::INT;
-		result->value = reinterpret_cast<intptr_t>(INTEGER(s));
+		result.type = RSharpValueType::INT;
+		result.value = reinterpret_cast<intptr_t>(INTEGER(s));
 		break;
 	}
 	case REALSXP: {
-		result->type = RSharpValueType::DOUBLE;
-		result->value = reinterpret_cast<intptr_t>(REAL(s));
+		result.type = RSharpValueType::DOUBLE;
+		result.value = reinterpret_cast<intptr_t>(REAL(s));
 		break;
 	}
 	case LGLSXP: {
-		result->type = RSharpValueType::BOOL;
-		result->value = reinterpret_cast<intptr_t>(LOGICAL(s));
+		result.type = RSharpValueType::BOOL;
+		result.value = reinterpret_cast<intptr_t>(LOGICAL(s));
 		break;
 	}
 	case STRSXP: {
-		result->type = RSharpValueType::STRING;
-		result->value = reinterpret_cast<intptr_t>(CHAR(STRING_ELT(s, 0)));
-		auto tempval = STRING_ELT(s, 0);
-		auto tempval2 = CHAR(STRING_ELT(s, 0));
+		result.type = RSharpValueType::STRING;
+		result.value = reinterpret_cast<intptr_t>(CHAR(STRING_ELT(s, 0)));
 		break;
 	}
 	default:
-		result = get_RSharp_generic_value(s);
+		result = *get_RSharp_generic_value(s);
 		break;
 	}
 
-	return *result;
+	return result;
 }

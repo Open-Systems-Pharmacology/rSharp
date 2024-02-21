@@ -112,7 +112,7 @@ extern "C" {
 	SEXP r_call_method(SEXP p);
 	SEXP r_get_typename_externalptr(SEXP p);
 	SEXP make_char_single_sexp(const char* str);
-	SEXP rsharp_object_to_SEXP(RSharpGenericValue* objptr);
+	SEXP rsharp_object_to_SEXP(RSharpGenericValue& objptr);
 
 	/**
 	 * \brief	Gets a SEXP, bypassing the custom data converters e.g. offered by RDotNetDataConverter.
@@ -132,7 +132,7 @@ extern "C" {
 
 RSharpGenericValue ConvertToRSharpGenericValue(SEXP s);
 RSharpGenericValue** sexp_to_parameters(SEXP args);
-SEXP ConvertToSEXP(RSharpGenericValue* value);
+SEXP ConvertToSEXP(RSharpGenericValue& value);
 
 
 #ifndef  __cplusplus
