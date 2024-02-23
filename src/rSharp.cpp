@@ -393,7 +393,7 @@ SEXP make_char_single_sexp(const char* str) {
 
 bool isObjectArray(RSharpGenericValue** parameterArray, int i)
 {
-	return parameterArray[i]->type == RSharpValueType::OBJECTARRAY;
+	return parameterArray[i]->type == RSharpValueType::OBJECT_ARRAY;
 }
 
 void free_params_array(RSharpGenericValue** parameterArray, int size)
@@ -962,7 +962,7 @@ RSharpGenericValue ConvertToRSharpGenericValue(SEXP s)
 	case S4SXP:
 		return *get_RSharp_generic_value(s);
 	case VECSXP:
-		result.type = RSharpValueType::OBJECTARRAY;
+		result.type = RSharpValueType::OBJECT_ARRAY;
 		result.size = LENGTH(s);
 		auto sharp_generic_value = new RSharpGenericValue* [result.size];
 		result.value = reinterpret_cast<intptr_t>(sharp_generic_value);

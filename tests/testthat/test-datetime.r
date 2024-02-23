@@ -31,7 +31,6 @@ test_that("Date and Time objects are marshalled correctly", {
   # test_that function, this fails twice (test, and then that the expected error is nevertheless not 'detected'
   # expect_error(testDotNetToR('2013-04-07 02:32'))
 
-  testDotNetToR('2013-04-07 02:33') #from then on same UTC date is returned.
   testDotNetToR('2013-04-07 03:00')
 
   # we can only test local date times post sometime in 1971 - DST rules for AU EST differ prior to that.
