@@ -27,7 +27,10 @@ typedef bool RSHARP_BOOL;
 #define FALSE_BOOL false;
 
 #ifdef WINDOWS
+
 #include <Windows.h>
+
+#include <metahost.h>
 
 #define STR(s) L ## s
 #define CH(c) L ## c
@@ -45,9 +48,9 @@ typedef bool RSHARP_BOOL;
 #define MAX_PATH PATH_MAX
 
 #define string_compare strcmp
-#include <assert.h>
-#endif
 
+#endif
+#include <assert.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
