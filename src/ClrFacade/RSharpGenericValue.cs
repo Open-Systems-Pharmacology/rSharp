@@ -17,7 +17,8 @@ namespace ClrFacade
       StringArray,
       Object,
       Null,
-      Intptr
+      Intptr,
+      ObjectArray
    }
 
    public static class RSharpGenericValueExtensions
