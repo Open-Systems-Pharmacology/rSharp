@@ -7,8 +7,8 @@
 clrGetInnerPkgName()
 }
 \value{
-the short name of the library currently loaded, depending on the runtime used (Mono or Microsoft .NET)
+the short name of the library currently loaded, depending on the runtime used 
 }
 \description{
-Gets the inner name used for the package (rSharpMono or rSharpMs). This is not intented for use by most users.
+Gets the inner name used for the package (rSharpUX or rSharpMs). This is not intented for use by most users.
 }

@@ -122,8 +122,8 @@ public class reflection_tests
    public void test_reflection_type_load_exception()
    {
       var reflectionTypeLoadException = new ReflectionTypeLoadException(
-         new[] { GetType() }, 
-         new[] { new Exception("some inner message") }, 
+         new[] { GetType() },
+         new[] { new Exception("some inner message") },
          "reflection type load exception message");
 
       string s = Internal.FormatExceptionInnermost(reflectionTypeLoadException);
@@ -177,18 +177,18 @@ public class reflection_tests
       var obj = new MyTestClass();
       Internal.CallInstanceMethod(obj, "OptionalInt");
       Internal.CallInstanceMethod(obj, "OptionalInt", 3);
-         
+
       Internal.CallInstanceMethod(obj, "IntOptionalInt", 3);
       Internal.CallInstanceMethod(obj, "IntOptionalInt", 3, 5);
-         
+
       Internal.CallInstanceMethod(obj, "DoubleOptionalInt", 3.0);
       Internal.CallInstanceMethod(obj, "DoubleOptionalInt", 3.0, 5);
-         
+
       Internal.CallInstanceMethod(obj, "DoubleOptionalIntDoubleString", 3.0, 5, 4.5, "blah");
       Internal.CallInstanceMethod(obj, "DoubleOptionalIntDoubleString", 3.0, 5);
       Internal.CallInstanceMethod(obj, "DoubleOptionalIntDoubleString", 3.0, 5);
       Internal.CallInstanceMethod(obj, "DoubleOptionalIntDoubleString", 3.0);
-         
+
       Assert.Equal("LevelOneClass", Internal.CallInstanceMethod(obj, "OptionalArgsMatch", new LevelOneClass()));
       Assert.Equal("LevelTwoClass", Internal.CallInstanceMethod(obj, "OptionalArgsMatch", new LevelTwoClass()));
       Assert.Equal("IMyInterface", Internal.CallInstanceMethod(obj, "OptionalArgsMatch", new OtherLevelOneClass()));

@@ -2,28 +2,27 @@ using System;
 using System.IO;
 using DynamicInterop;
 
-namespace ClrFacade
+namespace ClrFacade;
+
+public class RSharpUnmanagedDll : IUnmanagedDll
 {
-   public class RSharpUnmanagedDll : IUnmanagedDll
+   public RSharpUnmanagedDll(string dllName)
    {
-      public RSharpUnmanagedDll(string dllName)
+      if (!File.Exists(dllName))
       {
-         if (!File.Exists(dllName))
-         {
-            throw new FileNotFoundException(dllName);
-         }
-
-         _dll = new UnmanagedDll(dllName);
-         ClrObjectToSexp = _dll.GetFunction<ClrObjectToSexpDelegate>("rsharp_object_to_SEXP");
+         throw new FileNotFoundException(dllName);
       }
 
-      public ClrObjectToSexpDelegate ClrObjectToSexp { get; set; }
+      _dll = new UnmanagedDll(dllName);
+      ClrObjectToSexp = _dll.GetFunction<ClrObjectToSexpDelegate>("rsharp_object_to_SEXP");
+   }
 
-      private readonly UnmanagedDll _dll;
+   public ClrObjectToSexpDelegate ClrObjectToSexp { get; set; }
 
-      public IntPtr GetFunctionAddress(string entryPointName)
-      {
-         return _dll.GetFunctionAddress(entryPointName);
-      }
+   private readonly UnmanagedDll _dll;
+
+   public IntPtr GetFunctionAddress(string entryPointName)
+   {
+      return _dll.GetFunctionAddress(entryPointName);
    }
 }

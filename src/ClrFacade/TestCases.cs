@@ -7,6 +7,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using RDotNet;
+
 // ReSharper disable UnusedMember.Global called dynamically
 
 namespace ClrFacade;
@@ -74,7 +75,7 @@ public class TestCases
    public static bool DateEquals(DateTime dt1, DateTime dt2)
    {
       var res = dt1 == dt2;
-      if (res) 
+      if (res)
          return res;
 
       Console.WriteLine("DateEqualsFails");
@@ -122,7 +123,7 @@ public class TestCases
    public static DateTime CreateDate(string isoDateTime, string datetimeKind = "")
    {
       var res = DateTime.Parse(isoDateTime);
-      if (string.IsNullOrEmpty(datetimeKind)) 
+      if (string.IsNullOrEmpty(datetimeKind))
          return res;
 
       if (Enum.TryParse(datetimeKind, out DateTimeKind dtk))
@@ -143,7 +144,7 @@ public class TestCases
       // Using TimeZoneInfo on dates far back towards the start of the christian calendar era poses problem. Don't do it if TZ = UTC
       if (timeZoneId == "UTC")
          return CreateDate(isoDateTime, "Utc");
-      
+
       TimeZoneInfo tz;
       tz = string.IsNullOrEmpty(timeZoneId) ? TimeZoneInfo.Local : TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
       var dateTime = CreateDate(isoDateTime);
@@ -563,7 +564,8 @@ public class TestCases
 
    public static Complex[] CreateComplex(double[] real, double[] imaginary)
    {
-      if (real.Length != imaginary.Length) throw new ArgumentException("array of real and imaginary numbers not of the same length");
+      if (real.Length != imaginary.Length)
+         throw new ArgumentException("array of real and imaginary numbers not of the same length");
       var res = new Complex[real.Length];
       for (int i = 0; i < real.Length; i++)
       {
@@ -585,7 +587,7 @@ public class TestCases
 
    public static bool ComplexEquals(Complex[] complexArray, double[] real, double[] imaginary)
    {
-      if (complexArray.Length != real.Length || complexArray.Length != imaginary.Length) 
+      if (complexArray.Length != real.Length || complexArray.Length != imaginary.Length)
          return false;
 
       return !complexArray.Where((t, i) => !ComplexEquals(t, real[i], imaginary[i])).Any();

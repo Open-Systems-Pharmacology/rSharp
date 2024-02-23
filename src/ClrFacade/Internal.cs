@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using RDotNet.NativeLibrary;
 
 namespace ClrFacade;
 
@@ -105,7 +106,7 @@ public static class Internal
          throw new ArgumentException("missing type specification");
 
       var t = Type.GetType(typename);
-      if (t != null) 
+      if (t != null)
          return t;
 
       var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -135,13 +136,12 @@ public static class Internal
          }
       }
 
-      if (t != null) 
+      if (t != null)
          return t;
 
       var msg = $"Type not found: {typename}";
       Console.WriteLine(msg);
       return null;
-
    }
 
    public static int CurrentObject(IntPtr returnValue)
@@ -192,23 +192,22 @@ public static class Internal
       var t = Marshal.PtrToStructure<RSharpGenericValue>(instPtr);
       var instance = convertRSharpParameters(new[] { t })[0];
 
-      return Marshal.StringToBSTR(GetObjectTypeName(instance));
+      return Marshal.StringToHGlobalAnsi(GetObjectTypeName(instance));
    }
 
-   public static Assembly LoadFrom(string pathOrAssemblyName)
+   public static void LoadFrom(string pathOrAssemblyName)
    {
       Assembly result;
       if (File.Exists(pathOrAssemblyName))
-         result = Assembly.LoadFrom(pathOrAssemblyName);
+         Assembly.LoadFrom(pathOrAssemblyName);
       else if (isFullyQualifiedAssemblyName(pathOrAssemblyName))
-         result = Assembly.Load(pathOrAssemblyName);
+         Assembly.Load(pathOrAssemblyName);
       else
          // the use of LoadWithPartialName is deprecated, but this is highly convenient for the end user until there is 
          // another safer and convenient alternative
 #pragma warning disable 618, 612
-         result = Assembly.LoadWithPartialName(pathOrAssemblyName);
+         Assembly.LoadWithPartialName(pathOrAssemblyName);
 #pragma warning restore 618, 612
-      return result;
    }
 
    public static void SetFieldOrProperty(object obj, string name, object value)
@@ -305,7 +304,7 @@ public static class Internal
       var sb = new StringBuilder();
       sb.Append(!string.IsNullOrEmpty(additionalMsg) ? formatCustomMessage(additionalMsg) : formatExceptionMessage(innermost));
 
-      if (reflectionTypeLoadException == null) 
+      if (reflectionTypeLoadException == null)
          return sb.ToString();
 
       foreach (var e in reflectionTypeLoadException.LoaderExceptions)
@@ -388,7 +387,7 @@ public static class Internal
 
    public static void SetFieldOrProperty(Type type, string name, object value)
    {
-      if (type == null) 
+      if (type == null)
          throw new ArgumentNullException();
 
       const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Static;
@@ -403,7 +402,7 @@ public static class Internal
          var property = t.GetProperty(name, b);
          if (property == null)
             throw new ArgumentException($"Public instance field or property name {name} not found");
-         
+
          property.SetValue(objOrNull, value, null);
       }
       else
@@ -419,7 +418,7 @@ public static class Internal
    static object internalGetFieldOrProperty(Type t, string name, BindingFlags b, object objOrNull)
    {
       var field = t.GetField(name, b);
-      if (field != null) 
+      if (field != null)
          return field.GetValue(objOrNull);
 
       var property = t.GetProperty(name, b);
@@ -427,7 +426,6 @@ public static class Internal
          throw new ArgumentException($"Field or property name '{name}' not found on object of type '{t.Name}', for binding flags '{b.ToString()}'");
 
       return property.GetValue(objOrNull, null);
-
    }
 
    /// <summary>
@@ -663,7 +661,7 @@ public static class Internal
    public static void FreeObject(IntPtr instPtr)
    {
       var genericValue = Marshal.PtrToStructure<RSharpGenericValue>(instPtr);
-      if(genericValue.Type == RSharpValueType.String)
+      if (genericValue.Type == RSharpValueType.String)
          Marshal.FreeBSTR(genericValue.Value);
       else if (genericValue.Type == RSharpValueType.Object)
          ((GCHandle)genericValue.Value).Free();

@@ -39,12 +39,12 @@ double_backslash() {
 	RESULT=`echo $1 | sed -e 's/\\/\\\\/g'`
 }
 
-MONO_CFLAGS=`pkg-config --cflags mono-2`
+DOTNET_FLAGS=`dotnet --list-sdks`
 GLIB_CFLAGS=`pkg-config --cflags glib-2.0`
-echo "MONO_CFLAGS=$MONO_CFLAGS"
+echo "DOTNET_FLAGS=$DOTNET_FLAGS"
 echo "GLIB_CFLAGS=$GLIB_CFLAGS"
 
-if [ ${#MONO_CFLAGS} -eq 0 ]
+if [ ${#DOTNET_FLAGS} -eq 0 ]
 then
 	echo "error: mono-2 not found"
 	exit 1

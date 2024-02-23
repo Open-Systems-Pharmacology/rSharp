@@ -77,7 +77,7 @@ clrLoadAssembly <- function(name) {
 
 #' Gets the inner name used for the package
 #'
-#' Gets the inner name used for the package (rSharpMono or rSharpMs). This is not intented for use by most users.
+#' Gets the inner name used for the package (rSharpUX or rSharpMs). This is not intented for use by most users.
 #'
 #' @return the short name of the library currently loaded, depending on the runtime used (Mono or Microsoft .NET)
 #' @export
@@ -522,7 +522,7 @@ clrTypename <- function(clrobj) {
 #'
 #' Gets the name of the native library currently loaded. Used only for unit tests.
 #'
-#' @return the name of the native library currently loaded: rSharpMs or rSharpMono
+#' @return the name of the native library currently loaded: rSharpMs or rSharpUX
 #' @export
 clrGetNativeLibName <- function() {
   nativePkgName

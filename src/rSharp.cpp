@@ -26,9 +26,9 @@ typedef int (CORECLR_DELEGATE_CALLTYPE* CallInstanceMethodDelegate)(RSharpGeneri
 typedef void (CORECLR_DELEGATE_CALLTYPE* FreeObjectDelegate)(intptr_t instance);
 typedef intptr_t(CORECLR_DELEGATE_CALLTYPE* CallFullTypeNameDelegate)(RSharpGenericValue** instance);
 typedef int (CORECLR_DELEGATE_CALLTYPE* GetObjectDirectDelegate)(RSharpGenericValue* returnValue);
-typedef int (CORECLR_DELEGATE_CALLTYPE* CreateSEXPWrapperDelegate)(LONGLONG pointer, RSharpGenericValue* returnValue);
+typedef int (CORECLR_DELEGATE_CALLTYPE* CreateSEXPWrapperDelegate)(intptr_t pointer, RSharpGenericValue* returnValue);
 typedef int (CORECLR_DELEGATE_CALLTYPE* CreateInstanceDelegate)(const char*, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
-typedef void* (CORECLR_DELEGATE_CALLTYPE* LoadFromDelegate)(const char*);
+typedef void (CORECLR_DELEGATE_CALLTYPE* LoadFromDelegate)(const char*);
 
 
 void freeObject(RSharpGenericValue* instance);
@@ -82,28 +82,6 @@ static void rsharp_object_finalizer(SEXP clrSexp) {
 	}
 }
 
-//MyComm: is this still wotking in .NET 8??
-string_t get_current_directory()
-{
-	// Get the current executable's directory
-	// This sample assumes the managed assembly to load and its runtime configuration file are next to the host
-	char_t host_path[MAX_PATH];
-
-	//getting the path to the RSharp.dll
-	//important note: IF we were to call GetModuleFileName(NULL,....) we would actually get the path to the R.exe
-	//not the RSharp.dll
-	HMODULE hModule = GetModuleHandle(NULL);
-	auto size = ::GetModuleFileName(hModule, host_path, MAX_PATH);
-	assert(size != 0);
-
-	string_t root_path = host_path;
-	auto pos = root_path.find_last_of(DIR_SEPARATOR);
-	assert(pos != string_t::npos);
-	root_path = root_path.substr(0, pos + 1);
-
-	return root_path;
-}
-
 /////////////////////////////////////////
 // Function used to load and activate .NET Core
 /////////////////////////////////////////
@@ -112,18 +90,33 @@ namespace {
 	void* load_library(const char_t*);
 	void* get_export(void*, const char*);
 
-	void* load_library(const char_t* path)
+	#ifdef WINDOWS
+	void *load_library(const char_t *path)
 	{
 		HMODULE h = ::LoadLibraryW(path);
 		assert(h != nullptr);
 		return (void*)h;
 	}
-	void* get_export(void* h, const char* name)
+	void *get_export(void *h, const char *name)
 	{
-		void* f = ::GetProcAddress((HMODULE)h, name);
+		void *f = ::GetProcAddress((HMODULE)h, name);
 		assert(f != nullptr);
 		return f;
 	}
+#else
+	void *load_library(const char_t *path)
+	{
+		void *h = dlopen(path, RTLD_LAZY | RTLD_LOCAL);
+		assert(h != nullptr);
+		return h;
+	}
+	void *get_export(void *h, const char *name)
+	{
+		void *f = dlsym(h, name);
+		assert(f != nullptr);
+		return f;
+	}
+#endif
 
 	// <SnippetLoadHostFxr>
    // Using the nethost library, discover the location of hostfxr and get exports
@@ -518,7 +511,7 @@ RSharpGenericValue callInstance(RSharpGenericValue** instance, const char* mnam,
 	auto result = call_instance(instance, mnam, params, numberOfObjects, &return_value);
 
 	if (result < 0)
-		throw std::exception("Error calling instance method");
+		throw std::runtime_error("Error calling instance method");
 
 	return return_value;
 }
@@ -543,7 +536,7 @@ RSharpGenericValue callStatic(const char* mnam, char* ns_qualified_typename, RSh
 	auto result = call_static(ns_qualified_typename, mnam, params, numberOfObjects, &return_value);
 
 	if (result < 0)
-		throw std::exception("Error calling static method");
+		throw std::runtime_error("Error calling static method");
 
 	return return_value;
 }
@@ -557,7 +550,7 @@ RSharpGenericValue rclr_convert_element_rdotnet(SEXP p)
 
 	const auto call_static = reinterpret_cast<CreateSEXPWrapperDelegate>(create_sexp_wrapper_fn_ptr);
 
-	auto result = call_static(reinterpret_cast<LONGLONG>(p), &return_value);
+	auto result = call_static(reinterpret_cast<intptr_t>(p), &return_value);
 
 	return return_value;
 }
@@ -572,7 +565,7 @@ SEXP r_get_object_direct() {
 	auto result = call_static(&return_value);
 
 	if (result < 0)
-		throw std::exception("Error calling get object direct");
+		throw std::runtime_error("Error calling get object direct");
 
 	return ConvertToSEXP(return_value);
 }
@@ -586,7 +579,7 @@ const char* get_type_full_name(RSharpGenericValue** genericValue) {
 	const auto call_static = reinterpret_cast<CallFullTypeNameDelegate>(get_full_type_name_fn_ptr);
 
 	auto hr = call_static(genericValue);
-	return bstr_to_c_string((const wchar_t*)hr);
+	return (char_t*)(hr);
 }
 
 RSharpGenericValue* get_RSharp_generic_value(SEXP clrObj);
@@ -784,7 +777,7 @@ SEXP ConvertToSEXP(RSharpGenericValue& value) {
 		return Rf_ScalarLogical(boolValue);
 	}
 	case RSharpValueType::STRING: {
-		const char* stringValue = bstr_to_c_string((const wchar_t*)value.value);
+		const char* stringValue = (char_t*)value.value;
 		return make_char_single_sexp(stringValue);
 	}
 								/*case RSharpValueType::INT_ARRAY: {
@@ -886,59 +879,43 @@ RSharpGenericValue* get_RSharp_generic_value(SEXP clrObj) {
 // Functions without R specific constructs
 /////////////////////////////////////////
 
-char* bstr_to_c_string(const wchar_t* src) {
-#ifndef  UNICODE                     // r_winnt
-	return src;
-#else
-	// Convert the wchar_t string to a char* string.
-	// see http://msdn.microsoft.com/en-us/library/ms235631.aspx
-	size_t origsize = wcslen(src) + 1;
-	size_t convertedChars = 0;
-	const size_t newsize = origsize * 2;
-	char* nstring = new char[newsize];
-	wcstombs_s(&convertedChars, nstring, newsize, src, _TRUNCATE);
-	return nstring;
-#endif
-
-}
-
 RSharpGenericValue ConvertArrayToRSharpGenericValue(SEXP s)
 {
-	RSharpGenericValue* result = new RSharpGenericValue();
-	result->type = RSharpValueType::OBJECT;
-	result->value = 0;
-	result->size = 0; // Default size for non-array types
+	RSharpGenericValue result;
+	result.type = RSharpValueType::OBJECT;
+	result.value = 0;
+	result.size = 0; // Default size for non-array types
 
 	switch (TYPEOF(s)) {
 	case INTSXP: {
-		result->type = RSharpValueType::INT_ARRAY;
-		result->value = reinterpret_cast<intptr_t>(INTEGER(s));
-		result->size = LENGTH(s);
+		result.type = RSharpValueType::INT_ARRAY;
+		result.value = reinterpret_cast<intptr_t>(INTEGER(s));
+		result.size = LENGTH(s);
 		break;
 	}
 	case REALSXP: {
-		result->type = RSharpValueType::DOUBLE_ARRAY;
-		result->value = reinterpret_cast<intptr_t>(REAL(s));
-		result->size = LENGTH(s);
+		result.type = RSharpValueType::DOUBLE_ARRAY;
+		result.value = reinterpret_cast<intptr_t>(REAL(s));
+		result.size = LENGTH(s);
 		break;
 	}
 	case STRSXP: {
-		result->type = RSharpValueType::STRING_ARRAY;
-		result->value = reinterpret_cast<intptr_t>(CHAR(STRING_ELT(s, 0)));
-		result->size = LENGTH(s);
+		result.type = RSharpValueType::STRING_ARRAY;
+		result.value = reinterpret_cast<intptr_t>(CHAR(STRING_ELT(s, 0)));
+		result.size = LENGTH(s);
 		break;
 	}
 	case LGLSXP: {
-		result->type = RSharpValueType::BOOL_ARRAY;
-		result->value = reinterpret_cast<intptr_t>(LOGICAL(s));
-		result->size = LENGTH(s);
+		result.type = RSharpValueType::BOOL_ARRAY;
+		result.value = reinterpret_cast<intptr_t>(LOGICAL(s));
+		result.size = LENGTH(s);
 		break;
 	}
 	default:
 		break;
 	}
 
-	return *result;
+	return result;
 }
 
 
