@@ -391,10 +391,18 @@ SEXP make_char_single_sexp(const char* str) {
 	return mkString(str);
 }
 
+bool isObjectArray(RSharpGenericValue** parameterArray, int i)
+{
+	return parameterArray[i]->type == RSharpValueType::OBJECTARRAY;
+}
+
 void free_params_array(RSharpGenericValue** parameterArray, int size)
 {
 	for (int i = 0; i < size; i++)
 	{
+		if (isObjectArray(parameterArray, i))
+			free_params_array(reinterpret_cast<RSharpGenericValue**>(parameterArray[i]->value), parameterArray[i]->size);
+		
 		free(parameterArray[i]);
 	}
 	delete[] parameterArray;
@@ -570,6 +578,24 @@ SEXP r_get_object_direct() {
 	return ConvertToSEXP(return_value);
 }
 
+#ifdef WINDOWS
+char* wstring_to_c_string(const wchar_t* src) {
+#ifndef  UNICODE                     // r_winnt
+	return src;
+#else
+	// Convert the wchar_t string to a char* string.
+	// see http://msdn.microsoft.com/en-us/library/ms235631.aspx
+	size_t origsize = wcslen(src) + 1;
+	size_t convertedChars = 0;
+	const size_t newsize = origsize * 2;
+	char* nstring = new char[newsize];
+	wcstombs_s(&convertedChars, nstring, newsize, src, _TRUNCATE);
+	return nstring;
+#endif
+
+}
+#endif
+
 const char* get_type_full_name(RSharpGenericValue** genericValue) {
 	char* ns_qualified_typename = NULL;
 
@@ -579,7 +605,11 @@ const char* get_type_full_name(RSharpGenericValue** genericValue) {
 	const auto call_static = reinterpret_cast<CallFullTypeNameDelegate>(get_full_type_name_fn_ptr);
 
 	auto hr = call_static(genericValue);
-	return (char*)(hr);
+#ifdef WINDOWS
+	return wstring_to_c_string(reinterpret_cast<wchar_t*>(hr));
+#else
+	return (char_t*)(hr);
+#endif
 }
 
 RSharpGenericValue* get_RSharp_generic_value(SEXP clrObj);
@@ -777,7 +807,11 @@ SEXP ConvertToSEXP(RSharpGenericValue& value) {
 		return Rf_ScalarLogical(boolValue);
 	}
 	case RSharpValueType::STRING: {
+#ifdef WINDOWS
+		const char* stringValue = wstring_to_c_string((const wchar_t*)value.value);
+#else
 		const char* stringValue = (char*)value.value;
+#endif
 		return make_char_single_sexp(stringValue);
 	}
 								/*case RSharpValueType::INT_ARRAY: {
@@ -928,9 +962,14 @@ RSharpGenericValue ConvertToRSharpGenericValue(SEXP s)
 	case S4SXP:
 		return *get_RSharp_generic_value(s);
 	case VECSXP:
-		result = ConvertArrayToRSharpGenericValue(s);
-		result.value = reinterpret_cast<intptr_t>(INTEGER(s));
+		result.type = RSharpValueType::OBJECTARRAY;
 		result.size = LENGTH(s);
+		auto sharp_generic_value = new RSharpGenericValue* [result.size];
+		result.value = reinterpret_cast<intptr_t>(sharp_generic_value);
+		for(int i = 0 ; i < result.size; i++)
+		{
+			sharp_generic_value[i] = new RSharpGenericValue(ConvertToRSharpGenericValue(VECTOR_ELT(s, i)));
+		}
 		return result;
 	}
 

@@ -552,6 +552,8 @@ public static class Internal
             return argument.GetArray<float>();
          case RSharpValueType.StringArray:
             return argument.GetArray<string>();
+         case RSharpValueType.ObjectArray:
+            return convertToObjectArguments(argument.Value, argument.Size);
          case RSharpValueType.Object:
             return argument.GetObject();
          case RSharpValueType.DoubleArray:

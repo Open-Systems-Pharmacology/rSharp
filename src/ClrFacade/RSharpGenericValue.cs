@@ -17,7 +17,8 @@ public enum RSharpValueType
    StringArray,
    Object,
    Null,
-   Intptr
+   Intptr,
+   ObjectArray
 }
 
 public static class RSharpGenericValueExtensions
