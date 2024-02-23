@@ -398,10 +398,18 @@ SEXP make_char_single_sexp(const char* str) {
 	return mkString(str);
 }
 
+bool isObjectArray(RSharpGenericValue** parameterArray, int i)
+{
+	return parameterArray[i]->type == RSharpValueType::OBJECTARRAY;
+}
+
 void free_params_array(RSharpGenericValue** parameterArray, int size)
 {
 	for (int i = 0; i < size; i++)
 	{
+		if (isObjectArray(parameterArray, i))
+			free_params_array(reinterpret_cast<RSharpGenericValue**>(parameterArray[i]->value), parameterArray[i]->size);
+		
 		free(parameterArray[i]);
 	}
 	delete[] parameterArray;
@@ -951,9 +959,14 @@ RSharpGenericValue ConvertToRSharpGenericValue(SEXP s)
 	case S4SXP:
 		return *get_RSharp_generic_value(s);
 	case VECSXP:
-		result = ConvertArrayToRSharpGenericValue(s);
-		result.value = reinterpret_cast<intptr_t>(INTEGER(s));
+		result.type = RSharpValueType::OBJECTARRAY;
 		result.size = LENGTH(s);
+		auto sharp_generic_value = new RSharpGenericValue* [result.size];
+		result.value = reinterpret_cast<intptr_t>(sharp_generic_value);
+		for(int i = 0 ; i < result.size; i++)
+		{
+			sharp_generic_value[i] = new RSharpGenericValue(ConvertToRSharpGenericValue(VECTOR_ELT(s, i)));
+		}
 		return result;
 	}
 
