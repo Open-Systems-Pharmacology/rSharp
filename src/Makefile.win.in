@@ -83,8 +83,8 @@ rSharpLib: rSharpLibComp
 	
 	$(ROBOCP_CMD) ./packages/Microsoft.NETCore.App.Host.win-x64.8.0.2/runtimes/win-x64/native $(INSTDIR)/libs/ $(NETHOST).dll
 	$(ROBOCP_CMD) ./ $(INSTDIR)/libs/ $(RUNTIMECONFIG).json;
-	-$(ROBOCP_CMD) ./ClrFacade/bin/$(BuildConfiguration)/net7.0/ $(INSTDIR)/libs/ $(CLR_FACADE_BINS)
-	-$(ROBOCP_CMD) ./ClrFacade/bin/$(BuildConfiguration)/net7.0/ $(INSTDIR)/libs/ $(RDOTNET_BINS)
+	-$(ROBOCP_CMD) ./ClrFacade/bin/$(BuildConfiguration)/net8.0/ $(INSTDIR)/libs/ $(CLR_FACADE_BINS)
+	-$(ROBOCP_CMD) ./ClrFacade/bin/$(BuildConfiguration)/net8.0/ $(INSTDIR)/libs/ $(RDOTNET_BINS)
 
 clean:
 	$(MSB) $(SLN) //t:Clean

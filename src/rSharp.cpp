@@ -605,11 +605,7 @@ const char* get_type_full_name(RSharpGenericValue** genericValue) {
 	const auto call_static = reinterpret_cast<CallFullTypeNameDelegate>(get_full_type_name_fn_ptr);
 
 	auto hr = call_static(genericValue);
-#ifdef WINDOWS
-	return wstring_to_c_string(reinterpret_cast<wchar_t*>(hr));
-#else
-	return (char_t*)(hr);
-#endif
+	return (char*)(hr);
 }
 
 RSharpGenericValue* get_RSharp_generic_value(SEXP clrObj);
@@ -807,11 +803,7 @@ SEXP ConvertToSEXP(RSharpGenericValue& value) {
 		return Rf_ScalarLogical(boolValue);
 	}
 	case RSharpValueType::STRING: {
-#ifdef WINDOWS
-		const char* stringValue = wstring_to_c_string((const wchar_t*)value.value);
-#else
 		const char* stringValue = (char*)value.value;
-#endif
 		return make_char_single_sexp(stringValue);
 	}
 								/*case RSharpValueType::INT_ARRAY: {
