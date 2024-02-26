@@ -578,24 +578,6 @@ SEXP r_get_object_direct() {
 	return ConvertToSEXP(return_value);
 }
 
-#ifdef WINDOWS
-char* wstring_to_c_string(const wchar_t* src) {
-#ifndef  UNICODE                     // r_winnt
-	return src;
-#else
-	// Convert the wchar_t string to a char* string.
-	// see http://msdn.microsoft.com/en-us/library/ms235631.aspx
-	size_t origsize = wcslen(src) + 1;
-	size_t convertedChars = 0;
-	const size_t newsize = origsize * 2;
-	char* nstring = new char[newsize];
-	wcstombs_s(&convertedChars, nstring, newsize, src, _TRUNCATE);
-	return nstring;
-#endif
-
-}
-#endif
-
 const char* get_type_full_name(RSharpGenericValue** genericValue) {
 	char* ns_qualified_typename = NULL;
 
