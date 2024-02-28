@@ -4,9 +4,9 @@
 \name{rSharp-package}
 \alias{rSharp-package}
 \alias{rSharp}
-\title{R accessing .NET}
+\title{R accessing .NET/Mono}
 \description{
-Accessing the Common Language Runtime (.NET) from R
+Accessing the Common Language Runtime (.NET/Mono) from R
 }
 \details{
 \tabular{ll}{
@@ -35,6 +35,13 @@ Version \tab Date \tab Notes \cr
 }
 
 I gratefully acknowledge Kosei Abe and others for their work on the dependency R.NET (see https://github.com/jmp75/rdotnet/graphs/contributors)
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/Open-Systems-Pharmacology/rsharp/}
+}
+
 }
 \author{
 Jean-Michel Perraud \email{jean-michel.perraud_at_csiro.au}

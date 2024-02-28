@@ -10,7 +10,7 @@ setConvertAdvancedTypes(enable = TRUE)
 \item{enable}{if true enable, otherwise disable}
 }
 \description{
-Turn on/off the conversion of advanced data types with R.NET. This will turn off the conversion of classes such as dictionaries into R lists, 
+Turn on/off the conversion of advanced data types with R.NET. This will turn off the conversion of classes such as dictionaries into R lists,
 as these are not bidirectional and you may want to see and manipulate external pointers to dictionaries in some circumstances.
 }
 \examples{

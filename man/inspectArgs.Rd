@@ -13,7 +13,7 @@ inspectArgs(...)
 NULL. Information is printed, not returned.
 }
 \description{
-Inspect one or more R object to get information on its representation in the engine. 
-This function is mostly useful for R/rSharp developers. It is derived from the 'showArgs' 
+Inspect one or more R object to get information on its representation in the engine.
+This function is mostly useful for R/rSharp developers. It is derived from the 'showArgs'
 example in the R extension manual
 }

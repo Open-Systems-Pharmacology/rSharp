@@ -2,16 +2,23 @@
 % Please edit documentation in R/rSharp-exported.R
 \name{rToClrType}
 \alias{rToClrType}
-\title{Gets the type of a CLR object resulting from converting an R object}
+\title{Get the COM variant type of a CLR object}
 \usage{
 rToClrType(x)
 }
 \arguments{
 \item{x}{An R objects}
+
+\item{objOrType}{a CLR object, or type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.}
+
+\item{methodName}{the name of the method called on the object or class specified with objOrType}
+
+\item{...}{one or more arguments to pass to the function call}
 }
 \value{
 A list, with columns including mode, type,class,length and the string of the corresponding CLR type.
 }
 \description{
-Gets the type of a CLR object resulting from converting an R object. This function is mostly for documentation purposes, but may be of use to end users.
+Get the COM variant type of a CLR object, e.g. "VT_ARRAY | VT_I8". This function only works when run on the Microsoft implementation of the CLR.
+This function is useful for advanced diagnosis; most users should never have to use it.
 }

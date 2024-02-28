@@ -26,7 +26,7 @@ testClassName <- "ClrFacade.TestObject";
 (testObj <- clrNew(testClassName))
 clrCall(testObj, 'GetFieldIntegerOne')
 ## derived from unit test for matching the right method (function) to call.
-f <- function(...){ paste( 'This called a method with arguments:', 
+f <- function(...){ paste( 'This called a method with arguments:',
   paste(clrCallStatic('ClrFacade.TestMethodBinding', 'SomeStaticMethod', ...), collapse=', ')) }
 f(1:3)
 f(3)

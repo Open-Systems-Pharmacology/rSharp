@@ -12,10 +12,10 @@ mkClrObjRef(obj, clrtype = NULL)
 \item{clrtype}{character; the name of the CLR type for the object. If NULL, rSharp retrieves the type name.}
 }
 \value{
-a cobjRef S4 object if the argument is indeed an external pointer, 
+a cobjRef S4 object if the argument is indeed an external pointer,
 otherwise returned unchanged if null or not an external pointer.
 }
 \description{
-Create if possible and adequate the S4 object that wraps the external pointer to a CLR object. 
+Create if possible and adequate the S4 object that wraps the external pointer to a CLR object.
 Currently not exported, as this is unlikely to be recommended for use outside of unit tests and internal to rSharp.
 }

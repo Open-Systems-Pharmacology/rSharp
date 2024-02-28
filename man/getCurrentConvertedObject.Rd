@@ -10,6 +10,6 @@ getCurrentConvertedObject()
 a CLR object
 }
 \description{
-This function needs to be exported, but is highly unlikely to be of any use to an end user, even an advanced one. 
+This function needs to be exported, but is highly unlikely to be of any use to an end user, even an advanced one.
 This is indirectly needed to unlock the benefits of using R.NET convert data structures between R and .NET.
 }
