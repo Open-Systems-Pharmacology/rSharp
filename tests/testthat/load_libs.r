@@ -1,0 +1,1 @@
+testClassName <- "ClrFacade.TestObject"
