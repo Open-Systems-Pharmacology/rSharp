@@ -6,7 +6,6 @@ cTypename <- "ClrFacade.TestCases"
 
 # adapting to behavior as of testthat_0.11.0
 wd <- getwd()
-source(file.path(wd, "load_libs.r"))
 source(file.path(wd, "datetime-functions.r"))
 
 context("Date and times")

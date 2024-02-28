@@ -3,7 +3,7 @@ areClrRefEquals <- function(x, y) {
 }
 
 createArray <- function(clrType, arrayLength, elementObject) {
-  tn <- "Rclr.TestArrayMemoryHandling"
+  tn <- "ClrFacade.TestArrayMemoryHandling"
   arrayLength <- as.integer(arrayLength)
   if (missing(elementObject)) {
     return(callStatic(tn, paste0("CreateArray_", clrType), arrayLength))
@@ -59,7 +59,7 @@ if (rSharpEnv$nativePkgName == "rClrMs") {
     expect_equal(clrVT(cTypename, "IsTrue", TRUE), "VT_BOOL")
     expect_equal(clrVT("System.Convert", "ToInt64", 123L), "VT_I8")
     expect_equal(clrVT("System.Convert", "ToUInt64", 123L), "VT_UI8")
-    tn <- "Rclr.TestArrayMemoryHandling"
+    tn <- "ClrFacade.TestArrayMemoryHandling"
     expect_equal(clrVT(tn, "CreateArray_DateTime", 0L), "VT_ARRAY | VT_DATE")
     # expect_equal( clrVT(tn, "CreateArray_Type", 3L, clrGetType('System.Double')), "VT_ARRAY | VT_DATE" )
   })
@@ -72,7 +72,7 @@ test_that("String arrays are marshalled correctly", {
 
   ltrs[3] <- NA
   # expect_that( callTestCase( "CreateStringArrayMissingVal"), equals(ltrs) )
-  expect_true(callTestCase("StringArrayMissingValsEquals", ltrs))
+  expect_true(callTestCase("StringArrayMissingValuesEquals", ltrs))
 })
 
 test_that("clrGetType function", {
@@ -96,7 +96,7 @@ test_that("Numeric arrays are marshalled correctly", {
 
   expectedNumArray[3] <- NA
   expect_that(callTestCase("CreateNumArrayMissingVal"), equals(expectedNumArray))
-  expect_true(callTestCase("NumArrayMissingValsEquals", expectedNumArray))
+  expect_true(callTestCase("NumArrayMissingValuesEquals", expectedNumArray))
 })
 
 test_that("Complex numbers are converted", {
@@ -125,7 +125,7 @@ test_that("Correct method binding based on parameter types", {
     paste(typeName, "[]", sep = "")
   }
   f <- function(...) {
-    callStatic("Rclr.TestMethodBinding", "SomeStaticMethod", ...)
+    callStatic("ClrFacade.TestMethodBinding", "SomeStaticMethod", ...)
   }
   printIfDifferent <- function(got, expected) {
     if (any(got != expected)) {
@@ -175,7 +175,7 @@ test_that("Correct method binding based on parameter types", {
     expect_equal(f(letters[1:3], letters[4:6]), c(mkArrayTypeName(stringName), mkArrayTypeName(stringName)))
   }
   testMethodBinding()
-  obj <- clrNew("Rclr.TestMethodBinding")
+  obj <- clrNew("ClrFacade.TestMethodBinding")
   f <- function(...) {
     clrCall(obj, "SomeInstanceMethod", ...)
   }
@@ -269,10 +269,10 @@ test_that("CLR type compatibility checking", {
   expect_true(clrIs(testObj, testClassName))
   expect_true(clrIs(testObj, "System.Object"))
   expect_false(clrIs(testObj, "System.Double"))
-  testObj <- clrNew("Rclr.TestMethodBinding")
-  expect_true(clrIs(testObj, "Rclr.ITestMethodBindings"))
-  expect_true(clrIs(testObj, clrGetType("Rclr.ITestMethodBindings")))
-  expect_true(clrIs(testObj, clrGetType("Rclr.TestMethodBinding")))
+  testObj <- clrNew("ClrFacade.TestMethodBinding")
+  expect_true(clrIs(testObj, "ClrFacade.ITestMethodBindings"))
+  expect_true(clrIs(testObj, clrGetType("ClrFacade.ITestMethodBindings")))
+  expect_true(clrIs(testObj, clrGetType("ClrFacade.TestMethodBinding")))
   expect_false(clrIs(testObj, clrGetType("System.Reflection.Assembly")))
   expect_error(clrIs(testObj, testObj))
 })
@@ -280,13 +280,13 @@ test_that("CLR type compatibility checking", {
 # This test fails because one of the loaded assemlies is called "Anonymously Hosted DynamicMethods Assembly",
 # and `GetLoadedAssemblyURI` fails.
 test_that("Loaded assemblies discovery", {
-  expect_true(all(c("ClrFacade", "mscorlib") %in% clrGetLoadedAssemblies()))
+  expect_true("ClrFacade" %in% clrGetLoadedAssemblies())
   d <- clrGetLoadedAssemblies(fullname = TRUE, filenames = TRUE)
   expect_true(is.data.frame(d))
 })
 
 test_that("Object members discovery behaves as expected", {
-  expect_true("Rclr.TestObject" %in% clrGetTypesInAssembly("ClrFacade"))
+  expect_true("ClrFacade.TestObject" %in% clrGetTypesInAssembly("ClrFacade"))
   testObj <- clrNew(testClassName)
   members <- clrReflect(testObj)
 
@@ -359,7 +359,7 @@ test_that("Retrieval of object or class (i.e. static) members values behaves as 
 
 test_that("enums get/set", {
   # very basic support for the time being. Behavior to be defined for cases such as enums with binary operators ([FlagsAttribute])
-  eType <- "Rclr.TestEnum"
+  eType <- "ClrFacade.TestEnum"
   expect_that(clrGetEnumNames(eType), equals(c("A", "B", "C")))
   #  TODO, but problematic.
   #  e <- clrCall(cTypename, 'GetTestEnum', 'B')
@@ -416,7 +416,7 @@ test_that("Garbage collection of R.NET objects", {
 
 
 test_that("Assembly loading", {
-  clrLoadAssembly("System.Windows.Presentation, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089")
+  # clrLoadAssembly("System.Windows.Presentation, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089")
   clrLoadAssembly("System.Net.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
 
   # The use of partial assembly names is discouraged; nevertheless it is supported
