@@ -4,31 +4,13 @@ reflectionHelperTypeName <- 'ClrFacade.ReflectionHelper'
 # Full type name of the main facade to the interop code written in C#
 clrFacadeTypeName <- 'ClrFacade.ClrFacade'
 
-#' Initialize a new CLR application domain
-#'
-#' Initialize a new CLR application domain
-#'
-#' @param debug If using Mono, should the CLR be initialised to try to hook up to the mono soft debugger in MonoDevelop. This parameter has no effect if using MS.NET.
-#' @return nothing is returned by this function
-#' @examples
-#' \dontrun{
-#' library(rSharp)
-#' }
-clrInit <- function(debug=FALSE) {
-  pkgLibsDir <- getLibsPath('rSharp')
-  f <- file.path(pkgLibsDir, 'ClrFacade.dll')
-  f <- path.expand(f)
-  stopifnot( file.exists(f) )
-  result <- .C("rSharp_create_domain", pkgLibsDir, f, as.integer(debug), PACKAGE=nativePkgName)
-}
-
 checkIsExtPtr <- function(extPtr) {
   stopifnot("externalptr" %in% class(extPtr))
 }
 
 getLibsPath <- function(pkgName) {
   libLocation<-system.file(package=pkgName)
-  file.path(libLocation, 'libs')
+  file.path(libLocation, 'lib')
 }
 
 #' Create if possible an S4 CLR object.
