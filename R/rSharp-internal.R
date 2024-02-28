@@ -1,16 +1,16 @@
 # Full type name of the reflection helper the interop code written in C#
-reflectionHelperTypeName <- 'ClrFacade.ReflectionHelper'
+reflectionHelperTypeName <- "ClrFacade.ReflectionHelper"
 
 # Full type name of the main facade to the interop code written in C#
-clrFacadeTypeName <- 'ClrFacade.ClrFacade'
+clrFacadeTypeName <- "ClrFacade.ClrFacade"
 
 checkIsExtPtr <- function(extPtr) {
   stopifnot("externalptr" %in% class(extPtr))
 }
 
 getLibsPath <- function(pkgName) {
-  libLocation<-system.file(package=pkgName)
-  file.path(libLocation, 'lib')
+  libLocation <- system.file(package = pkgName)
+  file.path(libLocation, "lib")
 }
 
 #' Create if possible an S4 CLR object.
@@ -23,25 +23,20 @@ getLibsPath <- function(pkgName) {
 #' @return a cobjRef S4 object if the argument is indeed an external pointer,
 #' otherwise returned unchanged if null or not an external pointer.
 #' @import methods
-mkClrObjRef <- function(obj, clrtype=NULL) {
-
-  if(is(obj, 'cobjRef')) {
-	  return(obj)
+mkClrObjRef <- function(obj, clrtype = NULL) {
+  if (is(obj, "cobjRef")) {
+    return(obj)
   }
 
-  if( is.null(obj) == TRUE ) {
+  if (is.null(obj) == TRUE) {
     return(NULL)
-  }
-  else if ("externalptr" %in% class(obj)) {
-  	if(is.null(clrtype)) {
-  		clrtype <- clrTypeNameExtPtr(obj)
-  	}
+  } else if ("externalptr" %in% class(obj)) {
+    if (is.null(clrtype)) {
+      clrtype <- clrTypeNameExtPtr(obj)
+    }
 
-	  return(new("cobjRef", clrobj=obj, clrtype=clrtype))
-  }
-  else {
+    return(new("cobjRef", clrobj = obj, clrtype = clrtype))
+  } else {
     return(obj)
   }
 }
-
-

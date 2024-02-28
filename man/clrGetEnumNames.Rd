@@ -18,6 +18,6 @@ Gets the names of a CLR Enum value type
 \examples{
 \dontrun{
 library(rSharp)
-clrGetEnumNames('ClrFacade.TestEnum')
+clrGetEnumNames("ClrFacade.TestEnum")
 }
 }

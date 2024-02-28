@@ -17,7 +17,7 @@ Gets the static members for a type
 library(rSharp)
 cTypename <- "ClrFacade.TestCases"
 clrGetStaticMembers(cTypename)
-testClassName <- "ClrFacade.TestObject";
+testClassName <- "ClrFacade.TestObject"
 testObj <- clrNew(testClassName)
 clrGetStaticMembers(testObj)
 }

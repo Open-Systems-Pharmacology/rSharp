@@ -22,17 +22,21 @@ Call a method on an object
 \examples{
 \dontrun{
 library(rSharp)
-testClassName <- "ClrFacade.TestObject";
+testClassName <- "ClrFacade.TestObject"
 (testObj <- clrNew(testClassName))
-clrCall(testObj, 'GetFieldIntegerOne')
+clrCall(testObj, "GetFieldIntegerOne")
 ## derived from unit test for matching the right method (function) to call.
-f <- function(...){ paste( 'This called a method with arguments:',
-  paste(clrCallStatic('ClrFacade.TestMethodBinding', 'SomeStaticMethod', ...), collapse=', ')) }
+f <- function(...) {
+  paste(
+    "This called a method with arguments:",
+    paste(clrCallStatic("ClrFacade.TestMethodBinding", "SomeStaticMethod", ...), collapse = ", ")
+  )
+}
 f(1:3)
 f(3)
-f('a')
-f('a', 3)
-f(3, 'a')
-f(list('a', 3))
+f("a")
+f("a", 3)
+f(3, "a")
+f(list("a", 3))
 }
 }

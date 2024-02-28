@@ -21,11 +21,11 @@ Mostly used to interactively search for what arguments to pass to a method.
 \examples{
 \dontrun{
 library(rSharp)
-testClassName <- "ClrFacade.TestObject";
+testClassName <- "ClrFacade.TestObject"
 testObj <- clrNew(testClassName)
 clrReflect(testObj)
-clrGetMemberSignature(testObj, 'set_PropertyIntegerOne')
-clrGetMemberSignature(testObj, 'FieldIntegerOne')
-clrGetMemberSignature(testObj, 'PropertyIntegerTwo')
+clrGetMemberSignature(testObj, "set_PropertyIntegerOne")
+clrGetMemberSignature(testObj, "FieldIntegerOne")
+clrGetMemberSignature(testObj, "PropertyIntegerTwo")
 }
 }

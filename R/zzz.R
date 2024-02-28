@@ -1,5 +1,3 @@
-nativePkgName <- "RsharpMs"
-
 # nocov start
 .onLoad <- function(...) {
   # Check for C++ distrib availability

@@ -22,3 +22,14 @@ A list, with columns including mode, type,class,length and the string of the cor
 Get the COM variant type of a CLR object, e.g. "VT_ARRAY | VT_I8". This function only works when run on the Microsoft implementation of the CLR.
 This function is useful for advanced diagnosis; most users should never have to use it.
 }
+\examples{
+\dontrun{
+library(rSharp)
+cTypename <- "ClrFacade.TestCases"
+#         public static bool IsTrue(bool arg)
+}
+Gets the type of a CLR object resulting from converting an R object
+
+Gets the type of a CLR object resulting from converting an R object. This function is mostly for documentation purposes, but may be of use to end users.
+
+}

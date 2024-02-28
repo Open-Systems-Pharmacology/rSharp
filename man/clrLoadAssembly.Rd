@@ -16,9 +16,9 @@ Loads an assembly. Note that this is loaded in the single application domain tha
 \dontrun{
 library(rSharp)
 clrGetLoadedAssemblies()
-f <- file.path('SomeDirectory', 'YourDotNetBinaryFile.dll')
+f <- file.path("SomeDirectory", "YourDotNetBinaryFile.dll")
 f <- path.expand(f)
-stopifnot( file.exists(f) )
+stopifnot(file.exists(f))
 clrLoadAssembly(f)
 # Load an assembly from the global assembly cache (GAC)
 clrLoadAssembly("System.Windows.Presentation,

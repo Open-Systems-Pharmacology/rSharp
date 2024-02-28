@@ -19,6 +19,6 @@ Get a list of CLR type names exported by an assembly
 \dontrun{
 library(rSharp)
 clrGetLoadedAssemblies()
-clrGetTypesInAssembly('ClrFacade')
+clrGetTypesInAssembly("ClrFacade")
 }
 }

@@ -5,7 +5,7 @@
 #' @return nothing is returned by this function
 #' @export
 clrShutdown <- function() { # TODO: is this even possible given runtime's constraints?
-  result <- .C("rSharp_shutdown_clr", PACKAGE=nativePkgName)
+  result <- .C("rSharp_shutdown_clr", PACKAGE = rSharpEnv$nativePkgName)
 }
 
 #' Turn on/off R.NET
@@ -24,9 +24,9 @@ clrShutdown <- function() { # TODO: is this even possible given runtime's constr
 #' setRDotNet(FALSE)
 #' clrCallStatic(cTypename, "CreateStringDictionary")
 #' }
-setRDotNet <- function(setit=TRUE) {
+setRDotNet <- function(setit = TRUE) {
   print("during setRDotNet")
-  invisible(clrCallStatic('ClrFacade.RDotNetDataConverter', 'SetRDotNet', setit))
+  invisible(clrCallStatic("ClrFacade.RDotNetDataConverter", "SetRDotNet", setit))
 }
 
 #' Turn on/off the conversion of advanced data types with R.NET
@@ -44,8 +44,8 @@ setRDotNet <- function(setit=TRUE) {
 #' setConvertAdvancedTypes(FALSE)
 #' clrCallStatic(cTypename, "CreateStringDictionary")
 #' }
-setConvertAdvancedTypes <- function(enable=TRUE) {
-  invisible(clrCallStatic('ClrFacade.RDotNetDataConverter', 'SetConvertAdvancedTypes', enable))
+setConvertAdvancedTypes <- function(enable = TRUE) {
+  invisible(clrCallStatic("ClrFacade.RDotNetDataConverter", "SetConvertAdvancedTypes", enable))
 }
 
 #' Loads a Common Language assembly.
@@ -59,9 +59,9 @@ setConvertAdvancedTypes <- function(enable=TRUE) {
 #' \dontrun{
 #' library(rSharp)
 #' clrGetLoadedAssemblies()
-#' f <- file.path('SomeDirectory', 'YourDotNetBinaryFile.dll')
+#' f <- file.path("SomeDirectory", "YourDotNetBinaryFile.dll")
 #' f <- path.expand(f)
-#' stopifnot( file.exists(f) )
+#' stopifnot(file.exists(f))
 #' clrLoadAssembly(f)
 #' # Load an assembly from the global assembly cache (GAC)
 #' clrLoadAssembly("System.Windows.Presentation,
@@ -72,7 +72,7 @@ setConvertAdvancedTypes <- function(enable=TRUE) {
 #' }
 clrLoadAssembly <- function(name) {
   # if( !file.exists(name) ) stop(paste("File not found: ", name))
-  result <- .C("rSharp_load_assembly", name, PACKAGE=nativePkgName)
+  result <- .C("rSharp_load_assembly", name, PACKAGE = rSharpEnv$nativePkgName)
 }
 
 #' Gets the inner name used for the package
@@ -81,7 +81,9 @@ clrLoadAssembly <- function(name) {
 #'
 #' @return the short name of the library currently loaded, depending on the runtime used (Mono or Microsoft .NET)
 #' @export
-clrGetInnerPkgName <- function() { nativePkgName }
+clrGetInnerPkgName <- function() {
+  rSharpEnv$nativePkgName
+}
 
 #' List the instance members of a CLR object
 #'
@@ -93,13 +95,13 @@ clrGetInnerPkgName <- function() { nativePkgName }
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject";
+#' testClassName <- "ClrFacade.TestObject"
 #' testObj <- clrNew(testClassName)
 #' clrReflect(testObj)
 #' }
-clrReflect <- function( clrobj ) {
+clrReflect <- function(clrobj) {
   # .Call("r_reflect_on_object", clrobj@clrobj, silent=FALSE, PACKAGE="rSharp")
-  list(Methods=clrGetMethods(clrobj), Fields=clrGetFields(clrobj), Properties=clrGetProperties(clrobj))
+  list(Methods = clrGetMethods(clrobj), Fields = clrGetFields(clrobj), Properties = clrGetProperties(clrobj))
 }
 
 #' Calls the ToString method of an object
@@ -113,11 +115,11 @@ clrReflect <- function( clrobj ) {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' dt <- as.POSIXct('2001-01-01 02:03:04', tz='UTC')
+#' dt <- as.POSIXct("2001-01-01 02:03:04", tz = "UTC")
 #' clrToString(dt)
 #' }
 clrToString <- function(x) {
-  return(clrCallStatic(clrFacadeTypeName, 'ToString',x))
+  return(clrCallStatic(clrFacadeTypeName, "ToString", x))
 }
 
 
@@ -132,7 +134,7 @@ clrToString <- function(x) {
 #' clrTraceback() # prints the full stack trace
 #' }
 clrTraceback <- function() {
-  cat(clrGet(clrFacadeTypeName, 'LastException'))
+  cat(clrGet(clrFacadeTypeName, "LastException"))
   invisible(NULL)
 }
 
@@ -149,10 +151,10 @@ clrTraceback <- function() {
 #' library(rSharp)
 #' clrGetLoadedAssemblies()
 #' }
-clrGetLoadedAssemblies <- function(fullname=FALSE, filenames=FALSE) {
-  assNames <- clrCallStatic(reflectionHelperTypeName, 'GetLoadedAssemblyNames', fullname)
-  if(filenames) {
-    data.frame(AssemblyName=assNames, URI=clrCallStatic(reflectionHelperTypeName, 'GetLoadedAssemblyURI', assNames))
+clrGetLoadedAssemblies <- function(fullname = FALSE, filenames = FALSE) {
+  assNames <- clrCallStatic(reflectionHelperTypeName, "GetLoadedAssemblyNames", fullname)
+  if (filenames) {
+    data.frame(AssemblyName = assNames, URI = clrCallStatic(reflectionHelperTypeName, "GetLoadedAssemblyURI", assNames))
   } else {
     assNames
   }
@@ -169,10 +171,10 @@ clrGetLoadedAssemblies <- function(fullname=FALSE, filenames=FALSE) {
 #' \dontrun{
 #' library(rSharp)
 #' clrGetLoadedAssemblies()
-#' clrGetTypesInAssembly('ClrFacade')
+#' clrGetTypesInAssembly("ClrFacade")
 #' }
 clrGetTypesInAssembly <- function(assemblyName) {
-  clrCallStatic(reflectionHelperTypeName, 'GetTypesInAssembly', assemblyName)
+  clrCallStatic(reflectionHelperTypeName, "GetTypesInAssembly", assemblyName)
 }
 
 #' List the instance fields of a CLR object
@@ -186,13 +188,13 @@ clrGetTypesInAssembly <- function(assemblyName) {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject";
+#' testClassName <- "ClrFacade.TestObject"
 #' testObj <- clrNew(testClassName)
 #' clrGetFields(testObj)
-#' clrGetFields(testObj, 'ieldInt')
+#' clrGetFields(testObj, "ieldInt")
 #' }
-clrGetFields <- function( clrobj, contains = '') {
-  clrCallStatic(reflectionHelperTypeName, 'GetInstanceFields', clrobj, contains)
+clrGetFields <- function(clrobj, contains = "") {
+  clrCallStatic(reflectionHelperTypeName, "GetInstanceFields", clrobj, contains)
 }
 
 #' List the instance properties of a CLR object
@@ -206,13 +208,13 @@ clrGetFields <- function( clrobj, contains = '') {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject";
+#' testClassName <- "ClrFacade.TestObject"
 #' testObj <- clrNew(testClassName)
 #' clrGetProperties(testObj)
-#' clrGetProperties(testObj, 'One')
+#' clrGetProperties(testObj, "One")
 #' }
-clrGetProperties <- function( clrobj, contains = '') {
-  clrCallStatic(reflectionHelperTypeName, 'GetInstanceProperties', clrobj, contains)
+clrGetProperties <- function(clrobj, contains = "") {
+  clrCallStatic(reflectionHelperTypeName, "GetInstanceProperties", clrobj, contains)
 }
 
 #' List the instance methods of a CLR object
@@ -226,13 +228,13 @@ clrGetProperties <- function( clrobj, contains = '') {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject";
+#' testClassName <- "ClrFacade.TestObject"
 #' testObj <- clrNew(testClassName)
 #' clrGetMethods(testObj)
-#' clrGetMethods(testObj, 'Get')
+#' clrGetMethods(testObj, "Get")
 #' }
-clrGetMethods <- function( clrobj, contains = '') {
-  clrCallStatic(reflectionHelperTypeName, 'GetInstanceMethods', clrobj, contains)
+clrGetMethods <- function(clrobj, contains = "") {
+  clrCallStatic(reflectionHelperTypeName, "GetInstanceMethods", clrobj, contains)
 }
 
 #' List the public constructors of a CLR Type
@@ -245,11 +247,11 @@ clrGetMethods <- function( clrobj, contains = '') {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject";
+#' testClassName <- "ClrFacade.TestObject"
 #' clrGetConstructors(testClassName)
 #' }
-clrGetConstructors <- function( type ) {
-  clrCallStatic(reflectionHelperTypeName, 'GetConstructors', type)
+clrGetConstructors <- function(type) {
+  clrCallStatic(reflectionHelperTypeName, "GetConstructors", type)
 }
 
 #' Gets the signature of a CLI object member
@@ -264,15 +266,15 @@ clrGetConstructors <- function( type ) {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject";
+#' testClassName <- "ClrFacade.TestObject"
 #' testObj <- clrNew(testClassName)
 #' clrReflect(testObj)
-#' clrGetMemberSignature(testObj, 'set_PropertyIntegerOne')
-#' clrGetMemberSignature(testObj, 'FieldIntegerOne')
-#' clrGetMemberSignature(testObj, 'PropertyIntegerTwo')
+#' clrGetMemberSignature(testObj, "set_PropertyIntegerOne")
+#' clrGetMemberSignature(testObj, "FieldIntegerOne")
+#' clrGetMemberSignature(testObj, "PropertyIntegerTwo")
 #' }
-clrGetMemberSignature <- function( clrobj, memberName ) {
-  clrCallStatic(reflectionHelperTypeName, 'GetSignature', clrobj, memberName)
+clrGetMemberSignature <- function(clrobj, memberName) {
+  clrCallStatic(reflectionHelperTypeName, "GetSignature", clrobj, memberName)
 }
 
 #' Create a new CLR object
@@ -285,23 +287,22 @@ clrGetMemberSignature <- function( clrobj, memberName ) {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject";
+#' testClassName <- "ClrFacade.TestObject"
 #' (testObj <- clrNew(testClassName))
 #' # object with a constructor that has parameters
 #' (testObj <- clrNew(testClassName, as.integer(123)))
 #' clrLoadAssembly("System.Windows.Forms, Version=2.0.0.0,
 #'   Culture=neutral, PublicKeyToken=b77a5c561934e089")
-#' f <- clrNew('System.Windows.Forms.Form')
-#' clrSet(f, 'Text', "Hello from '.NET'")
-#' clrCall(f, 'Show')
+#' f <- clrNew("System.Windows.Forms.Form")
+#' clrSet(f, "Text", "Hello from '.NET'")
+#' clrCall(f, "Show")
 #' }
-clrNew <- function(typename, ...)
-{
-  o<-.External("r_create_clr_object", typename, ..., PACKAGE=nativePkgName)
+clrNew <- function(typename, ...) {
+  o <- .External("r_create_clr_object", typename, ..., PACKAGE = rSharpEnv$nativePkgName)
   if (is.null(o)) {
-    stop("Failed to create instance of type '",typename,"'")
+    stop("Failed to create instance of type '", typename, "'")
   }
-  mkClrObjRef(o, clrtype=typename)
+  mkClrObjRef(o, clrtype = typename)
 }
 
 #' System function to get a direct access to an object
@@ -311,9 +312,8 @@ clrNew <- function(typename, ...)
 #'
 #' @return a CLR object
 #' @export
-getCurrentConvertedObject <- function()
-{
-  o <-.External("r_get_object_direct", PACKAGE=nativePkgName)
+getCurrentConvertedObject <- function() {
+  o <- .External("r_get_object_direct", PACKAGE = rSharpEnv$nativePkgName)
   mkClrObjRef(o)
 }
 
@@ -328,33 +328,37 @@ getCurrentConvertedObject <- function()
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject";
+#' testClassName <- "ClrFacade.TestObject"
 #' (testObj <- clrNew(testClassName))
 #' clrIs(testObj, testClassName)
-#' clrIs(testObj, 'System.Object')
-#' clrIs(testObj, 'System.Double')
-#' (testObj <- clrNew('ClrFacade.TestMethodBinding'))
+#' clrIs(testObj, "System.Object")
+#' clrIs(testObj, "System.Double")
+#' (testObj <- clrNew("ClrFacade.TestMethodBinding"))
 #' # Test for interface definitions
-#' clrIs(testObj, 'ClrFacade.ITestMethodBindings')
-#' clrIs(testObj, clrGetType('ClrFacade.ITestMethodBindings'))
-#' clrIs(testObj, clrGetType('ClrFacade.TestMethodBinding'))
-#' clrIs(testObj, clrGetType('System.Reflection.Assembly'))
+#' clrIs(testObj, "ClrFacade.ITestMethodBindings")
+#' clrIs(testObj, clrGetType("ClrFacade.ITestMethodBindings"))
+#' clrIs(testObj, clrGetType("ClrFacade.TestMethodBinding"))
+#' clrIs(testObj, clrGetType("System.Reflection.Assembly"))
 #' }
 clrIs <- function(obj, type) {
-  if(is.character(type)) {
+  if (is.character(type)) {
     tmpType <- clrGetType(type)
-    if(is.null(tmpType)) {stop(paste('Unrecognized type name', type))} else {type <- tmpType}
+    if (is.null(tmpType)) {
+      stop(paste("Unrecognized type name", type))
+    } else {
+      type <- tmpType
+    }
   }
-  if(!is(type, 'cobjRef')) {
+  if (!is(type, "cobjRef")) {
     stop(paste('argument "type" must be a CLR type name or a Type'))
   } else {
-    typetypename <- clrGet(clrCall(type, 'GetType'), 'Name')
-    if(!(typetypename %in% c('RuntimeType', 'MonoType'))) {
+    typetypename <- clrGet(clrCall(type, "GetType"), "Name")
+    if (!(typetypename %in% c("RuntimeType", "MonoType"))) {
       stop(paste('argument "type" must be a CLR Type. Got a', typetypename))
     }
   }
   objType <- clrGetType(obj)
-  return(clrCall(type, 'IsAssignableFrom', objType))
+  return(clrCall(type, "IsAssignableFrom", objType))
 }
 
 #' Call a method on an object
@@ -367,24 +371,27 @@ clrIs <- function(obj, type) {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject";
+#' testClassName <- "ClrFacade.TestObject"
 #' (testObj <- clrNew(testClassName))
-#' clrCall(testObj, 'GetFieldIntegerOne')
+#' clrCall(testObj, "GetFieldIntegerOne")
 #' ## derived from unit test for matching the right method (function) to call.
-#' f <- function(...){ paste( 'This called a method with arguments:',
-#'   paste(clrCallStatic('ClrFacade.TestMethodBinding', 'SomeStaticMethod', ...), collapse=', ')) }
+#' f <- function(...) {
+#'   paste(
+#'     "This called a method with arguments:",
+#'     paste(clrCallStatic("ClrFacade.TestMethodBinding", "SomeStaticMethod", ...), collapse = ", ")
+#'   )
+#' }
 #' f(1:3)
 #' f(3)
-#' f('a')
-#' f('a', 3)
-#' f(3, 'a')
-#' f(list('a', 3))
+#' f("a")
+#' f("a", 3)
+#' f(3, "a")
+#' f(list("a", 3))
 #' }
-clrCall <- function(obj,methodName,...)
-{
-  interface="r_call_method"
+clrCall <- function(obj, methodName, ...) {
+  interface <- "r_call_method"
   result <- NULL
-  result <-.External(interface, obj@clrobj, methodName, ..., PACKAGE=nativePkgName)
+  result <- .External(interface, obj@clrobj, methodName, ..., PACKAGE = rSharpEnv$nativePkgName)
   return(mkClrObjRef(result))
 }
 
@@ -397,15 +404,14 @@ clrCall <- function(obj,methodName,...)
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject";
+#' testClassName <- "ClrFacade.TestObject"
 #' testObj <- clrNew(testClassName)
 #' clrReflect(testObj)
-#' clrGet(testObj, 'FieldIntegerOne')
-#' clrGet(testClassName, 'StaticPropertyIntegerOne')
+#' clrGet(testObj, "FieldIntegerOne")
+#' clrGet(testClassName, "StaticPropertyIntegerOne")
 #' }
-clrGet <- function(objOrType,name)
-{
-  return(clrCallStatic(clrFacadeTypeName, 'GetFieldOrProperty',objOrType, name))
+clrGet <- function(objOrType, name) {
+  return(clrCallStatic(clrFacadeTypeName, "GetFieldOrProperty", objOrType, name))
 }
 
 #' Sets the value of a field or property of an object or class
@@ -419,22 +425,21 @@ clrGet <- function(objOrType,name)
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject";
+#' testClassName <- "ClrFacade.TestObject"
 #' testObj <- clrNew(testClassName)
 #' clrReflect(testObj)
-#' clrSet(testObj, 'FieldIntegerOne', 42)
-#' clrSet(testClassName, 'StaticPropertyIntegerOne', 42)
+#' clrSet(testObj, "FieldIntegerOne", 42)
+#' clrSet(testClassName, "StaticPropertyIntegerOne", 42)
 #'
 #' # Using 'good old' Windows forms to say hello:
 #' clrLoadAssembly("System.Windows.Forms, Version=2.0.0.0,
 #'   Culture=neutral, PublicKeyToken=b77a5c561934e089")
-#' f <- clrNew('System.Windows.Forms.Form')
-#' clrSet(f, 'Text', "Hello from '.NET'")
-#' clrCall(f, 'Show')
+#' f <- clrNew("System.Windows.Forms.Form")
+#' clrSet(f, "Text", "Hello from '.NET'")
+#' clrCall(f, "Show")
 #' }
-clrSet <- function(objOrType, name, value)
-{
-  invisible(clrCallStatic(clrFacadeTypeName, 'SetFieldOrProperty',objOrType, name, value))
+clrSet <- function(objOrType, name, value) {
+  invisible(clrCallStatic(clrFacadeTypeName, "SetFieldOrProperty", objOrType, name, value))
 }
 
 #' Gets the names of a CLR Enum value type
@@ -445,11 +450,10 @@ clrSet <- function(objOrType, name, value)
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' clrGetEnumNames('ClrFacade.TestEnum')
+#' clrGetEnumNames("ClrFacade.TestEnum")
 #' }
-clrGetEnumNames <- function(enumType)
-{
-  return(clrCallStatic(reflectionHelperTypeName, 'GetEnumNames',enumType))
+clrGetEnumNames <- function(enumType) {
+  return(clrCallStatic(reflectionHelperTypeName, "GetEnumNames", enumType))
 }
 
 #' Sets the value of an enum field or property of an object or class
@@ -461,10 +465,9 @@ clrGetEnumNames <- function(enumType)
 #' @param enumtype type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
 #' @param enumval the value to set the field with
 #' @export
-clrSetEnumProperty <- function(objOrType, name, enumtype, enumval)
-{
-  stop('Not yet implemented')
-  return(clrCallStatic(reflectionHelperTypeName, 'SetEnumValue',objOrType, name, enumtype, enumval))
+clrSetEnumProperty <- function(objOrType, name, enumtype, enumval) {
+  stop("Not yet implemented")
+  return(clrCallStatic(reflectionHelperTypeName, "SetEnumValue", objOrType, name, enumtype, enumval))
 }
 
 #' Gets the external pointer CLR object.
@@ -488,13 +491,13 @@ clrGetExtPtr <- function(clrObject) {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject";
+#' testClassName <- "ClrFacade.TestObject"
 #' testObj <- clrNew(testClassName)
 #' clrTypeNameExtPtr(clrGetExtPtr(testObj))
 #' }
 clrTypeNameExtPtr <- function(extPtr) {
   checkIsExtPtr(extPtr)
-  .External("r_get_typename_externalptr", extPtr, PACKAGE=nativePkgName)
+  .External("r_get_typename_externalptr", extPtr, PACKAGE = rSharpEnv$nativePkgName)
 }
 
 
@@ -508,12 +511,12 @@ clrTypeNameExtPtr <- function(extPtr) {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject";
+#' testClassName <- "ClrFacade.TestObject"
 #' testObj <- clrNew(testClassName)
 #' clrTypename(testObj)
 #' }
 clrTypename <- function(clrobj) {
-  name <- .Call("r_get_type_name", clrobj, PACKAGE=nativePkgName)
+  name <- .Call("r_get_type_name", clrobj, PACKAGE = rSharpEnv$nativePkgName)
   name
 }
 
@@ -525,7 +528,7 @@ clrTypename <- function(clrobj) {
 #' @return the name of the native library currently loaded: rSharpMs or rSharpUX
 #' @export
 clrGetNativeLibName <- function() {
-  nativePkgName
+  rSharpEnv$nativePkgName
 }
 
 #' Call a static method on a CLR type
@@ -541,9 +544,8 @@ clrGetNativeLibName <- function() {
 #' cTypename <- "ClrFacade.TestCases"
 #' clrCallStatic(cTypename, "IsTrue", TRUE)
 #' }
-clrCallStatic <- function(typename, methodName,...)
-{
-  extPtr <-.External("r_call_static_method", typename, methodName,..., PACKAGE=nativePkgName)
+clrCallStatic <- function(typename, methodName, ...) {
+  extPtr <- .External("r_call_static_method", typename, methodName, ..., PACKAGE = rSharpEnv$nativePkgName)
   return(mkClrObjRef(extPtr))
 }
 
@@ -559,9 +561,8 @@ clrCallStatic <- function(typename, methodName,...)
 #' library(rSharp)
 #' peekClrArgs("a", numeric(0))
 #' }
-peekClrArgs <- function(...)
-{
-  extPtr <-.External("r_diagnose_parameters", ..., PACKAGE=nativePkgName)
+peekClrArgs <- function(...) {
+  extPtr <- .External("r_diagnose_parameters", ..., PACKAGE = rSharpEnv$nativePkgName)
   return(mkClrObjRef(extPtr))
 }
 
@@ -576,13 +577,12 @@ peekClrArgs <- function(...)
 #' library(rSharp)
 #' cTypename <- "ClrFacade.TestCases"
 #' clrGetStaticMembers(cTypename)
-#' testClassName <- "ClrFacade.TestObject";
+#' testClassName <- "ClrFacade.TestObject"
 #' testObj <- clrNew(testClassName)
 #' clrGetStaticMembers(testObj)
 #' }
-clrGetStaticMembers <- function(objOrType)
-{
-  list(Methods=clrGetStaticMethods(objOrType), Fields=clrGetStaticFields(objOrType), Properties=clrGetStaticProperties(objOrType))
+clrGetStaticMembers <- function(objOrType) {
+  list(Methods = clrGetStaticMethods(objOrType), Fields = clrGetStaticFields(objOrType), Properties = clrGetStaticProperties(objOrType))
 }
 
 #' Gets the static fields for a type
@@ -592,8 +592,8 @@ clrGetStaticMembers <- function(objOrType)
 #' @param objOrType a CLR object, or type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
 #' @param contains a string that the property names returned must contain
 #' @export
-clrGetStaticFields <- function( objOrType, contains = '') {
-  clrCallStatic(reflectionHelperTypeName, 'GetStaticFields', objOrType, contains)
+clrGetStaticFields <- function(objOrType, contains = "") {
+  clrCallStatic(reflectionHelperTypeName, "GetStaticFields", objOrType, contains)
 }
 
 #' Gets the static members for a type
@@ -602,16 +602,16 @@ clrGetStaticFields <- function( objOrType, contains = '') {
 #'
 #' @inheritParams clrGetStaticFields
 #' @export
-clrGetStaticProperties <- function( objOrType, contains = '') {
-  clrCallStatic(reflectionHelperTypeName, 'GetStaticProperties', objOrType, contains)
+clrGetStaticProperties <- function(objOrType, contains = "") {
+  clrCallStatic(reflectionHelperTypeName, "GetStaticProperties", objOrType, contains)
 }
 
 #' Gets the static members for a type
 #'
 #' @inheritParams clrGetStaticFields
 #' @export
-clrGetStaticMethods <- function( objOrType, contains = '') {
-  clrCallStatic(reflectionHelperTypeName, 'GetStaticMethods', objOrType, contains)
+clrGetStaticMethods <- function(objOrType, contains = "") {
+  clrCallStatic(reflectionHelperTypeName, "GetStaticMethods", objOrType, contains)
 }
 
 #' Gets the signature of a static member of a type
@@ -619,8 +619,8 @@ clrGetStaticMethods <- function( objOrType, contains = '') {
 #' @param typename type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
 #' @param memberName The exact name of the member (i.e. field, property, method) to search for
 #' @export
-clrGetStaticMemberSignature <- function( typename, memberName ) {
-  clrCallStatic(reflectionHelperTypeName, 'GetSignature', typename, memberName)
+clrGetStaticMemberSignature <- function(typename, memberName) {
+  clrCallStatic(reflectionHelperTypeName, "GetSignature", typename, memberName)
 }
 
 #' Architecture dependent path to the rSharp native library
@@ -633,12 +633,12 @@ clrGetStaticMemberSignature <- function( typename, memberName ) {
 #' @return the prospective path in which a native library would be found, e.g. c:/R/library/rSharp/libs/x64
 #' @export
 getNativeLibsPath <- function(pkgName) {
-  r_arch=Sys.getenv("R_ARCH")
-  arch <- sub( '/', '', r_arch)
+  r_arch <- Sys.getenv("R_ARCH")
+  arch <- sub("/", "", r_arch)
   file.path(getLibsPath(pkgName), arch)
-  #rlibs <- getNativeLibsPathRlibs(pkgName)
-  #rhome <- getNativeLibsPathRhome(pkgName)
-  #ifelse(file.exists(rlibs), rlibs, rhome)
+  # rlibs <- getNativeLibsPathRlibs(pkgName)
+  # rhome <- getNativeLibsPathRhome(pkgName)
+  # ifelse(file.exists(rlibs), rlibs, rhome)
 }
 
 #' Get the type code for a SEXP
@@ -649,7 +649,7 @@ getNativeLibsPath <- function(pkgName) {
 #' @return the type code, an integer, as defined in Rinternals.h
 #' @export
 getSexpType <- function(sexp) {
-  extPtr <-.External("r_get_sexp_type", sexp, PACKAGE=nativePkgName)
+  extPtr <- .External("r_get_sexp_type", sexp, PACKAGE = rSharpEnv$nativePkgName)
   return(mkClrObjRef(extPtr))
 }
 
@@ -663,7 +663,7 @@ getSexpType <- function(sexp) {
 #' @return NULL. Information is printed, not returned.
 #' @export
 inspectArgs <- function(...) {
-  extPtr <-.External("r_show_args", ..., PACKAGE=nativePkgName)
+  extPtr <- .External("r_show_args", ..., PACKAGE = rSharpEnv$nativePkgName)
   # return(mkClrObjRef(extPtr))
 }
 
@@ -680,6 +680,7 @@ inspectArgs <- function(...) {
 #' library(rSharp)
 #' cTypename <- "ClrFacade.TestCases"
 #' #         public static bool IsTrue(bool arg)
+#' }
 
 #' Gets the type of a CLR object resulting from converting an R object
 #'
@@ -694,8 +695,8 @@ rToClrType <- function(x) {
     mode = mode(x),
     type = typeof(x),
     class = class(x),
-    length=length(x),
-    clrType = clrCallStatic('ClrFacade.ClrFacade', 'GetObjectTypeName', x)
+    length = length(x),
+    clrType = clrCallStatic("ClrFacade.ClrFacade", "GetObjectTypeName", x)
   )
 }
 
@@ -707,12 +708,13 @@ rToClrType <- function(x) {
 #' @return the CLR Type.
 #' @export
 clrGetType <- function(objOrTypename) {
-  if(is.character(objOrTypename))
-    return(clrCallStatic(clrFacadeTypeName, 'GetType',objOrTypename))
-  else if('cobjRef' %in% class(objOrTypename))
-    return(clrCall(objOrTypename, 'GetType'))
-  else
-    stop('objOrTypename is neither a cobjRef object nor a character vector')
+  if (is.character(objOrTypename)) {
+    return(clrCallStatic(clrFacadeTypeName, "GetType", objOrTypename))
+  } else if ("cobjRef" %in% class(objOrTypename)) {
+    return(clrCall(objOrTypename, "GetType"))
+  } else {
+    stop("objOrTypename is neither a cobjRef object nor a character vector")
+  }
 }
 
 
@@ -723,9 +725,9 @@ clrGetType <- function(objOrTypename) {
 #' @param obj an object of S4 class clrObj
 #' @param envClassWhere environment where the new generator is created.
 #' @return the reference object.
-clrCobj <- function(obj, envClassWhere=.GlobalEnv) {
+clrCobj <- function(obj, envClassWhere = .GlobalEnv) {
   refgen <- setClrRefClass(obj@clrtype, envClassWhere)
-  refgen$new(ref=obj)
+  refgen$new(ref = obj)
 }
 
 #' Create reference classes for an object hierarchy
@@ -736,85 +738,99 @@ clrCobj <- function(obj, envClassWhere=.GlobalEnv) {
 #' @param env environment where the new generator is created.
 #' @return the object generator function
 setClrRefClass <- function(typeName,
-                            env=topenv(parent.frame()))
-{
-  isAbstract <- function(type) { clrGet(type, 'IsAbstract' ) }
-  isInterface <- function(type) { clrGet(type, 'IsInterface' ) }
+                           env = topenv(parent.frame())) {
+  isAbstract <- function(type) {
+    clrGet(type, "IsAbstract")
+  }
+  isInterface <- function(type) {
+    clrGet(type, "IsInterface")
+  }
 
   tryCatch(getRefClass(typeName),
-        error=function(e) {
-          type <- clrGetType(typeName)
-          if(is.null(type)) stop(paste('CLR type not found for type name', typeName))
+    error = function(e) {
+      type <- clrGetType(typeName)
+      if (is.null(type)) stop(paste("CLR type not found for type name", typeName))
 
-          baseType <- clrGet(type, 'BaseType')
-          baseTypeName <- NULL
-          if (!is.null(baseType)) {
-            baseTypeName <- clrGet(baseType, 'FullName')
-            setClrRefClass(baseTypeName, env)
-          }
+      baseType <- clrGet(type, "BaseType")
+      baseTypeName <- NULL
+      if (!is.null(baseType)) {
+        baseTypeName <- clrGet(baseType, "FullName")
+        setClrRefClass(baseTypeName, env)
+      }
 
-          # interfaces <- Map(function(interface) interface$getName(),
-                           # as.list(class$getInterfaces()))
+      # interfaces <- Map(function(interface) interface$getName(),
+      # as.list(class$getInterfaces()))
 
-          # If the type is the type for an interface, then GetInterfacesFullnames will not return 'itself', so no need to deal with infinite recursion here.
-          interfaces <- clrCallStatic(reflectionHelperTypeName, 'GetInterfacesFullNames', type)
+      # If the type is the type for an interface, then GetInterfacesFullnames will not return 'itself', so no need to deal with infinite recursion here.
+      interfaces <- clrCallStatic(reflectionHelperTypeName, "GetInterfacesFullNames", type)
 
-          for (ifname in interfaces)
-           setClrRefClass(ifname, env)
+      for (ifname in interfaces) {
+        setClrRefClass(ifname, env)
+      }
 
-          ## sort the interfaces lexicographically to avoid inconsistencies
-          contains <- c(baseTypeName,
-                       sort(as.character(unlist(interfaces))))
+      ## sort the interfaces lexicographically to avoid inconsistencies
+      contains <- c(
+        baseTypeName,
+        sort(as.character(unlist(interfaces)))
+      )
 
-          ## if an interface or an abstract type, need to contain VIRTUAL
-          if (isInterface(type) || isAbstract(type))
-           contains <- c(contains, "VIRTUAL")
+      ## if an interface or an abstract type, need to contain VIRTUAL
+      if (isInterface(type) || isAbstract(type)) {
+        contains <- c(contains, "VIRTUAL")
+      }
 
-          declaredMethods <- clrCallStatic(reflectionHelperTypeName, 'GetDeclaredMethodNames', type)
-           # Map(function(method) method$getName(),
-               # Filter(notProtected, as.list(class$getDeclaredMethods())))
-          declaredMethods <- unique(declaredMethods)
+      declaredMethods <- clrCallStatic(reflectionHelperTypeName, "GetDeclaredMethodNames", type)
+      # Map(function(method) method$getName(),
+      # Filter(notProtected, as.list(class$getDeclaredMethods())))
+      declaredMethods <- unique(declaredMethods)
 
-          methods <- sapply(as.character(declaredMethods), function(method) {
-            eval(substitute(function(...) {
-              arguments <- Map(function(argument) {
-                if (is(argument, 'System.Object')) {
-                  argument$ref
-                } else
-                argument
-              }, list(...))
-              'TODO Here there should be the method description'
-              do.call(clrCall, c(.self$ref, method, arguments))
-            }, list(method=method)))
-          })
+      methods <- sapply(as.character(declaredMethods), function(method) {
+        eval(substitute(function(...) {
+          arguments <- Map(function(argument) {
+            if (is(argument, "System.Object")) {
+              argument$ref
+            } else {
+              argument
+            }
+          }, list(...))
+          "TODO Here there should be the method description"
+          do.call(clrCall, c(.self$ref, method, arguments))
+        }, list(method = method)))
+      })
 
-          if (typeName == "System.Object")
-          setRefClass("System.Object",
-                      fields = list(ref = 'cobjRef'),
-                      methods = c(methods,
-                        initialize = function(...) {
-                          argu <- list(...)
-                          x <- argu[['ref']]
-                          if(!is.null(x)) {
-                            ref <<- x
-                          } else {
-                            ref <<- clrNew(class(.self), ...)
-                          }
-                          .self
-                        # },
-                        # copy = function(shallow = FALSE) {
-                          # ## unlike clone(), this preserves any
-                          # ## fields that may be present in
-                          # ## an R-specific subclass
-                          # x <- callSuper(shallow)
-                          # x$ref <- ref$clone()
-                          # x
-                        }),
-                      contains = contains,
-                      where = env)
-          else setRefClass(typeName,
-                          methods = methods,
-                          contains = contains,
-                          where = env)
-        })
+      if (typeName == "System.Object") {
+        setRefClass("System.Object",
+          fields = list(ref = "cobjRef"),
+          methods = c(methods,
+            initialize = function(...) {
+              argu <- list(...)
+              x <- argu[["ref"]]
+              if (!is.null(x)) {
+                ref <<- x
+              } else {
+                ref <<- clrNew(class(.self), ...)
+              }
+              .self
+              # },
+              # copy = function(shallow = FALSE) {
+              # ## unlike clone(), this preserves any
+              # ## fields that may be present in
+              # ## an R-specific subclass
+              # x <- callSuper(shallow)
+              # x$ref <- ref$clone()
+              # x
+            }
+          ),
+          contains = contains,
+          where = env
+        )
+      } else {
+        setRefClass(typeName,
+          methods = methods,
+          contains = contains,
+          where = env
+        )
+      }
+    }
+  )
 }
