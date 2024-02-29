@@ -48,7 +48,7 @@ clrReflect <- function(clrobj) {
 #' dt <- as.POSIXct("2001-01-01 02:03:04", tz = "UTC")
 #' toString(dt)
 toString <- function(x) {
-  return(clrCallStatic(rSharpEnv$clrFacadeTypeName, "ToString", x))
+  return(clrCallStatic(rSharpEnv$InternalTypeName, "ToString", x))
 }
 
 
