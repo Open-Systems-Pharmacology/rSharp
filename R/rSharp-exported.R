@@ -15,20 +15,18 @@ setConvertAdvancedTypes <- function(enable = TRUE) {
   invisible(clrCallStatic("ClrFacade.RDotNetDataConverter", "SetConvertAdvancedTypes", enable))
 }
 
-#' List the instance members of a CLR object
+#' List the instance members of a .NET object
 #'
-#' List the instance members of a CLR object, i.e. its methods, fields and properties.
+#' List the instance members of a .NET object, i.e. its methods, fields and properties.
 #'
-#' @param clrobj CLR object
+#' @param clrobj .NET object encapsupated as `clrobj`
 #' @return a list of methods, fields and properties of the CLR object
 #' @export
 #' @examples
-#' \dontrun{
 #' library(rSharp)
 #' testClassName <- "ClrFacade.TestObject"
 #' testObj <- clrNew(testClassName)
 #' clrReflect(testObj)
-#' }
 clrReflect <- function(clrobj) {
   # .Call("r_reflect_on_object", clrobj@clrobj, silent=FALSE, PACKAGE="rSharp")
   list(Methods = clrGetMethods(clrobj), Fields = clrGetFields(clrobj), Properties = clrGetProperties(clrobj))
@@ -36,20 +34,21 @@ clrReflect <- function(clrobj) {
 
 #' Calls the ToString method of an object
 #'
-#' Calls the ToString method of an object as represented in the CLR.
-#' This function is here to help quickly test object equivalence from the R interpreter, for instance on the tricky topic of date-time conversions
+#' @description
 #'
-#' @param x any R object, which is converted to a CLR object on which to call ToString
-#' @return the string representation of the object in the CLR
+#' Calls the ToString method of an object as represented in the .NET.
+#' This function is here to help quickly test object equivalence from the R interpreter,
+#'  for instance on the tricky topic of date-time conversions
+#'
+#' @param x any R object, which is converted to a .NET object on which to call ToString
+#' @return The string representation of the object in .NET
 #' @export
 #' @examples
-#' \dontrun{
 #' library(rSharp)
 #' dt <- as.POSIXct("2001-01-01 02:03:04", tz = "UTC")
-#' clrToString(dt)
-#' }
-clrToString <- function(x) {
-  return(clrCallStatic(clrFacadeTypeName, "ToString", x))
+#' toString(dt)
+toString <- function(x) {
+  return(clrCallStatic(rSharpEnv$clrFacadeTypeName, "ToString", x))
 }
 
 
@@ -64,7 +63,7 @@ clrToString <- function(x) {
 #' clrTraceback() # prints the full stack trace
 #' }
 clrTraceback <- function() {
-  cat(clrGet(clrFacadeTypeName, "LastException"))
+  cat(clrGet(rSharpEnv$clrFacadeTypeName, "LastException"))
   invisible(NULL)
 }
 
@@ -341,7 +340,7 @@ clrCall <- function(obj, methodName, ...) {
 #' clrGet(testClassName, "StaticPropertyIntegerOne")
 #' }
 clrGet <- function(objOrType, name) {
-  return(clrCallStatic(clrFacadeTypeName, "GetFieldOrProperty", objOrType, name))
+  return(clrCallStatic(rSharpEnv$clrFacadeTypeName, "GetFieldOrProperty", objOrType, name))
 }
 
 #' Sets the value of a field or property of an object or class
@@ -369,7 +368,7 @@ clrGet <- function(objOrType, name) {
 #' clrCall(f, "Show")
 #' }
 clrSet <- function(objOrType, name, value) {
-  invisible(clrCallStatic(clrFacadeTypeName, "SetFieldOrProperty", objOrType, name, value))
+  invisible(clrCallStatic(rSharpEnv$clrFacadeTypeName, "SetFieldOrProperty", objOrType, name, value))
 }
 
 #' Gets the names of a CLR Enum value type
@@ -639,7 +638,7 @@ rToClrType <- function(x) {
 #' @export
 clrGetType <- function(objOrTypename) {
   if (is.character(objOrTypename)) {
-    return(clrCallStatic(clrFacadeTypeName, "GetType", objOrTypename))
+    return(clrCallStatic(rSharpEnv$clrFacadeTypeName, "GetType", objOrTypename))
   } else if ("cobjRef" %in% class(objOrTypename)) {
     return(clrCall(objOrTypename, "GetType"))
   } else {

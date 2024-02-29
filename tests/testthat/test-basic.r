@@ -422,3 +422,15 @@ test_that("Assembly loading", {
   # The use of partial assembly names is discouraged; nevertheless it is supported
   clrLoadAssembly("System.Web.Services")
 })
+
+
+test_that("toString works for primitive types", {
+  expect_that(toString(1), equals("1"))
+  expect_that(toString(1.0), equals("1"))
+  expect_that(toString("a"), equals("a"))
+  expect_that(toString(TRUE), equals("True"))
+  expect_that(toString(FALSE), equals("False"))
+  # Check of correct behavior
+#  expect_that(toString(NA), equals("null"))
+#  expect_that(toString(NULL), equals("null"))
+})
