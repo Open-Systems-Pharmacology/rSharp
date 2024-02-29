@@ -302,7 +302,7 @@ clrNew <- function(typename, ...) {
   if (is.null(o)) {
     stop("Failed to create instance of type '", typename, "'")
   }
-  mkClrObjRef(o, clrtype = typename)
+  .mkClrObjRef(o, clrtype = typename)
 }
 
 #' System function to get a direct access to an object
@@ -314,7 +314,7 @@ clrNew <- function(typename, ...) {
 #' @export
 getCurrentConvertedObject <- function() {
   o <- .External("r_get_object_direct", PACKAGE = rSharpEnv$nativePkgName)
-  mkClrObjRef(o)
+  .mkClrObjRef(o)
 }
 
 #' Check whether an object is of a certain type
@@ -392,7 +392,7 @@ clrCall <- function(obj, methodName, ...) {
   interface <- "r_call_method"
   result <- NULL
   result <- .External(interface, obj@clrobj, methodName, ..., PACKAGE = rSharpEnv$nativePkgName)
-  return(mkClrObjRef(result))
+  return(.mkClrObjRef(result))
 }
 
 #' Gets the value of a field or property of an object or class
@@ -546,7 +546,7 @@ clrGetNativeLibName <- function() {
 #' }
 clrCallStatic <- function(typename, methodName, ...) {
   extPtr <- .External("r_call_static_method", typename, methodName, ..., PACKAGE = rSharpEnv$nativePkgName)
-  return(mkClrObjRef(extPtr))
+  return(.mkClrObjRef(extPtr))
 }
 
 #' Peek into the types of CLR objects arguments are converted to by rSharp
@@ -563,7 +563,7 @@ clrCallStatic <- function(typename, methodName, ...) {
 #' }
 peekClrArgs <- function(...) {
   extPtr <- .External("r_diagnose_parameters", ..., PACKAGE = rSharpEnv$nativePkgName)
-  return(mkClrObjRef(extPtr))
+  return(.mkClrObjRef(extPtr))
 }
 
 #' Gets the static members for a type
@@ -650,7 +650,7 @@ getNativeLibsPath <- function(pkgName) {
 #' @export
 getSexpType <- function(sexp) {
   extPtr <- .External("r_get_sexp_type", sexp, PACKAGE = rSharpEnv$nativePkgName)
-  return(mkClrObjRef(extPtr))
+  return(.mkClrObjRef(extPtr))
 }
 
 #' Peek into the structure of R objects 'as seen from C code'
@@ -664,7 +664,7 @@ getSexpType <- function(sexp) {
 #' @export
 inspectArgs <- function(...) {
   extPtr <- .External("r_show_args", ..., PACKAGE = rSharpEnv$nativePkgName)
-  # return(mkClrObjRef(extPtr))
+  # return(.mkClrObjRef(extPtr))
 }
 
 #' Get the COM variant type of a CLR object
