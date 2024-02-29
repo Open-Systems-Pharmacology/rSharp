@@ -24,18 +24,6 @@
 #   NetObject$new(o)
 # }
 
-#' Create a reference object wrapper around a CLR object
-#'
-#' (EXPERIMENTAL) Create a reference object wrapper around a CLR object
-#'
-#' @param obj an object of S4 class clrObj
-#' @param envClassWhere environment where the new generator is created.
-#' @return the reference object.
-clrCobj <- function(obj, envClassWhere = .GlobalEnv) {
-  refgen <- setClrRefClass(obj@clrtype, envClassWhere)
-  refgen$new(ref = obj)
-}
-
 #' Create reference classes for an object hierarchy
 #'
 #' EXPERIMENTAL Create reference classes for an object hierarchy. Gratefully acknowledge Peter D. and its rJavax work.

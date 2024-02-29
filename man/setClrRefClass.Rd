@@ -2,7 +2,7 @@
 % Please edit documentation in R/rClr-exported.R, R/rSharp-exported.R
 \name{setClrRefClass}
 \alias{setClrRefClass}
-\title{Create reference classes for an object hierarchy}
+\title{Create a new NetObject R6 object}
 \usage{
 setClrRefClass(typeName, env = topenv(parent.frame()))
 
@@ -12,14 +12,35 @@ setClrRefClass(typeName, env = topenv(parent.frame()))
 \item{typeName}{a CLR type name, recognizable by getType}
 
 \item{env}{environment where the new generator is created.}
+
+\item{typename}{type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.}
+
+\item{...}{additional method arguments passed to the object constructor via the call to .External}
 }
 \value{
+a `NetObject` R6 object
+
 the object generator function
 
 the object generator function
 }
 \description{
 EXPERIMENTAL Create reference classes for an object hierarchy. Gratefully acknowledge Peter D. and its rJavax work.
+}
+\examples{
+\dontrun{
+testClassName <- "Rclr.TestObject"
+(testObj <- clrNew(testClassName))
+# object with a constructor that has parameters
+(testObj <- clrNew(testClassName, as.integer(123)))
+clrLoadAssembly("System.Windows.Forms, Version=2.0.0.0,
+  Culture=neutral, PublicKeyToken=b77a5c561934e089")
+f <- clrNew("System.Windows.Forms.Form")
+clrSet(f, "Text", "Hello from '.NET'")
+clrCall(f, "Show")
+}
+Create reference classes for an object hierarchy
 
 EXPERIMENTAL Create reference classes for an object hierarchy. Gratefully acknowledge Peter D. and its rJavax work.
+
 }
