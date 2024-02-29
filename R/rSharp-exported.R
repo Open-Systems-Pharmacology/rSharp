@@ -136,46 +136,6 @@ clrNew <- function(typename, ...) {
   .mkClrObjRef(o, clrtype = typename)
 }
 
-#' Gets the type name of an object
-#'
-#' Gets the type name of an object, given the SEXP external pointer to this CLR object.
-#'
-#' @param extPtr external pointer to a CLR object (not a cobjRef S4 object)
-#' @return a character string, the type name
-#' @export
-#' @examples
-#' \dontrun{
-#' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject"
-#' testObj <- clrNew(testClassName)
-#' clrTypeNameExtPtr(clrGetExtPtr(testObj))
-#' }
-clrTypeNameExtPtr <- function(extPtr) {
-  .validateIsExtPtr(extPtr)
-  .External("r_get_typename_externalptr", extPtr, PACKAGE = rSharpEnv$nativePkgName)
-}
-
-
-#' Gets the type name of an object
-#'
-#' Gets the CLR type name of an object, given an S4 clrobj object
-#'
-#' @param clrobj CLR object
-#' @return type name
-#' @export
-#' @examples
-#' \dontrun{
-#' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject"
-#' testObj <- clrNew(testClassName)
-#' clrTypename(testObj)
-#' }
-clrTypename <- function(clrobj) {
-  name <- .Call("r_get_type_name", clrobj, PACKAGE = rSharpEnv$nativePkgName)
-  name
-}
-
-
 #' Gets the name of the native library currently loaded.
 #'
 #' Gets the name of the native library currently loaded. Used only for unit tests.

@@ -115,18 +115,15 @@ clrSet <- function(objOrType, name, value) {
 
 #' Gets the type name of an object
 #'
-#' Gets the CLR type name of an object, given an S4 clrobj object
+#' Gets the .NET type name of an object, given an S4 clrobj object
 #'
-#' @param clrobj CLR object
+#' @param clrobj .NET object
 #' @return type name
 #' @export
 #' @examples
-#' \dontrun{
-#' library(rClr)
-#' testClassName <- "Rclr.TestObject"
+#' testClassName <- "ClrFacade.TestObject"
 #' testObj <- clrNew(testClassName)
 #' clrTypename(testObj)
-#' }
 clrTypename <- function(clrobj) {
-  return(.Call("r_get_type_name", clrobj, PACKAGE = rSharpEnv$nativePkgName))
+  .clrTypeNameExtPtr(clrobj@clrobj)
 }

@@ -287,7 +287,7 @@ test_that("Basic objects are created correctly", {
   # 	 extptr <-.External("r_call_static_method", cTypename, "CreateTestObject",PACKAGE=clrGetNativeLibName())
   #  expect_that(is.null(extptr), is_false())
   #  expect_that("externalptr" %in% class(extptr), is_true())
-  #  expect_that(clrTypeNameExtPtr(extptr), equals(testClassName))
+  #  expect_that(.clrTypeNameExtPtr(extptr), equals(testClassName))
 
   testObj <- .External("r_call_static_method", cTypename, "CreateTestObject", PACKAGE = clrGetNativeLibName())
   expect_false(is.null(testObj))
