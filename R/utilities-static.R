@@ -1,42 +1,36 @@
 #' Gets the static members for a type
 #'
-#' @param objOrType a CLR object, or type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
+#' @param objOrType a .NET object, or type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
 #' @export
 #' @examples
-#' \dontrun{
-#' library(rClr)
 #' cTypename <- getRSharpSetting("testCasesTypeName")
-#' clrGetStaticMembers(cTypename)
-#' testClassName <- "Rclr.TestObject"
-#' testObj <- clrNew(testClassName)
-#' clrGetStaticMembers(testObj)
-#' }
-clrGetStaticMembers <- function(objOrType) {
-  list(Methods = clrGetStaticMethods(objOrType), Fields = clrGetStaticFields(objOrType), Properties = clrGetStaticProperties(objOrType))
+#' getStaticMembers(cTypename)
+getStaticMembers <- function(objOrType) {
+  list(Methods = getStaticMethods(objOrType), Fields = getStaticFields(objOrType), Properties = getStaticProperties(objOrType))
 }
 
 #' Gets the static fields for a type
 #'
-#' @param objOrType a CLR object, or type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
+#' @param objOrType a .NET object, or type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
 #' @param contains a string that the property names returned must contain
 #' @export
-clrGetStaticFields <- function(objOrType, contains = "") {
+getStaticFields <- function(objOrType, contains = "") {
   callStatic(rSharpEnv$reflectionHelperTypeName, "GetStaticFields", objOrType, contains)
 }
 
 #' Gets the static properties for a type
 #'
-#' @inheritParams clrGetStaticFields
+#' @inheritParams getStaticFields
 #' @export
-clrGetStaticProperties <- function(objOrType, contains = "") {
+getStaticProperties <- function(objOrType, contains = "") {
   callStatic(rSharpEnv$reflectionHelperTypeName, "GetStaticProperties", objOrType, contains)
 }
 
 #' Gets the static methods for a type
 #'
-#' @inheritParams clrGetStaticFields
+#' @inheritParams getStaticFields
 #' @export
-clrGetStaticMethods <- function(objOrType, contains = "") {
+getStaticMethods <- function(objOrType, contains = "") {
   callStatic(rSharpEnv$reflectionHelperTypeName, "GetStaticMethods", objOrType, contains)
 }
 

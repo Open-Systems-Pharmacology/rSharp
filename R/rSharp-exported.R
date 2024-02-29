@@ -136,54 +136,6 @@ clrNew <- function(typename, ...) {
   .mkClrObjRef(o, clrtype = typename)
 }
 
-#' Gets the static members for a type
-#'
-#' Gets the static members for a type
-#'
-#' @param objOrType a CLR object, or type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
-#' @export
-#' @examples
-#' \dontrun{
-#' library(rSharp)
-#' cTypename <- getRSharpSetting("testCasesTypeName")
-#' clrGetStaticMembers(cTypename)
-#' testClassName <- "ClrFacade.TestObject"
-#' testObj <- clrNew(testClassName)
-#' clrGetStaticMembers(testObj)
-#' }
-clrGetStaticMembers <- function(objOrType) {
-  list(Methods = clrGetStaticMethods(objOrType), Fields = clrGetStaticFields(objOrType), Properties = clrGetStaticProperties(objOrType))
-}
-
-#' Gets the static fields for a type
-#'
-#' Gets the static fields for a type
-#'
-#' @param objOrType a CLR object, or type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
-#' @param contains a string that the property names returned must contain
-#' @export
-clrGetStaticFields <- function(objOrType, contains = "") {
-  callStatic(rSharpEnv$reflectionHelperTypeName, "GetStaticFields", objOrType, contains)
-}
-
-#' Gets the static members for a type
-#'
-#' Gets the static members for a type
-#'
-#' @inheritParams clrGetStaticFields
-#' @export
-clrGetStaticProperties <- function(objOrType, contains = "") {
-  callStatic(rSharpEnv$reflectionHelperTypeName, "GetStaticProperties", objOrType, contains)
-}
-
-#' Gets the static members for a type
-#'
-#' @inheritParams clrGetStaticFields
-#' @export
-clrGetStaticMethods <- function(objOrType, contains = "") {
-  callStatic(rSharpEnv$reflectionHelperTypeName, "GetStaticMethods", objOrType, contains)
-}
-
 #' Gets the signature of a static member of a type
 #'
 #' @param typename type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.

@@ -365,7 +365,7 @@ test_that("Object members discovery behaves as expected", {
     )
   }
   f(testObj, static = FALSE, getFields, clrGetProperties, clrGetMethods)
-  f(testClassName, static = TRUE, clrGetStaticFields, clrGetStaticProperties, clrGetStaticMethods)
+  f(testClassName, static = TRUE, getStaticFields, getStaticProperties, getStaticMethods)
   # TODO test that methods that are explicit implementations of interfaces are found
 })
 
