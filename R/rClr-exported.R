@@ -1,20 +1,4 @@
-#' List the instance fields of a CLR object
-#'
-#' @param clrobj CLR object
-#' @param contains a string that the field names returned must contain
-#' @return a list of names of the fields of the CLR object
-#' @export
-#' @examples
-#' \dontrun{
-#' library(rClr)
-#' testClassName <- "Rclr.TestObject"
-#' testObj <- clrNew(testClassName)
-#' clrGetFields(testObj)
-#' clrGetFields(testObj, "ieldInt")
-#' }
-clrGetFields <- function(clrobj, contains = "") {
-  callStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceFields", clrobj, contains)
-}
+
 
 #' List the instance properties of a CLR object
 #'
@@ -25,7 +9,7 @@ clrGetFields <- function(clrobj, contains = "") {
 #' @examples
 #' \dontrun{
 #' library(rClr)
-#' testClassName <- "Rclr.TestObject"
+#' testClassName <- rSharpEnv$testObjectTypeName
 #' testObj <- clrNew(testClassName)
 #' clrGetProperties(testObj)
 #' clrGetProperties(testObj, "One")
@@ -43,7 +27,7 @@ clrGetProperties <- function(clrobj, contains = "") {
 #' @examples
 #' \dontrun{
 #' library(rClr)
-#' testClassName <- "Rclr.TestObject"
+#' testClassName <- rSharpEnv$testObjectTypeName
 #' testObj <- clrNew(testClassName)
 #' clrGetMethods(testObj)
 #' clrGetMethods(testObj, "Get")

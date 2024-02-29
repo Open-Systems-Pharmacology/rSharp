@@ -15,7 +15,7 @@ Note that this is loaded in the single application domain that is created by rCl
 \examples{
 \dontrun{
 library(rClr)
-clrGetLoadedAssemblies()
+getLoadedAssemblies()
 f <- file.path("SomeDirectory", "YourDotNetBinaryFile.dll")
 f <- path.expand(f)
 stopifnot(file.exists(f))
@@ -25,7 +25,7 @@ clrLoadAssembly("System.Windows.Presentation,
   Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089")
 # The use of partial assembly names is discouraged; nevertheless it is supported
 clrLoadAssembly("System.Web.Services")
-clrGetLoadedAssemblies()
+getLoadedAssemblies()
 }
 }
 \seealso{

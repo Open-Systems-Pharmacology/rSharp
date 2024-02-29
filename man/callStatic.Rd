@@ -21,7 +21,7 @@ Call a static method on a .NET type
 }
 \examples{
 \dontrun{
-cTypename <- "Rclr.TestCases"
+cTypename <- getRSharpSetting("testCasesTypeName")
 callStatic(cTypename, "IsTrue", TRUE)
 }
 }

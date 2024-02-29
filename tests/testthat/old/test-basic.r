@@ -364,7 +364,7 @@ test_that("Object members discovery behaves as expected", {
       equals(collate(sig_prefix, "Method: Int32 ", p("GetMethodWithParameters, Int32, String")))
     )
   }
-  f(testObj, static = FALSE, clrGetFields, clrGetProperties, clrGetMethods)
+  f(testObj, static = FALSE, getFields, clrGetProperties, clrGetMethods)
   f(testClassName, static = TRUE, clrGetStaticFields, clrGetStaticProperties, clrGetStaticMethods)
   # TODO test that methods that are explicit implementations of interfaces are found
 })

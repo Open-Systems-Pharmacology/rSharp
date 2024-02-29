@@ -29,7 +29,7 @@ setConvertAdvancedTypes <- function(enable = TRUE) {
 #' clrReflect(testObj)
 clrReflect <- function(clrobj) {
   # .Call("r_reflect_on_object", clrobj@clrobj, silent=FALSE, PACKAGE="rSharp")
-  list(Methods = clrGetMethods(clrobj), Fields = clrGetFields(clrobj), Properties = clrGetProperties(clrobj))
+  list(Methods = clrGetMethods(clrobj), Fields = getFields(clrobj), Properties = clrGetProperties(clrobj))
 }
 
 #' Calls the ToString method of an object
@@ -51,24 +51,19 @@ toString <- function(x) {
   return(clrCallStatic(rSharpEnv$InternalTypeName, "ToString", x))
 }
 
-#' List the instance fields of a CLR object
-#'
-#' List the instance fields of a CLR object
+#' List the instance fields of a .NET object
 #'
 #' @param clrobj CLR object
 #' @param contains a string that the field names returned must contain
-#' @return a list of names of the fields of the CLR object
+#' @return a list of names of the fields of the .NET object
 #' @export
 #' @examples
-#' \dontrun{
-#' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject"
+#' testClassName <- rSharpEnv$testObjectTypeName
 #' testObj <- clrNew(testClassName)
-#' clrGetFields(testObj)
-#' clrGetFields(testObj, "ieldInt")
-#' }
-clrGetFields <- function(clrobj, contains = "") {
-  clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceFields", clrobj, contains)
+#' getFields(testObj)
+#' getFields(testObj, "ieldInt")
+getFields <- function(clrobj, contains = "") {
+  callStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceFields", clrobj, contains)
 }
 
 #' List the instance properties of a CLR object

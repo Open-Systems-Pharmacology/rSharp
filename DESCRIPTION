@@ -24,7 +24,7 @@ Authors@R: c(person(given = "Open-Systems-Pharmacology Community",
              family = "Du",
              role = c("aut")),
      person("Jean-Michel", "Perraud", email =
-    "jean-michel.perraud@csiro.au", role = c("aut", "cre")))
+    "jean-michel.perraud@csiro.au", role = "aut"))
 Maintainer: Ian Peter Du <ian_peter.du@esqlabs.com>
 Description: rSharp is a package for low-level access from R .NET runtime. It
     provides a set of functions to create and manipulate .NET objects, call

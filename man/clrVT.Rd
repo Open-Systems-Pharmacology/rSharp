@@ -22,8 +22,7 @@ This function is useful for advanced diagnosis; most users should never have to 
 }
 \examples{
 \dontrun{
-library(rClr)
-cTypename <- "Rclr.TestCases"
+cTypename <- getRSharpSetting("testCasesTypeName")
 #         public static bool IsTrue(bool arg)
 clrVT(cTypename, "IsTrue", TRUE)
 clrVT("System.Convert", "ToInt64", 123L)
