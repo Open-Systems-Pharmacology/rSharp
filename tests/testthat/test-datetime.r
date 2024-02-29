@@ -297,4 +297,3 @@ test_that("Date and Time objects are marshalled correctly", {
   # getSeconds(utcDate('2012-07-02 12:00:00') - utcDate('2012-07-01 12:00:00'))
   ###########################
 })
-

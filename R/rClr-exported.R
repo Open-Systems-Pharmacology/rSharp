@@ -1,5 +1,3 @@
-
-
 #' List the instance properties of a CLR object
 #'
 #' @param clrobj CLR object

@@ -411,8 +411,8 @@ test_that("toString works for primitive types", {
   expect_that(toString(TRUE), equals("True"))
   expect_that(toString(FALSE), equals("False"))
   # Check of correct behavior
-#  expect_that(toString(NA), equals("null"))
-#  expect_that(toString(NULL), equals("null"))
+  #  expect_that(toString(NA), equals("null"))
+  #  expect_that(toString(NULL), equals("null"))
 })
 
 # Re-enable when https://github.com/Open-Systems-Pharmacology/rSharp/issues/35 is fixed
