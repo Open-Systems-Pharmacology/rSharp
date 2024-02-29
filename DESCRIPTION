@@ -32,8 +32,7 @@ Description: rSharp is a package for low-level access from R .NET runtime. It
 URL: https://github.com/Open-Systems-Pharmacology/rsharp/
 Encoding: UTF-8
 Depends:
-    R (>= 4.1),
-    methods
+    R (>= 4.1)
 Suggests:
     testthat,
     knitr,
