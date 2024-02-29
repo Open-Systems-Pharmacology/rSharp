@@ -160,3 +160,16 @@ inst/libs/*.*
 inst/libs/i386/*.*
 .Rproj.user
 .Rhistory
+/ClrFacade.deps.json
+/ClrFacade.dll
+/ClrFacade.dll.config
+/DynamicInterop.dll
+/Newtonsoft.Json.dll
+/RDotNet.dll
+/RSharp.runtimeconfig.json
+/RsharpMs.dll
+/RsharpMs.lib
+/inst/ClrFacade.deps.json
+/inst/ClrFacade.dll.config
+/inst/lib/ClrFacade.deps.json
+/nethost.dll
