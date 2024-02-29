@@ -14,6 +14,7 @@
 setConvertAdvancedTypes <- function(enable = TRUE) {
   invisible(clrCallStatic("ClrFacade.RDotNetDataConverter", "SetConvertAdvancedTypes", enable))
 }
+
 #' List the instance members of a CLR object
 #'
 #' List the instance members of a CLR object, i.e. its methods, fields and properties.

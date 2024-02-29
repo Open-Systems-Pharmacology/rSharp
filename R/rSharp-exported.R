@@ -15,33 +15,6 @@ setConvertAdvancedTypes <- function(enable = TRUE) {
   invisible(clrCallStatic("ClrFacade.RDotNetDataConverter", "SetConvertAdvancedTypes", enable))
 }
 
-#' Loads a Common Language assembly.
-#'
-#' Loads an assembly. Note that this is loaded in the single application domain that is created by rSharp, not a separate application domain.
-#'
-#' @param name a character vector of length one. It can be the full file name of the assembly to load, or a fully qualified assembly name, or as a last resort a partial name.
-#' @seealso \code{\link{.C}} which this function wraps
-#' @export
-#' @examples
-#' \dontrun{
-#' library(rSharp)
-#' clrGetLoadedAssemblies()
-#' f <- file.path("SomeDirectory", "YourDotNetBinaryFile.dll")
-#' f <- path.expand(f)
-#' stopifnot(file.exists(f))
-#' clrLoadAssembly(f)
-#' # Load an assembly from the global assembly cache (GAC)
-#' clrLoadAssembly("System.Windows.Presentation,
-#'   Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089")
-#' # The use of partial assembly names is discouraged; nevertheless it is supported
-#' clrLoadAssembly("System.Web.Services")
-#' clrGetLoadedAssemblies()
-#' }
-clrLoadAssembly <- function(name) {
-  # if( !file.exists(name) ) stop(paste("File not found: ", name))
-  result <- .C("rSharp_load_assembly", name, PACKAGE = rSharpEnv$nativePkgName)
-}
-
 #' Gets the inner name used for the package
 #'
 #' Gets the inner name used for the package (rSharpUX or rSharpMs). This is not intented for use by most users.
