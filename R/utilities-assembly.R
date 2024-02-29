@@ -8,7 +8,7 @@
 #' @examples
 #' \dontrun{
 #' library(rClr)
-#' clrGetLoadedAssemblies()
+#' getLoadedAssemblies()
 #' f <- file.path("SomeDirectory", "YourDotNetBinaryFile.dll")
 #' f <- path.expand(f)
 #' stopifnot(file.exists(f))
@@ -18,35 +18,27 @@
 #'   Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089")
 #' # The use of partial assembly names is discouraged; nevertheless it is supported
 #' clrLoadAssembly("System.Web.Services")
-#' clrGetLoadedAssemblies()
+#' getLoadedAssemblies()
 #' }
 clrLoadAssembly <- function(name) {
   result <- .C("rSharp_load_assembly", name, PACKAGE = rSharpEnv$nativePkgName)
 }
 
-#' List the names of loaded CLR assemblies
+#' List the names of loaded assemblies
 #'
-#' @param fullname Boolean. Should the full name of the assemblies be returned?
-#' Default is `FALSE`
-#' @param filenames Boolean. If `TRUE`, return a data frame where the second
-#' column is the URI (usually file path) of the loaded assembly. Default is `FALSE`
-#' @return The names of loaded CLR assemblies
+#' @param fullname should the full name of the assemblies be returned. `FALSE` by default.
+#' @param filenames if TRUE, return a data frame where the second column is the URI (usually file path) of the loaded assembly. `FALSE` by default.
+#' @return the names of loaded assemblies
 #' @export
 #' @examples
-#' \dontrun{
-#' library(rClr)
-#' clrGetLoadedAssemblies()
-#' }
-clrGetLoadedAssemblies <- function(fullname = FALSE, filenames = FALSE) {
-  assNames <- callStatic(rSharpEnv$reflectionHelperTypeName, "GetLoadedAssemblyNames", fullname)
+#' getLoadedAssemblies()
+getLoadedAssemblies <- function(fullname = FALSE, filenames = FALSE) {
+  assNames <- clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetLoadedAssemblyNames", fullname)
   if (filenames) {
-    # Workarount until https://github.com/Open-Systems-Pharmacology/rClr/issues/25 is fixed
-    assNames <- assNames[which(assNames != "Anonymously Hosted DynamicMethods Assembly" &
-      assNames != "Anonymously Hosted DynamicMethods Assembly, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", useNames = FALSE)]
-
-    return(data.frame(AssemblyName = assNames, URI = callStatic(rSharpEnv$reflectionHelperTypeName, "GetLoadedAssemblyURI", assNames)))
+    data.frame(AssemblyName = assNames, URI = clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetLoadedAssemblyURI", assNames))
+  } else {
+    assNames
   }
-  return(assNames)
 }
 
 #' Get a list of CLR type names exported by an assembly
@@ -57,7 +49,7 @@ clrGetLoadedAssemblies <- function(fullname = FALSE, filenames = FALSE) {
 #' @examples
 #' \dontrun{
 #' library(rClr)
-#' clrGetLoadedAssemblies()
+#' getLoadedAssemblies()
 #' clrGetTypesInAssembly("ClrFacade")
 #' }
 clrGetTypesInAssembly <- function(assemblyName) {

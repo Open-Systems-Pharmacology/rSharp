@@ -51,28 +51,6 @@ toString <- function(x) {
   return(clrCallStatic(rSharpEnv$InternalTypeName, "ToString", x))
 }
 
-#' List the names of loaded CLR assemblies
-#'
-#' List the names of loaded CLR assemblies
-#'
-#' @param fullname should the full name of the assemblies be returned
-#' @param filenames if TRUE, return a data frame where the second column is the URI (usually file path) of the loaded assembly.
-#' @return the names of loaded CLR assemblies
-#' @export
-#' @examples
-#' \dontrun{
-#' library(rSharp)
-#' clrGetLoadedAssemblies()
-#' }
-clrGetLoadedAssemblies <- function(fullname = FALSE, filenames = FALSE) {
-  assNames <- clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetLoadedAssemblyNames", fullname)
-  if (filenames) {
-    data.frame(AssemblyName = assNames, URI = clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetLoadedAssemblyURI", assNames))
-  } else {
-    assNames
-  }
-}
-
 #' Get a list of CLR type names exported by an assembly
 #'
 #' Get a list of CLR type names exported by an assembly
@@ -82,8 +60,7 @@ clrGetLoadedAssemblies <- function(fullname = FALSE, filenames = FALSE) {
 #' @export
 #' @examples
 #' \dontrun{
-#' library(rSharp)
-#' clrGetLoadedAssemblies()
+#' getLoadedAssemblies()
 #' clrGetTypesInAssembly("ClrFacade")
 #' }
 clrGetTypesInAssembly <- function(assemblyName) {

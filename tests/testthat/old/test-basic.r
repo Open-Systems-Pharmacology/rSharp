@@ -324,8 +324,8 @@ test_that("CLR type compatibility checking", {
 })
 
 test_that("Loaded assemblies discovery", {
-  expect_true(all(c("ClrFacade", "System.Private.CoreLib") %in% clrGetLoadedAssemblies()))
-  d <- clrGetLoadedAssemblies(fullname = TRUE, filenames = TRUE)
+  expect_true(all(c("ClrFacade", "System.Private.CoreLib") %in% getLoadedAssemblies()))
+  d <- getLoadedAssemblies(fullname = TRUE, filenames = TRUE)
   expect_true(is.data.frame(d))
 })
 

@@ -260,8 +260,8 @@ test_that("CLR type compatibility checking", {
 # This test fails because one of the loaded assemlies is called "Anonymously Hosted DynamicMethods Assembly",
 # and `GetLoadedAssemblyURI` fails.
 test_that("Loaded assemblies discovery", {
-  expect_true("ClrFacade" %in% clrGetLoadedAssemblies())
-  d <- clrGetLoadedAssemblies(fullname = TRUE, filenames = TRUE)
+  expect_true("ClrFacade" %in% getLoadedAssemblies())
+  d <- getLoadedAssemblies(fullname = TRUE, filenames = TRUE)
   expect_true(is.data.frame(d))
 })
 
