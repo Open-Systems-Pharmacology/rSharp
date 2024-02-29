@@ -11,7 +11,7 @@ getStaticMembers <- function(objOrType) {
 
 #' Gets the static fields for a type
 #'
-#' @param objOrType a .NET object, or type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
+#' @param objOrType a `NetObject` object, or type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
 #' @param contains a string that the property names returned must contain
 #' @export
 getStaticFields <- function(objOrType, contains = "") {
@@ -39,7 +39,7 @@ getStaticMethods <- function(objOrType, contains = "") {
 #' @param typename type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
 #' @param methodName the name of a static method of the type
 #' @param ... additional method arguments passed to .External (e.g., arguments to the method)
-#' @return an object resulting from the call. May be a `cobjRef` object, or a native R object for common types. Can be NULL.
+#' @return an object resulting from the call. May be a `NetObject` object, or a native R object for common types. Can be NULL.
 #' @export
 #' @examples
 #' cTypename <- getRSharpSetting("testCasesTypeName")
