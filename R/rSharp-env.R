@@ -20,6 +20,7 @@ rSharpEnv$dotnetPkgName <- "ClrFacade"
 rSharpEnv$reflectionHelperTypeName <- "ClrFacade.ReflectionHelper"
 # Full type name of the main facade to the interop code written in C#
 rSharpEnv$clrFacadeTypeName <- "ClrFacade.ClrFacade"
+# Full type name of the Internal code written in C#
 rSharpEnv$InternalTypeName <- "ClrFacade.Internal"
 
 

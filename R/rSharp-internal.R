@@ -1,6 +1,3 @@
-# Full type name of the reflection helper the interop code written in C#
-reflectionHelperTypeName <- "ClrFacade.ReflectionHelper"
-
 checkIsExtPtr <- function(extPtr) {
   stopifnot("externalptr" %in% class(extPtr))
 }
