@@ -81,11 +81,11 @@ clrGetProperties <- function(clrobj, contains = "") {
   clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceProperties", clrobj, contains)
 }
 
-#' List the instance methods of a CLR object
+#' List the instance methods of a .NET object
 #'
 #' @param clrobj CLR object
 #' @param contains a string that the methods names returned must contain
-#' @return a list of names of the methods of the CLR object
+#' @return a list of names of the methods of the .NET object
 #' @export
 #' @examples
 #' testClassName <- "ClrFacade.TestObject"
@@ -96,7 +96,7 @@ clrGetMethods <- function(clrobj, contains = "") {
   clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceMethods", clrobj, contains)
 }
 
-#' Gets the signature of a CLI object member
+#' Gets the signature of a .NET object member
 #'
 #' Gets a string representation of the signature of a member (i.e. field, property, method).
 #' Mostly used to interactively search for what arguments to pass to a method.
@@ -106,15 +106,12 @@ clrGetMethods <- function(clrobj, contains = "") {
 #' @return a character vector with summary information on the method/member signatures
 #' @export
 #' @examples
-#' \dontrun{
-#' library(rSharp)
 #' testClassName <- "ClrFacade.TestObject"
 #' testObj <- clrNew(testClassName)
 #' clrReflect(testObj)
 #' clrGetMemberSignature(testObj, "set_PropertyIntegerOne")
 #' clrGetMemberSignature(testObj, "FieldIntegerOne")
 #' clrGetMemberSignature(testObj, "PropertyIntegerTwo")
-#' }
 clrGetMemberSignature <- function(clrobj, memberName) {
   clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetSignature", clrobj, memberName)
 }
@@ -145,18 +142,6 @@ clrNew <- function(typename, ...) {
     stop("Failed to create instance of type '", typename, "'")
   }
   .mkClrObjRef(o, clrtype = typename)
-}
-
-#' System function to get a direct access to an object
-#'
-#' This function needs to be exported, but is highly unlikely to be of any use to an end user, even an advanced one.
-#' This is indirectly needed to unlock the benefits of using R.NET convert data structures between R and .NET.
-#'
-#' @return a CLR object
-#' @export
-getCurrentConvertedObject <- function() {
-  o <- .External("r_get_object_direct", PACKAGE = rSharpEnv$nativePkgName)
-  .mkClrObjRef(o)
 }
 
 #' Check whether an object is of a certain type

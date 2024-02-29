@@ -1,26 +1,3 @@
-#' Gets the signature of a CLI object member
-#'
-#' Gets a string representation of the signature of a member (i.e. field, property, method).
-#' Mostly used to interactively search for what arguments to pass to a method.
-#'
-#' @param clrobj CLR object
-#' @param memberName The exact name of the member (i.e. field, property, method) to search for
-#' @return a character vector with summary information on the method/member signatures
-#' @export
-#' @examples
-#' \dontrun{
-#' library(rClr)
-#' testClassName <- "Rclr.TestObject"
-#' testObj <- clrNew(testClassName)
-#' clrReflect(testObj)
-#' clrGetMemberSignature(testObj, "set_PropertyIntegerOne")
-#' clrGetMemberSignature(testObj, "FieldIntegerOne")
-#' clrGetMemberSignature(testObj, "PropertyIntegerTwo")
-#' }
-clrGetMemberSignature <- function(clrobj, memberName) {
-  callStatic(rSharpEnv$reflectionHelperTypeName, "GetSignature", clrobj, memberName)
-}
-
 #' Create a new NetObject R6 object
 #'
 #' @param typename type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
@@ -39,13 +16,13 @@ clrGetMemberSignature <- function(clrobj, memberName) {
 #' clrSet(f, "Text", "Hello from '.NET'")
 #' clrCall(f, "Show")
 #' }
-clrNew <- function(typename, ...) {
-  o <- .External("r_create_clr_object", typename, ..., PACKAGE = rSharpEnv$nativePkgName)
-  if (is.null(o)) {
-    stop("Failed to create instance of type '", typename, "'")
-  }
-  NetObject$new(o)
-}
+# clrNew <- function(typename, ...) {
+#   o <- .External("r_create_clr_object", typename, ..., PACKAGE = rSharpEnv$nativePkgName)
+#   if (is.null(o)) {
+#     stop("Failed to create instance of type '", typename, "'")
+#   }
+#   NetObject$new(o)
+# }
 
 #' System function to get a direct access to an object
 #'
