@@ -26,6 +26,7 @@ rSharpEnv$InternalTypeName <- "ClrFacade.Internal"
 rSharpEnv$testCasesTypeName <- "ClrFacade.TestCases"
 # Full name of test object class
 rSharpEnv$testObjectTypeName <- "ClrFacade.TestObject"
+rSharpEnv$testMethodBindingTypeName <- "ClrFacade.TestMethodBinding"
 
 
 #' Names of the settings stored in rSharpEnv Can be used with `getRSharpSetting()`

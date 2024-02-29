@@ -406,7 +406,7 @@ test_that("Retrieval of object or class (i.e. static) members values behaves as 
 test_that("enums get/set", {
   # very basic support for the time being. Behavior to be defined for cases such as enums with binary operators ([FlagsAttribute])
   eType <- "ClrFacade.TestEnum"
-  expect_that(clrGetEnumNames(eType), equals(c("A", "B", "C")))
+  expect_that(getEnumNames(eType), equals(c("A", "B", "C")))
   #  TODO, but problematic.
   #  e <- clrCall(cTypename, 'GetTestEnum', 'B')
   #  expect_false(is.null(e))

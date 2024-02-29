@@ -24,19 +24,6 @@
 #   NetObject$new(o)
 # }
 
-#' System function to get a direct access to an object
-#'
-#' This function needs to be exported, but is highly unlikely to be of any use to an end user, even an advanced one.
-#' This is indirectly needed to unlock the benefits of using R.NET convert data structures between R and .NET.
-#' Using this function is a critical part of solving the rather complicated issue rClr #33.
-#'
-#' @return a `NetObject` R6 object
-#' @export
-getCurrentConvertedObject <- function() {
-  o <- .External("r_get_object_direct", PACKAGE = rSharpEnv$nativePkgName)
-  NetObject$new(o)
-}
-
 #' Gets the type of a CLR object given its type name
 #'
 #' @param objOrTypename a character vector of length one. It can be the full file name of the assembly to load, or a fully qualified assembly name, or as a last resort a partial name.

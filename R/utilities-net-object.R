@@ -37,20 +37,10 @@ createNetObject <- function(obj) {
 #' @return TRUE or FALSE
 #' @export
 #' @examples
-#' \dontrun{
-#' library(rClr)
-#' testClassName <- "Rclr.TestObject"
-#' (testObj <- clrNew(testClassName))
+#' testClassName <- "ClrFacade.TestObject"
+#' testObj <- clrNew(testClassName)
 #' clrIs(testObj, testClassName)
 #' clrIs(testObj, "System.Object")
-#' clrIs(testObj, "System.Double")
-#' (testObj <- clrNew("Rclr.TestMethodBinding"))
-#' # Test for interface definitions
-#' clrIs(testObj, "Rclr.ITestMethodBindings")
-#' clrIs(testObj, clrGetType("Rclr.ITestMethodBindings"))
-#' clrIs(testObj, clrGetType("Rclr.TestMethodBinding"))
-#' clrIs(testObj, clrGetType("System.Reflection.Assembly"))
-#' }
 clrIs <- function(obj, type) {
   if (is.character(type)) {
     tmpType <- clrGetType(type)
@@ -81,30 +71,14 @@ clrIs <- function(obj, type) {
 #' @return an object resulting from the call. May be a CLR object, or a native R object for common types. Can be NULL.
 #' @export
 #' @examples
-#' \dontrun{
-#' library(rClr)
-#' testClassName <- "Rclr.TestObject"
-#' (testObj <- clrNew(testClassName))
+#' testClassName <- rSharpEnv$testObjectTypeName
+#' testObj <- clrNew(testClassName)
 #' clrCall(testObj, "GetFieldIntegerOne")
-#' ## derived from unit test for matching the right method (function) to call.
-#' f <- function(...) {
-#'   paste(
-#'     "This called a method with arguments:",
-#'     paste(callStatic("Rclr.TestMethodBinding", "SomeStaticMethod", ...), collapse = ", ")
-#'   )
-#' }
-#' f(1:3)
-#' f(3)
-#' f("a")
-#' f("a", 3)
-#' f(3, "a")
-#' f(list("a", 3))
-#' }
 clrCall <- function(obj, methodName, ...) {
   interface <- "r_call_method"
   result <- NULL
   result <- .External(interface, obj@clrobj, methodName, ..., PACKAGE = rSharpEnv$nativePkgName)
-  return(createNetObject(result))
+  return(.mkClrObjRef(result))
 }
 
 #' Gets the value of a field or property of an object or class
@@ -114,14 +88,11 @@ clrCall <- function(obj, methodName, ...) {
 #' @return an object resulting from the call. May be a CLR object, or a native R object for common types. Can be NULL.
 #' @export
 #' @examples
-#' \dontrun{
-#' library(rClr)
-#' testClassName <- "Rclr.TestObject"
+#' testClassName <- rSharpEnv$testObjectTypeName
 #' testObj <- clrNew(testClassName)
 #' clrReflect(testObj)
 #' clrGet(testObj, "FieldIntegerOne")
 #' clrGet(testClassName, "StaticPropertyIntegerOne")
-#' }
 clrGet <- function(objOrType, name) {
   return(callStatic(rSharpEnv$clrFacadeTypeName, "GetFieldOrProperty", objOrType, name))
 }
@@ -133,21 +104,11 @@ clrGet <- function(objOrType, name) {
 #' @param value the value to set the field with
 #' @export
 #' @examples
-#' \dontrun{
-#' library(rClr)
-#' testClassName <- "Rclr.TestObject"
+#' testClassName <- rSharpEnv$testObjectTypeName
 #' testObj <- clrNew(testClassName)
 #' clrReflect(testObj)
-#' clrSet(testObj, "FieldIntegerOne", 42)
-#' clrSet(testClassName, "StaticPropertyIntegerOne", 42)
-#'
-#' # Using 'good old' Windows forms to say hello:
-#' clrLoadAssembly("System.Windows.Forms, Version=2.0.0.0,
-#'   Culture=neutral, PublicKeyToken=b77a5c561934e089")
-#' f <- clrNew("System.Windows.Forms.Form")
-#' clrSet(f, "Text", "Hello from '.NET'")
-#' clrCall(f, "Show")
-#' }
+#' clrSet(testObj, "FieldIntegerOne", as.integer(42))
+#' clrSet(testClassName, "StaticPropertyIntegerOne", as.integer(42))
 clrSet <- function(objOrType, name, value) {
   invisible(callStatic(rSharpEnv$clrFacadeTypeName, "SetFieldOrProperty", objOrType, name, value))
 }

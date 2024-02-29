@@ -340,7 +340,7 @@ test_that("Retrieval of object or class (i.e. static) members values behaves as 
 test_that("enums get/set", {
   # very basic support for the time being. Behavior to be defined for cases such as enums with binary operators ([FlagsAttribute])
   eType <- "ClrFacade.TestEnum"
-  expect_that(clrGetEnumNames(eType), equals(c("A", "B", "C")))
+  expect_that(getEnumNames(eType), equals(c("A", "B", "C")))
   #  TODO, but problematic.
   #  e <- clrCall(cTypename, 'GetTestEnum', 'B')
   #  expect_false(is.null(e))
@@ -420,3 +420,11 @@ test_that("toString works for primitive types", {
 #   # callStatic(rSharpEnv$testCasesTypeName, "ThrowException", 10L) # will be truncated by the Rf_error API
 #   printTraceback() # prints the full stack trace
 # })
+
+test_that("set works ", {
+  testClassName <- rSharpEnv$testObjectTypeName
+  testObj <- clrNew(testClassName)
+  clrReflect(testObj)
+  clrSet(testObj, "FieldIntegerOne", as.integer(42))
+  clrSet(testClassName, "StaticPropertyIntegerOne", as.integer(42))
+})

@@ -124,163 +124,16 @@ clrGetMemberSignature <- function(clrobj, memberName) {
 #' @export
 #' @import methods
 #' @examples
-#' \dontrun{
-#' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject"
-#' (testObj <- clrNew(testClassName))
+#' testClassName <- rSharpEnv$testObjectTypeName
+#' testObj <- clrNew(testClassName)
 #' # object with a constructor that has parameters
-#' (testObj <- clrNew(testClassName, as.integer(123)))
-#' clrLoadAssembly("System.Windows.Forms, Version=2.0.0.0,
-#'   Culture=neutral, PublicKeyToken=b77a5c561934e089")
-#' f <- clrNew("System.Windows.Forms.Form")
-#' clrSet(f, "Text", "Hello from '.NET'")
-#' clrCall(f, "Show")
-#' }
+#' testObj <- clrNew(testClassName, as.integer(123))
 clrNew <- function(typename, ...) {
   o <- .External("r_create_clr_object", typename, ..., PACKAGE = rSharpEnv$nativePkgName)
   if (is.null(o)) {
     stop("Failed to create instance of type '", typename, "'")
   }
   .mkClrObjRef(o, clrtype = typename)
-}
-
-#' Check whether an object is of a certain type
-#'
-#' Check whether an object is of a certain type. This function is meant to match the behavior of the 'is' keyword in C#.
-#'
-#' @param obj an object
-#' @param type the object type to check for. It can be a character, of a object of CLR type System.RuntimeType
-#' @return TRUE or FALSE
-#' @export
-#' @examples
-#' \dontrun{
-#' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject"
-#' (testObj <- clrNew(testClassName))
-#' clrIs(testObj, testClassName)
-#' clrIs(testObj, "System.Object")
-#' clrIs(testObj, "System.Double")
-#' (testObj <- clrNew("ClrFacade.TestMethodBinding"))
-#' # Test for interface definitions
-#' clrIs(testObj, "ClrFacade.ITestMethodBindings")
-#' clrIs(testObj, clrGetType("ClrFacade.ITestMethodBindings"))
-#' clrIs(testObj, clrGetType("ClrFacade.TestMethodBinding"))
-#' clrIs(testObj, clrGetType("System.Reflection.Assembly"))
-#' }
-clrIs <- function(obj, type) {
-  if (is.character(type)) {
-    tmpType <- clrGetType(type)
-    if (is.null(tmpType)) {
-      stop(paste("Unrecognized type name", type))
-    } else {
-      type <- tmpType
-    }
-  }
-  if (!is(type, "cobjRef")) {
-    stop(paste('argument "type" must be a CLR type name or a Type'))
-  } else {
-    typetypename <- clrGet(clrCall(type, "GetType"), "Name")
-    if (!(typetypename %in% c("RuntimeType", "MonoType"))) {
-      stop(paste('argument "type" must be a CLR Type. Got a', typetypename))
-    }
-  }
-  objType <- clrGetType(obj)
-  return(clrCall(type, "IsAssignableFrom", objType))
-}
-
-#' Call a method on an object
-#'
-#' @param obj an object
-#' @param methodName the name of a method of the object
-#' @param ... additional method arguments passed to .External
-#' @return an object resulting from the call. May be a CLR object, or a native R object for common types. Can be NULL.
-#' @export
-#' @examples
-#' \dontrun{
-#' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject"
-#' (testObj <- clrNew(testClassName))
-#' clrCall(testObj, "GetFieldIntegerOne")
-#' ## derived from unit test for matching the right method (function) to call.
-#' f <- function(...) {
-#'   paste(
-#'     "This called a method with arguments:",
-#'     paste(clrCallStatic("ClrFacade.TestMethodBinding", "SomeStaticMethod", ...), collapse = ", ")
-#'   )
-#' }
-#' f(1:3)
-#' f(3)
-#' f("a")
-#' f("a", 3)
-#' f(3, "a")
-#' f(list("a", 3))
-#' }
-clrCall <- function(obj, methodName, ...) {
-  interface <- "r_call_method"
-  result <- NULL
-  result <- .External(interface, obj@clrobj, methodName, ..., PACKAGE = rSharpEnv$nativePkgName)
-  return(.mkClrObjRef(result))
-}
-
-#' Gets the value of a field or property of an object or class
-#'
-#' @param objOrType a CLR object, or type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
-#' @param name the name of a field/property  of the object
-#' @return an object resulting from the call. May be a CLR object, or a native R object for common types. Can be NULL.
-#' @export
-#' @examples
-#' \dontrun{
-#' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject"
-#' testObj <- clrNew(testClassName)
-#' clrReflect(testObj)
-#' clrGet(testObj, "FieldIntegerOne")
-#' clrGet(testClassName, "StaticPropertyIntegerOne")
-#' }
-clrGet <- function(objOrType, name) {
-  return(clrCallStatic(rSharpEnv$clrFacadeTypeName, "GetFieldOrProperty", objOrType, name))
-}
-
-#' Sets the value of a field or property of an object or class
-#'
-#' Sets the value of a field or property of an object or class
-#'
-#' @param objOrType a CLR object, or type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
-#' @param name the name of a field/property of the object
-#' @param value the value to set the field with
-#' @export
-#' @examples
-#' \dontrun{
-#' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject"
-#' testObj <- clrNew(testClassName)
-#' clrReflect(testObj)
-#' clrSet(testObj, "FieldIntegerOne", 42)
-#' clrSet(testClassName, "StaticPropertyIntegerOne", 42)
-#'
-#' # Using 'good old' Windows forms to say hello:
-#' clrLoadAssembly("System.Windows.Forms, Version=2.0.0.0,
-#'   Culture=neutral, PublicKeyToken=b77a5c561934e089")
-#' f <- clrNew("System.Windows.Forms.Form")
-#' clrSet(f, "Text", "Hello from '.NET'")
-#' clrCall(f, "Show")
-#' }
-clrSet <- function(objOrType, name, value) {
-  invisible(clrCallStatic(rSharpEnv$clrFacadeTypeName, "SetFieldOrProperty", objOrType, name, value))
-}
-
-#' Gets the names of a CLR Enum value type
-#'
-#' @param enumType a CLR object, System.Type or type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
-#' @return a character vector of the names for the enum
-#' @export
-#' @examples
-#' \dontrun{
-#' library(rSharp)
-#' clrGetEnumNames("ClrFacade.TestEnum")
-#' }
-clrGetEnumNames <- function(enumType) {
-  return(clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetEnumNames", enumType))
 }
 
 #' Sets the value of an enum field or property of an object or class
