@@ -20,13 +20,7 @@ tzIdR_AUest <- "Australia/Sydney"
 # IronPython: tz = [x for x in TimeZoneInfo.GetSystemTimeZones()]
 tzId_AUest <-
   ifelse(tolower(Sys.info()["sysname"]) == "windows",
-    ifelse(clrGetNativeLibName() == "rSharpUX",
-      # As of Mono 3.8.0, and probably earlier releases including 3.4.0, the time zone names have changed. Not Olson DB anymore. Not MS.NET either. *Sigh*
-      "E. Australia Standard Time",
-      # I think even on Linux Mono does not use the Olson DB names. If still, use something like the following line
-      #  'E. Australia Standard Time', tzIdR_AUest),
-      "AUS Eastern Standard Time"
-    ) # TODO: is 'Australia/Sydney' also OK for MS.NET?
+         "AUS Eastern Standard Time"
     ,
     tzIdR_AUest # on Linux, use the Olson DB.
   )

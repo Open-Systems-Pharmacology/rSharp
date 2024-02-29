@@ -136,16 +136,6 @@ clrNew <- function(typename, ...) {
   .mkClrObjRef(o, clrtype = typename)
 }
 
-#' Gets the name of the native library currently loaded.
-#'
-#' Gets the name of the native library currently loaded. Used only for unit tests.
-#'
-#' @return the name of the native library currently loaded: rSharpMs or rSharpUX
-#' @export
-clrGetNativeLibName <- function() {
-  rSharpEnv$nativePkgName
-}
-
 #' Call a static method on a CLR type
 #'
 #' @param typename type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.

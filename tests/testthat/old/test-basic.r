@@ -284,12 +284,12 @@ test_that("Basic objects are created correctly", {
   # Note to self: I originally wrote code to make sure that r_call_static_method kept returning an external pointer, not
   # an R object of type clrObjRef already created. I am not sure why this would have been a compulsory behavior.
   # Delete if no harm done...
-  # 	 extptr <-.External("r_call_static_method", cTypename, "CreateTestObject",PACKAGE=clrGetNativeLibName())
+  # 	 extptr <-.External("r_call_static_method", cTypename, "CreateTestObject",PACKAGE=rSharpEnv$nativePkgName)
   #  expect_that(is.null(extptr), is_false())
   #  expect_that("externalptr" %in% class(extptr), is_true())
   #  expect_that(.clrTypeNameExtPtr(extptr), equals(testClassName))
 
-  testObj <- .External("r_call_static_method", cTypename, "CreateTestObject", PACKAGE = clrGetNativeLibName())
+  testObj <- .External("r_call_static_method", cTypename, "CreateTestObject", PACKAGE = rSharpEnv$nativePkgName)
   expect_false(is.null(testObj))
   expect_that(testObj@clrtype, equals(testClassName))
   rm(testObj)
