@@ -7,7 +7,7 @@
 #' @export
 #' @examples
 #' library(rSharp)
-#' cTypename <- "ClrFacade.TestCases"
+#' cTypename <- getRSharpSetting("testCasesTypeName")
 #' callStatic(cTypename, "CreateStringDictionary")
 #' setConvertAdvancedTypes(FALSE)
 #' callStatic(cTypename, "CreateStringDictionary")
@@ -49,22 +49,6 @@ clrReflect <- function(clrobj) {
 #' toString(dt)
 toString <- function(x) {
   return(clrCallStatic(rSharpEnv$InternalTypeName, "ToString", x))
-}
-
-
-#' Prints the last CLR exception
-#'
-#' Prints the last CLR exception. This is roughly the equivalent of the traceback function of R.
-#'
-#' @export
-#' @examples
-#' \dontrun{
-#' clrCallStatic("ClrFacade.TestCases", "ThrowException", 10L) # will be truncated by the Rf_error API
-#' clrTraceback() # prints the full stack trace
-#' }
-clrTraceback <- function() {
-  cat(clrGet(rSharpEnv$clrFacadeTypeName, "LastException"))
-  invisible(NULL)
 }
 
 #' List the names of loaded CLR assemblies
@@ -470,7 +454,7 @@ clrGetNativeLibName <- function() {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' cTypename <- "ClrFacade.TestCases"
+#' cTypename <- getRSharpSetting("testCasesTypeName")
 #' clrCallStatic(cTypename, "IsTrue", TRUE)
 #' }
 clrCallStatic <- function(typename, methodName, ...) {
@@ -504,7 +488,7 @@ peekClrArgs <- function(...) {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' cTypename <- "ClrFacade.TestCases"
+#' cTypename <- getRSharpSetting("testCasesTypeName")
 #' clrGetStaticMembers(cTypename)
 #' testClassName <- "ClrFacade.TestObject"
 #' testObj <- clrNew(testClassName)
@@ -589,7 +573,7 @@ inspectArgs <- function(...) {
 #' @examples
 #' \dontrun{
 #' library(rSharp)
-#' cTypename <- "ClrFacade.TestCases"
+#' cTypename <- getRSharpSetting("testCasesTypeName")
 #' #         public static bool IsTrue(bool arg)
 #' }
 

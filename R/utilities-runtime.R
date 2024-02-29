@@ -1,14 +1,12 @@
-#' Prints the last CLR exception
+#' Prints the last .NET exception
 #'
 #' This is roughly the equivalent of the traceback function of R.
 #'
 #' @export
 #' @examples
-#' \dontrun{
-#' callStatic("Rclr.TestCases", "ThrowException", 10L) # will be truncated by the Rf_error API
-#' clrTraceback() # prints the full stack trace
-#' }
-clrTraceback <- function() {
+#' callStatic(getRSharpSetting("testCasesTypeName"), "ThrowException", 10L) # will be truncated by the Rf_error API
+#' printTraceback() # prints the full stack trace
+printTraceback <- function() {
   cat(clrGet(rSharpEnv$clrFacadeTypeName, "LastException"))
   invisible(NULL)
 }

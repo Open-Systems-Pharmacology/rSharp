@@ -218,10 +218,10 @@ test_that("Basic objects are created correctly", {
   # Note to self: I originally wrote code to make sure that r_call_static_method kept returning an external pointer, not
   # an R object of type clrObjRef already created. I am not sure why this would have been a compulsory behavior.
   # Delete if no harm done...
-  # 	 extptr <-.External("r_call_static_method", cTypename, "CreateTestObject",PACKAGE=rSharpEnv$nativePkgName)
+  # 	 extptr <-.External("r_call_static_method", rSharpEnv$testCasesTypeName, "CreateTestObject",PACKAGE=rSharpEnv$nativePkgName)
   #  expect_false(is.null(extptr))
   #  expect_that("externalptr" %in% class(extptr), is_true())
-  testObj <- .External("r_call_static_method", cTypename, "CreateTestObject", PACKAGE = rSharpEnv$nativePkgName)
+  testObj <- .External("r_call_static_method", rSharpEnv$testCasesTypeName, "CreateTestObject", PACKAGE = rSharpEnv$nativePkgName)
   expect_false(is.null(testObj))
   expect_that(testObj@clrtype, equals(testClassName))
   rm(testObj)
@@ -414,3 +414,9 @@ test_that("toString works for primitive types", {
 #  expect_that(toString(NA), equals("null"))
 #  expect_that(toString(NULL), equals("null"))
 })
+
+# Re-enable when https://github.com/Open-Systems-Pharmacology/rSharp/issues/35 is fixed
+# test_that("Print traceback", {
+#   # callStatic(rSharpEnv$testCasesTypeName, "ThrowException", 10L) # will be truncated by the Rf_error API
+#   printTraceback() # prints the full stack trace
+# })

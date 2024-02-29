@@ -22,6 +22,8 @@ rSharpEnv$reflectionHelperTypeName <- "ClrFacade.ReflectionHelper"
 rSharpEnv$clrFacadeTypeName <- "ClrFacade.ClrFacade"
 # Full type name of the Internal code written in C#
 rSharpEnv$InternalTypeName <- "ClrFacade.Internal"
+# Full type name of the test cases
+rSharpEnv$testCasesTypeName <- "ClrFacade.TestCases"
 
 
 #' Names of the settings stored in rSharpEnv Can be used with `getRSharpSetting()`

@@ -83,7 +83,7 @@ doMeasure <- function(trials, trow, FUNGEN, dataClass,direction,tag=NA) {
 }
 
 doMeasureFun <- function(trials, FUNGEN, dataClass,direction,tag=NA) {
-  callStatic('ClrFacade.TestCases', 'CallGC') # minimize the risk of cases such that we end up with negative runtimes...
+  callStatic(rSharpEnv$testCasesTypeName, 'CallGC') # minimize the risk of cases such that we end up with negative runtimes...
   res <- doMeasure(trials, 1, FUNGEN=FUNGEN, dataClass, direction, tag)
   for (trow in 2:nrow(trials)) {
     res <- rbind(res, doMeasure(trials, trow, FUNGEN=FUNGEN, dataClass, direction, tag))

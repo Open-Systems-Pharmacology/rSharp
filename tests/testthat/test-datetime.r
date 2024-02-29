@@ -1,9 +1,3 @@
-# Name of the testcase class
-cTypename <- "ClrFacade.TestCases"
-
-
-# print(paste('current directory is', getwd(), 'and contains files' , paste(list.files( getwd()), collapse=',')))
-
 # adapting to behavior as of testthat_0.11.0
 wd <- getwd()
 source(file.path(wd, "datetime-functions.r"))
@@ -212,7 +206,7 @@ test_that("Date and Time objects are marshalled correctly", {
   threePfive_min <- as.difftime(3.5, units = "mins")
   expect_equal(callStatic("System.TimeSpan", "FromMinutes", 3.5), expected = as.difftime(180 + 30, units = "secs"))
   # arrays of timespan
-  expect_equal(callStatic(cTypename, "CreateTimeSpanArray", 3.5, as.integer(5)), expected = threePfive_sec + 5 * (0:4))
+  expect_equal(callStatic(rSharpEnv$testCasesTypeName, "CreateTimeSpanArray", 3.5, as.integer(5)), expected = threePfive_sec + 5 * (0:4))
 
   ##########
   # R to .NET conversions
@@ -256,13 +250,13 @@ test_that("Date and Time objects are marshalled correctly", {
   # Note that there no point looking below daily period wuth Date objects. consider:
   # z <- ISOdate(2010, 04, 13, c(0,12))
   # str(unclass(as.Date(z)))
-  expect_true(callStatic(cTypename, "CheckIsDailySequence", as.Date(testDateStr) + 0:(numDays - 1), testDateStr, as.integer(numDays)))
+  expect_true(callStatic(rSharpEnv$testCasesTypeName, "CheckIsDailySequence", as.Date(testDateStr) + 0:(numDays - 1), testDateStr, as.integer(numDays)))
 
   # Time spans: R to .NET
   # This seems trickier, at least with the MS CLR hosting API.
   # TODO
   # Basically, I don't know how I can create a TimeSpan from the C layer, since the hosting API will fail to find a suitable COM type for it.
-  # expect_true( callStatic(cTypename, "TimeSpanEquals", threePfive_min, '00:03:30.00'))
+  # expect_true( callStatic(rSharpEnv$testCasesTypeName, "TimeSpanEquals", threePfive_min, '00:03:30.00'))
 
 
   # further notes, summary, thoughts to elaborate:

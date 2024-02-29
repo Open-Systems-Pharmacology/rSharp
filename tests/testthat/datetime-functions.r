@@ -3,16 +3,13 @@
 ########################
 
 clrDateEquals <- function(d, isoDateTimeStr, tzIdClr) {
-  cTypename <- "ClrFacade.TestCases"
-  callStatic(cTypename, "UtcDateEquals", d, isoDateTimeStr, tzIdClr)
+  callStatic(rSharpEnv$testCasesTypeName, "UtcDateEquals", d, isoDateTimeStr, tzIdClr)
 }
 createDotNetDate <- function(...) {
-  cTypename <- "ClrFacade.TestCases"
-  callStatic(cTypename, "CreateDate", ...)
+  callStatic(rSharpEnv$testCasesTypeName, "CreateDate", ...)
 }
 createUtcDate <- function(isoDateTimeStr, tzIdClr) {
-  cTypename <- "ClrFacade.TestCases"
-  callStatic(cTypename, "UtcDateForTimeZone", isoDateTimeStr, tzIdClr)
+  callStatic(rSharpEnv$testCasesTypeName, "UtcDateForTimeZone", isoDateTimeStr, tzIdClr)
 }
 # convertClrTime <- function(isoDateTimeStr, tzIdClr_from, tzIdClr_to ) { callStatic(cTypename, "ConvertTime", isoDateTimeStr, tzIdClr_from, tzIdClr_to) }
 

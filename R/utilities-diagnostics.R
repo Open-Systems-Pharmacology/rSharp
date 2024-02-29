@@ -51,8 +51,7 @@ inspectArgs <- function(...) {
 #' @param ... one or more arguments to pass to the function call
 #' @examples
 #' \dontrun{
-#' library(rClr)
-#' cTypename <- "Rclr.TestCases"
+#' cTypename <- getRSharpSetting("testCasesTypeName")
 #' #         public static bool IsTrue(bool arg)
 #' clrVT(cTypename, "IsTrue", TRUE)
 #' clrVT("System.Convert", "ToInt64", 123L)

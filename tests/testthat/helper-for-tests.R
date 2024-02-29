@@ -1,7 +1,6 @@
 # this file is automatically loaded by testthat when running tests
 
 # Variables
-cTypename <- "ClrFacade.TestCases"
 testClassName <- "ClrFacade.TestObject"
 
 
@@ -31,5 +30,5 @@ expectClrArrayElementType <- function(rObj, expectedClrTypeName) {
 }
 
 callTestCase <- function(...) {
-  callStatic(cTypename, ...)
+  callStatic(rSharpEnv$testCasesTypeName, ...)
 }

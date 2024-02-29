@@ -1,8 +1,5 @@
-# Name of the testcase class
-cTypename <- "ClrFacade.TestCases"
-
 callTestCase <- function(...) {
-  callStatic(cTypename, ...)
+  callStatic(rSharpEnv$testCasesTypeName, ...)
 }
 
 test_that("Booleans are marshalled correctly", {

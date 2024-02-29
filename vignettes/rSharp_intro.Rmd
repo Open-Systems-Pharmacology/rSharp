@@ -77,13 +77,13 @@ Calling the instance methods on objects is done by specifying the method name as
 
 ```{r}
 clrCall(testObj, "GetFieldIntegerOne")
-clrGetMemberSignature("ClrFacade.TestCases", "CreateDateArray")
+clrGetMemberSignature(getRSharpSetting("testCasesTypeName"), "CreateDateArray")
 ```
 
 Two arguments are passed to the function `clrCallStatic`: a string in an ISO date time format, and a numeric cast as an integer. **rSharp** will transparently convert these to CLR types. Note that if the last argument had just been `4`, the mode of the R vector would have been `numeric`, not `integer`. To avoid ambiguity in method calls you must pass an integer vector. The returned value of the .NET method is a `DateTime[]` i.e. an array of `System.DateTime` objects. Again **rSharp** transparently converts these to a standard R vector with the appropriate POSIX time class attribute.
 
 ```{r}
-dates <- clrCallStatic("ClrFacade.TestCases", "CreateDateArray", "2001-01-01", as.integer(4))
+dates <- clrCallStatic(getRSharpSetting("testCasesTypeName"), "CreateDateArray", "2001-01-01", as.integer(4))
 str(dates)
 class(dates)
 ```

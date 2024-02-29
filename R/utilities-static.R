@@ -5,7 +5,7 @@
 #' @examples
 #' \dontrun{
 #' library(rClr)
-#' cTypename <- "Rclr.TestCases"
+#' cTypename <- getRSharpSetting("testCasesTypeName")
 #' clrGetStaticMembers(cTypename)
 #' testClassName <- "Rclr.TestObject"
 #' testObj <- clrNew(testClassName)
@@ -49,7 +49,7 @@ clrGetStaticMethods <- function(objOrType, contains = "") {
 #' @export
 #' @examples
 #' \dontrun{
-#' cTypename <- "Rclr.TestCases"
+#' cTypename <- getRSharpSetting("testCasesTypeName")
 #' callStatic(cTypename, "IsTrue", TRUE)
 #' }
 callStatic <- function(typename, methodName, ...) {
