@@ -200,36 +200,16 @@ test_that("Numerical bi-dimensional arrays are marshalled correctly", {
   # expect_that( callTestCase( "NumericMatrixEquals", numericMat), equals(numericMat))
 })
 
-testSmartDictConversion <- function() {
-  # The definition of 'as expected' for these collections is not all that clear, and there may be some RDotNet limitations.
-  expect_that(callTestCase("CreateStringDictionary"), equals(list(a = "A", b = "B")))
-  expect_that(
-    callTestCase("CreateStringDoubleArrayDictionary"),
-    equals(
-      list(
-        a = c(1.0, 2.0, 3.0, 3.5, 4.3, 11),
-        b = c(1.0, 2.0, 3.0, 3.5, 4.3),
-        c = c(2.2, 3.3, 6.5)
-      )
-    )
-  )
-  # d <- callTestCase( "CreateObjectDictionary")
-  # expect_true
-}
-
-test_that("CLI dictionaries are marshalled as expected", {
-  testSmartDictConversion()
+test_that("Conversion of non-bijective types can be turned on/off", {
+  # When the conversion is turned off, a `NetObject` is returned, which holds a reference to the .NET object.
+  setConvertAdvancedTypes(FALSE)
+  expect_true(is(callTestCase("CreateStringDictionary"), "NetObject"))
+  expect_true(is(callTestCase("CreateStringDoubleArrayDictionary"), "NetObject"))
+  # When the conversion is turned on, the .NET object is converted to an R list.
+  setConvertAdvancedTypes(TRUE)
+  expect_equal(callTestCase("CreateStringDictionary"), list(a = "A", b = "B"))
+  expect_equal(callTestCase("CreateStringDoubleArrayDictionary"), list(a = c(1.0, 2.0, 3.0, 3.5, 4.3, 11), b = c(1.0, 2.0, 3.0, 3.5, 4.3), c = c(2.2, 3.3, 6.5)))
 })
-
-# test_that("Conversion of non-bijective types can be turned on/off", {
-#   setConvertAdvancedTypes(FALSE)
-#   expect_true(is(callTestCase("CreateStringDictionary"), "cobjRef"))
-#   expect_true(is(callTestCase("CreateStringDoubleArrayDictionary"), "cobjRef"))
-#   setConvertAdvancedTypes(TRUE)
-#   expect_false(is(callTestCase("CreateStringDictionary"), "cobjRef"))
-#   expect_false(is(callTestCase("CreateStringDoubleArrayDictionary"), "cobjRef"))
-#   testSmartDictConversion()
-# })
 
 test_that("Basic objects are created correctly", {
   testObj <- clrNew(testClassName)
