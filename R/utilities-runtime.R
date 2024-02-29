@@ -10,11 +10,3 @@ printTraceback <- function() {
   cat(clrGet(rSharpEnv$clrFacadeTypeName, "LastException"))
   invisible(NULL)
 }
-
-#' Shuts down the current runtime.
-#'
-#' @return nothing is returned by this function
-#' @export
-clrShutdown <- function() { # TODO: is this even possible given runtime's constraints?
-  result <- .C("rclr_shutdown_clr", PACKAGE = rSharpEnv$nativePkgName)
-}
