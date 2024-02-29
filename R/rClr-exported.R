@@ -6,17 +6,14 @@
 #' @param enable if true enable, otherwise disable
 #' @export
 #' @examples
-#' \dontrun{
-#' library(rClr)
-#' cTypename <- "Rclr.TestCases"
+#' library(rSharp)
+#' cTypename <- "ClrFacade.TestCases"
 #' callStatic(cTypename, "CreateStringDictionary")
 #' setConvertAdvancedTypes(FALSE)
 #' callStatic(cTypename, "CreateStringDictionary")
-#' }
 setConvertAdvancedTypes <- function(enable = TRUE) {
-  invisible(callStatic("Rclr.RDotNetDataConverter", "SetConvertAdvancedTypes", enable))
+  invisible(clrCallStatic("ClrFacade.RDotNetDataConverter", "SetConvertAdvancedTypes", enable))
 }
-
 #' List the instance members of a CLR object
 #'
 #' List the instance members of a CLR object, i.e. its methods, fields and properties.

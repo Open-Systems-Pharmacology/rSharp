@@ -6,13 +6,11 @@
 #' @param enable if true enable, otherwise disable
 #' @export
 #' @examples
-#' \dontrun{
 #' library(rSharp)
 #' cTypename <- "ClrFacade.TestCases"
-#' clrCallStatic(cTypename, "CreateStringDictionary")
+#' callStatic(cTypename, "CreateStringDictionary")
 #' setConvertAdvancedTypes(FALSE)
-#' clrCallStatic(cTypename, "CreateStringDictionary")
-#' }
+#' callStatic(cTypename, "CreateStringDictionary")
 setConvertAdvancedTypes <- function(enable = TRUE) {
   invisible(clrCallStatic("ClrFacade.RDotNetDataConverter", "SetConvertAdvancedTypes", enable))
 }
