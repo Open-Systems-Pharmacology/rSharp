@@ -54,6 +54,6 @@ callStatic <- function(typename, methodName, ...) {
 #' @param typename type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
 #' @param memberName The exact name of the member (i.e. field, property, method) to search for
 #' @export
-clrGetStaticMemberSignature <- function(typename, memberName) {
+getStaticMemberSignature <- function(typename, memberName) {
   callStatic(rSharpEnv$reflectionHelperTypeName, "GetSignature", typename, memberName)
 }

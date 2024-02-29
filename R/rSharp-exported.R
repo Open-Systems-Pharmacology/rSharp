@@ -136,15 +136,6 @@ clrNew <- function(typename, ...) {
   .mkClrObjRef(o, clrtype = typename)
 }
 
-#' Gets the signature of a static member of a type
-#'
-#' @param typename type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
-#' @param memberName The exact name of the member (i.e. field, property, method) to search for
-#' @export
-clrGetStaticMemberSignature <- function(typename, memberName) {
-  callStatic(rSharpEnv$reflectionHelperTypeName, "GetSignature", typename, memberName)
-}
-
 #' Get the type code for a SEXP
 #'
 #' Get the type code for a SEXP, as returned by the TYPEOF macro
