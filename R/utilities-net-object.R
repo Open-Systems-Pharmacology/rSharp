@@ -11,17 +11,12 @@
 #' @return A `NetObject` R6 object if the argument is indeed an external pointer,
 #' otherwise returned unchanged.
 createNetObject <- function(obj) {
-  # Return NULL if `obj`is NULL
-  if (is.null(obj)) {
-    return(NULL)
-  }
-
   # Create a new NetObject instance if obj is a pointer
   if (is(obj, "externalptr")) {
     return(NetObject$new(obj))
   }
 
-  # Return the object unchanged
+  # Otherwise return the object unchanged
   return(obj)
 }
 

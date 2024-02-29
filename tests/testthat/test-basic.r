@@ -203,10 +203,8 @@ test_that("Numerical bi-dimensional arrays are marshalled correctly", {
 test_that("Conversion of non-bijective types can be turned on/off", {
   # When the conversion is turned off, a `NetObject` is returned, which holds a reference to the .NET object.
   setConvertAdvancedTypes(FALSE)
-  # expect_true(is(callTestCase("CreateStringDictionary"), "NetObject"))
-  # expect_true(is(callTestCase("CreateStringDoubleArrayDictionary"), "NetObject"))
-  expect_true(is(callTestCase("CreateStringDictionary"), "cobjRef"))
-  expect_true(is(callTestCase("CreateStringDoubleArrayDictionary"), "cobjRef"))
+  expect_true(is(callTestCase("CreateStringDictionary"), "NetObject"))
+  expect_true(is(callTestCase("CreateStringDoubleArrayDictionary"), "NetObject"))
   # When the conversion is turned on, the .NET object is converted to an R list.
   setConvertAdvancedTypes(TRUE)
   expect_equal(callTestCase("CreateStringDictionary"), list(a = "A", b = "B"))

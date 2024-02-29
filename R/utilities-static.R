@@ -46,8 +46,7 @@ getStaticMethods <- function(objOrType, contains = "") {
 #' callStatic(cTypename, "IsTrue", TRUE)
 callStatic <- function(typename, methodName, ...) {
   extPtr <- .External("r_call_static_method", typename, methodName, ..., PACKAGE = rSharpEnv$nativePkgName)
-  return(.mkClrObjRef(extPtr))
-  # return(createNetObject(extPtr))
+  return(createNetObject(extPtr))
 }
 
 #' Gets the signature of a static member of a type
