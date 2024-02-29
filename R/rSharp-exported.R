@@ -15,16 +15,6 @@ setConvertAdvancedTypes <- function(enable = TRUE) {
   invisible(clrCallStatic("ClrFacade.RDotNetDataConverter", "SetConvertAdvancedTypes", enable))
 }
 
-#' Gets the inner name used for the package
-#'
-#' Gets the inner name used for the package (rSharpUX or rSharpMs). This is not intented for use by most users.
-#'
-#' @return the short name of the library currently loaded, depending on the runtime used (Mono or Microsoft .NET)
-#' @export
-clrGetInnerPkgName <- function() {
-  rSharpEnv$nativePkgName
-}
-
 #' List the instance members of a CLR object
 #'
 #' List the instance members of a CLR object, i.e. its methods, fields and properties.
