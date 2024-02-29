@@ -136,31 +136,6 @@ clrNew <- function(typename, ...) {
   .mkClrObjRef(o, clrtype = typename)
 }
 
-#' Sets the value of an enum field or property of an object or class
-#'
-#' Sets the value of an enum field or property of an object or class
-#'
-#' @param objOrType a CLR object, or type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
-#' @param name the name of a field/property of the object
-#' @param enumtype type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
-#' @param enumval the value to set the field with
-#' @export
-clrSetEnumProperty <- function(objOrType, name, enumtype, enumval) {
-  stop("Not yet implemented")
-  return(clrCallStatic(rSharpEnv$reflectionHelperTypeName, "SetEnumValue", objOrType, name, enumtype, enumval))
-}
-
-#' Gets the external pointer CLR object.
-#'
-#' Gets the external pointer CLR object. End user are unlikely to need this.
-#'
-#' @param clrObject a S4 object of class clrobj
-#' @return the external pointer to the CLR object
-#' @export
-clrGetExtPtr <- function(clrObject) {
-  clrObject@clrobj
-}
-
 #' Gets the type name of an object
 #'
 #' Gets the type name of an object, given the SEXP external pointer to this CLR object.
