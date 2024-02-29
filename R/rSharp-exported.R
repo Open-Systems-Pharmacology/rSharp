@@ -12,7 +12,7 @@
 #' setConvertAdvancedTypes(FALSE)
 #' callStatic(cTypename, "CreateStringDictionary")
 setConvertAdvancedTypes <- function(enable = TRUE) {
-  invisible(clrCallStatic("ClrFacade.RDotNetDataConverter", "SetConvertAdvancedTypes", enable))
+  invisible(callStatic("ClrFacade.RDotNetDataConverter", "SetConvertAdvancedTypes", enable))
 }
 
 #' List the instance members of a .NET object
@@ -48,7 +48,7 @@ clrReflect <- function(clrobj) {
 #' dt <- as.POSIXct("2001-01-01 02:03:04", tz = "UTC")
 #' toString(dt)
 toString <- function(x) {
-  return(clrCallStatic(rSharpEnv$InternalTypeName, "ToString", x))
+  return(callStatic(rSharpEnv$InternalTypeName, "ToString", x))
 }
 
 #' List the instance fields of a .NET object
@@ -78,7 +78,7 @@ getFields <- function(clrobj, contains = "") {
 #' clrGetProperties(testObj)
 #' clrGetProperties(testObj, "One")
 clrGetProperties <- function(clrobj, contains = "") {
-  clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceProperties", clrobj, contains)
+  callStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceProperties", clrobj, contains)
 }
 
 #' List the instance methods of a .NET object
@@ -93,7 +93,7 @@ clrGetProperties <- function(clrobj, contains = "") {
 #' clrGetMethods(testObj)
 #' clrGetMethods(testObj, "Get")
 clrGetMethods <- function(clrobj, contains = "") {
-  clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceMethods", clrobj, contains)
+  callStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceMethods", clrobj, contains)
 }
 
 #' Gets the signature of a .NET object member
@@ -113,7 +113,7 @@ clrGetMethods <- function(clrobj, contains = "") {
 #' clrGetMemberSignature(testObj, "FieldIntegerOne")
 #' clrGetMemberSignature(testObj, "PropertyIntegerTwo")
 clrGetMemberSignature <- function(clrobj, memberName) {
-  clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetSignature", clrobj, memberName)
+  callStatic(rSharpEnv$reflectionHelperTypeName, "GetSignature", clrobj, memberName)
 }
 
 #' Create a new CLR object
@@ -134,24 +134,6 @@ clrNew <- function(typename, ...) {
     stop("Failed to create instance of type '", typename, "'")
   }
   .mkClrObjRef(o, clrtype = typename)
-}
-
-#' Call a static method on a CLR type
-#'
-#' @param typename type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
-#' @param methodName the name of a static method of the type
-#' @param ... additional method arguments passed to .External
-#' @return an object resulting from the call. May be a CLR object, or a native R object for common types. Can be NULL.
-#' @export
-#' @examples
-#' \dontrun{
-#' library(rSharp)
-#' cTypename <- getRSharpSetting("testCasesTypeName")
-#' clrCallStatic(cTypename, "IsTrue", TRUE)
-#' }
-clrCallStatic <- function(typename, methodName, ...) {
-  extPtr <- .External("r_call_static_method", typename, methodName, ..., PACKAGE = rSharpEnv$nativePkgName)
-  return(.mkClrObjRef(extPtr))
 }
 
 #' Peek into the types of CLR objects arguments are converted to by rSharp
@@ -198,7 +180,7 @@ clrGetStaticMembers <- function(objOrType) {
 #' @param contains a string that the property names returned must contain
 #' @export
 clrGetStaticFields <- function(objOrType, contains = "") {
-  clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetStaticFields", objOrType, contains)
+  callStatic(rSharpEnv$reflectionHelperTypeName, "GetStaticFields", objOrType, contains)
 }
 
 #' Gets the static members for a type
@@ -208,7 +190,7 @@ clrGetStaticFields <- function(objOrType, contains = "") {
 #' @inheritParams clrGetStaticFields
 #' @export
 clrGetStaticProperties <- function(objOrType, contains = "") {
-  clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetStaticProperties", objOrType, contains)
+  callStatic(rSharpEnv$reflectionHelperTypeName, "GetStaticProperties", objOrType, contains)
 }
 
 #' Gets the static members for a type
@@ -216,7 +198,7 @@ clrGetStaticProperties <- function(objOrType, contains = "") {
 #' @inheritParams clrGetStaticFields
 #' @export
 clrGetStaticMethods <- function(objOrType, contains = "") {
-  clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetStaticMethods", objOrType, contains)
+  callStatic(rSharpEnv$reflectionHelperTypeName, "GetStaticMethods", objOrType, contains)
 }
 
 #' Gets the signature of a static member of a type
@@ -225,7 +207,7 @@ clrGetStaticMethods <- function(objOrType, contains = "") {
 #' @param memberName The exact name of the member (i.e. field, property, method) to search for
 #' @export
 clrGetStaticMemberSignature <- function(typename, memberName) {
-  clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetSignature", typename, memberName)
+  callStatic(rSharpEnv$reflectionHelperTypeName, "GetSignature", typename, memberName)
 }
 
 #' Get the type code for a SEXP
@@ -283,7 +265,7 @@ rToClrType <- function(x) {
     type = typeof(x),
     class = class(x),
     length = length(x),
-    clrType = clrCallStatic("ClrFacade.ClrFacade", "GetObjectTypeName", x)
+    clrType = callStatic("ClrFacade.ClrFacade", "GetObjectTypeName", x)
   )
 }
 
@@ -296,7 +278,7 @@ rToClrType <- function(x) {
 #' @export
 clrGetType <- function(objOrTypename) {
   if (is.character(objOrTypename)) {
-    return(clrCallStatic(rSharpEnv$clrFacadeTypeName, "GetType", objOrTypename))
+    return(callStatic(rSharpEnv$clrFacadeTypeName, "GetType", objOrTypename))
   } else if ("cobjRef" %in% class(objOrTypename)) {
     return(clrCall(objOrTypename, "GetType"))
   } else {
@@ -349,7 +331,7 @@ setClrRefClass <- function(typeName,
       # as.list(class$getInterfaces()))
 
       # If the type is the type for an interface, then GetInterfacesFullnames will not return 'itself', so no need to deal with infinite recursion here.
-      interfaces <- clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetInterfacesFullNames", type)
+      interfaces <- callStatic(rSharpEnv$reflectionHelperTypeName, "GetInterfacesFullNames", type)
 
       for (ifname in interfaces) {
         setClrRefClass(ifname, env)
@@ -366,7 +348,7 @@ setClrRefClass <- function(typeName,
         contains <- c(contains, "VIRTUAL")
       }
 
-      declaredMethods <- clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetDeclaredMethodNames", type)
+      declaredMethods <- callStatic(rSharpEnv$reflectionHelperTypeName, "GetDeclaredMethodNames", type)
       # Map(function(method) method$getName(),
       # Filter(notProtected, as.list(class$getDeclaredMethods())))
       declaredMethods <- unique(declaredMethods)

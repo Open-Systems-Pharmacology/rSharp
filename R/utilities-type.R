@@ -8,5 +8,5 @@
 #' testClassName <- "ClrFacade.TestObject"
 #' getConstructors(testClassName)
 getConstructors <- function(type) {
-  clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetConstructors", type)
+  callStatic(rSharpEnv$reflectionHelperTypeName, "GetConstructors", type)
 }

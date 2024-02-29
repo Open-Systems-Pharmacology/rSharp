@@ -33,9 +33,9 @@ clrLoadAssembly <- function(name) {
 #' @examples
 #' getLoadedAssemblies()
 getLoadedAssemblies <- function(fullname = FALSE, filenames = FALSE) {
-  assNames <- clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetLoadedAssemblyNames", fullname)
+  assNames <- callStatic(rSharpEnv$reflectionHelperTypeName, "GetLoadedAssemblyNames", fullname)
   if (filenames) {
-    data.frame(AssemblyName = assNames, URI = clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetLoadedAssemblyURI", assNames))
+    data.frame(AssemblyName = assNames, URI = callStatic(rSharpEnv$reflectionHelperTypeName, "GetLoadedAssemblyURI", assNames))
   } else {
     assNames
   }

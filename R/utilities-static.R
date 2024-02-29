@@ -45,16 +45,14 @@ clrGetStaticMethods <- function(objOrType, contains = "") {
 #' @param typename type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
 #' @param methodName the name of a static method of the type
 #' @param ... additional method arguments passed to .External (e.g., arguments to the method)
-#' @return an object resulting from the call. May be a `NetObject` object, or a native R object for common types. Can be NULL.
+#' @return an object resulting from the call. May be a `cobjRef` object, or a native R object for common types. Can be NULL.
 #' @export
-#' @examples
-#' \dontrun{
 #' cTypename <- getRSharpSetting("testCasesTypeName")
 #' callStatic(cTypename, "IsTrue", TRUE)
-#' }
 callStatic <- function(typename, methodName, ...) {
   extPtr <- .External("r_call_static_method", typename, methodName, ..., PACKAGE = rSharpEnv$nativePkgName)
-  return(createNetObject(extPtr))
+  return(.mkClrObjRef(extPtr))
+  #return(createNetObject(extPtr))
 }
 
 #' Gets the signature of a static member of a type
