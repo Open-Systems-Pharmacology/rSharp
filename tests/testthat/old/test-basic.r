@@ -52,7 +52,7 @@ test_that("Basic types of length zero are marshalled correctly", {
   expectEmptyArrayConv("bool", logical(0))
   expectEmptyArrayConv("string", character(0))
 
-  expect_error(clrCallStatic(tn, "CreateArray_long", numeric(0)))
+  expect_error(callStatic(tn, "CreateArray_long", numeric(0)))
   expectEmptyArrayConv("object", list())
   expectEmptyArrayConv("Type", list())
 
@@ -77,11 +77,11 @@ test_that("Basic types of length zero are marshalled correctly", {
   attributes(aPosixCt) <- list(tzone = "UTC")
   class(aPosixCt) <- c("POSIXct", "POSIXt")
 
-  expect_equal(clrCallStatic(tn, "CreateArray_DateTime", 0L), aPosixCt)
+  expect_equal(callStatic(tn, "CreateArray_DateTime", 0L), aPosixCt)
   tdiff <- numeric(0)
   class(tdiff) <- "difftime"
   attr(tdiff, "units") <- "secs"
-  expect_equal(clrCallStatic(tn, "CreateArray_TimeSpan", 0L), tdiff)
+  expect_equal(callStatic(tn, "CreateArray_TimeSpan", 0L), tdiff)
 
   expectClrArrayElementType(aPosixCt, "System.DateTime")
   expectClrArrayElementType(tdiff, "System.TimeSpan")
@@ -102,11 +102,11 @@ test_that("non-empty arrays of non-basic .NET objects are handled", {
   }
 
   obj <- clrNew(tName)
-  actual <- clrCallStatic(tn, "CreateArray_object", 3L, obj)
+  actual <- callStatic(tn, "CreateArray_object", 3L, obj)
   testListEqual(obj, 3L, actual)
 
   aType <- clrGetType("System.Double")
-  actual <- clrCallStatic(tn, "CreateArray_Type", 3L, aType)
+  actual <- callStatic(tn, "CreateArray_Type", 3L, aType)
   testListEqual(aType, 3L, actual)
 })
 
@@ -170,7 +170,7 @@ test_that("Correct method binding based on parameter types", {
     paste(typeName, "[]", sep = "")
   }
   f <- function(...) {
-    clrCallStatic("ClrFacade.TestMethodBinding", "SomeStaticMethod", ...)
+    callStatic("ClrFacade.TestMethodBinding", "SomeStaticMethod", ...)
   }
   printIfDifferent <- function(got, expected) {
     if (any(got != expected)) {

@@ -2,7 +2,7 @@
 #' #' @docType class
 #' #'
 #' #' @description
-#' #' Base wrapper class for pointers to .NET objects
+#' #' Base wrapper class for the S4 class `cobjRef` which holds pointers to .NET objects
 #' #'
 #' #' @importFrom R6
 #' #'
@@ -28,20 +28,40 @@ NetObject <- R6::R6Class(
   "NetObject",
   cloneable = FALSE,
   active = list(
+    #' @field type The type of the .NET object. Read-only
     type = function(value) {
       if (missing(value)) {
         private$.type
       } else {
         private$.throwPropertyIsReadonly("type")
       }
-}
+    },
+
+    #' @field pointer The external pointer to the .NET object. Read-only
+    pointer = function(value) {
+      if (missing(value)) {
+        private$.pointer
+      } else {
+        private$.throwPropertyIsReadonly("pointer")
+      }
+    },
+
+    #' @field cobjRef The underlying `cobjRef` object. Read-only
+    cobjRef = function(value) {
+      if (missing(value)) {
+        private$.cobjRef
+      } else {
+        private$.throwPropertyIsReadonly("cobjRef")
+      }
+    }
   ),
   private = list(
     # The external pointer to the .NET object
     .pointer = NULL,
     # Type of the .NET object
     .type = NULL,
-
+    # The underlying `cobjRef` object
+    .cobjRef = NULL,
     .printLine = function(entry, value = NULL, addTab = TRUE) {
       entries <- paste0(entry, ":", sep = "")
 
@@ -165,7 +185,6 @@ NetObject <- R6::R6Class(
       invisible(self)
     }
   )
-
 )
 #'
 #'

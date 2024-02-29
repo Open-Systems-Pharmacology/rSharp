@@ -77,11 +77,11 @@ test_that("Date and Time objects are marshalled correctly", {
   # TimeSpan were not handled gracefully. Following tests also check that https://r2clr.codeplex.com/workitem/52 is dealt with
   # TODO broader, relating to that: default unknown value types are handled gracefully
   threePfive_sec <- as.difftime(3.5, units = "secs")
-  expect_equal(clrCallStatic("System.TimeSpan", "FromSeconds", 3.5), expected = threePfive_sec)
+  expect_equal(callStatic("System.TimeSpan", "FromSeconds", 3.5), expected = threePfive_sec)
   threePfive_min <- as.difftime(3.5, units = "mins")
-  expect_equal(clrCallStatic("System.TimeSpan", "FromMinutes", 3.5), expected = as.difftime(180 + 30, units = "secs"))
+  expect_equal(callStatic("System.TimeSpan", "FromMinutes", 3.5), expected = as.difftime(180 + 30, units = "secs"))
   # arrays of timespan
-  expect_equal(clrCallStatic(cTypename, "CreateTimeSpanArray", 3.5, as.integer(5)), expected = threePfive_sec + 5 * (0:4))
+  expect_equal(callStatic(cTypename, "CreateTimeSpanArray", 3.5, as.integer(5)), expected = threePfive_sec + 5 * (0:4))
 
   ##########
   # R to .NET conversions
@@ -110,10 +110,10 @@ test_that("Date and Time objects are marshalled correctly", {
   # The following lines may look puzzling but really do have a purpose.
   # Check  that http://r2clr.codeplex.com/workitem/37 has been fixed The following will crash if not.
   x <- as.Date(testDateStr)
-  clrType <- clrCallStatic("ClrFacade.ClrFacade", "GetObjectTypeName", x)
+  clrType <- callStatic("ClrFacade.ClrFacade", "GetObjectTypeName", x)
   expect_that(x, equals(as.Date(testDateStr)))
   x <- as.Date(testDateStr) + 0:3
-  clrType <- clrCallStatic("ClrFacade.ClrFacade", "GetObjectTypeName", x)
+  clrType <- callStatic("ClrFacade.ClrFacade", "GetObjectTypeName", x)
   expect_that(x[1], equals(as.Date(testDateStr)))
   expect_that(x[2], equals(as.Date(testDateStr) + 1))
   # End check http://r2clr.codeplex.com/workitem/37
@@ -125,5 +125,5 @@ test_that("Date and Time objects are marshalled correctly", {
   # Note that there no point looking below daily period wuth Date objects. consider:
   # z <- ISOdate(2010, 04, 13, c(0,12))
   # str(unclass(as.Date(z)))
-  expect_true(clrCallStatic(cTypename, "CheckIsDailySequence", as.Date(testDateStr) + 0:(numDays - 1), testDateStr, as.integer(numDays)))
+  expect_true(callStatic(cTypename, "CheckIsDailySequence", as.Date(testDateStr) + 0:(numDays - 1), testDateStr, as.integer(numDays)))
 })

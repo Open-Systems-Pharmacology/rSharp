@@ -6,7 +6,7 @@
 #' @docType class
 #'
 #' @description
-#' Base wrapper class for pointers to .NET objects
+#' Base wrapper class for the S4 class `cobjRef` which holds pointers to .NET objects
 #'
 #' @importFrom R6
 #'
@@ -27,14 +27,13 @@
 #' )
 #'
 #' x <- myPrintable$new()
-#' x
-Initialize}
+#' x}
 \description{
 #' @title NetObject
 #' @docType class
 #'
 #' @description
-#' Base wrapper class for pointers to .NET objects
+#' Base wrapper class for the S4 class `cobjRef` which holds pointers to .NET objects
 #'
 #' @importFrom R6
 #'
@@ -56,13 +55,12 @@ Initialize}
 #'
 #' x <- myPrintable$new()
 #' x
-Initialize
 
 #' @title NetObject
 #' @docType class
 #'
 #' @description
-#' Base wrapper class for pointers to .NET objects
+#' Base wrapper class for the S4 class `cobjRef` which holds pointers to .NET objects
 #'
 #' @importFrom R6
 #'
@@ -84,7 +82,6 @@ Initialize
 #'
 #' x <- myPrintable$new()
 #' x
-Initialize
 }
 \examples{
 
@@ -97,6 +94,18 @@ Initialize
   x <- NetObject$new(o)
   print(x)
 Print
+}
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{type}}{The type of the .NET object. Read-only}
+
+\item{\code{pointer}}{The external pointer to the .NET object. Read-only}
+
+\item{\code{cobjRef}}{The underlying `cobjRef` object. Read-only
+Initialize}
+}
+\if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
