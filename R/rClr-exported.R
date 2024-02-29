@@ -24,20 +24,6 @@
 #   NetObject$new(o)
 # }
 
-#' Gets the type of a CLR object given its type name
-#'
-#' @param objOrTypename a character vector of length one. It can be the full file name of the assembly to load, or a fully qualified assembly name, or as a last resort a partial name.
-#' @return the CLR Type.
-#' @export
-clrGetType <- function(objOrTypename) {
-  if (is.character(objOrTypename)) {
-    return(callStatic(rSharpEnv$clrFacadeTypeName, "GetType", objOrTypename))
-  } else if ("cobjRef" %in% class(objOrTypename)) {
-    return(clrCall(objOrTypename, "GetType"))
-  } else {
-    stop("objOrTypename is neither a cobjRef object nor a character vector")
-  }
-}
 
 #' Create a reference object wrapper around a CLR object
 #'
@@ -55,7 +41,7 @@ clrCobj <- function(obj, envClassWhere = .GlobalEnv) {
 #'
 #' EXPERIMENTAL Create reference classes for an object hierarchy. Gratefully acknowledge Peter D. and its rJavax work.
 #'
-#' @param typeName a CLR type name, recognizable by clrGetType
+#' @param typeName a CLR type name, recognizable by getType
 #' @param env environment where the new generator is created.
 #' @return the object generator function
 setClrRefClass <- function(typeName,
@@ -69,7 +55,7 @@ setClrRefClass <- function(typeName,
 
   tryCatch(getRefClass(typeName),
     error = function(e) {
-      type <- clrGetType(typeName)
+      type <- getType(typeName)
       if (is.null(type)) stop(paste("CLR type not found for type name", typeName))
 
       baseType <- clrGet(type, "BaseType")

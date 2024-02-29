@@ -105,7 +105,7 @@ test_that("non-empty arrays of non-basic .NET objects are handled", {
   actual <- callStatic(tn, "CreateArray_object", 3L, obj)
   testListEqual(obj, 3L, actual)
 
-  aType <- clrGetType("System.Double")
+  aType <- getType("System.Double")
   actual <- callStatic(tn, "CreateArray_Type", 3L, aType)
   testListEqual(aType, 3L, actual)
 })
@@ -120,10 +120,10 @@ test_that("String arrays are marshalled correctly", {
   # expect_that(callTestCase( "StringArrayMissingValuesEquals", ltrs), is_true() )
 })
 
-test_that("clrGetType function", {
+test_that("getType function", {
   testObj <- clrNew(testClassName)
-  expect_equal(testClassName, clrGet(clrGetType(testClassName), "FullName"))
-  expect_equal(testClassName, clrGet(clrGetType(testObj), "FullName"))
+  expect_equal(testClassName, clrGet(getType(testClassName), "FullName"))
+  expect_equal(testClassName, clrGet(getType(testObj), "FullName"))
 })
 
 
@@ -317,9 +317,9 @@ test_that("CLR type compatibility checking", {
   expect_false(clrIs(testObj, "System.Double"))
   testObj <- clrNew("ClrFacade.TestMethodBinding")
   expect_true(clrIs(testObj, "ClrFacade.ITestMethodBindings"))
-  expect_true(clrIs(testObj, clrGetType("ClrFacade.ITestMethodBindings")))
-  expect_true(clrIs(testObj, clrGetType("ClrFacade.TestMethodBinding")))
-  expect_false(clrIs(testObj, clrGetType("System.Reflection.Assembly")))
+  expect_true(clrIs(testObj, getType("ClrFacade.ITestMethodBindings")))
+  expect_true(clrIs(testObj, getType("ClrFacade.TestMethodBinding")))
+  expect_false(clrIs(testObj, getType("System.Reflection.Assembly")))
   expect_error(clrIs(testObj, testObj))
 })
 

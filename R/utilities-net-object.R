@@ -43,7 +43,7 @@ createNetObject <- function(obj) {
 #' clrIs(testObj, "System.Object")
 clrIs <- function(obj, type) {
   if (is.character(type)) {
-    tmpType <- clrGetType(type)
+    tmpType <- getType(type)
     if (is.null(tmpType)) {
       stop(paste("Unrecognized type name", type))
     } else {
@@ -58,7 +58,7 @@ clrIs <- function(obj, type) {
       stop(paste('argument "type" must be a CLR Type. Got a', typetypename))
     }
   }
-  objType <- clrGetType(obj)
+  objType <- getType(obj)
   return(clrCall(type, "IsAssignableFrom", objType))
 }
 

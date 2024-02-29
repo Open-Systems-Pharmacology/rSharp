@@ -26,7 +26,7 @@ createArray <- function(clrType, arrayLength, elementObject) {
 
 expectClrArrayElementType <- function(rObj, expectedClrTypeName) {
   tn <- "ClrFacade.TestArrayMemoryHandling"
-  expect_true(callStatic(tn, "CheckElementType", rObj, clrGetType(expectedClrTypeName)))
+  expect_true(callStatic(tn, "CheckElementType", rObj, getType(expectedClrTypeName)))
 }
 
 callTestCase <- function(...) {

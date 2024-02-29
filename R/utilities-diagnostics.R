@@ -22,8 +22,7 @@ getSexpType <- function(sexp) {
 #' @return NULL. Information is printed, not returned.
 #' @export
 inspectArgs <- function(...) {
-  #extPtr is NULL
-  extPtr <- .External("r_show_args", ..., PACKAGE = rSharpEnv$nativePkgName)
+  invisible(.External("r_show_args", ..., PACKAGE = rSharpEnv$nativePkgName))
 }
 
 #' Gets the type of a .NET object resulting from converting an R object
