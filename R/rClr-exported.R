@@ -1,39 +1,3 @@
-#' List the instance properties of a CLR object
-#'
-#' @param clrobj CLR object
-#' @param contains a string that the property names returned must contain
-#' @return a list of names of the properties of the CLR object
-#' @export
-#' @examples
-#' \dontrun{
-#' library(rClr)
-#' testClassName <- rSharpEnv$testObjectTypeName
-#' testObj <- clrNew(testClassName)
-#' clrGetProperties(testObj)
-#' clrGetProperties(testObj, "One")
-#' }
-clrGetProperties <- function(clrobj, contains = "") {
-  callStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceProperties", clrobj, contains)
-}
-
-#' List the instance methods of a CLR object
-#'
-#' @param clrobj CLR object
-#' @param contains a string that the methods names returned must contain
-#' @return a list of names of the methods of the CLR object
-#' @export
-#' @examples
-#' \dontrun{
-#' library(rClr)
-#' testClassName <- rSharpEnv$testObjectTypeName
-#' testObj <- clrNew(testClassName)
-#' clrGetMethods(testObj)
-#' clrGetMethods(testObj, "Get")
-#' }
-clrGetMethods <- function(clrobj, contains = "") {
-  callStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceMethods", clrobj, contains)
-}
-
 #' Gets the signature of a CLI object member
 #'
 #' Gets a string representation of the signature of a member (i.e. field, property, method).

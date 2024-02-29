@@ -379,7 +379,7 @@ test_that("Object constructor discovery behaves as expected", {
       "Constructor: .ctor, Int32, Int32",
       "Constructor: .ctor, Int32, Int32, Double, Double"
     ),
-    clrGetConstructors(testClassName)
+    getConstructors(testClassName)
   )
 })
 

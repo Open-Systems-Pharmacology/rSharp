@@ -68,26 +68,19 @@ getFields <- function(clrobj, contains = "") {
 
 #' List the instance properties of a CLR object
 #'
-#' List the instance properties of a CLR object
-#'
 #' @param clrobj CLR object
 #' @param contains a string that the property names returned must contain
 #' @return a list of names of the properties of the CLR object
 #' @export
 #' @examples
-#' \dontrun{
-#' library(rSharp)
 #' testClassName <- "ClrFacade.TestObject"
 #' testObj <- clrNew(testClassName)
 #' clrGetProperties(testObj)
 #' clrGetProperties(testObj, "One")
-#' }
 clrGetProperties <- function(clrobj, contains = "") {
   clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceProperties", clrobj, contains)
 }
 
-#' List the instance methods of a CLR object
-#'
 #' List the instance methods of a CLR object
 #'
 #' @param clrobj CLR object
@@ -95,32 +88,12 @@ clrGetProperties <- function(clrobj, contains = "") {
 #' @return a list of names of the methods of the CLR object
 #' @export
 #' @examples
-#' \dontrun{
-#' library(rSharp)
 #' testClassName <- "ClrFacade.TestObject"
 #' testObj <- clrNew(testClassName)
 #' clrGetMethods(testObj)
 #' clrGetMethods(testObj, "Get")
-#' }
 clrGetMethods <- function(clrobj, contains = "") {
   clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceMethods", clrobj, contains)
-}
-
-#' List the public constructors of a CLR Type
-#'
-#' List the public constructors of a CLR Type
-#'
-#' @param type CLR Type, or a (character) type name that can be successfully parsed
-#' @return a list of constructor signatures
-#' @export
-#' @examples
-#' \dontrun{
-#' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject"
-#' clrGetConstructors(testClassName)
-#' }
-clrGetConstructors <- function(type) {
-  clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetConstructors", type)
 }
 
 #' Gets the signature of a CLI object member
