@@ -1,13 +1,3 @@
-#' Shuts down the current runtime.
-#'
-#' Shuts down the current runtime.
-#'
-#' @return nothing is returned by this function
-#' @export
-clrShutdown <- function() { # TODO: is this even possible given runtime's constraints?
-  result <- .C("rSharp_shutdown_clr", PACKAGE = rSharpEnv$nativePkgName)
-}
-
 #' Turn on/off R.NET
 #'
 #' Turn on or off the usage of the R.NET assemblies to convert CLR objects to R data structures. As of version 0.7.0, R.NET is the preferred way to convert data and is enabled by default.
