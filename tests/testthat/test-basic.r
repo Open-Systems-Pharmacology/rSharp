@@ -398,11 +398,11 @@ test_that("Garbage collection of R.NET objects", {
 
 
 test_that("Assembly loading", {
-  # clrLoadAssembly("System.Windows.Presentation, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089")
-  clrLoadAssembly("System.Net.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
+  # loadAssembly("System.Windows.Presentation, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089")
+  loadAssembly("System.Net.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
 
   # The use of partial assembly names is discouraged; nevertheless it is supported
-  clrLoadAssembly("System.Web.Services")
+  loadAssembly("System.Web.Services")
 })
 
 
