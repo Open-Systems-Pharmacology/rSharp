@@ -24,7 +24,6 @@
 #   NetObject$new(o)
 # }
 
-
 #' Create a reference object wrapper around a CLR object
 #'
 #' (EXPERIMENTAL) Create a reference object wrapper around a CLR object

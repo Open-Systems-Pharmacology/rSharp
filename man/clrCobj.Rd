@@ -2,7 +2,7 @@
 % Please edit documentation in R/rClr-exported.R, R/rSharp-exported.R
 \name{clrCobj}
 \alias{clrCobj}
-\title{Create a reference object wrapper around a CLR object}
+\title{Create a new NetObject R6 object}
 \usage{
 clrCobj(obj, envClassWhere = .GlobalEnv)
 
@@ -12,14 +12,35 @@ clrCobj(obj, envClassWhere = .GlobalEnv)
 \item{obj}{an object of S4 class clrObj}
 
 \item{envClassWhere}{environment where the new generator is created.}
+
+\item{typename}{type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.}
+
+\item{...}{additional method arguments passed to the object constructor via the call to .External}
 }
 \value{
+a `NetObject` R6 object
+
 the reference object.
 
 the reference object.
 }
 \description{
 (EXPERIMENTAL) Create a reference object wrapper around a CLR object
+}
+\examples{
+\dontrun{
+testClassName <- "Rclr.TestObject"
+(testObj <- clrNew(testClassName))
+# object with a constructor that has parameters
+(testObj <- clrNew(testClassName, as.integer(123)))
+clrLoadAssembly("System.Windows.Forms, Version=2.0.0.0,
+  Culture=neutral, PublicKeyToken=b77a5c561934e089")
+f <- clrNew("System.Windows.Forms.Form")
+clrSet(f, "Text", "Hello from '.NET'")
+clrCall(f, "Show")
+}
+Create a reference object wrapper around a CLR object
 
 (EXPERIMENTAL) Create a reference object wrapper around a CLR object
+
 }

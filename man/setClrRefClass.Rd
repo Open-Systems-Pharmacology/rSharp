@@ -9,7 +9,7 @@ setClrRefClass(typeName, env = topenv(parent.frame()))
 setClrRefClass(typeName, env = topenv(parent.frame()))
 }
 \arguments{
-\item{typeName}{a CLR type name, recognizable by clrGetType}
+\item{typeName}{a CLR type name, recognizable by getType}
 
 \item{env}{environment where the new generator is created.}
 }
