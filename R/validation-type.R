@@ -5,7 +5,7 @@
 #' @keywords internal
 #' @noRd
 .validateIsExtPtr <- function(extPtr) {
-  if (!any(class(extPtr) == "externalptr")) {
+  if (!inherits(extPtr, "externalptr")) {
     stop(messages$errorNoExternalPointer)
   }
 }

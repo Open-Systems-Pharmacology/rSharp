@@ -425,7 +425,7 @@ clrGetExtPtr <- function(clrObject) {
 #' clrTypeNameExtPtr(clrGetExtPtr(testObj))
 #' }
 clrTypeNameExtPtr <- function(extPtr) {
-  checkIsExtPtr(extPtr)
+  .validateIsExtPtr(extPtr)
   .External("r_get_typename_externalptr", extPtr, PACKAGE = rSharpEnv$nativePkgName)
 }
 
@@ -550,24 +550,6 @@ clrGetStaticMethods <- function(objOrType, contains = "") {
 #' @export
 clrGetStaticMemberSignature <- function(typename, memberName) {
   clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetSignature", typename, memberName)
-}
-
-#' Architecture dependent path to the rSharp native library
-#'
-#' Guess the directory where to expect the architecture dependent native library of a specified package
-#' e.g. for the package rSharp, ${R_HOME}/library/rSharp/libs/x64
-#' This is a utility that is not specific to the rSharp package
-#'
-#' @param pkgName the name of a package, e.g. 'rSharp'
-#' @return the prospective path in which a native library would be found, e.g. c:/R/library/rSharp/libs/x64
-#' @export
-getNativeLibsPath <- function(pkgName) {
-  r_arch <- Sys.getenv("R_ARCH")
-  arch <- sub("/", "", r_arch)
-  file.path(getLibsPath(pkgName), arch)
-  # rlibs <- getNativeLibsPathRlibs(pkgName)
-  # rhome <- getNativeLibsPathRhome(pkgName)
-  # ifelse(file.exists(rlibs), rlibs, rhome)
 }
 
 #' Get the type code for a SEXP

@@ -1,8 +1,7 @@
-checkIsExtPtr <- function(extPtr) {
-  stopifnot("externalptr" %in% class(extPtr))
-}
-
-getLibsPath <- function(pkgName) {
-  libLocation <- system.file(package = pkgName)
-  file.path(libLocation, "lib")
+#' Gets the external pointer CLR object.
+#'
+#' @param clrObject a S4 object of class clrobj
+#' @return the external pointer to the CLR object
+.clrGetExtPtr <- function(clrObject) {
+  clrObject@clrobj
 }
