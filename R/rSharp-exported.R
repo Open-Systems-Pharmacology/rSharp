@@ -51,22 +51,6 @@ toString <- function(x) {
   return(clrCallStatic(rSharpEnv$InternalTypeName, "ToString", x))
 }
 
-#' Get a list of CLR type names exported by an assembly
-#'
-#' Get a list of CLR type names exported by an assembly
-#'
-#' @param assemblyName the name of the assembly
-#' @return the names of the types exported by the assembly
-#' @export
-#' @examples
-#' \dontrun{
-#' getLoadedAssemblies()
-#' clrGetTypesInAssembly("ClrFacade")
-#' }
-clrGetTypesInAssembly <- function(assemblyName) {
-  clrCallStatic(rSharpEnv$reflectionHelperTypeName, "GetTypesInAssembly", assemblyName)
-}
-
 #' List the instance fields of a CLR object
 #'
 #' List the instance fields of a CLR object

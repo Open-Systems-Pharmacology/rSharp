@@ -266,7 +266,7 @@ test_that("Loaded assemblies discovery", {
 })
 
 test_that("Object members discovery behaves as expected", {
-  expect_true("ClrFacade.TestObject" %in% clrGetTypesInAssembly("ClrFacade"))
+  expect_true("ClrFacade.TestObject" %in% getTypesInAssembly("ClrFacade"))
   testObj <- clrNew(testClassName)
   members <- clrReflect(testObj)
 

@@ -41,17 +41,13 @@ getLoadedAssemblies <- function(fullname = FALSE, filenames = FALSE) {
   }
 }
 
-#' Get a list of CLR type names exported by an assembly
+#' Get a list of .NET type names exported by an assembly
 #'
 #' @param assemblyName the name of the assembly
 #' @return The names of the types exported by the assembly
 #' @export
 #' @examples
-#' \dontrun{
-#' library(rClr)
-#' getLoadedAssemblies()
-#' clrGetTypesInAssembly("ClrFacade")
-#' }
-clrGetTypesInAssembly <- function(assemblyName) {
+#' getTypesInAssembly("ClrFacade")
+getTypesInAssembly <- function(assemblyName) {
   callStatic(rSharpEnv$reflectionHelperTypeName, "GetTypesInAssembly", assemblyName)
 }
