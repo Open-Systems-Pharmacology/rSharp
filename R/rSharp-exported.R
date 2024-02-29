@@ -1,24 +1,3 @@
-#' Turn on/off R.NET
-#'
-#' Turn on or off the usage of the R.NET assemblies to convert CLR objects to R data structures. As of version 0.7.0, R.NET is the preferred way to convert data and is enabled by default.
-#'
-#' @param setit if true enable, otherwise disable
-#' @export
-#' @examples
-#' \dontrun{
-#' library(rSharp)
-#' ## R.NET is currently used to convert complicated CLR types to sensible R equivalents
-#' setRDotNet()
-#' cTypename <- "ClrFacade.TestCases"
-#' clrCallStatic(cTypename, "CreateStringDictionary")
-#' setRDotNet(FALSE)
-#' clrCallStatic(cTypename, "CreateStringDictionary")
-#' }
-setRDotNet <- function(setit = TRUE) {
-  print("during setRDotNet")
-  invisible(clrCallStatic("ClrFacade.RDotNetDataConverter", "SetRDotNet", setit))
-}
-
 #' Turn on/off the conversion of advanced data types with R.NET
 #'
 #' Turn on/off the conversion of advanced data types with R.NET. This will turn off the conversion of classes such as dictionaries into R lists,
