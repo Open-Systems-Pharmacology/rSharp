@@ -41,6 +41,7 @@ getStaticMethods <- function(objOrType, contains = "") {
 #' @param ... additional method arguments passed to .External (e.g., arguments to the method)
 #' @return an object resulting from the call. May be a `cobjRef` object, or a native R object for common types. Can be NULL.
 #' @export
+#' @examples
 #' cTypename <- getRSharpSetting("testCasesTypeName")
 #' callStatic(cTypename, "IsTrue", TRUE)
 callStatic <- function(typename, methodName, ...) {

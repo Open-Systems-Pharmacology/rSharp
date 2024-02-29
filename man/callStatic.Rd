@@ -19,3 +19,7 @@ an object resulting from the call. May be a `cobjRef` object, or a native R obje
 \description{
 Call a static method on a .NET type
 }
+\examples{
+cTypename <- getRSharpSetting("testCasesTypeName")
+callStatic(cTypename, "IsTrue", TRUE)
+}

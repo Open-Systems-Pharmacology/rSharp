@@ -7,7 +7,7 @@
 getEnumNames(enumType)
 }
 \arguments{
-\item{enumType}{a CLR object, System.Type or type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.}
+\item{enumType}{a .NET object, System.Type or type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.}
 }
 \value{
 a character vector of the names for the enum
