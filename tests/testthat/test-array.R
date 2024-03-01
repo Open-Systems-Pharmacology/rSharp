@@ -2,9 +2,10 @@
 cTypename <- "ClrFacade.TestArrayMemoryHandling"
 
 # Test for expected length and type of an array returned from .NET
-expectArrayTypeConv <- function(type, arrayLength, expectedRObj) {
+expectArrayTypeConv <- function(type, arrayLength, expectedRObj, ...) {
   arrayLength <- as.integer(arrayLength)
-  expect_equal(callStatic(cTypename, paste0("CreateArray_", type), arrayLength), expectedRObj)
+  obj <- callStatic(cTypename, paste0("CreateArray_", type), arrayLength, ...)
+  expect_equal(obj, expectedRObj)
 }
 
 # Test that R passes correct type of array to .NET
@@ -25,6 +26,34 @@ test_that("Basic types of length zero are returned correctly from .NET", {
   # Empty arrays of a certain type are empty lists in R
   expectArrayTypeConv("object", 0, list())
   expectArrayTypeConv("Type", 0, list())
+})
+
+test_that("Basic types of length 1 are returned correctly from .NET", {
+  expectArrayTypeConv("float", 1, numeric(1))
+  expectArrayTypeConv("double", 1, numeric(1))
+  expectArrayTypeConv("int", 1, integer(1))
+  expectArrayTypeConv("byte", 1, raw(1))
+  expectArrayTypeConv("char", 1, character(1))
+  expectArrayTypeConv("bool", 1, logical(1))
+  expectArrayTypeConv("string", 1, character(1), "")
+
+  # Empty arrays of a certain type are empty lists in R
+  expectArrayTypeConv("object", 1, vector("list", 1))
+  expectArrayTypeConv("Type", 1, vector("list", 1))
+})
+
+test_that("Basic types of length >1 are returned correctly from .NET", {
+  expectArrayTypeConv("float", 2, numeric(2))
+  expectArrayTypeConv("double", 2, numeric(2))
+  expectArrayTypeConv("int", 2, integer(2))
+  expectArrayTypeConv("byte", 2, raw(2))
+  expectArrayTypeConv("char", 2, character(2))
+  expectArrayTypeConv("bool", 2, logical(2))
+  expectArrayTypeConv("string", 2, character(2), "")
+
+  # Empty arrays of a certain type are empty lists in R
+  expectArrayTypeConv("object", 2, vector("list", 2))
+  expectArrayTypeConv("Type", 2, vector("list", 2))
 })
 
 test_that("Basic types of length zero are passed correctly from R to .NET", {
@@ -51,3 +80,23 @@ test_that("Basic types of length zero are passed correctly from R to .NET", {
 })
 
 # Same for length 1!
+# Investigate after https://github.com/Open-Systems-Pharmacology/rSharp/issues/35
+# test_that("Basic types of length one are passed correctly from R to .NET", {
+#   expectArrayElementType(numeric(1), "System.Double")
+#   expectArrayElementType(integer(1), "System.Int32")
+#   expectArrayElementType(raw(1), "System.Byte")
+#   expectArrayElementType(logical(1), "System.Boolean")
+#   expectArrayElementType(character(1), "System.String")
+#   expectArrayElementType("a", "System.String")
+# })
+
+# Same for length >1!
+# Investigate after https://github.com/Open-Systems-Pharmacology/rSharp/issues/35
+# test_that("Basic types of length one are passed correctly from R to .NET", {
+#   expectArrayElementType(numeric(2), "System.Double")
+#   expectArrayElementType(integer(2), "System.Int32")
+#   expectArrayElementType(raw(2), "System.Byte")
+#   expectArrayElementType(logical(2), "System.Boolean")
+#   expectArrayElementType(character(2), "System.String")
+#   expectArrayElementType("aa", "System.String")
+# })
