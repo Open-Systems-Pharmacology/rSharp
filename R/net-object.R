@@ -83,82 +83,6 @@ NetObject <- R6::R6Class(
     }
   ),
   public = list(
-    # # The external pointer to the .NET object
-    # clrobj = NULL,
-    # # The .NET type name of the object
-    # clrtype = NULL,
-    # # The .NET type of the object
-    # clrType = function() {
-    #   if (is.null(private$clrtype)) {
-    #     return(NULL)
-    #   }
-    #   clrGetType(private$clrtype)
-    # },
-    # # The .NET object's type name
-    # typeName = function() {
-    #   if (is.null(private$clrtype)) {
-    #     return(NULL)
-    #   }
-    #   private$clrtype
-    # },
-    # # The .NET object's type
-    # type = function() {
-    #   if (is.null(private$clrtype)) {
-    #     return(NULL)
-    #   }
-    #   clrGetType(private$clrtype)
-    # },
-    # # The .NET object's type name
-    # toString = function() {
-    #   if (is.null(private$clrobj)) {
-    #     return(NULL)
-    #   }
-    #   clrToString(private$clrobj)
-    # },
-    # # The .NET object's type name
-    # fields = function() {
-    #   if (is.null(private$clrtype)) {
-    #     return(NULL)
-    #   }
-    #   clrGetFields(private$clrtype)
-    # },
-    # # The .NET object's type name
-    # properties = function() {
-    #   if (is.null(private$clrtype)) {
-    #     return(NULL)
-    #   }
-    #   clrGetProperties(private$clrtype)
-    # },
-    # # The .NET object's type name
-    # methods = function() {
-    #   if (is.null(private$clrtype)) {
-    #     return(NULL)
-    #   }
-    #   clrGetMethods(private$clrtype)
-    # },
-    # # The .NET object's type name
-    # memberSignature = function(memberName) {
-    #   if (is.null(private$clrtype)) {
-    #     return(NULL)
-    #   }
-    #   clrGetMemberSignature(private$clrtype, memberName)
-    # },
-    # # The .NET object's type name
-    # new = function(...) {
-    #   if (is.null(private$clrtype)) {
-    #     return(NULL)
-    #   }
-    #   clrNew(private$clrtype, ...)
-    # },
-    # # The .NET object's type name
-    # call = function(methodName, ...) {
-    #   if (is.null(private$clrobj)) {
-    #     return(NULL)
-    #   }
-    #   clrCall(private$clrobj, methodName, ...)
-    # },
-    # # The .NET object's type name
-
     #' Initialize
     #' @description Initializes the object.
     #' @param clrobj The external pointer to the .NET object
@@ -175,6 +99,32 @@ NetObject <- R6::R6Class(
       # Get the type of the pointer
       private$.type <- .External("r_get_typename_externalptr", pointer, PACKAGE = rSharpEnv$nativePkgName)
       return(self)
+    },
+
+    is = function(type) {
+      .External("r_is_clr_type", private$.pointer, type, PACKAGE = rSharpEnv$nativePkgName)
+
+
+
+
+      if (is.character(type)) {
+        tmpType <- getType(type)
+        if (is.null(tmpType)) {
+          stop(paste("Unrecognized type name", type))
+        } else {
+          type <- tmpType
+        }
+      }
+      if (!is(type, "cobjRef")) {
+        stop(paste('argument "type" must be a CLR type name or a Type'))
+      } else {
+        typetypename <- clrGet(clrCall(type, "GetType"), "Name")
+        if (!(typetypename %in% c("RuntimeType", "MonoType"))) {
+          stop(paste('argument "type" must be a CLR Type. Got a', typetypename))
+        }
+      }
+      objType <- getType(obj)
+      return(clrCall(type, "IsAssignableFrom", objType))
     },
 
     #' Print
