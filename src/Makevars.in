@@ -14,11 +14,17 @@ BUILDTYPE ?= Debug
 
 TGTPLATFORM=x64
 RUNTIMECONFIG=RSharp.runtimeconfig
+OBJ_DIR := obj
+OUT_DIR := out
+SRC_DIR := .
+SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
+OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
+
 PKG_CPPFLAGS = --std=c++11 -lsupc++
 
 MONO_INSTALL_PATH=@MONO_INSTALL_PATH@
 MONO_INSTALL_PATH64=@MONO_INSTALL_PATH64@
-OBJECTS=rSharpUX.o
+OBJECTS=$(OUT_DIR)/rSharpUX.so
 ifeq "$(MONO_INSTALL_PATH)" ""
 XBUILD=xbuild
 else
@@ -88,16 +94,16 @@ RM = 		rm -f
 
 # .PHONY: 	all clean
 
-all:		printarch  rSharpUX.so instdir rSharpLib rSharpInstrSharpUX
+all:		printarch instdir $(OUT_DIR)/rSharpUX.so rSharpLib rSharpInstrSharpUX
 
 clean:
-	${RM} $(OBJECTS) $(SHLIB) $(RSHARP_LIBS)
+	${RM} $(OUT_DIR)/* $(OBJ_DIR)/*
 
-rSharpUX.o: 
-	$(CXX) -std=c++11 -Ipackages/Microsoft.NETCore.App.Host.linux-x64.8.0.2/runtimes/linux-x64/native $(ALL_CPPFLAGS) -I/usr/share/R/include/ $(ALL_CFLAGS) -fPIC -c rSharp.cpp -o rSharpUX.o  -lsupc++
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	$(CXX) -std=c++11 -Ipackages/Microsoft.NETCore.App.Host.linux-x64.8.0.2/runtimes/linux-x64/native $(ALL_CPPFLAGS) -I/usr/share/R/include/ $(ALL_CFLAGS) -fPIC -c $<  -o $@  -lsupc++
 
-rSharpUX.so:  rSharpUX.o 
-	$(CXX) -std=c++11 -shared -Wl,-z,relro -o rSharpUX.so  rSharpUX.o $(ALL_LIBS) -L./packages/Microsoft.NETCore.App.Host.linux-x64.8.0.2/runtimes/linux-x64/native -l:libnethost.a
+$(OUT_DIR)/rSharpUX.so:  $(OBJ_FILES)
+	$(CXX) -std=c++11 -shared -Wl,-z,relro -o $@  $^ $(ALL_LIBS) -L./packages/Microsoft.NETCore.App.Host.linux-x64.8.0.2/runtimes/linux-x64/native -l:libnethost.a
 
 printarch:
 	-@echo **Variable information only for diagnosis purposes**
@@ -113,8 +119,8 @@ instdir:
 	-@mkdir -p $(INSTDIR) 2>/dev/null
 	-@mkdir -p $(INSTDIR)/libs$(R_ARCH) 2>/dev/null
 
-rSharpInstrSharpUX: rSharpUX.so
-	cp -u -p rSharpUX.so $(INSTDIR)/libs$(R_ARCH)
+rSharpInstrSharpUX: $(OUT_DIR)/rSharpUX.so
+	cp -u -p $< $(INSTDIR)/libs$(R_ARCH)
 
 rSharpLib: rSharpLibComp
 	if [ -e symbols.rds ] ; then cp -u -p symbols.rds $(INSTDIR)/libs$(R_ARCH) ; fi
@@ -122,8 +128,8 @@ rSharpLib: rSharpLibComp
 	-cp -u -p $(CLR_FACADE_BINS) $(INSTDIR)/libs
 	-cp -u -p ./$(RUNTIMECONFIG).json $(INSTDIR)/libs/
 
-rSharpNugetRestore: rSharp.cpp
-	-$(DOTNET_CMD) restore ;
+rSharpNugetRestore:
+	-$(DOTNET_CMD) restore
 
 rSharpLibComp: rSharpNugetRestore
 	"$(XBUILD)" build /t:$(MODE) $(SLNPROPERTIES)
