@@ -21,7 +21,7 @@ startupMsg <- ''
   rSharp_env=Sys.getenv('RSHARP')
   monoexepath <- Sys.which('mono')
   ext <- .Platform$dynlib.ext
-  nativeLibsNames <- paste(c('rSharpMono', 'RsharpMs'), ext, sep='')
+  nativeLibsNames <- paste(c('rSharpUX', 'RsharpMs'), ext, sep='')
   monoDll <- nativeLibsNames[1]
   msDll <- nativeLibsNames[2]
   getFnameNoExt <- function(x) {strsplit(x, '\\.')[[1]][1]}
@@ -62,7 +62,7 @@ startupMsg <- ''
     }
   } else { # not on Windows.
     appendStartupMsg('Loading the dynamic library for Mono runtime...')
-    chname <- "rSharp"
+    chname <- "rSharpUX"
     loadAndInit(chname, pkgname, libname, srcPkgLibPath)
   }
 }

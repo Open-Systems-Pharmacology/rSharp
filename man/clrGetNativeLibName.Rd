@@ -7,7 +7,7 @@
 clrGetNativeLibName()
 }
 \value{
-the name of the native library currently loaded: rSharpMs or rSharpMono
+the name of the native library currently loaded: rSharpMs or rSharpUX
 }
 \description{
 Gets the name of the native library currently loaded. Used only for unit tests.

@@ -5,7 +5,6 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{D07290EB-5755-453C-8CD6-5CDDED3400BE}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
     <Version>0.8.1</Version>
     <Copyright>(c) 2014-2019 Jean-Michel Perraud</Copyright>
     <Description>.NET interoperability on top of R.NET for the rSharp package</Description>
@@ -17,6 +16,7 @@
     <RepositoryUrl>https://github.com/Open-Systems-Pharmacology/rsharp</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Open-Systems-Pharmacology/rsharp</PackageProjectUrl>
     <PackageReleaseNotes>Migration to .NET Standard 2.0 and supporting R 3.5.x</PackageReleaseNotes>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="TestApp\**" />

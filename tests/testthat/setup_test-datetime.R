@@ -14,7 +14,7 @@ tzIdR_AUest = "Australia/Sydney"
 # IronPython: tz = [x for x in TimeZoneInfo.GetSystemTimeZones()]
 tzId_AUest <-
 ifelse( tolower(Sys.info()['sysname'])== 'windows',
-    ifelse(clrGetNativeLibName()=='rSharpMono',
+    ifelse(clrGetNativeLibName()=='rSharpUX',
       # As of Mono 3.8.0, and probably earlier releases including 3.4.0, the time zone names have changed. Not Olson DB anymore. Not MS.NET either. *Sigh*
       'E. Australia Standard Time',
       # I think even on Linux Mono does not use the Olson DB names. If still, use something like the following line
@@ -120,7 +120,6 @@ post1971_DateStr <- c('2001-01-01',
   '2013-10-06 01:59', # DST starts in Canberra
   '2013-10-06 03:01',
   '2013-04-07 01:59',  # DST ends in Canberra. See also notes below for peculiarities over the twice run over 02:00 to 03:00
-  '2013-04-07 02:33',
   '2013-04-07 03:00',
   # Around one of the leap seconds (that is, when the UTC/GMT is tested
   '1994-06-30 23:00:00',

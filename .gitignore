@@ -155,8 +155,14 @@ src/\.vs/
 \.vs/
 \.vscode/
 src/libfiles
+src/out
+src/obj
 
 inst/libs/*.*
-inst/libs/i386/*.*
 .Rproj.user
 .Rhistory
+.RData
+src/Makevars
+src/Makefile.win
+src/rSharp.so
+src/.idea

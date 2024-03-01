@@ -9,18 +9,11 @@
 // definition of complex in Rext/Complex.h This error should not be present when compiling with gcc.
 #define R_LEGACY_RCOMPLEX
 
-#include <windows.h>
 #include <fstream>
-#include <cstdlib>
-#include <metahost.h>
-//#include "stdafx.h"
-//#include "atlbase.h"
-#include <comutil.h>
-#include <tchar.h> 
 #include <iostream>
 #include <iterator>
 
-
+#define NETHOST_USE_AS_STATIC
 // Provided by the AppHost NuGet package and installed as an SDK pack
 #include <nethost.h>
 
@@ -33,14 +26,31 @@ typedef bool RSHARP_BOOL;
 #define TRUE_BOOL true;
 #define FALSE_BOOL false;
 
-//Defines for the new hostfxr API
-//--------------------
+#ifdef WINDOWS
+
+#include <Windows.h>
+
+#include <metahost.h>
+
 #define STR(s) L ## s
 #define CH(c) L ## c
 #define DIR_SEPARATOR L'\\'
 
 #define string_compare wcscmp
 
+#else
+#include <dlfcn.h>
+#include <limits.h>
+
+#define STR(s) s
+#define CH(c) c
+#define DIR_SEPARATOR '/'
+#define MAX_PATH PATH_MAX
+
+#define string_compare strcmp
+
+#endif
+#include <assert.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -75,7 +85,7 @@ enum class RSharpValueType
 	OBJECT,
 	NULL_VALUE,
 	INTPTR,
-	OBJECTARRAY
+	OBJECT_ARRAY
 };
 
 // Struct to store a generic value along with its type
@@ -139,6 +149,7 @@ SEXP ConvertToSEXP(RSharpGenericValue& value);
 #ifndef  __cplusplus
 #define STR_DUP strdup
 #else
+#define _strdup strdup
 #define STR_DUP _strdup
 #endif
 

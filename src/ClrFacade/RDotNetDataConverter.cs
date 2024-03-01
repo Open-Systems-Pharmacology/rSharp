@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
+using DynamicInterop;
 using RDotNet;
 using RDotNet.NativeLibrary;
 
@@ -22,7 +26,12 @@ public class RDotNetDataConverter : IDataConverter
          assemblyPath = Path.GetFullPath(assemblyPath);
          var libDir = Path.GetDirectoryName(assemblyPath);
 
-         dllName = Path.Combine(libDir, NativeUtility.IsUnix ? "rSharp.so" : "rSharpMs.dll");
+         var version = Environment.Is64BitProcess.ToString();
+         CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+         CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
+         CultureInfo.CurrentUICulture = new CultureInfo("en-US");
+
+         dllName = Path.Combine(libDir, NativeUtility.IsUnix ? "rSharpUX.so" : "rSharpMs.dll");
       }
 
       DataConversionHelper.rSharpNativeDll = new RSharpUnmanagedDll(dllName);
@@ -356,7 +365,7 @@ public class RDotNetDataConverter : IDataConverter
 
    private SymbolicExpression convertArrayDouble(object obj)
    {
-      if (!ConvertVectors) 
+      if (!ConvertVectors)
          return null;
 
       var array = (double[])obj;
@@ -365,7 +374,7 @@ public class RDotNetDataConverter : IDataConverter
 
    private SymbolicExpression convertArrayBool(object obj)
    {
-      if (!ConvertVectors) 
+      if (!ConvertVectors)
          return null;
 
       var array = (bool[])obj;
@@ -374,7 +383,7 @@ public class RDotNetDataConverter : IDataConverter
 
    private SymbolicExpression convertArrayByte(object obj)
    {
-      if (!ConvertVectors) 
+      if (!ConvertVectors)
          return null;
 
       var array = (byte[])obj;
@@ -383,7 +392,7 @@ public class RDotNetDataConverter : IDataConverter
 
    private SymbolicExpression convertArraySingle(object obj)
    {
-      if (!ConvertVectors) 
+      if (!ConvertVectors)
          return null;
 
       var array = (float[])obj;
@@ -392,7 +401,7 @@ public class RDotNetDataConverter : IDataConverter
 
    private SymbolicExpression convertArrayInt(object obj)
    {
-      if (!ConvertVectors) 
+      if (!ConvertVectors)
          return null;
 
       var array = (int[])obj;
@@ -401,7 +410,7 @@ public class RDotNetDataConverter : IDataConverter
 
    private SymbolicExpression convertArrayString(object obj)
    {
-      if (!ConvertVectors) 
+      if (!ConvertVectors)
          return null;
 
       var array = (string[])obj;
@@ -410,7 +419,7 @@ public class RDotNetDataConverter : IDataConverter
 
    private SymbolicExpression convertArrayChar(object obj)
    {
-      if (!ConvertVectors) 
+      if (!ConvertVectors)
          return null;
 
       var array = (char[])obj;
@@ -419,10 +428,10 @@ public class RDotNetDataConverter : IDataConverter
 
    private SymbolicExpression convertArrayComplex(object obj)
    {
-      if (!ConvertVectors) 
+      if (!ConvertVectors)
          return null;
 
-      if (!ConvertValueTypes) 
+      if (!ConvertValueTypes)
          return null;
 
       var array = (Complex[])obj;
@@ -431,10 +440,10 @@ public class RDotNetDataConverter : IDataConverter
 
    private SymbolicExpression convertArrayDateTime(object obj)
    {
-      if (!ConvertVectors) 
+      if (!ConvertVectors)
          return null;
 
-      if (!ConvertValueTypes) 
+      if (!ConvertValueTypes)
          return null;
 
       var array = (DateTime[])obj;
@@ -447,10 +456,10 @@ public class RDotNetDataConverter : IDataConverter
 
    private SymbolicExpression convertArrayTimeSpan(object obj)
    {
-      if (!ConvertVectors) 
+      if (!ConvertVectors)
          return null;
 
-      if (!ConvertValueTypes) 
+      if (!ConvertValueTypes)
          return null;
 
       var array = (TimeSpan[])obj;
@@ -462,7 +471,7 @@ public class RDotNetDataConverter : IDataConverter
 
    private SymbolicExpression convertDouble(object obj)
    {
-      if (!ConvertVectors) 
+      if (!ConvertVectors)
          return null;
 
       var value = (double)obj;
@@ -471,7 +480,7 @@ public class RDotNetDataConverter : IDataConverter
 
    private SymbolicExpression convertSingle(object obj)
    {
-      if (!ConvertVectors) 
+      if (!ConvertVectors)
          return null;
 
       var value = (float)obj;
@@ -480,7 +489,7 @@ public class RDotNetDataConverter : IDataConverter
 
    private SymbolicExpression convertByte(object obj)
    {
-      if (!ConvertVectors) 
+      if (!ConvertVectors)
          return null;
 
       var value = (byte)obj;
@@ -489,7 +498,7 @@ public class RDotNetDataConverter : IDataConverter
 
    private SymbolicExpression convertChar(object obj)
    {
-      if (!ConvertVectors) 
+      if (!ConvertVectors)
          return null;
 
       var value = (char)obj;
@@ -498,7 +507,7 @@ public class RDotNetDataConverter : IDataConverter
 
    private SymbolicExpression convertBool(object obj)
    {
-      if (!ConvertVectors) 
+      if (!ConvertVectors)
          return null;
 
       var value = (bool)obj;
@@ -507,7 +516,7 @@ public class RDotNetDataConverter : IDataConverter
 
    private SymbolicExpression convertInt(object obj)
    {
-      if (!ConvertVectors) 
+      if (!ConvertVectors)
          return null;
 
       var value = (int)obj;
@@ -516,7 +525,7 @@ public class RDotNetDataConverter : IDataConverter
 
    private SymbolicExpression convertString(object obj)
    {
-      if (!ConvertVectors) 
+      if (!ConvertVectors)
          return null;
 
       var value = (string)obj;
@@ -525,10 +534,10 @@ public class RDotNetDataConverter : IDataConverter
 
    private SymbolicExpression convertTimeSpan(object obj)
    {
-      if (!ConvertVectors) 
+      if (!ConvertVectors)
          return null;
 
-      if (!ConvertValueTypes) 
+      if (!ConvertValueTypes)
          return null;
 
       var value = (TimeSpan)obj;
@@ -540,10 +549,10 @@ public class RDotNetDataConverter : IDataConverter
 
    private SymbolicExpression convertDateTime(object obj)
    {
-      if (!ConvertVectors) 
+      if (!ConvertVectors)
          return null;
 
-      if (!ConvertValueTypes) 
+      if (!ConvertValueTypes)
          return null;
 
       var value = (DateTime)obj;
@@ -555,10 +564,10 @@ public class RDotNetDataConverter : IDataConverter
 
    private SymbolicExpression convertComplex(object obj)
    {
-      if (!ConvertVectors) 
+      if (!ConvertVectors)
          return null;
 
-      if (!ConvertValueTypes) 
+      if (!ConvertValueTypes)
          return null;
 
       var value = (Complex)obj;

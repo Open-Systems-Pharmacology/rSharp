@@ -1,13 +1,12 @@
-﻿namespace ClrFacade
+﻿namespace ClrFacade;
+
+/// <summary>
+///    Support for the package vignette
+/// </summary>
+public class HelloWorld
 {
-   /// <summary>
-   ///    Support for the package vignette
-   /// </summary>
-   public class HelloWorld
+   public static string Hello()
    {
-      public static string Hello()
-      {
-         return "Hello, World!";
-      }
+      return "Hello, World!";
    }
 }
