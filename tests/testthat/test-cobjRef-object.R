@@ -24,3 +24,24 @@ test_that("getType function", {
   expect_equal(testClassName, clrGet(getType(testClassName), "FullName"))
   expect_equal(testClassName, clrGet(getType(testObj), "FullName"))
 })
+
+test_that("Basic objects are created correctly", {
+  testObj <- clrNew(testClassName)
+  expect_that(testObj@clrtype, equals(testClassName))
+  rm(testObj)
+  testObj <- .External("r_call_static_method", rSharpEnv$testCasesTypeName, "CreateTestObject", PACKAGE = rSharpEnv$nativePkgName)
+  expect_false(is.null(testObj))
+  expect_that(testObj@clrtype, equals(testClassName))
+  rm(testObj)
+  testObj <- callTestCase("CreateTestObject")
+  expect_false(is.null(testObj))
+  expect_that(testObj@clrtype, equals(testClassName))
+
+  testObj <- callTestCase("CreateTestObjectGenericInstance")
+  expect_false(is.null(testObj))
+
+  # Not clear what should be tested here...
+  testObj <- callTestCase("CreateTestArrayGenericObjects")
+  testObj <- callTestCase("CreateTestArrayInterface")
+  testObj <- callTestCase("CreateTestArrayGenericInterface")
+})

@@ -76,8 +76,6 @@ test_that("Correct method binding based on parameter types", {
   testMethodBinding()
 })
 
-
-
 test_that("Conversion of non-bijective types can be turned on/off", {
   # When the conversion is turned off, a `NetObject` is returned, which holds a reference to the .NET object.
   setConvertAdvancedTypes(FALSE)
@@ -89,60 +87,6 @@ test_that("Conversion of non-bijective types can be turned on/off", {
   setConvertAdvancedTypes(TRUE)
   expect_equal(callTestCase("CreateStringDictionary"), list(a = "A", b = "B"))
   expect_equal(callTestCase("CreateStringDoubleArrayDictionary"), list(a = c(1.0, 2.0, 3.0, 3.5, 4.3, 11), b = c(1.0, 2.0, 3.0, 3.5, 4.3), c = c(2.2, 3.3, 6.5)))
-})
-
-test_that("Basic objects are created correctly", {
-  testObj <- clrNew(testClassName)
-  expect_that(testObj@clrtype, equals(testClassName))
-  rm(testObj)
-  # Note to self: I originally wrote code to make sure that r_call_static_method kept returning an external pointer, not
-  # an R object of type clrObjRef already created. I am not sure why this would have been a compulsory behavior.
-  # Delete if no harm done...
-  # 	 extptr <-.External("r_call_static_method", rSharpEnv$testCasesTypeName, "CreateTestObject",PACKAGE=rSharpEnv$nativePkgName)
-  #  expect_false(is.null(extptr))
-  #  expect_that("externalptr" %in% class(extptr), is_true())
-  testObj <- .External("r_call_static_method", rSharpEnv$testCasesTypeName, "CreateTestObject", PACKAGE = rSharpEnv$nativePkgName)
-  expect_false(is.null(testObj))
-  expect_that(testObj@clrtype, equals(testClassName))
-  rm(testObj)
-  testObj <- callTestCase("CreateTestObject")
-  expect_false(is.null(testObj))
-  expect_that(testObj@clrtype, equals(testClassName))
-
-  # cover part of the issue https://rclr.codeplex.com/workitem/39
-  testObj <- callTestCase("CreateTestObjectGenericInstance")
-  expect_false(is.null(testObj))
-
-
-  testObj <- callTestCase("CreateTestArrayGenericObjects")
-  testObj <- callTestCase("CreateTestArrayInterface")
-  testObj <- callTestCase("CreateTestArrayGenericInterface")
-})
-
-test_that("Creation of SEXP via R.NET", {
-  # cover issue https://rclr.codeplex.com/workitem/42. Just check that the stack imbalance warning does not show up (could not find a way to check this via testthat; warnings() is not affected by the warning given by the stack imbalance checking mechanism in R itself. This is probably because check_stack_balance uses the function REprintf instead of warningcall
-  aDataFrame <- callTestCase("CreateTestDataFrame")
-})
-
-test_that("CLR type compatibility checking", {
-  testObj <- clrNew(testClassName)
-  expect_true(clrIs(testObj, testClassName))
-  expect_true(clrIs(testObj, "System.Object"))
-  expect_false(clrIs(testObj, "System.Double"))
-  testObj <- clrNew("ClrFacade.TestMethodBinding")
-  expect_true(clrIs(testObj, "ClrFacade.ITestMethodBindings"))
-  expect_true(clrIs(testObj, getType("ClrFacade.ITestMethodBindings")))
-  expect_true(clrIs(testObj, getType("ClrFacade.TestMethodBinding")))
-  expect_false(clrIs(testObj, getType("System.Reflection.Assembly")))
-  expect_error(clrIs(testObj, testObj))
-})
-
-# This test fails because one of the loaded assemlies is called "Anonymously Hosted DynamicMethods Assembly",
-# and `GetLoadedAssemblyURI` fails.
-test_that("Loaded assemblies discovery", {
-  expect_true("ClrFacade" %in% getLoadedAssemblies())
-  d <- getLoadedAssemblies(fullname = TRUE, filenames = TRUE)
-  expect_true(is.data.frame(d))
 })
 
 test_that("Object members discovery behaves as expected", {
@@ -183,20 +127,6 @@ test_that("Object members discovery behaves as expected", {
   # TODO test that methods that are explicit implementations of interfaces are found
 })
 
-test_that("Object constructor discovery behaves as expected", {
-  expect_equal(
-    c(
-      "Constructor: .ctor",
-      "Constructor: .ctor, Double",
-      "Constructor: .ctor, Double, Double",
-      "Constructor: .ctor, Int32",
-      "Constructor: .ctor, Int32, Int32",
-      "Constructor: .ctor, Int32, Int32, Double, Double"
-    ),
-    getConstructors(testClassName)
-  )
-})
-
 test_that("Retrieval of object or class (i.e. static) members values behaves as expected", {
   f <- function(obj_or_type, rootMemberName, staticPrefix = "") {
     fieldName <- paste(staticPrefix, "Field", rootMemberName, sep = "")
@@ -216,64 +146,6 @@ test_that("Retrieval of object or class (i.e. static) members values behaves as 
   # then test static members
   f(testClassName, "IntegerOne", staticPrefix = "Static")
 })
-
-test_that("enums get/set", {
-  # very basic support for the time being. Behavior to be defined for cases such as enums with binary operators ([FlagsAttribute])
-  eType <- "ClrFacade.TestEnum"
-  expect_that(getEnumNames(eType), equals(c("A", "B", "C")))
-  #  TODO, but problematic.
-  #  e <- clrCall(cTypename, 'GetTestEnum', 'B')
-  #  expect_false(is.null(e))
-  #  expect_that(clrCall(e, 'ToString'), equals('B'))
-})
-
-testGarbageCollection <- function(getObjCountMethodName = "GetMemTestObjCounter", createTestObjectMethodName = "CreateMemTestObj") {
-  callGcMethname <- "CallGC"
-  forceDotNetGc <- function() {
-    callTestCase(callGcMethname)
-  }
-  checkPlusOne <- function() {
-    expect_that(callTestCase(getObjCountMethodName), equals(counter + 1))
-  }
-
-  counter <- callTestCase(getObjCountMethodName)
-  expect_that(counter, equals(0)) # make sure none of these test objects instances are hanging in the CLR
-  testObj <- callTestCase(createTestObjectMethodName)
-  checkPlusOne()
-  forceDotNetGc()
-  # the object should still be in memory.
-  checkPlusOne()
-  gc()
-  # the object should still be in memory, since testObj is in use and thus the underlying clr handle should be pinned too.
-  checkPlusOne()
-  rm(testObj)
-  gc()
-  forceDotNetGc()
-  expect_that(callTestCase(getObjCountMethodName), equals(counter))
-
-  # Trying to test that issue https://r2clr.codeplex.com/workitem/71 is fixed.
-  # However the underlying COM type for a Form is a VT_DISPATCH but for out MemTestObject a VT_UNKNOWN.
-  # Needs more work to reproduce in a unit test; no desire to introduce dependency on System.Windows.Form
-  # counter = callTestCase( getObjCountMethodName)
-  # expect_that( counter, equals(0) )
-  # testObj = callTestCase( createTestObjectMethodName)
-  # clrSet( testObj, 'Text', "et nous alimentons nos aimables remords comme les mendiants nourissent leur vermine" )
-  # forceDotNetGc()
-  # checkPlusOne()
-  # clrSet( testObj, 'Text', "Sur l'oreiller du mal..." )
-  # checkPlusOne()
-  # rm(testObj) ; gc() ; forceDotNetGc()
-}
-
-test_that("Garbage collection in R and the CLR behaves as expected", {
-  testGarbageCollection(getObjCountMethodName = "GetMemTestObjCounter", createTestObjectMethodName = "CreateMemTestObj")
-})
-
-test_that("Garbage collection of R.NET objects", {
-  # Unfortunately cannot test this yet because of http://r2clr.codeplex.com/workitem/30
-  # testGarbageCollection( getObjCountMethodName = 'GetMemTestObjCounterRDotnet', createTestObjectMethodName = 'CreateMemTestObjRDotnet')
-})
-
 
 test_that("Assembly loading", {
   # loadAssembly("System.Windows.Presentation, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089")

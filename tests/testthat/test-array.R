@@ -71,6 +71,7 @@ test_that("Basic types of length zero are passed correctly from R to .NET", {
 #   expect_true(callTestCase("IsNull", c(1, NaN, 3)))
 # })
 
+# https://github.com/Open-Systems-Pharmacology/rSharp/issues/58
 # test_that("Numerical bi-dimensional arrays are marshalled correctly from R to .NET", {
 #   numericMat <- matrix(as.numeric(1:15), nrow = 3, ncol = 5, byrow = TRUE)
 #   expect_that( callTestCase( "NumericMatrixEquals", numericMat), equals(numericMat))
