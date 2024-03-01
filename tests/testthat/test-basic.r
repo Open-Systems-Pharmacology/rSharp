@@ -406,15 +406,15 @@ test_that("Assembly loading", {
 })
 
 
-test_that("toString works for primitive types", {
-  expect_that(toString(1), equals("1"))
-  expect_that(toString(1.0), equals("1"))
-  expect_that(toString("a"), equals("a"))
-  expect_that(toString(TRUE), equals("True"))
-  expect_that(toString(FALSE), equals("False"))
+test_that("toStringNET works for primitive types", {
+  expect_that(toStringNET(1), equals("1"))
+  expect_that(toStringNET(1.0), equals("1"))
+  expect_that(toStringNET("a"), equals("a"))
+  expect_that(toStringNET(TRUE), equals("True"))
+  expect_that(toStringNET(FALSE), equals("False"))
   # Check of correct behavior
-  #  expect_that(toString(NA), equals("null"))
-  #  expect_that(toString(NULL), equals("null"))
+  #  expect_that(toStringNET(NA), equals("null"))
+  #  expect_that(toStringNET(NULL), equals("null"))
 })
 
 # Re-enable when https://github.com/Open-Systems-Pharmacology/rSharp/issues/35 is fixed
