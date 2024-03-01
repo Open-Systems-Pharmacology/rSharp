@@ -32,3 +32,8 @@ expectClrArrayElementType <- function(rObj, expectedClrTypeName) {
 callTestCase <- function(...) {
   callStatic(rSharpEnv$testCasesTypeName, ...)
 }
+
+# Check if references are equal
+areClrRefEquals <- function(x, y) {
+  callStatic("System.Object", "ReferenceEquals", x, y)
+}

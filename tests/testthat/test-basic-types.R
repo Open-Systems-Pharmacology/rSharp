@@ -23,3 +23,24 @@ test_that("Basic types of length one are marshalled correctly", {
 #   # NET to R
 #   expect_true(callTestCase("CreateUnicodeString", "äöü"))
 # })
+
+# https://github.com/Open-Systems-Pharmacology/rSharp/issues/57
+# test_that("Basic NULL is passed to .NET as null", {
+#   expect_true(callTestCase("IsNull", NULL))
+# })
+# test_that("Basic NA is passed to .NET as NA", {
+#   expect_true(callTestCase("IsNull", NA))
+# })
+# test_that("Basic NaN is passed to .NET as NaN", {
+#   expect_true(callTestCase("IsNull", NaN))
+# })
+#
+# test_that("Basic NULL is passed from .NET as null", {
+#   expect_true(callTestCase("IsNull", NULL))
+# })
+# test_that("Basic NA is passed from .NET as NA", {
+#   expect_true(callTestCase("IsNull", NA))
+# })
+# test_that("Basic NaN is passed from .NET as NaN", {
+#   expect_true(callTestCase("IsNull", NaN))
+# })

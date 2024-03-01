@@ -14,48 +14,8 @@ expectArrayElementType <- function(rObj, expectedTypeName) {
   expect_true(callStatic(cTypename, "CheckElementType", rObj, netType))
 }
 
-test_that("Basic types of length zero are returned correctly from .NET", {
-  expectArrayTypeConv("float", 0, numeric(0))
-  expectArrayTypeConv("double", 0, numeric(0))
-  expectArrayTypeConv("int", 0, integer(0))
-  expectArrayTypeConv("byte", 0, raw(0))
-  expectArrayTypeConv("char", 0, character(0))
-  expectArrayTypeConv("bool", 0, logical(0))
-  expectArrayTypeConv("string", 0, character(0))
 
-  # Empty arrays of a certain type are empty lists in R
-  expectArrayTypeConv("object", 0, list())
-  expectArrayTypeConv("Type", 0, list())
-})
-
-test_that("Basic types of length 1 are returned correctly from .NET", {
-  expectArrayTypeConv("float", 1, numeric(1))
-  expectArrayTypeConv("double", 1, numeric(1))
-  expectArrayTypeConv("int", 1, integer(1))
-  expectArrayTypeConv("byte", 1, raw(1))
-  expectArrayTypeConv("char", 1, character(1))
-  expectArrayTypeConv("bool", 1, logical(1))
-  expectArrayTypeConv("string", 1, character(1), "")
-
-  # Empty arrays of a certain type are empty lists in R
-  expectArrayTypeConv("object", 1, vector("list", 1))
-  expectArrayTypeConv("Type", 1, vector("list", 1))
-})
-
-test_that("Basic types of length >1 are returned correctly from .NET", {
-  expectArrayTypeConv("float", 2, numeric(2))
-  expectArrayTypeConv("double", 2, numeric(2))
-  expectArrayTypeConv("int", 2, integer(2))
-  expectArrayTypeConv("byte", 2, raw(2))
-  expectArrayTypeConv("char", 2, character(2))
-  expectArrayTypeConv("bool", 2, logical(2))
-  expectArrayTypeConv("string", 2, character(2), "")
-
-  # Empty arrays of a certain type are empty lists in R
-  expectArrayTypeConv("object", 2, vector("list", 2))
-  expectArrayTypeConv("Type", 2, vector("list", 2))
-})
-
+##########R to .NET tests##########
 test_that("Basic types of length zero are passed correctly from R to .NET", {
   expectArrayElementType(numeric(0), "System.Double")
   expectArrayElementType(integer(0), "System.Int32")
@@ -100,3 +60,98 @@ test_that("Basic types of length zero are passed correctly from R to .NET", {
 #   expectArrayElementType(character(2), "System.String")
 #   expectArrayElementType("aa", "System.String")
 # })
+
+# test_that("Array NULL is passed to .NET as null", {
+#   expect_true(callTestCase("IsNull", c(1, NULL, 3)))
+# })
+# test_that("Array NA is passed to .NET as NA", {
+#   expect_true(callTestCase("IsNull", c(1, NA, 3)))
+# })
+# test_that("Array NaN is passed to .NET as NaN", {
+#   expect_true(callTestCase("IsNull", c(1, NaN, 3)))
+# })
+
+##########.NET to R tests##########
+test_that("Basic types of length zero are returned correctly from .NET", {
+  expectArrayTypeConv("float", 0, numeric(0))
+  expectArrayTypeConv("double", 0, numeric(0))
+  expectArrayTypeConv("int", 0, integer(0))
+  expectArrayTypeConv("byte", 0, raw(0))
+  expectArrayTypeConv("char", 0, character(0))
+  expectArrayTypeConv("bool", 0, logical(0))
+  expectArrayTypeConv("string", 0, character(0))
+
+  # Empty arrays of a certain type are empty lists in R
+  expectArrayTypeConv("object", 0, list())
+  expectArrayTypeConv("Type", 0, list())
+})
+
+test_that("Basic types of length 1 are returned correctly from .NET", {
+  expectArrayTypeConv("float", 1, numeric(1))
+  expectArrayTypeConv("double", 1, numeric(1))
+  expectArrayTypeConv("int", 1, integer(1))
+  expectArrayTypeConv("byte", 1, raw(1))
+  expectArrayTypeConv("char", 1, character(1))
+  expectArrayTypeConv("bool", 1, logical(1))
+  expectArrayTypeConv("string", 1, character(1), "")
+
+  # Empty arrays of a certain type are empty lists in R
+  expectArrayTypeConv("object", 1, vector("list", 1))
+  expectArrayTypeConv("Type", 1, vector("list", 1))
+})
+
+test_that("Basic types of length >1 are returned correctly from .NET", {
+  expectArrayTypeConv("float", 2, numeric(2))
+  expectArrayTypeConv("double", 2, numeric(2))
+  expectArrayTypeConv("int", 2, integer(2))
+  expectArrayTypeConv("byte", 2, raw(2))
+  expectArrayTypeConv("char", 2, character(2))
+  expectArrayTypeConv("bool", 2, logical(2))
+  expectArrayTypeConv("string", 2, character(2), "")
+
+  # Empty arrays of a certain type are empty lists in R
+  expectArrayTypeConv("object", 2, vector("list", 2))
+  expectArrayTypeConv("Type", 2, vector("list", 2))
+})
+
+test_that("non-empty arrays of non-basic .NET objects are created and passed from .NET to R", {
+  tn <- "ClrFacade.TestArrayMemoryHandling"
+  tName <- "ClrFacade.TestObject"
+
+  testListEqual <- function(expectObj, expectedLength, actual) {
+    expect_equal(expectedLength, length(actual))
+    expect_true(is.list(actual))
+    expect_true(all(sapply(actual, FUN = function(x) {
+      areClrRefEquals(expectObj, x)
+    })))
+  }
+
+  obj <- clrNew(tName)
+  actual <- callStatic(tn, "CreateArray_object", 3L, obj)
+  testListEqual(obj, 3L, actual)
+
+  aType <- getType("System.Double")
+  actual <- callStatic(tn, "CreateArray_Type", 3L, aType)
+  testListEqual(aType, 3L, actual)
+})
+
+# https://github.com/Open-Systems-Pharmacology/rSharp/issues/57
+# test_that("Array NULL is passed from .NET as null", {
+#   expect_true(callTestCase("IsNull", NULL))
+# })
+# test_that("Array NA is passed from .NET as NA", {
+#   expect_true(callTestCase("IsNull", NA))
+# })
+# test_that("Array NaN is passed from .NET as NaN", {
+#   expect_true(callTestCase("IsNull", NA))
+# })
+
+test_that("String arrays are marshalled correctly", {
+  ltrs <- paste(letters[1:5], letters[2:6], sep = "")
+  expect_true(callTestCase("StringArrayEquals", ltrs))
+  expect_equal(callTestCase("CreateStringArray"), ltrs)
+
+  # One entry is NA.
+  ltrs[[3]] <- NA
+  expect_true(callTestCase("StringArrayMissingValuesEquals", ltrs))
+})
