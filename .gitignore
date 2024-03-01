@@ -165,3 +165,4 @@ inst/libs/*.*
 src/Makevars
 src/Makefile.win
 src/rSharp.so
+src/.idea
