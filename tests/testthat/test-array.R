@@ -71,6 +71,12 @@ test_that("Basic types of length zero are passed correctly from R to .NET", {
 #   expect_true(callTestCase("IsNull", c(1, NaN, 3)))
 # })
 
+# test_that("Numerical bi-dimensional arrays are marshalled correctly from R to .NET", {
+#   numericMat <- matrix(as.numeric(1:15), nrow = 3, ncol = 5, byrow = TRUE)
+#   expect_that( callTestCase( "NumericMatrixEquals", numericMat), equals(numericMat))
+# })
+
+
 ##########.NET to R tests##########
 test_that("Basic types of length zero are returned correctly from .NET", {
   expectArrayTypeConv("float", 0, numeric(0))
@@ -137,13 +143,13 @@ test_that("non-empty arrays of non-basic .NET objects are created and passed fro
 
 # https://github.com/Open-Systems-Pharmacology/rSharp/issues/57
 # test_that("Array NULL is passed from .NET as null", {
-#   expect_true(callTestCase("IsNull", NULL))
+#   expect_equal(callTestCase("IsNull", NULL))
 # })
 # test_that("Array NA is passed from .NET as NA", {
-#   expect_true(callTestCase("IsNull", NA))
+#   expect_equal(callTestCase("IsNull", NA))
 # })
 # test_that("Array NaN is passed from .NET as NaN", {
-#   expect_true(callTestCase("IsNull", NA))
+#   expect_equal(callTestCase("IsNull", NA))
 # })
 
 test_that("String arrays are marshalled correctly", {
@@ -154,4 +160,29 @@ test_that("String arrays are marshalled correctly", {
   # One entry is NA.
   ltrs[[3]] <- NA
   expect_true(callTestCase("StringArrayMissingValuesEquals", ltrs))
+})
+
+test_that("Numerical bi-dimensional arrays are marshalled correctly from .NET to R", {
+  numericMat <- matrix(as.numeric(1:15), nrow = 3, ncol = 5, byrow = TRUE)
+  # A natural marshalling of jagged arrays is debatable. For the time being assuming that they are matrices, due to the concrete use case.
+  expect_that(callTestCase("CreateJaggedFloatArray"), equals(numericMat))
+  expect_that(callTestCase("CreateJaggedDoubleArray"), equals(numericMat))
+  expect_that(callTestCase("CreateRectFloatArray"), equals(numericMat))
+  expect_that(callTestCase("CreateRectDoubleArray"), equals(numericMat))
+})
+
+
+##########Mixed tests##########
+test_that("Numeric arrays are marshalled correctly", {
+  expectedNumArray <- 1:5 * 1.1
+  expect_that(callTestCase("CreateNumArray"), equals(expectedNumArray))
+  expect_equal(callTestCase("CreateFloatArray"), expected = expectedNumArray, tolerance = 5e-8, scale = 2)
+  expect_true(callTestCase("NumArrayEquals", expectedNumArray))
+
+  numDays <- 5
+  expect_equal(callTestCase("CreateIntArray", as.integer(numDays)), expected = 0:(numDays - 1))
+
+  expectedNumArray[3] <- NA
+  expect_that(callTestCase("CreateNumArrayMissingVal"), equals(expectedNumArray))
+  expect_true(callTestCase("NumArrayMissingValuesEquals", expectedNumArray))
 })

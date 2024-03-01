@@ -1,40 +1,3 @@
-
-
-test_that("getType function", {
-  testObj <- clrNew(testClassName)
-  expect_equal(testClassName, clrGet(getType(testClassName), "FullName"))
-  expect_equal(testClassName, clrGet(getType(testObj), "FullName"))
-})
-
-
-test_that("Numeric arrays are marshalled correctly", {
-  expectedNumArray <- 1:5 * 1.1
-  expect_that(callTestCase("CreateNumArray"), equals(expectedNumArray))
-  ## Internally somewhere, some noise is added probably in a float to double conversion.
-  ## Expected, but 5e-8 is more difference than I'd have guessed. Some watch point.
-  # expect_that( callTestCase( "CreateFloatArray"), equals(expectedNumArray) )
-  expect_equal(callTestCase("CreateFloatArray"), expected = expectedNumArray, tolerance = 5e-8, scale = 2)
-  expect_true(callTestCase("NumArrayEquals", expectedNumArray))
-
-  numDays <- 5
-  expect_equal(callTestCase("CreateIntArray", as.integer(numDays)), expected = 0:(numDays - 1))
-
-  expectedNumArray[3] <- NA
-  expect_that(callTestCase("CreateNumArrayMissingVal"), equals(expectedNumArray))
-  expect_true(callTestCase("NumArrayMissingValuesEquals", expectedNumArray))
-})
-
-test_that("Complex numbers are converted", {
-  z <- 1 + 2i
-  expect_equal(callTestCase("CreateComplex", 1, 2), z)
-  expect_true(callTestCase("ComplexEquals", z, 1, 2))
-  z <- c(1 + 2i, 3 + 4i, 3.3 + 4.4i)
-  expect_equal(callTestCase("CreateComplex", c(1, 3, 3.3), c(2, 4, 4.4)), z)
-  expect_true(callTestCase("ComplexEquals", z, c(1, 3, 3.3), c(2, 4, 4.4)))
-})
-
-# TODO: test that passing an S4 object that is not a clr object converts to a null reference in the CLR
-
 test_that("Methods with variable number of parameters with c# 'params' keyword", {
   testObj <- clrNew(testClassName)
   actual <- clrCall(testObj, "TestParams", "Hello, ", "World!", 1L, 2L, 3L, 6L, 5L, 4L)
@@ -114,16 +77,6 @@ test_that("Correct method binding based on parameter types", {
 })
 
 
-test_that("Numerical bi-dimensional arrays are marshalled correctly", {
-  numericMat <- matrix(as.numeric(1:15), nrow = 3, ncol = 5, byrow = TRUE)
-  # A natural marshalling of jagged arrays is debatable. For the time being assuming that they are matrices, due to the concrete use case.
-  expect_that(callTestCase("CreateJaggedFloatArray"), equals(numericMat))
-  expect_that(callTestCase("CreateJaggedDoubleArray"), equals(numericMat))
-  expect_that(callTestCase("CreateRectFloatArray"), equals(numericMat))
-  expect_that(callTestCase("CreateRectDoubleArray"), equals(numericMat))
-
-  # expect_that( callTestCase( "NumericMatrixEquals", numericMat), equals(numericMat))
-})
 
 test_that("Conversion of non-bijective types can be turned on/off", {
   # When the conversion is turned off, a `NetObject` is returned, which holds a reference to the .NET object.

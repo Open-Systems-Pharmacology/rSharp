@@ -18,3 +18,9 @@ test_that("Object constructors calls work", {
   expect_that(clrGet(obj, "FieldDoubleOne"), equals(d1))
   expect_that(clrGet(obj, "FieldDoubleTwo"), equals(d2))
 })
+
+test_that("getType function", {
+  testObj <- clrNew(testClassName)
+  expect_equal(testClassName, clrGet(getType(testClassName), "FullName"))
+  expect_equal(testClassName, clrGet(getType(testObj), "FullName"))
+})

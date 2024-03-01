@@ -44,3 +44,12 @@ test_that("Basic types of length one are marshalled correctly", {
 # test_that("Basic NaN is passed from .NET as NaN", {
 #   expect_true(callTestCase("IsNull", NaN))
 # })
+
+test_that("Complex numbers are converted", {
+  z <- 1 + 2i
+  expect_equal(callTestCase("CreateComplex", 1, 2), z)
+  expect_true(callTestCase("ComplexEquals", z, 1, 2))
+  z <- c(1 + 2i, 3 + 4i, 3.3 + 4.4i)
+  expect_equal(callTestCase("CreateComplex", c(1, 3, 3.3), c(2, 4, 4.4)), z)
+  expect_true(callTestCase("ComplexEquals", z, c(1, 3, 3.3), c(2, 4, 4.4)))
+})
