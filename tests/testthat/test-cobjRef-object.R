@@ -45,3 +45,11 @@ test_that("Basic objects are created correctly", {
   testObj <- callTestCase("CreateTestArrayInterface")
   testObj <- callTestCase("CreateTestArrayGenericInterface")
 })
+
+test_that("set works ", {
+  testClassName <- rSharpEnv$testObjectTypeName
+  testObj <- clrNew(testClassName)
+  clrReflect(testObj)
+  clrSet(testObj, "FieldIntegerOne", as.integer(42))
+  clrSet(testClassName, "StaticPropertyIntegerOne", as.integer(42))
+})

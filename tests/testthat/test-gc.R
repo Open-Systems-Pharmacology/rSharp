@@ -37,6 +37,7 @@ test_that("Garbage collection in R and the .NET behaves as expected", {
   testGarbageCollection(getObjCountMethodName = "GetMemTestObjCounter", createTestObjectMethodName = "CreateMemTestObj")
 })
 
+# https://github.com/Open-Systems-Pharmacology/rSharp/issues/59
 # test_that("Garbage collection of R.NET objects", {
 #   testGarbageCollection( getObjCountMethodName = 'GetMemTestObjCounterRDotnet', createTestObjectMethodName = 'CreateMemTestObjRDotnet')
 # })

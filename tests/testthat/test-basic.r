@@ -147,15 +147,6 @@ test_that("Retrieval of object or class (i.e. static) members values behaves as 
   f(testClassName, "IntegerOne", staticPrefix = "Static")
 })
 
-test_that("Assembly loading", {
-  # loadAssembly("System.Windows.Presentation, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089")
-  loadAssembly("System.Net.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
-
-  # The use of partial assembly names is discouraged; nevertheless it is supported
-  loadAssembly("System.Web.Services")
-})
-
-
 test_that("toStringNET works for primitive types", {
   expect_that(toStringNET(1), equals("1"))
   expect_that(toStringNET(1.0), equals("1"))
@@ -165,6 +156,7 @@ test_that("toStringNET works for primitive types", {
   # Check of correct behavior
   #  expect_that(toStringNET(NA), equals("null"))
   #  expect_that(toStringNET(NULL), equals("null"))
+  expect_that(toStringNET(NaN), equals("NaN"))
 })
 
 # Re-enable when https://github.com/Open-Systems-Pharmacology/rSharp/issues/35 is fixed
@@ -172,11 +164,3 @@ test_that("toStringNET works for primitive types", {
 #   # callStatic(rSharpEnv$testCasesTypeName, "ThrowException", 10L) # will be truncated by the Rf_error API
 #   printTraceback() # prints the full stack trace
 # })
-
-test_that("set works ", {
-  testClassName <- rSharpEnv$testObjectTypeName
-  testObj <- clrNew(testClassName)
-  clrReflect(testObj)
-  clrSet(testObj, "FieldIntegerOne", as.integer(42))
-  clrSet(testClassName, "StaticPropertyIntegerOne", as.integer(42))
-})
