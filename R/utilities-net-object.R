@@ -46,23 +46,7 @@ newObjectFromName <- function(typename, ...) {
 
 
 ###########################
-#' Call a method on an object
-#'
-#' @param obj an object
-#' @param methodName the name of a method of the object
-#' @param ... additional method arguments passed to .External
-#' @return an object resulting from the call. May be a CLR object, or a native R object for common types. Can be NULL.
-#' @export
-#' @examples
-#' testClassName <- rSharpEnv$testObjectTypeName
-#' testObj <- newObjectFromName(testClassName)
-#' clrCall(testObj, "GetFieldIntegerOne")
-clrCall <- function(obj, methodName, ...) {
-  interface <- "r_call_method"
-  result <- NULL
-  result <- .External(interface, obj$pointer, methodName, ..., PACKAGE = rSharpEnv$nativePkgName)
-  return(castToRObject(result))
-}
+
 
 #' Gets the value of a field or property of an object or class
 #'

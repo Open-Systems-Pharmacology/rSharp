@@ -2,7 +2,6 @@
 
 export(NetObject)
 export(callStatic)
-export(clrCall)
 export(clrGet)
 export(clrSet)
 export(getConstructors)

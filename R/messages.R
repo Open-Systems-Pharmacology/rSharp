@@ -23,3 +23,13 @@ messages$errorPropertyReadOnly <- function(propertyName, optionalMessage = NULL)
     }
   )
 }
+
+messages$errorMethodNotFound <- function(methodName, typeName) {
+  paste0(
+    "Method '",
+    methodName,
+    "' does not exist in the type '",
+    typeName,
+    "'."
+  )
+}

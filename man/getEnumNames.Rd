@@ -16,5 +16,9 @@ a character vector of the names for the enum
 Gets the names of a .NET Enum value type
 }
 \examples{
-getEnumNames("Rclr.TestEnum")
+enumName <- "ClrFacade.TestEnum"
+getEnumNames(enumName)
+# Get enum names from object
+enumObj <- newObjectFromName(enumName)
+getEnumNames(enumObj)
 }

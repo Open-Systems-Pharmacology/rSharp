@@ -1,9 +1,9 @@
 test_that("Methods with variable number of parameters with c# 'params' keyword", {
   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
-  actual <- clrCall(testObj, "TestParams", "Hello, ", "World!", 1L, 2L, 3L, 6L, 5L, 4L)
+  actual <- testObj$call("TestParams", "Hello, ", "World!", 1L, 2L, 3L, 6L, 5L, 4L)
   expected <- "Hello, World!123654"
   expect_equal(actual, expected = expected)
-  actual <- clrCall(testObj, "TestParams", "Hello, ", "World!", as.integer(1:6))
+  actual <- testObj$call("TestParams", "Hello, ", "World!", as.integer(1:6))
   expected <- "Hello, World!123456"
   expect_equal(actual, expected = expected)
 })
@@ -65,13 +65,13 @@ test_that("Correct method binding based on parameter types", {
   testMethodBinding()
   obj <- newObjectFromName("ClrFacade.TestMethodBinding")
   f <- function(...) {
-    clrCall(obj, "SomeInstanceMethod", ...)
+    obj$call("SomeInstanceMethod", ...)
   }
   testMethodBinding()
   # Test that methods implemented to comply with an interface are found, even if the method is explicitely implemented.
   # We do not want the users to have to figure out which interface type they deal with, at least not for R users.
   f <- function(...) {
-    clrCall(obj, "SomeExplicitlyImplementedMethod", ...)
+    obj$call("SomeExplicitlyImplementedMethod", ...)
   }
   testMethodBinding()
 })

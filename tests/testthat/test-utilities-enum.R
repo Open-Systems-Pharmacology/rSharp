@@ -4,5 +4,5 @@ test_that("enums get/set", {
   expect_that(getEnumNames(eType), equals(c("A", "B", "C")))
   e <- callStatic(rSharpEnv$testCasesTypeName, "GetTestEnum", "B")
   expect_false(is.null(e))
-  expect_that(clrCall(e, "ToString"), equals("B"))
+  expect_that(e$call("ToString"), equals("B"))
 })

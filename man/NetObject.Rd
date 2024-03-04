@@ -138,6 +138,16 @@ testObj <- newObjectFromName(testClassName)
 testObj$getMemberSignature("set_PropertyIntegerOne")
 testObj$getMemberSignature("FieldIntegerOne")
 testObj$getMemberSignature("PropertyIntegerTwo")
+Call a method of the object
+
+
+## ------------------------------------------------
+## Method `NetObject$call`
+## ------------------------------------------------
+
+testClassName <- rSharpEnv$testObjectTypeName
+testObj <- newObjectFromName(testClassName)
+testObj$call("GetFieldIntegerOne")
 Print
 }
 \section{Active bindings}{
@@ -158,6 +168,7 @@ Initialize}
 \item \href{#method-NetObject-getProperties}{\code{NetObject$getProperties()}}
 \item \href{#method-NetObject-getMethods}{\code{NetObject$getMethods()}}
 \item \href{#method-NetObject-getMemberSignature}{\code{NetObject$getMemberSignature()}}
+\item \href{#method-NetObject-call}{\code{NetObject$call()}}
 \item \href{#method-NetObject-print}{\code{NetObject$print()}}
 }
 }
@@ -317,6 +328,39 @@ testObj <- newObjectFromName(testClassName)
 testObj$getMemberSignature("set_PropertyIntegerOne")
 testObj$getMemberSignature("FieldIntegerOne")
 testObj$getMemberSignature("PropertyIntegerTwo")
+Call a method of the object
+
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-NetObject-call"></a>}}
+\if{latex}{\out{\hypertarget{method-NetObject-call}{}}}
+\subsection{Method \code{call()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{NetObject$call(methodName, ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{methodName}}{the name of a method of the object}
+
+\item{\code{...}}{additional method arguments}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+An object resulting from the call. May be a `NetObject` object, or a native R object for common types. Can be NULL.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{testClassName <- rSharpEnv$testObjectTypeName
+testObj <- newObjectFromName(testClassName)
+testObj$call("GetFieldIntegerOne")
 Print
 }
 \if{html}{\out{</div>}}

@@ -158,6 +158,31 @@ NetObject <- R6::R6Class(
       callStatic(rSharpEnv$reflectionHelperTypeName, "GetSignature", self$pointer, memberName)
     },
 
+    #' Call a method of the object
+    #'
+    #' @param methodName the name of a method of the object
+    #' @param ... additional method arguments
+    #' @return An object resulting from the call. May be a `NetObject` object, or a native R object for common types. Can be NULL.
+    #' @export
+    #' @examples
+    #' testClassName <- rSharpEnv$testObjectTypeName
+    #' testObj <- newObjectFromName(testClassName)
+    #' testObj$call("GetFieldIntegerOne")
+    call = function(methodName, ...) {
+      # validateIsString methodName
+      # First I implemented checking for the method name in the list of methods,
+      # but the the test for explicitely implemented methods fails. The check must
+      # be performed in C++ https://github.com/Open-Systems-Pharmacology/rSharp/issues/70
+      # if (!any(methodName == self$getMethods())) {
+      #   stop(messages$errorMethodNotFound(methodName, self$type))
+      # }
+
+      interface <- "r_call_method"
+      result <- NULL
+      result <- .External(interface, self$pointer, methodName, ..., PACKAGE = rSharpEnv$nativePkgName)
+      return(castToRObject(result))
+    },
+
     #' Print
     #' @description print prints a summary of the object.
     print = function() {

@@ -93,6 +93,12 @@ test_that("Object members discovery behaves as expected", {
 #   expect_error(clrGetMemberSignature(testObj, "NonExistentMethod"))
 # })
 
+# https://github.com/Open-Systems-Pharmacology/rSharp/issues/70
+# test_that("It throws an error when trying to call a method that does not exist", {
+#   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
+#   expect_error(testObj$call(methodName = "NonExistentMethod"), regexp = messages$errorMethodNotFound("NonExistentMethod", rSharpEnv$testObjectTypeName))
+# })
+
 ###########
 
 

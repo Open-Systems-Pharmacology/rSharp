@@ -40,7 +40,7 @@ getType <- function(objOrTypename) {
 
   # If the input is a NetObject
   if (inherits(objOrTypename, "NetObject")) {
-    return(clrCall(objOrTypename, "GetType"))
+    return(objOrTypename$call("GetType"))
   }
   stop("objOrTypename is neither a `NetObject` object nor a character vector")
 }
