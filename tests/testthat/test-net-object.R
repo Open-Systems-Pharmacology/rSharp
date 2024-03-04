@@ -10,25 +10,25 @@ test_that("It creates a `NetObject` from a valid pointer is provided", {
   netObj$print()
 })
 
-test_that("CLR type compatibility checking", {
-  testObj <- newObjectFromName(testClassName)
-  expect_true(clrIs(testObj, testClassName))
-  expect_true(clrIs(testObj, "System.Object"))
-  expect_false(clrIs(testObj, "System.Double"))
-  testObj <- newObjectFromName("ClrFacade.TestMethodBinding")
-  expect_true(clrIs(testObj, "ClrFacade.ITestMethodBindings"))
-  expect_true(clrIs(testObj, getType("ClrFacade.ITestMethodBindings")))
-  expect_true(clrIs(testObj, getType("ClrFacade.TestMethodBinding")))
-  expect_false(clrIs(testObj, getType("System.Reflection.Assembly")))
-  expect_error(clrIs(testObj, testObj))
-})
+# Re-enable once https://github.com/Open-Systems-Pharmacology/rSharp/issues/67
+# test_that("CLR type compatibility checking", {
+#   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
+#   expect_true(clrIs(testObj, rSharpEnv$testObjectTypeName))
+#   expect_true(clrIs(testObj, "System.Object"))
+#   expect_false(clrIs(testObj, "System.Double"))
+#   testObj <- newObjectFromName("ClrFacade.TestMethodBinding")
+#   expect_true(clrIs(testObj, "ClrFacade.ITestMethodBindings"))
+#   expect_true(clrIs(testObj, getType("ClrFacade.ITestMethodBindings")))
+#   expect_true(clrIs(testObj, getType("ClrFacade.TestMethodBinding")))
+#   expect_false(clrIs(testObj, getType("System.Reflection.Assembly")))
+#   expect_error(clrIs(testObj, testObj))
+# })
 
 
 
 test_that("set works ", {
-  testClassName <- rSharpEnv$testObjectTypeName
-  testObj <- newObjectFromName(testClassName)
+  testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
   clrReflect(testObj)
   clrSet(testObj, "FieldIntegerOne", as.integer(42))
-  clrSet(testClassName, "StaticPropertyIntegerOne", as.integer(42))
+  clrSet(rSharpEnv$testObjectTypeName, "StaticPropertyIntegerOne", as.integer(42))
 })

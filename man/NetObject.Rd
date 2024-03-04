@@ -111,7 +111,6 @@ Initialize}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-NetObject-new}{\code{NetObject$new()}}
-\item \href{#method-NetObject-is}{\code{NetObject$is()}}
 \item \href{#method-NetObject-print}{\code{NetObject$print()}}
 }
 }
@@ -144,15 +143,6 @@ Print
 }
 \if{html}{\out{</div>}}
 
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-NetObject-is"></a>}}
-\if{latex}{\out{\hypertarget{method-NetObject-is}{}}}
-\subsection{Method \code{is()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{NetObject$is(type)}\if{html}{\out{</div>}}
 }
 
 }

@@ -24,7 +24,7 @@ testClassName <- "ClrFacade.TestObject"
 type <- getType(testClassName)
 toStringNET(type)
 
-testObj <- createNetObject(testClassName)
+testObj <- newObjectFromName(testClassName)
 type <- getType(testObj)
 toStringNET(type)
 

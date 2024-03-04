@@ -101,36 +101,9 @@ NetObject <- R6::R6Class(
       return(self)
     },
 
-    is = function(type) {
-      .External("r_is_clr_type", private$.pointer, type, PACKAGE = rSharpEnv$nativePkgName)
-
-
-      #the object type to check for. It can be a character, of a object of CLR type System.RuntimeType
-
-
-
-      if (is.character(type)) {
-        tmpType <- getType(type)
-        if (is.null(tmpType)) {
-          stop(paste("Unrecognized type name", type))
-        } else {
-          type <- tmpType
-        }
-      }
-
-
-
-      if (!is(type, "cobjRef")) {
-        stop(paste('argument "type" must be a CLR type name or a Type'))
-      } else {
-        typetypename <- clrGet(clrCall(type, "GetType"), "Name")
-        if (!(typetypename %in% c("RuntimeType", "MonoType"))) {
-          stop(paste('argument "type" must be a CLR Type. Got a', typetypename))
-        }
-      }
-      objType <- getType(obj)
-      return(clrCall(type, "IsAssignableFrom", objType))
-    },
+    # is = function(type) {
+    #   # call static method once implemented https://github.com/Open-Systems-Pharmacology/rSharp/issues/67
+    # },
 
     #' Print
     #' @description print prints a summary of the object.
@@ -158,5 +131,4 @@ NetObject <- R6::R6Class(
 #' # clrTypename
 #'
 #' # Obsolete
-#' # clrIs - this should be easy to check by accessing the field of the class? Not used anywhere
 #' # .clrGetExtPtr

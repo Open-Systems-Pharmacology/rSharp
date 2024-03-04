@@ -27,42 +27,6 @@ castToRObject <- function(obj) {
 
 
 ###########################
-
-#' Check whether an object is of a certain type
-#'
-#' This function is meant to match the behavior of the 'is' keyword in C#.
-#'
-#' @param obj an object
-#' @param type the object type to check for. It can be a character, of a object of CLR type System.RuntimeType
-#' @return TRUE or FALSE
-#' @export
-#' @examples
-#' testClassName <- "ClrFacade.TestObject"
-#' testObj <- newObjectFromName(testClassName)
-#' clrIs(testObj, testClassName)
-#' clrIs(testObj, "System.Object")
-clrIs <- function(obj, type) {
-  if (is.character(type)) {
-    tmpType <- getType(type)
-    if (is.null(tmpType)) {
-      stop(paste("Unrecognized type name", type))
-    } else {
-      type <- tmpType
-    }
-  }
-  if (!is(type, "cobjRef")) {
-    stop(paste('argument "type" must be a CLR type name or a Type'))
-  } else {
-    typetypename <- clrGet(clrCall(type, "GetType"), "Name")
-    if (!(typetypename %in% c("RuntimeType", "MonoType"))) {
-      stop(paste('argument "type" must be a CLR Type. Got a', typetypename))
-    }
-  }
-  objType <- getType(obj)
-  return(clrCall(type, "IsAssignableFrom", objType))
-}
-
-
 #' Call a method on an object
 #'
 #' @param obj an object
