@@ -158,6 +158,16 @@ Gets the value of a field or property of the object
 testClassName <- rSharpEnv$testObjectTypeName
 testObj <- newObjectFromName(testClassName)
 testObj$get("FieldIntegerOne")
+Sets the value of a field or property of the object.
+
+
+## ------------------------------------------------
+## Method `NetObject$set`
+## ------------------------------------------------
+
+testClassName <- rSharpEnv$testObjectTypeName
+testObj <- newObjectFromName(testClassName)
+testObj$set("FieldIntegerOne", as.integer(42))
 Print
 }
 \section{Active bindings}{
@@ -180,6 +190,7 @@ Initialize}
 \item \href{#method-NetObject-getMemberSignature}{\code{NetObject$getMemberSignature()}}
 \item \href{#method-NetObject-call}{\code{NetObject$call()}}
 \item \href{#method-NetObject-get}{\code{NetObject$get()}}
+\item \href{#method-NetObject-set}{\code{NetObject$set()}}
 \item \href{#method-NetObject-print}{\code{NetObject$print()}}
 }
 }
@@ -403,6 +414,36 @@ An object resulting from the call. May be a `NetObject` object, or a native R ob
 \preformatted{testClassName <- rSharpEnv$testObjectTypeName
 testObj <- newObjectFromName(testClassName)
 testObj$get("FieldIntegerOne")
+Sets the value of a field or property of the object.
+
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-NetObject-set"></a>}}
+\if{latex}{\out{\hypertarget{method-NetObject-set}{}}}
+\subsection{Method \code{set()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{NetObject$set(name, value)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{the name of a field/property of the object}
+
+\item{\code{value}}{the value to set the field with}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{testClassName <- rSharpEnv$testObjectTypeName
+testObj <- newObjectFromName(testClassName)
+testObj$set("FieldIntegerOne", as.integer(42))
 Print
 }
 \if{html}{\out{</div>}}

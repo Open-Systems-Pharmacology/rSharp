@@ -43,35 +43,3 @@ newObjectFromName <- function(typename, ...) {
   }
   NetObject$new(o)
 }
-
-
-###########################
-
-
-#' Gets the value of a static field or property of a class
-#'
-#' @param type Type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
-#' @param name the name of a field/property  of the object
-#' @return An object resulting from the call. May be a `NetObject` object, or a native R object for common types. Can be NULL.
-#' @export
-#' @examples
-#' testClassName <- rSharpEnv$testObjectTypeName
-#' getStatic(testClassName, "StaticPropertyIntegerOne")
-getStatic <- function(type, name) {
-  return(callStatic(rSharpEnv$clrFacadeTypeName, "GetFieldOrProperty", type, name))
-}
-
-#' Sets the value of a field or property of an object or class
-#'
-#' @param objOrType a CLR object, or type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
-#' @param name the name of a field/property of the object
-#' @param value the value to set the field with
-#' @export
-#' @examples
-#' testClassName <- rSharpEnv$testObjectTypeName
-#' testObj <- newObjectFromName(testClassName)
-#' clrSet(testObj, "FieldIntegerOne", as.integer(42))
-#' clrSet(testClassName, "StaticPropertyIntegerOne", as.integer(42))
-clrSet <- function(objOrType, name, value) {
-  invisible(callStatic(rSharpEnv$clrFacadeTypeName, "SetFieldOrProperty", objOrType, name, value))
-}

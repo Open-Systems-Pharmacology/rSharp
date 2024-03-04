@@ -197,6 +197,20 @@ NetObject <- R6::R6Class(
       return(getStatic(self$pointer, name))
     },
 
+    #' Sets the value of a field or property of the object.
+    #'
+    #' @param name the name of a field/property of the object
+    #' @param value the value to set the field with
+    #' @export
+    #' @examples
+    #' testClassName <- rSharpEnv$testObjectTypeName
+    #' testObj <- newObjectFromName(testClassName)
+    #' testObj$set("FieldIntegerOne", as.integer(42))
+    set = function(name, value) {
+      # Internally calling `setStatic` because it uses the same C++ code
+      invisible(setStatic(self$pointer, name, value))
+    },
+
     #' Print
     #' @description print prints a summary of the object.
     print = function() {

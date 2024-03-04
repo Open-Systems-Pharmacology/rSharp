@@ -108,25 +108,17 @@ test_that("$get works as expected", {
     expect_equal(testObj$get(propName), 0)
 })
 
-# test_that("$set works as expected", {
-#   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
-#   fieldName <- "FieldIntegerOne"
-#   propName <- "PropertyIntegerOne"
-#
-#   expect_equal(testObj$get(fieldName), 0)
-#   expect_equal(testObj$get(propName), 0)
-#
-#
-#   clrSet(obj_or_type, fieldName, as.integer(0))
-#
-#   clrSet(obj_or_type, fieldName, as.integer(2))
-#   expect_that(clrGet(obj_or_type, fieldName), equals(2))
-#
-#   clrSet(obj_or_type, propName, as.integer(2))
-#   expect_that(clrGet(obj_or_type, propName), equals(2))
-#   # first object members
-#
-#   f(testObj, "IntegerOne", staticPrefix = "")
-#   # then test static members
-#   f(rSharpEnv$testObjectTypeName, "IntegerOne", staticPrefix = "Static")
-# })
+test_that("$set works as expected", {
+  testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
+  fieldName <- "FieldIntegerOne"
+  propName <- "PropertyIntegerOne"
+
+  expect_equal(testObj$get(fieldName), 0)
+  expect_equal(testObj$get(propName), 0)
+
+  testObj$set(fieldName, as.integer(2))
+  expect_equal(testObj$get(fieldName), 2)
+
+  testObj$set(propName, as.integer(2))
+  expect_equal(testObj$get(propName), 2)
+})

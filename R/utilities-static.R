@@ -9,6 +9,15 @@ getStaticMembers <- function(objOrType) {
   list(Methods = getStaticMethods(objOrType), Fields = getStaticFields(objOrType), Properties = getStaticProperties(objOrType))
 }
 
+#' Gets the signature of a static member of a type
+#'
+#' @param typename type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
+#' @param memberName The exact name of the member (i.e. field, property, method) to search for
+#' @export
+getStaticMemberSignature <- function(typename, memberName) {
+  callStatic(rSharpEnv$reflectionHelperTypeName, "GetSignature", typename, memberName)
+}
+
 #' Gets the static fields for a type
 #'
 #' @param objOrType a `NetObject` object, or type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
@@ -57,11 +66,28 @@ callStatic <- function(typename, methodName, ...) {
   return(castToRObject(extPtr))
 }
 
-#' Gets the signature of a static member of a type
+#' Gets the value of a static field or property of a class
 #'
-#' @param typename type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
-#' @param memberName The exact name of the member (i.e. field, property, method) to search for
+#' @param type Type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
+#' @param name the name of a field/property  of the object
+#' @return An object resulting from the call. May be a `NetObject` object, or a native R object for common types. Can be NULL.
 #' @export
-getStaticMemberSignature <- function(typename, memberName) {
-  callStatic(rSharpEnv$reflectionHelperTypeName, "GetSignature", typename, memberName)
+#' @examples
+#' testClassName <- rSharpEnv$testObjectTypeName
+#' getStatic(testClassName, "StaticPropertyIntegerOne")
+getStatic <- function(type, name) {
+  return(callStatic(rSharpEnv$clrFacadeTypeName, "GetFieldOrProperty", type, name))
+}
+
+#' Sets the value of a field or property of an object or class
+#'
+#' @param type Type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
+#' @param name the name of a field/property of the object
+#' @param value The value to set the field with
+#' @export
+#' @examples
+#' testClassName <- rSharpEnv$testObjectTypeName
+#' setStatic(testClassName, "StaticPropertyIntegerOne", as.integer(42))
+setStatic <- function(type, name, value) {
+  invisible(callStatic(rSharpEnv$clrFacadeTypeName, "SetFieldOrProperty", type, name, value))
 }
