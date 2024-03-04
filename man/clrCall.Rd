@@ -21,6 +21,6 @@ Call a method on an object
 }
 \examples{
 testClassName <- rSharpEnv$testObjectTypeName
-testObj <- clrNew(testClassName)
+testObj <- newObjectFromName(testClassName)
 clrCall(testObj, "GetFieldIntegerOne")
 }

@@ -19,7 +19,7 @@ Gets the value of a field or property of an object or class
 }
 \examples{
 testClassName <- rSharpEnv$testObjectTypeName
-testObj <- clrNew(testClassName)
+testObj <- newObjectFromName(testClassName)
 clrReflect(testObj)
 clrGet(testObj, "FieldIntegerOne")
 clrGet(testClassName, "StaticPropertyIntegerOne")

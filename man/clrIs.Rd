@@ -19,7 +19,7 @@ This function is meant to match the behavior of the 'is' keyword in C#.
 }
 \examples{
 testClassName <- "ClrFacade.TestObject"
-testObj <- clrNew(testClassName)
+testObj <- newObjectFromName(testClassName)
 clrIs(testObj, testClassName)
 clrIs(testObj, "System.Object")
 }

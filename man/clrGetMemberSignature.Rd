@@ -20,7 +20,7 @@ Mostly used to interactively search for what arguments to pass to a method.
 }
 \examples{
 testClassName <- "ClrFacade.TestObject"
-testObj <- clrNew(testClassName)
+testObj <- newObjectFromName(testClassName)
 clrReflect(testObj)
 clrGetMemberSignature(testObj, "set_PropertyIntegerOne")
 clrGetMemberSignature(testObj, "FieldIntegerOne")

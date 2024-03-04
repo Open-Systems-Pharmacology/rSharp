@@ -19,7 +19,7 @@ List the instance properties of a CLR object
 }
 \examples{
 testClassName <- "ClrFacade.TestObject"
-testObj <- clrNew(testClassName)
+testObj <- newObjectFromName(testClassName)
 clrGetProperties(testObj)
 clrGetProperties(testObj, "One")
 }

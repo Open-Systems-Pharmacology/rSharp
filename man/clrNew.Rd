@@ -18,8 +18,8 @@ a CLR object
 Create a new CLR object
 }
 \examples{
-testClassName <- rSharpEnv$testObjectTypeName
-testObj <- clrNew(testClassName)
+testClassName <- getRSharpSetting("testObjectTypeName")
+testObj <- newObjectFromName(testClassName)
 # object with a constructor that has parameters
 testObj <- clrNew(testClassName, as.integer(123))
 }

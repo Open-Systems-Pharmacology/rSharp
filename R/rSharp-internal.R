@@ -41,7 +41,7 @@
 #' @return a character string, the type name
 #' @examples
 #' testClassName <- "ClrFacade.TestObject"
-#' testObj <- clrNew(testClassName)
+#' testObj <- newObjectFromName(testClassName)
 #' .clrTypeNameExtPtr(testObj@clrobj)
 .clrTypeNameExtPtr <- function(extPtr) {
   .validateIsExtPtr(extPtr)

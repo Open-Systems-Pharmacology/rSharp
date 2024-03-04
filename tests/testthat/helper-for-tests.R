@@ -1,9 +1,4 @@
 # this file is automatically loaded by testthat when running tests
-
-# Variables
-testClassName <- "ClrFacade.TestObject"
-
-
 # Functions
 areClrRefEquals <- function(x, y) {
   callStatic("System.Object", "ReferenceEquals", x, y)
@@ -31,4 +26,9 @@ expectClrArrayElementType <- function(rObj, expectedClrTypeName) {
 
 callTestCase <- function(...) {
   callStatic(rSharpEnv$testCasesTypeName, ...)
+}
+
+# Check if references are equal
+areClrRefEquals <- function(x, y) {
+  callStatic("System.Object", "ReferenceEquals", x, y)
 }

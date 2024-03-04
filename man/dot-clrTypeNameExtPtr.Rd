@@ -17,6 +17,6 @@ Gets the type name of an object, given the SEXP external pointer to this .NET ob
 }
 \examples{
 testClassName <- "ClrFacade.TestObject"
-testObj <- clrNew(testClassName)
+testObj <- newObjectFromName(testClassName)
 .clrTypeNameExtPtr(testObj@clrobj)
 }

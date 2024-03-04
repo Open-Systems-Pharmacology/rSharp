@@ -25,7 +25,7 @@ setConvertAdvancedTypes <- function(enable = TRUE) {
 #' @examples
 #' library(rSharp)
 #' testClassName <- "ClrFacade.TestObject"
-#' testObj <- clrNew(testClassName)
+#' testObj <- newObjectFromName(testClassName)
 #' clrReflect(testObj)
 clrReflect <- function(clrobj) {
   # .Call("r_reflect_on_object", clrobj@clrobj, silent=FALSE, PACKAGE="rSharp")
@@ -46,8 +46,8 @@ clrReflect <- function(clrobj) {
 #' @examples
 #' library(rSharp)
 #' dt <- as.POSIXct("2001-01-01 02:03:04", tz = "UTC")
-#' toString(dt)
-toString <- function(x) {
+#' toStringNET(dt)
+toStringNET <- function(x) {
   return(callStatic(rSharpEnv$InternalTypeName, "ToString", x))
 }
 
@@ -59,7 +59,7 @@ toString <- function(x) {
 #' @export
 #' @examples
 #' testClassName <- rSharpEnv$testObjectTypeName
-#' testObj <- clrNew(testClassName)
+#' testObj <- newObjectFromName(testClassName)
 #' getFields(testObj)
 #' getFields(testObj, "ieldInt")
 getFields <- function(clrobj, contains = "") {
@@ -74,7 +74,7 @@ getFields <- function(clrobj, contains = "") {
 #' @export
 #' @examples
 #' testClassName <- "ClrFacade.TestObject"
-#' testObj <- clrNew(testClassName)
+#' testObj <- newObjectFromName(testClassName)
 #' clrGetProperties(testObj)
 #' clrGetProperties(testObj, "One")
 clrGetProperties <- function(clrobj, contains = "") {
@@ -89,7 +89,7 @@ clrGetProperties <- function(clrobj, contains = "") {
 #' @export
 #' @examples
 #' testClassName <- "ClrFacade.TestObject"
-#' testObj <- clrNew(testClassName)
+#' testObj <- newObjectFromName(testClassName)
 #' clrGetMethods(testObj)
 #' clrGetMethods(testObj, "Get")
 clrGetMethods <- function(clrobj, contains = "") {
@@ -107,7 +107,7 @@ clrGetMethods <- function(clrobj, contains = "") {
 #' @export
 #' @examples
 #' testClassName <- "ClrFacade.TestObject"
-#' testObj <- clrNew(testClassName)
+#' testObj <- newObjectFromName(testClassName)
 #' clrReflect(testObj)
 #' clrGetMemberSignature(testObj, "set_PropertyIntegerOne")
 #' clrGetMemberSignature(testObj, "FieldIntegerOne")
@@ -124,8 +124,8 @@ clrGetMemberSignature <- function(clrobj, memberName) {
 #' @export
 #' @import methods
 #' @examples
-#' testClassName <- rSharpEnv$testObjectTypeName
-#' testObj <- clrNew(testClassName)
+#' testClassName <- getRSharpSetting("testObjectTypeName")
+#' testObj <- newObjectFromName(testClassName)
 #' # object with a constructor that has parameters
 #' testObj <- clrNew(testClassName, as.integer(123))
 clrNew <- function(typename, ...) {
@@ -137,43 +137,21 @@ clrNew <- function(typename, ...) {
 }
 
 
-#' Create a new NetObject R6 object
+#' Create a new NetObject R6 object given the type name.
 #'
 #' @param typename type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
 #' @param ... additional method arguments passed to the object constructor via the call to .External
 #' @return a `NetObject` R6 object
 #' @export
 #' @examples
-#' \dontrun{
-#' testClassName <- "Rclr.TestObject"
-#' (testObj <- clrNew(testClassName))
+#' testClassName <- getRSharpSetting("testObjectTypeName")
+#' testObj <- newObjectFromName(testClassName)
 #' # object with a constructor that has parameters
-#' (testObj <- clrNew(testClassName, as.integer(123)))
-#' loadAssembly("System.Windows.Forms, Version=2.0.0.0,
-#'   Culture=neutral, PublicKeyToken=b77a5c561934e089")
-#' f <- clrNew("System.Windows.Forms.Form")
-#' clrSet(f, "Text", "Hello from '.NET'")
-#' clrCall(f, "Show")
-#' }
-# clrNew <- function(typename, ...) {
-#   o <- .External("r_create_clr_object", typename, ..., PACKAGE = rSharpEnv$nativePkgName)
-#   if (is.null(o)) {
-#     stop("Failed to create instance of type '", typename, "'")
-#   }
-#   NetObject$new(o)
-# }
-
-#' Gets the type of a .NET object given its type name
-#'
-#' @param objOrTypename a character vector of length one. It can be the full file name of the assembly to load, or a fully qualified assembly name, or as a last resort a partial name.
-#' @return the .NET Type.
-#' @export
-getType <- function(objOrTypename) {
-  if (is.character(objOrTypename)) {
-    return(callStatic(rSharpEnv$clrFacadeTypeName, "GetType", objOrTypename))
-  } else if (inherits(objOrTypename, "cobjRef")) {
-    return(clrCall(objOrTypename, "GetType"))
-  } else {
-    stop("objOrTypename is neither a cobjRef object nor a character vector")
+#' testObj <- newObjectFromName(testClassName, as.integer(123))
+newObjectFromName <- function(typename, ...) {
+  o <- .External("r_create_clr_object", typename, ..., PACKAGE = rSharpEnv$nativePkgName)
+  if (is.null(o)) {
+    stop("Failed to create instance of type '", typename, "'")
   }
+  NetObject$new(o)
 }

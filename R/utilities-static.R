@@ -45,8 +45,16 @@ getStaticMethods <- function(objOrType, contains = "") {
 #' cTypename <- getRSharpSetting("testCasesTypeName")
 #' callStatic(cTypename, "IsTrue", TRUE)
 callStatic <- function(typename, methodName, ...) {
-  extPtr <- .External("r_call_static_method", typename, methodName, ..., PACKAGE = rSharpEnv$nativePkgName)
-  return(createNetObject(extPtr))
+  # Extract the pointer for R6 objects
+  args <- list(...)
+  for (i in seq_along(args)) {
+    if (inherits(args[[i]], "NetObject")) {
+      args[[i]] <- args[[i]]$pointer
+    }
+  }
+  # Calling via `do.call` to pass the arguments
+  extPtr <- do.call(".External", c(list("r_call_static_method", typename, methodName), args, PACKAGE = rSharpEnv$nativePkgName))
+  return(castToRObject(extPtr))
 }
 
 #' Gets the signature of a static member of a type

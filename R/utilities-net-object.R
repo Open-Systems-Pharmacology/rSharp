@@ -10,10 +10,15 @@
 #'
 #' @return A `NetObject` R6 object if the argument is indeed an external pointer,
 #' otherwise returned unchanged.
-createNetObject <- function(obj) {
+castToRObject <- function(obj) {
   # Create a new NetObject instance if obj is a pointer
   if (is(obj, "externalptr")) {
     return(NetObject$new(obj))
+  }
+
+  # If obj is the S4 object of type cobjRef, return create a new NetObject
+  if (inherits(obj, "cobjRef")) {
+    return(NetObject$new(obj@clrobj))
   }
 
   # Otherwise return the object unchanged
@@ -33,7 +38,7 @@ createNetObject <- function(obj) {
 #' @export
 #' @examples
 #' testClassName <- "ClrFacade.TestObject"
-#' testObj <- clrNew(testClassName)
+#' testObj <- newObjectFromName(testClassName)
 #' clrIs(testObj, testClassName)
 #' clrIs(testObj, "System.Object")
 clrIs <- function(obj, type) {
@@ -67,13 +72,13 @@ clrIs <- function(obj, type) {
 #' @export
 #' @examples
 #' testClassName <- rSharpEnv$testObjectTypeName
-#' testObj <- clrNew(testClassName)
+#' testObj <- newObjectFromName(testClassName)
 #' clrCall(testObj, "GetFieldIntegerOne")
 clrCall <- function(obj, methodName, ...) {
   interface <- "r_call_method"
   result <- NULL
-  result <- .External(interface, obj@clrobj, methodName, ..., PACKAGE = rSharpEnv$nativePkgName)
-  return(.mkClrObjRef(result))
+  result <- .External(interface, obj$pointer, methodName, ..., PACKAGE = rSharpEnv$nativePkgName)
+  return(castToRObject(result))
 }
 
 #' Gets the value of a field or property of an object or class
@@ -84,7 +89,7 @@ clrCall <- function(obj, methodName, ...) {
 #' @export
 #' @examples
 #' testClassName <- rSharpEnv$testObjectTypeName
-#' testObj <- clrNew(testClassName)
+#' testObj <- newObjectFromName(testClassName)
 #' clrReflect(testObj)
 #' clrGet(testObj, "FieldIntegerOne")
 #' clrGet(testClassName, "StaticPropertyIntegerOne")
@@ -100,7 +105,7 @@ clrGet <- function(objOrType, name) {
 #' @export
 #' @examples
 #' testClassName <- rSharpEnv$testObjectTypeName
-#' testObj <- clrNew(testClassName)
+#' testObj <- newObjectFromName(testClassName)
 #' clrReflect(testObj)
 #' clrSet(testObj, "FieldIntegerOne", as.integer(42))
 #' clrSet(testClassName, "StaticPropertyIntegerOne", as.integer(42))
@@ -117,7 +122,7 @@ clrSet <- function(objOrType, name, value) {
 #' @export
 #' @examples
 #' testClassName <- "ClrFacade.TestObject"
-#' testObj <- clrNew(testClassName)
+#' testObj <- newObjectFromName(testClassName)
 #' clrTypename(testObj)
 clrTypename <- function(clrobj) {
   .clrTypeNameExtPtr(clrobj@clrobj)

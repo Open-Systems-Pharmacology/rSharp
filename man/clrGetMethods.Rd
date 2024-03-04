@@ -19,7 +19,7 @@ List the instance methods of a .NET object
 }
 \examples{
 testClassName <- "ClrFacade.TestObject"
-testObj <- clrNew(testClassName)
+testObj <- newObjectFromName(testClassName)
 clrGetMethods(testObj)
 clrGetMethods(testObj, "Get")
 }

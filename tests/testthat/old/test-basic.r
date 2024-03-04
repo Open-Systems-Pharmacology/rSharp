@@ -17,13 +17,13 @@ test_that("Object constructors calls work", {
   i2 <- as.integer(42)
   d1 <- 1.234
   d2 <- 2.345
-  obj <- clrNew(tName)
-  obj <- clrNew(tName, i1)
+  obj <- newObjectFromName(tName)
+  obj <- newObjectFromName(tName, i1)
   expect_that(clrGet(obj, "FieldIntegerOne"), equals(i1))
-  obj <- clrNew(tName, i1, i2)
+  obj <- newObjectFromName(tName, i1, i2)
   expect_that(clrGet(obj, "FieldIntegerOne"), equals(i1))
   expect_that(clrGet(obj, "FieldIntegerTwo"), equals(i2))
-  obj <- clrNew(tName, d1, d2)
+  obj <- newObjectFromName(tName, d1, d2)
   expect_that(clrGet(obj, "FieldDoubleOne"), equals(d1))
   expect_that(clrGet(obj, "FieldDoubleTwo"), equals(d2))
 })
@@ -101,7 +101,7 @@ test_that("non-empty arrays of non-basic .NET objects are handled", {
     })))
   }
 
-  obj <- clrNew(tName)
+  obj <- newObjectFromName(tName)
   actual <- callStatic(tn, "CreateArray_object", 3L, obj)
   testListEqual(obj, 3L, actual)
 
@@ -121,7 +121,7 @@ test_that("String arrays are marshalled correctly", {
 })
 
 test_that("getType function", {
-  testObj <- clrNew(testClassName)
+  testObj <- newObjectFromName(testClassName)
   expect_equal(testClassName, clrGet(getType(testClassName), "FullName"))
   expect_equal(testClassName, clrGet(getType(testObj), "FullName"))
 })
@@ -156,7 +156,7 @@ test_that("Complex numbers are converted", {
 # TODO: test that passing an S4 object that is not a clr object converts to a null reference in the CLR
 
 test_that("Methods with variable number of parameters with c# 'params' keyword", {
-  testObj <- clrNew(testClassName)
+  testObj <- newObjectFromName(testClassName)
   actual <- clrCall(testObj, "TestParams", "Hello, ", "World!", 1L, 2L, 3L, 6L, 5L, 4L)
   expected <- "Hello, World!123654"
   expect_equal(actual, expected = expected)
@@ -200,7 +200,7 @@ test_that("Correct method binding based on parameter types", {
   boolName <- "System.Boolean"
   dateTimeName <- "System.DateTime"
   objectName <- "System.Object"
-  testObj <- clrNew(testClassName)
+  testObj <- newObjectFromName(testClassName)
 
   testMethodBinding <- function() {
     g(1:3, intName)
@@ -221,7 +221,7 @@ test_that("Correct method binding based on parameter types", {
   }
 
   testMethodBinding()
-  obj <- clrNew("ClrFacade.TestMethodBinding")
+  obj <- newObjectFromName("ClrFacade.TestMethodBinding")
   f <- function(...) {
     clrCall(obj, "SomeInstanceMethod", ...)
   }
@@ -278,7 +278,7 @@ test_that("Conversion of non-bijective types can be turned on/off", {
 })
 
 test_that("Basic objects are created correctly", {
-  testObj <- clrNew(testClassName)
+  testObj <- newObjectFromName(testClassName)
   expect_that(testObj@clrtype, equals(testClassName))
   rm(testObj)
   # Note to self: I originally wrote code to make sure that r_call_static_method kept returning an external pointer, not
@@ -311,11 +311,11 @@ test_that("Creation of SEXP via R.NET", {
 })
 
 test_that("CLR type compatibility checking", {
-  testObj <- clrNew(testClassName)
+  testObj <- newObjectFromName(testClassName)
   expect_true(clrIs(testObj, testClassName))
   expect_true(clrIs(testObj, "System.Object"))
   expect_false(clrIs(testObj, "System.Double"))
-  testObj <- clrNew("ClrFacade.TestMethodBinding")
+  testObj <- newObjectFromName("ClrFacade.TestMethodBinding")
   expect_true(clrIs(testObj, "ClrFacade.ITestMethodBindings"))
   expect_true(clrIs(testObj, getType("ClrFacade.ITestMethodBindings")))
   expect_true(clrIs(testObj, getType("ClrFacade.TestMethodBinding")))
@@ -333,7 +333,7 @@ test_that("Loaded assemblies discovery", {
 
 test_that("Object members discovery behaves as expected", {
   expect_true("ClrFacade.TestObject" %in% getTypesInAssembly("ClrFacade"))
-  testObj <- clrNew(testClassName)
+  testObj <- newObjectFromName(testClassName)
   members <- clrReflect(testObj)
 
   f <- function(obj_or_tname, static = FALSE, getF, getP, getM) { # copy-paste may have been more readable... Anyway.
@@ -397,7 +397,7 @@ test_that("Retrieval of object or class (i.e. static) members values behaves as 
     expect_that(clrGet(obj_or_type, propName), equals(2))
   }
   # first object members
-  testObj <- clrNew(testClassName)
+  testObj <- newObjectFromName(testClassName)
   f(testObj, "IntegerOne", staticPrefix = "")
   # then test static members
   f(testClassName, "IntegerOne", staticPrefix = "Static")

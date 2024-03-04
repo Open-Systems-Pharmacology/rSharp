@@ -105,6 +105,8 @@ NetObject <- R6::R6Class(
       .External("r_is_clr_type", private$.pointer, type, PACKAGE = rSharpEnv$nativePkgName)
 
 
+      #the object type to check for. It can be a character, of a object of CLR type System.RuntimeType
+
 
 
       if (is.character(type)) {
@@ -115,6 +117,9 @@ NetObject <- R6::R6Class(
           type <- tmpType
         }
       }
+
+
+
       if (!is(type, "cobjRef")) {
         stop(paste('argument "type" must be a CLR type name or a Type'))
       } else {

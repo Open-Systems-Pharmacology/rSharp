@@ -19,7 +19,7 @@ List the instance fields of a .NET object
 }
 \examples{
 testClassName <- rSharpEnv$testObjectTypeName
-testObj <- clrNew(testClassName)
+testObj <- newObjectFromName(testClassName)
 getFields(testObj)
 getFields(testObj, "ieldInt")
 }

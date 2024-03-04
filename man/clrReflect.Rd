@@ -18,6 +18,6 @@ List the instance members of a .NET object, i.e. its methods, fields and propert
 \examples{
 library(rSharp)
 testClassName <- "ClrFacade.TestObject"
-testObj <- clrNew(testClassName)
+testObj <- newObjectFromName(testClassName)
 clrReflect(testObj)
 }

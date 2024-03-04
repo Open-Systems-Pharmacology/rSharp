@@ -17,6 +17,6 @@ Gets the .NET type name of an object, given an S4 clrobj object
 }
 \examples{
 testClassName <- "ClrFacade.TestObject"
-testObj <- clrNew(testClassName)
+testObj <- newObjectFromName(testClassName)
 clrTypename(testObj)
 }
