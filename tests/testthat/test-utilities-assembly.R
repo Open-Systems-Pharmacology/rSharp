@@ -1,8 +1,8 @@
 test_that("Assembly loading", {
-  loadAssembly("System.Net.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
+  expect_no_error(loadAssembly("System.Net.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"))
 
   # The use of partial assembly names is discouraged; nevertheless it is supported
-  loadAssembly("System.Web.Services")
+  expect_no_error(loadAssembly("System.Web.Services"))
 })
 
 test_that("Loaded assemblies discovery", {
