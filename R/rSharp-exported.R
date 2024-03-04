@@ -34,31 +34,6 @@ toStringNET <- function(x) {
   return(callStatic(rSharpEnv$InternalTypeName, "ToString", x))
 }
 
-
-
-
-
-#' Create a new CLR object
-#'
-#' @param typename type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
-#' @param ... additional method arguments passed to the object constructor via the call to .External
-#' @return a CLR object
-#' @export
-#' @import methods
-#' @examples
-#' testClassName <- getRSharpSetting("testObjectTypeName")
-#' testObj <- newObjectFromName(testClassName)
-#' # object with a constructor that has parameters
-#' testObj <- clrNew(testClassName, as.integer(123))
-clrNew <- function(typename, ...) {
-  o <- .External("r_create_clr_object", typename, ..., PACKAGE = rSharpEnv$nativePkgName)
-  if (is.null(o)) {
-    stop("Failed to create instance of type '", typename, "'")
-  }
-  .mkClrObjRef(o, clrtype = typename)
-}
-
-
 #' Create a new NetObject R6 object given the type name.
 #'
 #' @param typename type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
