@@ -149,6 +149,26 @@ NetObject <- R6::R6Class(
       # Validate contains is string
       callStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceMethods", self$pointer, contains)
     },
+
+    #' Gets the signature of a .NET object member
+    #'
+    #' @description
+    #' Gets a string representation of the signature of a member (i.e. field, property, method).
+    #' Mostly used to interactively search for what arguments to pass to a method.
+    #'
+    #' @param memberName The exact name of the member (i.e. field, property, method) to search for
+    #' @return a character vector with summary information on the method/member signatures
+    #' @export
+    #' @examples
+    #' testClassName <- "ClrFacade.TestObject"
+    #' testObj <- newObjectFromName(testClassName)
+    #' testObj$getMemberSignature("set_PropertyIntegerOne")
+    #' testObj$getMemberSignature("FieldIntegerOne")
+    #' testObj$getMemberSignature("PropertyIntegerTwo")
+    getMemberSignature = function(memberName) {
+      callStatic(rSharpEnv$reflectionHelperTypeName, "GetSignature", self$pointer, memberName)
+    },
+
     #' Print
     #' @description print prints a summary of the object.
     print = function() {

@@ -74,28 +74,22 @@ test_that("$getProperties lists all properties of an object that include a given
 test_that("Object members discovery behaves as expected", {
   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
 
-  f <- function(obj_or_tname, static = FALSE, getF, getP, getM) { # copy-paste may have been more readable... Anyway.
-    prefix <- ifelse(static, "Static", "")
-    collate <- function(...) {
-      paste(..., sep = "")
-    } # surely in stringr, but avoid dependency
-    p <- function(basefieldname) {
-      collate(prefix, basefieldname)
-    }
+  expect_equal(
+    testObj$getMemberSignature(memberName = "GetFieldIntegerOne"),
+    "Method: Int32 GetFieldIntegerOne"
+  )
 
-    sig_prefix <- ifelse(static, "Static, ", "")
-    expect_that(
-      clrGetMemberSignature(obj_or_tname, p("GetFieldIntegerOne")),
-      equals(collate(sig_prefix, "Method: Int32 ", p("GetFieldIntegerOne")))
-    )
-    expect_that(
-      clrGetMemberSignature(obj_or_tname, p("GetMethodWithParameters")),
-      equals(collate(sig_prefix, "Method: Int32 ", p("GetMethodWithParameters, Int32, String")))
-    )
-  }
-
-  f(rSharpEnv$testObjectTypeName, static = TRUE, getStaticFields, getStaticProperties, getStaticMethods)
+  expect_equal(
+    testObj$getMemberSignature(memberName = "GetMethodWithParameters"),
+    "Method: Int32 GetMethodWithParameters, Int32, String"
+  )
 })
+
+# Expect an error? https://github.com/Open-Systems-Pharmacology/rSharp/issues/69
+# test_that("$getMemberSignature() when a member with the given name is not found", {
+#   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
+#   expect_error(clrGetMemberSignature(testObj, "NonExistentMethod"))
+# })
 
 ###########
 

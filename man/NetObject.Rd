@@ -126,6 +126,18 @@ testClassName <- "ClrFacade.TestObject"
 testObj <- newObjectFromName(testClassName)
 testObj$getMethods()
 testObj$getMethods("Get")
+Gets the signature of a .NET object member
+
+
+## ------------------------------------------------
+## Method `NetObject$getMemberSignature`
+## ------------------------------------------------
+
+testClassName <- "ClrFacade.TestObject"
+testObj <- newObjectFromName(testClassName)
+testObj$getMemberSignature("set_PropertyIntegerOne")
+testObj$getMemberSignature("FieldIntegerOne")
+testObj$getMemberSignature("PropertyIntegerTwo")
 Print
 }
 \section{Active bindings}{
@@ -147,6 +159,7 @@ Initialize}
 \item \href{#method-NetObject-getFields}{\code{NetObject$getFields()}}
 \item \href{#method-NetObject-getProperties}{\code{NetObject$getProperties()}}
 \item \href{#method-NetObject-getMethods}{\code{NetObject$getMethods()}}
+\item \href{#method-NetObject-getMemberSignature}{\code{NetObject$getMemberSignature()}}
 \item \href{#method-NetObject-print}{\code{NetObject$print()}}
 }
 }
@@ -271,6 +284,41 @@ a list of names of the methods of the object
 testObj <- newObjectFromName(testClassName)
 testObj$getMethods()
 testObj$getMethods("Get")
+Gets the signature of a .NET object member
+
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-NetObject-getMemberSignature"></a>}}
+\if{latex}{\out{\hypertarget{method-NetObject-getMemberSignature}{}}}
+\subsection{Method \code{getMemberSignature()}}{
+Gets a string representation of the signature of a member (i.e. field, property, method).
+Mostly used to interactively search for what arguments to pass to a method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{NetObject$getMemberSignature(memberName)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{memberName}}{The exact name of the member (i.e. field, property, method) to search for}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+a character vector with summary information on the method/member signatures
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{testClassName <- "ClrFacade.TestObject"
+testObj <- newObjectFromName(testClassName)
+testObj$getMemberSignature("set_PropertyIntegerOne")
+testObj$getMemberSignature("FieldIntegerOne")
+testObj$getMemberSignature("PropertyIntegerTwo")
 Print
 }
 \if{html}{\out{</div>}}

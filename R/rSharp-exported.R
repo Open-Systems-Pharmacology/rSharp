@@ -36,24 +36,7 @@ toStringNET <- function(x) {
 
 
 
-#' Gets the signature of a .NET object member
-#'
-#' Gets a string representation of the signature of a member (i.e. field, property, method).
-#' Mostly used to interactively search for what arguments to pass to a method.
-#'
-#' @param clrobj CLR object
-#' @param memberName The exact name of the member (i.e. field, property, method) to search for
-#' @return a character vector with summary information on the method/member signatures
-#' @export
-#' @examples
-#' testClassName <- "ClrFacade.TestObject"
-#' testObj <- newObjectFromName(testClassName)
-#' clrGetMemberSignature(testObj, "set_PropertyIntegerOne")
-#' clrGetMemberSignature(testObj, "FieldIntegerOne")
-#' clrGetMemberSignature(testObj, "PropertyIntegerTwo")
-clrGetMemberSignature <- function(clrobj, memberName) {
-  callStatic(rSharpEnv$reflectionHelperTypeName, "GetSignature", clrobj, memberName)
-}
+
 
 #' Create a new CLR object
 #'
