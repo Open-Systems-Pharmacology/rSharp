@@ -34,50 +34,7 @@ toStringNET <- function(x) {
   return(callStatic(rSharpEnv$InternalTypeName, "ToString", x))
 }
 
-#' List the instance fields of a .NET object
-#'
-#' @param clrobj CLR object
-#' @param contains a string that the field names returned must contain
-#' @return a list of names of the fields of the .NET object
-#' @export
-#' @examples
-#' testClassName <- rSharpEnv$testObjectTypeName
-#' testObj <- newObjectFromName(testClassName)
-#' getFields(testObj)
-#' getFields(testObj, "ieldInt")
-getFields <- function(clrobj, contains = "") {
-  callStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceFields", clrobj, contains)
-}
 
-#' List the instance properties of a CLR object
-#'
-#' @param clrobj CLR object
-#' @param contains a string that the property names returned must contain
-#' @return a list of names of the properties of the CLR object
-#' @export
-#' @examples
-#' testClassName <- "ClrFacade.TestObject"
-#' testObj <- newObjectFromName(testClassName)
-#' clrGetProperties(testObj)
-#' clrGetProperties(testObj, "One")
-clrGetProperties <- function(clrobj, contains = "") {
-  callStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceProperties", clrobj, contains)
-}
-
-#' List the instance methods of a .NET object
-#'
-#' @param clrobj CLR object
-#' @param contains a string that the methods names returned must contain
-#' @return a list of names of the methods of the .NET object
-#' @export
-#' @examples
-#' testClassName <- "ClrFacade.TestObject"
-#' testObj <- newObjectFromName(testClassName)
-#' clrGetMethods(testObj)
-#' clrGetMethods(testObj, "Get")
-clrGetMethods <- function(clrobj, contains = "") {
-  callStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceMethods", clrobj, contains)
-}
 
 #' Gets the signature of a .NET object member
 #'

@@ -91,8 +91,41 @@
 
   testClassName <- "ClrFacade.Tests.RefClasses.LevelOneClass"
   o <- .External("r_create_clr_object", testClassName, PACKAGE = getRSharpSetting("nativePkgName"))
-  x <- NetObject$new(o)
+  x <- newObjectFromName(testClassName)
   print(x)
+List the fields of the object
+
+
+## ------------------------------------------------
+## Method `NetObject$getFields`
+## ------------------------------------------------
+
+testClassName <- rSharpEnv$testObjectTypeName
+testObj <- newObjectFromName(testClassName)
+testObj$getFields()
+testObj$getFields("ieldInt")
+List the properties of the object
+
+
+## ------------------------------------------------
+## Method `NetObject$getProperties`
+## ------------------------------------------------
+
+testClassName <- "ClrFacade.TestObject"
+testObj <- newObjectFromName(testClassName)
+testObj$getProperties()
+testObj$getProperties("One")
+List the methods the object
+
+
+## ------------------------------------------------
+## Method `NetObject$getMethods`
+## ------------------------------------------------
+
+testClassName <- "ClrFacade.TestObject"
+testObj <- newObjectFromName(testClassName)
+testObj$getMethods()
+testObj$getMethods("Get")
 Print
 }
 \section{Active bindings}{
@@ -111,6 +144,9 @@ Initialize}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-NetObject-new}{\code{NetObject$new()}}
+\item \href{#method-NetObject-getFields}{\code{NetObject$getFields()}}
+\item \href{#method-NetObject-getProperties}{\code{NetObject$getProperties()}}
+\item \href{#method-NetObject-getMethods}{\code{NetObject$getMethods()}}
 \item \href{#method-NetObject-print}{\code{NetObject$print()}}
 }
 }
@@ -137,8 +173,104 @@ The initialized object
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{  testClassName <- "ClrFacade.Tests.RefClasses.LevelOneClass"
   o <- .External("r_create_clr_object", testClassName, PACKAGE = getRSharpSetting("nativePkgName"))
-  x <- NetObject$new(o)
+  x <- newObjectFromName(testClassName)
   print(x)
+List the fields of the object
+
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-NetObject-getFields"></a>}}
+\if{latex}{\out{\hypertarget{method-NetObject-getFields}{}}}
+\subsection{Method \code{getFields()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{NetObject$getFields(contains = "")}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{contains}}{a string that the field names returned must contain}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+a list of names of the fields of the object
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{testClassName <- rSharpEnv$testObjectTypeName
+testObj <- newObjectFromName(testClassName)
+testObj$getFields()
+testObj$getFields("ieldInt")
+List the properties of the object
+
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-NetObject-getProperties"></a>}}
+\if{latex}{\out{\hypertarget{method-NetObject-getProperties}{}}}
+\subsection{Method \code{getProperties()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{NetObject$getProperties(contains = "")}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{contains}}{a string that the property names returned must contain}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+a list of names of the properties of the object
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{testClassName <- "ClrFacade.TestObject"
+testObj <- newObjectFromName(testClassName)
+testObj$getProperties()
+testObj$getProperties("One")
+List the methods the object
+
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-NetObject-getMethods"></a>}}
+\if{latex}{\out{\hypertarget{method-NetObject-getMethods}{}}}
+\subsection{Method \code{getMethods()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{NetObject$getMethods(contains = "")}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{contains}}{a string that the methods names returned must contain}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+a list of names of the methods of the object
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{testClassName <- "ClrFacade.TestObject"
+testObj <- newObjectFromName(testClassName)
+testObj$getMethods()
+testObj$getMethods("Get")
 Print
 }
 \if{html}{\out{</div>}}

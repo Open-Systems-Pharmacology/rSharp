@@ -91,7 +91,7 @@ NetObject <- R6::R6Class(
     #' @examples
     #'   testClassName <- "ClrFacade.Tests.RefClasses.LevelOneClass"
     #'   o <- .External("r_create_clr_object", testClassName, PACKAGE = getRSharpSetting("nativePkgName"))
-    #'   x <- NetObject$new(o)
+    #'   x <- newObjectFromName(testClassName)
     #'   print(x)
     initialize = function(pointer) {
       .validateIsExtPtr(pointer)
@@ -105,14 +105,58 @@ NetObject <- R6::R6Class(
     #   # call static method once implemented https://github.com/Open-Systems-Pharmacology/rSharp/issues/67
     # },
 
+    #' List the fields of the object
+    #'
+    #' @param contains a string that the field names returned must contain
+    #' @return a list of names of the fields of the object
+    #' @export
+    #' @examples
+    #' testClassName <- rSharpEnv$testObjectTypeName
+    #' testObj <- newObjectFromName(testClassName)
+    #' testObj$getFields()
+    #' testObj$getFields("ieldInt")
+    getFields = function(contains = "") {
+      # Validate contains is string
+      callStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceFields", self$pointer, contains)
+    },
+
+    #' List the properties of the object
+    #'
+    #' @param contains a string that the property names returned must contain
+    #' @return a list of names of the properties of the object
+    #' @export
+    #' @examples
+    #' testClassName <- "ClrFacade.TestObject"
+    #' testObj <- newObjectFromName(testClassName)
+    #' testObj$getProperties()
+    #' testObj$getProperties("One")
+    getProperties = function(contains = "") {
+      # Validate contains is string
+      callStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceProperties", self$pointer, contains)
+    },
+
+    #' List the methods the object
+    #'
+    #' @param contains a string that the methods names returned must contain
+    #' @return a list of names of the methods of the object
+    #' @export
+    #' @examples
+    #' testClassName <- "ClrFacade.TestObject"
+    #' testObj <- newObjectFromName(testClassName)
+    #' testObj$getMethods()
+    #' testObj$getMethods("Get")
+    getMethods = function(contains = "") {
+      # Validate contains is string
+      callStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceMethods", self$pointer, contains)
+    },
     #' Print
     #' @description print prints a summary of the object.
     print = function() {
       private$.printClass()
       private$.printLine("Type", private$.type)
-      private$.printLine("Methods:", clrGetMethods(self))
-      private$.printLine("Fields",  getFields(self))
-      private$.printLine("Properties", clrGetProperties(self))
+      private$.printLine("Methods:", self$getMethods())
+      private$.printLine("Fields",  self$getFields())
+      private$.printLine("Properties", self$getProperties())
       invisible(self)
     }
   )
@@ -122,9 +166,6 @@ NetObject <- R6::R6Class(
 #' # functions to move here:
 #'
 #' # clrToString
-#' # clrGetFields
-#' # clrGetProperties
-#' # clrGetMethods
 #' # clrGetMemberSignature
 #' # clrNew
 #' # clrCall

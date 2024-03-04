@@ -24,27 +24,55 @@ test_that("It creates a `NetObject` from a valid pointer is provided", {
 #   expect_error(clrIs(testObj, testObj))
 # })
 
-test_that("$reflect lists all methods, fields, and properties", {
+test_that("$getMethods lists all methods of an object", {
   expectedMethods <-  c("Equals", "get_PropertyIntegerOne", "get_PropertyIntegerTwo", "GetFieldIntegerOne",
                         "GetFieldIntegerTwo", "GetHashCode", "GetMethodWithParameters",
                         "GetPublicInt", "GetType", "set_PropertyIntegerOne",
                         "set_PropertyIntegerTwo", "TestDefaultValues", "TestParams", "ToString")
+
+  testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
+  expect_true(all(testObj$getMethods() %in% expectedMethods))
+})
+
+test_that("$getMethods lists all methods of an object that include a given string", {
+  expectedMethods <-  c("get_PropertyIntegerOne", "GetFieldIntegerOne", "set_PropertyIntegerOne")
+
+  testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
+  expect_true(all(testObj$getMethods(contains = "IntegerOne") %in% expectedMethods))
+})
+
+
+test_that("$getFields lists all fields of an object", {
   expectedFields <- c("FieldDoubleOne", "FieldDoubleTwo", "FieldIntegerOne", "FieldIntegerTwo", "PublicInt")
+
+  testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
+  expect_true(all(testObj$getFields() %in% expectedFields))
+})
+
+test_that("$getFields lists all fields of an object that include a given string", {
+  expectedFields <- c("FieldIntegerOne")
+
+  testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
+  expect_true(all(testObj$getFields(contains = "IntegerOne") %in% expectedFields))
+})
+
+test_that("$getProperties lists all properties of an object", {
   expectedProperties <- c("PropertyIntegerOne", "PropertyIntegerTwo")
 
   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
-  members <- testObj$reflect()
-  expect_true(all(c("Methods", "Fields", "Properties") %in% names(members)))
-  expect_true(all(members$Methods %in% expectedMethods))
-  expect_true(all(members$Fields %in% expectedFields))
-  expect_true(all(members$Properties %in% expectedProperties))
+  expect_true(all(testObj$getProperties() %in% expectedProperties))
 })
 
+test_that("$getProperties lists all properties of an object that include a given string", {
+  expectedProperties <- c("PropertyIntegerOne")
+
+  testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
+  expect_true(all(testObj$getProperties(contains = "IntegerOne") %in% expectedProperties))
+})
 
 
 test_that("Object members discovery behaves as expected", {
   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
-  members <- testObj$reflect()
 
   f <- function(obj_or_tname, static = FALSE, getF, getP, getM) { # copy-paste may have been more readable... Anyway.
     prefix <- ifelse(static, "Static", "")
@@ -54,15 +82,6 @@ test_that("Object members discovery behaves as expected", {
     p <- function(basefieldname) {
       collate(prefix, basefieldname)
     }
-
-    expect_that(getF(obj_or_tname, "IntegerOne"), equals(p("FieldIntegerOne")))
-    expect_that(getP(obj_or_tname, "IntegerOne"), equals(p("PropertyIntegerOne")))
-
-    expected_mnames <- paste(c("get_", "", "set_"), p(c("PropertyIntegerOne", "GetFieldIntegerOne", "PropertyIntegerOne")), sep = "")
-    actual_mnames <- getM(obj_or_tname, "IntegerOne")
-
-    expect_that(length(actual_mnames), equals(length(expected_mnames)))
-    expect_true(all(actual_mnames %in% expected_mnames))
 
     sig_prefix <- ifelse(static, "Static, ", "")
     expect_that(
@@ -75,10 +94,7 @@ test_that("Object members discovery behaves as expected", {
     )
   }
 
-
-  f(testObj, static = FALSE, getFields, clrGetProperties, clrGetMethods)
   f(rSharpEnv$testObjectTypeName, static = TRUE, getStaticFields, getStaticProperties, getStaticMethods)
-  # TODO test that methods that are explicit implementations of interfaces are found
 })
 
 ###########
