@@ -132,7 +132,7 @@ extern "C" {
 	 */
 	void get_FullTypeName( SEXP p, char ** tname);
 	void rSharp_load_assembly(char ** filename);
-	void rSharp_create_domain();
+	void rSharp_create_domain(char** libPath);
 	int use_rdotnet = 0;
 
 

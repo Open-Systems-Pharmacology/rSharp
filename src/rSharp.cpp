@@ -36,8 +36,8 @@ void freeObject(RSharpGenericValue* instance);
 /////////////////////////////////////////
 // Initialization and disposal of the CLR
 /////////////////////////////////////////
-void rSharp_create_domain() {
-
+void rSharp_create_domain(char ** libPath)
+{
 	// if already loaded in this process, do not load again
 	if (load_assembly_and_get_function_pointer != nullptr)
 		return;
@@ -50,10 +50,28 @@ void rSharp_create_domain() {
 	}
 
 	// STEP 2: Initialize and start the .NET Core runtime
-	const string_t config_path = STR("./RSharp.runtimeconfig.json");
+
+	const char* additionalPath = "/RSharp.runtimeconfig.json";
+
+	size_t libPathLen = strlen(*libPath);
+	size_t additionalPathLen = strlen(additionalPath);
+
+	char* combinedPath = new char[libPathLen + additionalPathLen + 1];
+
+	strcpy(combinedPath, *libPath);
+	strcat(combinedPath, additionalPath);
+
+	size_t length = 0;
+	mbstowcs_s(&length, nullptr, 0, combinedPath, 0);
+	char_t* wideStringPath = new char_t[length + 1];
+	mbstowcs_s(nullptr, wideStringPath, length + 1, combinedPath, length);
+
 	load_assembly_and_get_function_pointer = nullptr;
-	load_assembly_and_get_function_pointer = get_dotnet_load_assembly(config_path.c_str());
+	load_assembly_and_get_function_pointer = get_dotnet_load_assembly(wideStringPath);
 	assert(load_assembly_and_get_function_pointer != nullptr && "Failure: get_dotnet_load_assembly()");
+
+	delete[] combinedPath;
+	delete[] wideStringPath;
 }
 
 void rSharp_shutdown_clr()
