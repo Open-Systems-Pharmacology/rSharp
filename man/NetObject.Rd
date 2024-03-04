@@ -145,9 +145,7 @@ Print
 \describe{
 \item{\code{type}}{String representation of the type of the .NET object. Read-only}
 
-\item{\code{pointer}}{The external pointer to the .NET object. Read-only}
-
-\item{\code{cobjRef}}{The underlying `cobjRef` object. Read-only
+\item{\code{pointer}}{The external pointer to the .NET object. Read-only
 Initialize}
 }
 \if{html}{\out{</div>}}

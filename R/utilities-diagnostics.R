@@ -5,11 +5,16 @@
 #' Get the type code for a SEXP, as returned by the TYPEOF macro
 #'
 #' @param sexp an R object
+#'
 #' @return the type code, an integer, as defined in Rinternals.h
 #' @export
+#' @examples
+#' getSexpType(1)
+#' getSexpType("a")
+#' getSexpType(1:10)
 getSexpType <- function(sexp) {
   extPtr <- .External("r_get_sexp_type", sexp, PACKAGE = rSharpEnv$nativePkgName)
-  return(.mkClrObjRef(extPtr))
+  return(castToRObject(extPtr))
 }
 
 #' Peek into the structure of R objects 'as seen from C code'
@@ -19,8 +24,11 @@ getSexpType <- function(sexp) {
 #' example in the R extension manual
 #'
 #' @param ... one or more R objects
+#'
 #' @return NULL. Information is printed, not returned.
 #' @export
+#' @examples
+#' inspectArgs(1, "a", 1:10)
 inspectArgs <- function(...) {
   invisible(.External("r_show_args", ..., PACKAGE = rSharpEnv$nativePkgName))
 }
@@ -33,6 +41,8 @@ inspectArgs <- function(...) {
 #' @param x An R object
 #' @return A list, with columns including mode, type, class, length and the string of the corresponding .NET type.
 #' @export
+#' @examples
+#' rToDotNetType(1)
 rToDotNetType <- function(x) {
   list(
     # what = str(x),

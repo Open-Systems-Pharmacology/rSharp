@@ -164,7 +164,7 @@ NetObject <- R6::R6Class(
       private$.printClass()
       private$.printLine("Type", private$.type)
       private$.printLine("Methods:", self$getMethods())
-      private$.printLine("Fields",  self$getFields())
+      private$.printLine("Fields", self$getFields())
       private$.printLine("Properties", self$getProperties())
       invisible(self)
     }

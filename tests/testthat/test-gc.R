@@ -22,15 +22,17 @@ testGarbageCollection <- function(getObjCountMethodName = "GetMemTestObjCounter"
   forceDotNetGc()
   expect_that(callTestCase(getObjCountMethodName), equals(counter))
 
-  counter = callTestCase( getObjCountMethodName)
-  expect_that( counter, equals(0) )
-  testObj = callTestCase( createTestObjectMethodName)
-  clrSet( testObj, 'Text', "et nous alimentons nos aimables remords comme les mendiants nourissent leur vermine" )
+  counter <- callTestCase(getObjCountMethodName)
+  expect_that(counter, equals(0))
+  testObj <- callTestCase(createTestObjectMethodName)
+  clrSet(testObj, "Text", "et nous alimentons nos aimables remords comme les mendiants nourissent leur vermine")
   forceDotNetGc()
   checkPlusOne()
-  clrSet( testObj, 'Text', "Sur l'oreiller du mal..." )
+  clrSet(testObj, "Text", "Sur l'oreiller du mal...")
   checkPlusOne()
-  rm(testObj) ; gc() ; forceDotNetGc()
+  rm(testObj)
+  gc()
+  forceDotNetGc()
 }
 
 test_that("Garbage collection in R and the .NET behaves as expected", {

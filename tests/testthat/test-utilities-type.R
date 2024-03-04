@@ -24,6 +24,6 @@ test_that("getType returns a `NetObject` with a pointer for a `NetObject` object
 
 test_that("getType returns a `NetObject` with a pointer for a `NetObject` object
           created for a generic instance", {
-            testObj <- callTestCase("CreateTestObjectGenericInstance")
+  testObj <- callTestCase("CreateTestObjectGenericInstance")
   expect_equal(toStringNET(getType(testObj)), "ClrFacade.TestObjectGeneric`1[System.String]")
 })

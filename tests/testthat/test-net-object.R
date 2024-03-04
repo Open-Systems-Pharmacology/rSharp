@@ -25,17 +25,19 @@ test_that("It creates a `NetObject` from a valid pointer is provided", {
 # })
 
 test_that("$getMethods lists all methods of an object", {
-  expectedMethods <-  c("Equals", "get_PropertyIntegerOne", "get_PropertyIntegerTwo", "GetFieldIntegerOne",
-                        "GetFieldIntegerTwo", "GetHashCode", "GetMethodWithParameters",
-                        "GetPublicInt", "GetType", "set_PropertyIntegerOne",
-                        "set_PropertyIntegerTwo", "TestDefaultValues", "TestParams", "ToString")
+  expectedMethods <- c(
+    "Equals", "get_PropertyIntegerOne", "get_PropertyIntegerTwo", "GetFieldIntegerOne",
+    "GetFieldIntegerTwo", "GetHashCode", "GetMethodWithParameters",
+    "GetPublicInt", "GetType", "set_PropertyIntegerOne",
+    "set_PropertyIntegerTwo", "TestDefaultValues", "TestParams", "ToString"
+  )
 
   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
   expect_true(all(testObj$getMethods() %in% expectedMethods))
 })
 
 test_that("$getMethods lists all methods of an object that include a given string", {
-  expectedMethods <-  c("get_PropertyIntegerOne", "GetFieldIntegerOne", "set_PropertyIntegerOne")
+  expectedMethods <- c("get_PropertyIntegerOne", "GetFieldIntegerOne", "set_PropertyIntegerOne")
 
   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
   expect_true(all(testObj$getMethods(contains = "IntegerOne") %in% expectedMethods))

@@ -36,5 +36,3 @@ test_that("Basic objects are created correctly", {
   expect_that(testObj@clrtype, equals(rSharpEnv$testObjectTypeName))
   rm(testObj)
 })
-
-
