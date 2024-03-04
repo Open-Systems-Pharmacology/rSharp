@@ -8,15 +8,15 @@ test_that("newObjectFromName calls constructors when a valid name is provided", 
   obj <- newObjectFromName(tName)
   # Constructor with one argument
   obj <- newObjectFromName(tName, i1)
-  expect_that(obj$get(obj, "FieldIntegerOne"), equals(i1))
+  expect_that(obj$get("FieldIntegerOne"), equals(i1))
   # Constructor with two arguments
   obj <- newObjectFromName(tName, i1, i2)
-  expect_that(obj$get(obj, "FieldIntegerOne"), equals(i1))
-  expect_that(obj$get(obj, "FieldIntegerTwo"), equals(i2))
+  expect_that(obj$get("FieldIntegerOne"), equals(i1))
+  expect_that(obj$get("FieldIntegerTwo"), equals(i2))
   # Constructor with two double arguments
   obj <- newObjectFromName(tName, d1, d2)
-  expect_that(obj$get(obj, "FieldDoubleOne"), equals(d1))
-  expect_that(obj$get(obj, "FieldDoubleTwo"), equals(d2))
+  expect_that(obj$get("FieldDoubleOne"), equals(d1))
+  expect_that(obj$get("FieldDoubleTwo"), equals(d2))
 })
 
 # Re-enable when https://github.com/Open-Systems-Pharmacology/rSharp/issues/66 is fixed
