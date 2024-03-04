@@ -93,6 +93,16 @@
   o <- .External("r_create_clr_object", testClassName, PACKAGE = getRSharpSetting("nativePkgName"))
   x <- NetObject$new(o)
   print(x)
+List the instance members of a .NET object
+
+
+## ------------------------------------------------
+## Method `NetObject$reflect`
+## ------------------------------------------------
+
+testClassName <- "ClrFacade.TestObject"
+testObj <- newObjectFromName(testClassName)
+clrReflect(testObj)
 Print
 }
 \section{Active bindings}{
@@ -111,6 +121,7 @@ Initialize}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-NetObject-new}{\code{NetObject$new()}}
+\item \href{#method-NetObject-reflect}{\code{NetObject$reflect()}}
 \item \href{#method-NetObject-print}{\code{NetObject$print()}}
 }
 }
@@ -126,7 +137,7 @@ Initializes the object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{clrobj}}{The external pointer to the .NET object}
+\item{\code{pointer}}{The external pointer to the .NET object}
 }
 \if{html}{\out{</div>}}
 }
@@ -139,6 +150,31 @@ The initialized object
   o <- .External("r_create_clr_object", testClassName, PACKAGE = getRSharpSetting("nativePkgName"))
   x <- NetObject$new(o)
   print(x)
+List the instance members of a .NET object
+
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-NetObject-reflect"></a>}}
+\if{latex}{\out{\hypertarget{method-NetObject-reflect}{}}}
+\subsection{Method \code{reflect()}}{
+List the instance members of a .NET object, i.e. its methods, fields and properties.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{NetObject$reflect()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A list of methods, fields, and properties of the object
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{testClassName <- "ClrFacade.TestObject"
+testObj <- newObjectFromName(testClassName)
+clrReflect(testObj)
 Print
 }
 \if{html}{\out{</div>}}

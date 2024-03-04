@@ -85,7 +85,7 @@ NetObject <- R6::R6Class(
   public = list(
     #' Initialize
     #' @description Initializes the object.
-    #' @param clrobj The external pointer to the .NET object
+    #' @param pointer The external pointer to the .NET object
     #' @return The initialized object
     #' @export
     #' @examples
@@ -101,6 +101,22 @@ NetObject <- R6::R6Class(
       return(self)
     },
 
+#' List the instance members of a .NET object
+#'
+#' @description
+#' List the instance members of a .NET object, i.e. its methods, fields and properties.
+#'
+#' @return A list of methods, fields, and properties of the object
+#' @export
+#'
+#' @examples
+#' testClassName <- "ClrFacade.TestObject"
+#' testObj <- newObjectFromName(testClassName)
+#' testObj$reflect()
+    reflect = function(){
+      return(list(Methods = clrGetMethods(self), Fields = getFields(self), Properties = clrGetProperties(self)))
+    },
+
     # is = function(type) {
     #   # call static method once implemented https://github.com/Open-Systems-Pharmacology/rSharp/issues/67
     # },
@@ -110,6 +126,9 @@ NetObject <- R6::R6Class(
     print = function() {
       private$.printClass()
       private$.printLine("Type", private$.type)
+      private$.printLine("Methods:", clrGetMethods(self))
+      private$.printLine("Fields",  getFields(self))
+      private$.printLine("Properties", clrGetProperties(self))
       invisible(self)
     }
   )

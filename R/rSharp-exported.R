@@ -15,23 +15,6 @@ setConvertAdvancedTypes <- function(enable = TRUE) {
   invisible(callStatic("ClrFacade.RDotNetDataConverter", "SetConvertAdvancedTypes", enable))
 }
 
-#' List the instance members of a .NET object
-#'
-#' List the instance members of a .NET object, i.e. its methods, fields and properties.
-#'
-#' @param clrobj .NET object encapsupated as `clrobj`
-#' @return a list of methods, fields and properties of the CLR object
-#' @export
-#' @examples
-#' library(rSharp)
-#' testClassName <- "ClrFacade.TestObject"
-#' testObj <- newObjectFromName(testClassName)
-#' clrReflect(testObj)
-clrReflect <- function(clrobj) {
-  # .Call("r_reflect_on_object", clrobj@clrobj, silent=FALSE, PACKAGE="rSharp")
-  list(Methods = clrGetMethods(clrobj), Fields = getFields(clrobj), Properties = clrGetProperties(clrobj))
-}
-
 #' Calls the ToString method of an object
 #'
 #' @description
@@ -108,7 +91,7 @@ clrGetMethods <- function(clrobj, contains = "") {
 #' @examples
 #' testClassName <- "ClrFacade.TestObject"
 #' testObj <- newObjectFromName(testClassName)
-#' clrReflect(testObj)
+#' testObj$reflect()
 #' clrGetMemberSignature(testObj, "set_PropertyIntegerOne")
 #' clrGetMemberSignature(testObj, "FieldIntegerOne")
 #' clrGetMemberSignature(testObj, "PropertyIntegerTwo")

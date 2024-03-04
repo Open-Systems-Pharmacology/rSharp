@@ -10,3 +10,7 @@ test_that("Loaded assemblies discovery", {
   d <- getLoadedAssemblies(fullname = TRUE, filenames = TRUE)
   expect_true(is.data.frame(d))
 })
+
+test_that("getTypesInAssembly works as expected()", {
+  expect_true("ClrFacade.TestObject" %in% getTypesInAssembly("ClrFacade"))
+})
