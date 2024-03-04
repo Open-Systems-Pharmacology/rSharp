@@ -12,3 +12,11 @@ test_that("callStatic returns a NetObject when the static .NET method returns a 
   testObj <- callTestCase("CreateTestArrayInterface")
   testObj <- callTestCase("CreateTestArrayGenericInterface")
 })
+
+test_that("getStatic works as expected", {
+  fieldName <- "StaticFieldIntegerOne"
+  propName <- "StaticPropertyIntegerOne"
+
+  expect_equal(getStatic(type = rSharpEnv$testObjectTypeName, name = fieldName), 0)
+  expect_equal(getStatic(type = rSharpEnv$testObjectTypeName, name = propName), 0)
+})

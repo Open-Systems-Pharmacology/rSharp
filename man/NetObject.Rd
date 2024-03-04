@@ -148,6 +148,16 @@ Call a method of the object
 testClassName <- rSharpEnv$testObjectTypeName
 testObj <- newObjectFromName(testClassName)
 testObj$call("GetFieldIntegerOne")
+Gets the value of a field or property of the object
+
+
+## ------------------------------------------------
+## Method `NetObject$get`
+## ------------------------------------------------
+
+testClassName <- rSharpEnv$testObjectTypeName
+testObj <- newObjectFromName(testClassName)
+testObj$get("FieldIntegerOne")
 Print
 }
 \section{Active bindings}{
@@ -169,6 +179,7 @@ Initialize}
 \item \href{#method-NetObject-getMethods}{\code{NetObject$getMethods()}}
 \item \href{#method-NetObject-getMemberSignature}{\code{NetObject$getMemberSignature()}}
 \item \href{#method-NetObject-call}{\code{NetObject$call()}}
+\item \href{#method-NetObject-get}{\code{NetObject$get()}}
 \item \href{#method-NetObject-print}{\code{NetObject$print()}}
 }
 }
@@ -361,6 +372,37 @@ An object resulting from the call. May be a `NetObject` object, or a native R ob
 \preformatted{testClassName <- rSharpEnv$testObjectTypeName
 testObj <- newObjectFromName(testClassName)
 testObj$call("GetFieldIntegerOne")
+Gets the value of a field or property of the object
+
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-NetObject-get"></a>}}
+\if{latex}{\out{\hypertarget{method-NetObject-get}{}}}
+\subsection{Method \code{get()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{NetObject$get(name)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{the name of a field/property  of the object}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+An object resulting from the call. May be a `NetObject` object, or a native R object for common types. Can be NULL.
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{testClassName <- rSharpEnv$testObjectTypeName
+testObj <- newObjectFromName(testClassName)
+testObj$get("FieldIntegerOne")
 Print
 }
 \if{html}{\out{</div>}}

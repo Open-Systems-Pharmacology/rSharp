@@ -183,6 +183,20 @@ NetObject <- R6::R6Class(
       return(castToRObject(result))
     },
 
+    #' Gets the value of a field or property of the object
+    #'
+    #' @param name the name of a field/property  of the object
+    #' @return An object resulting from the call. May be a `NetObject` object, or a native R object for common types. Can be NULL.
+    #' @export
+    #' @examples
+    #' testClassName <- rSharpEnv$testObjectTypeName
+    #' testObj <- newObjectFromName(testClassName)
+    #' testObj$get("FieldIntegerOne")
+    get = function(name) {
+      # Internally calling `getStatic` because it uses the same C++ code
+      return(getStatic(self$pointer, name))
+    },
+
     #' Print
     #' @description print prints a summary of the object.
     print = function() {

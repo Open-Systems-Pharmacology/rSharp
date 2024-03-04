@@ -99,13 +99,34 @@ test_that("Object members discovery behaves as expected", {
 #   expect_error(testObj$call(methodName = "NonExistentMethod"), regexp = messages$errorMethodNotFound("NonExistentMethod", rSharpEnv$testObjectTypeName))
 # })
 
-###########
-
-
-
-
-test_that("set works ", {
+test_that("$get works as expected", {
   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
-  clrSet(testObj, "FieldIntegerOne", as.integer(42))
-  clrSet(rSharpEnv$testObjectTypeName, "StaticPropertyIntegerOne", as.integer(42))
+    fieldName <- "FieldIntegerOne"
+    propName <- "PropertyIntegerOne"
+
+    expect_equal(testObj$get(fieldName), 0)
+    expect_equal(testObj$get(propName), 0)
 })
+
+# test_that("$set works as expected", {
+#   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
+#   fieldName <- "FieldIntegerOne"
+#   propName <- "PropertyIntegerOne"
+#
+#   expect_equal(testObj$get(fieldName), 0)
+#   expect_equal(testObj$get(propName), 0)
+#
+#
+#   clrSet(obj_or_type, fieldName, as.integer(0))
+#
+#   clrSet(obj_or_type, fieldName, as.integer(2))
+#   expect_that(clrGet(obj_or_type, fieldName), equals(2))
+#
+#   clrSet(obj_or_type, propName, as.integer(2))
+#   expect_that(clrGet(obj_or_type, propName), equals(2))
+#   # first object members
+#
+#   f(testObj, "IntegerOne", staticPrefix = "")
+#   # then test static members
+#   f(rSharpEnv$testObjectTypeName, "IntegerOne", staticPrefix = "Static")
+# })

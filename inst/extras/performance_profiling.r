@@ -106,7 +106,7 @@ doMeasureFun <- function(trials, FUNGEN, dataClass,direction,tag=NA) {
 
 createCases <- function(numReps=10, maxArrayLen=7.5e6) {
   # May want to tailor to whether this is 32 or 64 bits; use:
-  # clrGet('System.Environment', 'Is64BitProcess')
+  # getStatic('System.Environment', 'Is64BitProcess')
   cases <- c(2,5,7.5)
   trials <- expand.grid ( numReps = numReps, arrLen = as.integer(cases) )
   mult <- c(1,2,5,7.5)

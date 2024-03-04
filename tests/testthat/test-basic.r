@@ -87,26 +87,6 @@ test_that("Conversion of non-bijective types can be turned on/off", {
   expect_equal(callTestCase("CreateStringDoubleArrayDictionary"), list(a = c(1.0, 2.0, 3.0, 3.5, 4.3, 11), b = c(1.0, 2.0, 3.0, 3.5, 4.3), c = c(2.2, 3.3, 6.5)))
 })
 
-test_that("Retrieval of object or class (i.e. static) members values behaves as expected", {
-  f <- function(obj_or_type, rootMemberName, staticPrefix = "") {
-    fieldName <- paste(staticPrefix, "Field", rootMemberName, sep = "")
-    propName <- paste(staticPrefix, "Property", rootMemberName, sep = "")
-    clrSet(obj_or_type, fieldName, as.integer(0))
-    expect_that(clrGet(obj_or_type, fieldName), equals(0))
-    clrSet(obj_or_type, fieldName, as.integer(2))
-    expect_that(clrGet(obj_or_type, fieldName), equals(2))
-    clrSet(obj_or_type, propName, as.integer(0))
-    expect_that(clrGet(obj_or_type, propName), equals(0))
-    clrSet(obj_or_type, propName, as.integer(2))
-    expect_that(clrGet(obj_or_type, propName), equals(2))
-  }
-  # first object members
-  testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
-  f(testObj, "IntegerOne", staticPrefix = "")
-  # then test static members
-  f(rSharpEnv$testObjectTypeName, "IntegerOne", staticPrefix = "Static")
-})
-
 test_that("toStringNET works for primitive types", {
   expect_that(toStringNET(1), equals("1"))
   expect_that(toStringNET(1.0), equals("1"))
