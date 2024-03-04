@@ -9,7 +9,7 @@
 
 using string_t = std::basic_string<char_t>;
 
-const string_t dotnetlib_path = STR("./ClrFacade.dll");
+const char_t* dotnetlib_path = nullptr;
 const auto loadAssemblyDelegate = STR("ClrFacade.ClrFacade+LoadFromDelegate, ClrFacade");
 void* create_instance_fn_ptr = nullptr;
 void* load_from_fn_ptr = nullptr;
@@ -38,6 +38,9 @@ void freeObject(RSharpGenericValue* instance);
 /////////////////////////////////////////
 void rSharp_create_domain(char ** libPath)
 {
+	char_t* wideStringPath = MergeLibPath(libPath, "/RSharp.runtimeconfig.json");
+	dotnetlib_path = MergeLibPath(libPath, "/ClrFacade.dll");
+
 	// if already loaded in this process, do not load again
 	if (load_assembly_and_get_function_pointer != nullptr)
 		return;
@@ -50,9 +53,15 @@ void rSharp_create_domain(char ** libPath)
 	}
 
 	// STEP 2: Initialize and start the .NET Core runtime
+	load_assembly_and_get_function_pointer = nullptr;
+	load_assembly_and_get_function_pointer = get_dotnet_load_assembly(wideStringPath);
+	assert(load_assembly_and_get_function_pointer != nullptr && "Failure: get_dotnet_load_assembly()");
 
-	const char* additionalPath = "/RSharp.runtimeconfig.json";
+	delete[] wideStringPath;
+}
 
+char_t* MergeLibPath(char** libPath, char* additionalPath)
+{
 	size_t libPathLen = strlen(*libPath);
 	size_t additionalPathLen = strlen(additionalPath);
 
@@ -66,12 +75,8 @@ void rSharp_create_domain(char ** libPath)
 	char_t* wideStringPath = new char_t[length + 1];
 	mbstowcs_s(nullptr, wideStringPath, length + 1, combinedPath, length);
 
-	load_assembly_and_get_function_pointer = nullptr;
-	load_assembly_and_get_function_pointer = get_dotnet_load_assembly(wideStringPath);
-	assert(load_assembly_and_get_function_pointer != nullptr && "Failure: get_dotnet_load_assembly()");
-
 	delete[] combinedPath;
-	delete[] wideStringPath;
+	return wideStringPath;
 }
 
 void rSharp_shutdown_clr()
@@ -197,7 +202,7 @@ void initializeCreateInstance()
 	auto functionDelegate = STR("ClrFacade.ClrFacade+CreateInstanceDelegate, ClrFacade");
 
 	int rc_1 = load_assembly_and_get_function_pointer(
-		dotnetlib_path.c_str(),
+		dotnetlib_path,
 		dotnet_type,
 		STR("CreateInstance"),
 		functionDelegate,//delegate_type_name
@@ -213,7 +218,7 @@ void initializeLoadAssembly()
 	auto functionDelegate = STR("ClrFacade.ClrFacade+LoadFromDelegate, ClrFacade");
 
 	int rc_1 = load_assembly_and_get_function_pointer(
-		dotnetlib_path.c_str(),
+		dotnetlib_path,
 		dotnet_type,
 		STR("LoadFrom"),
 		loadAssemblyDelegate,//delegate_type_name
@@ -229,7 +234,7 @@ void initializeGetFullTypeNameFunction()
 	auto functionDelegate = STR("ClrFacade.ClrFacade+GetObjectTypeNameDelegate, ClrFacade");
 
 	int rc_1 = load_assembly_and_get_function_pointer(
-		dotnetlib_path.c_str(),
+		dotnetlib_path,
 		dotnet_type,
 		STR("GetObjectTypeName"),
 		functionDelegate,//delegate_type_name
@@ -245,7 +250,7 @@ void initializeGetObjectDirectFunction()
 	auto functionDelegate = STR("ClrFacade.ClrFacade+CurrentObjectDelegate, ClrFacade");
 
 	int rc_1 = load_assembly_and_get_function_pointer(
-		dotnetlib_path.c_str(),
+		dotnetlib_path,
 		dotnet_type,
 		STR("CurrentObject"),
 		functionDelegate,//delegate_type_name
@@ -261,7 +266,7 @@ void initializeCreateSEXPFunction()
 	auto functionDelegate = STR("ClrFacade.ClrFacade+CreateSexpWrapperDelegate, ClrFacade");
 
 	int rc_1 = load_assembly_and_get_function_pointer(
-		dotnetlib_path.c_str(),
+		dotnetlib_path,
 		dotnet_type,
 		STR("CreateSexpWrapperLong"),
 		functionDelegate,//delegate_type_name
@@ -278,7 +283,7 @@ void initializeCallInstanceFunction()
 	auto functionDelegate = STR("ClrFacade.ClrFacade+CallInstanceMethodDelegate, ClrFacade");
 
 	int rc_1 = load_assembly_and_get_function_pointer(
-		dotnetlib_path.c_str(),
+		dotnetlib_path,
 		dotnet_type,
 		STR("CallInstanceMethod"),
 		functionDelegate,//delegate_type_name
@@ -294,7 +299,7 @@ void initializeFreeObjectFunction()
 	auto functionDelegate = STR("ClrFacade.ClrFacade+FreeObjectDelegate, ClrFacade");
 
 	int rc_1 = load_assembly_and_get_function_pointer(
-		dotnetlib_path.c_str(),
+		dotnetlib_path,
 		dotnet_type,
 		STR("FreeObject"),
 		functionDelegate,//delegate_type_name
@@ -311,7 +316,7 @@ void initializeCallStaticFunction()
 	auto functionDelegate = STR("ClrFacade.ClrFacade+CallStaticMethodDelegate, ClrFacade");
 
 	int rc_1 = load_assembly_and_get_function_pointer(
-		dotnetlib_path.c_str(),
+		dotnetlib_path,
 		dotnet_type,
 		STR("CallStaticMethod"),
 		functionDelegate,//delegate_type_name
