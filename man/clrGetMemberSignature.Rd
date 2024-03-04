@@ -21,7 +21,6 @@ Mostly used to interactively search for what arguments to pass to a method.
 \examples{
 testClassName <- "ClrFacade.TestObject"
 testObj <- newObjectFromName(testClassName)
-clrReflect(testObj)
 clrGetMemberSignature(testObj, "set_PropertyIntegerOne")
 clrGetMemberSignature(testObj, "FieldIntegerOne")
 clrGetMemberSignature(testObj, "PropertyIntegerTwo")

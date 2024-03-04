@@ -88,7 +88,6 @@ test_that("Object members discovery behaves as expected", {
 
 test_that("set works ", {
   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
-  clrReflect(testObj)
   clrSet(testObj, "FieldIntegerOne", as.integer(42))
   clrSet(rSharpEnv$testObjectTypeName, "StaticPropertyIntegerOne", as.integer(42))
 })

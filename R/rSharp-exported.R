@@ -91,7 +91,6 @@ clrGetMethods <- function(clrobj, contains = "") {
 #' @examples
 #' testClassName <- "ClrFacade.TestObject"
 #' testObj <- newObjectFromName(testClassName)
-#' testObj$reflect()
 #' clrGetMemberSignature(testObj, "set_PropertyIntegerOne")
 #' clrGetMemberSignature(testObj, "FieldIntegerOne")
 #' clrGetMemberSignature(testObj, "PropertyIntegerTwo")

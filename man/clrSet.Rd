@@ -19,7 +19,6 @@ Sets the value of a field or property of an object or class
 \examples{
 testClassName <- rSharpEnv$testObjectTypeName
 testObj <- newObjectFromName(testClassName)
-clrReflect(testObj)
 clrSet(testObj, "FieldIntegerOne", as.integer(42))
 clrSet(testClassName, "StaticPropertyIntegerOne", as.integer(42))
 }

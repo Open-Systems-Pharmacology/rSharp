@@ -101,22 +101,6 @@ NetObject <- R6::R6Class(
       return(self)
     },
 
-#' List the instance members of a .NET object
-#'
-#' @description
-#' List the instance members of a .NET object, i.e. its methods, fields and properties.
-#'
-#' @return A list of methods, fields, and properties of the object
-#' @export
-#'
-#' @examples
-#' testClassName <- "ClrFacade.TestObject"
-#' testObj <- newObjectFromName(testClassName)
-#' testObj$reflect()
-    reflect = function(){
-      return(list(Methods = clrGetMethods(self), Fields = getFields(self), Properties = clrGetProperties(self)))
-    },
-
     # is = function(type) {
     #   # call static method once implemented https://github.com/Open-Systems-Pharmacology/rSharp/issues/67
     # },
@@ -137,7 +121,6 @@ NetObject <- R6::R6Class(
 #'
 #' # functions to move here:
 #'
-#' # clrReflect - will not be used, use separate methods instead
 #' # clrToString
 #' # clrGetFields
 #' # clrGetProperties

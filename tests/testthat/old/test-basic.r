@@ -329,46 +329,6 @@ test_that("Loaded assemblies discovery", {
   expect_true(is.data.frame(d))
 })
 
-
-
-test_that("Object members discovery behaves as expected", {
-  expect_true("ClrFacade.TestObject" %in% getTypesInAssembly("ClrFacade"))
-  testObj <- newObjectFromName(testClassName)
-  members <- clrReflect(testObj)
-
-  f <- function(obj_or_tname, static = FALSE, getF, getP, getM) { # copy-paste may have been more readable... Anyway.
-    prefix <- ifelse(static, "Static", "")
-    collate <- function(...) {
-      paste(..., sep = "")
-    } # surely in stringr, but avoid dependency
-    p <- function(basefieldname) {
-      collate(prefix, basefieldname)
-    }
-
-    expect_that(getF(obj_or_tname, "IntegerOne"), equals(p("FieldIntegerOne")))
-    expect_that(getP(obj_or_tname, "IntegerOne"), equals(p("PropertyIntegerOne")))
-
-    expected_mnames <- paste(c("get_", "", "set_"), p(c("PropertyIntegerOne", "GetFieldIntegerOne", "PropertyIntegerOne")), sep = "")
-    actual_mnames <- getM(obj_or_tname, "IntegerOne")
-
-    expect_that(length(actual_mnames), equals(length(expected_mnames)))
-    expect_true(all(actual_mnames %in% expected_mnames))
-
-    sig_prefix <- ifelse(static, "Static, ", "")
-    expect_that(
-      clrGetMemberSignature(obj_or_tname, p("GetFieldIntegerOne")),
-      equals(collate(sig_prefix, "Method: Int32 ", p("GetFieldIntegerOne")))
-    )
-    expect_that(
-      clrGetMemberSignature(obj_or_tname, p("GetMethodWithParameters")),
-      equals(collate(sig_prefix, "Method: Int32 ", p("GetMethodWithParameters, Int32, String")))
-    )
-  }
-  f(testObj, static = FALSE, getFields, clrGetProperties, clrGetMethods)
-  f(testClassName, static = TRUE, getStaticFields, getStaticProperties, getStaticMethods)
-  # TODO test that methods that are explicit implementations of interfaces are found
-})
-
 test_that("Object constructor discovery behaves as expected", {
   expect_equal(
     c(

@@ -54,7 +54,6 @@ clrCall <- function(obj, methodName, ...) {
 #' @examples
 #' testClassName <- rSharpEnv$testObjectTypeName
 #' testObj <- newObjectFromName(testClassName)
-#' testObj$reflect()
 #' clrGet(testObj, "FieldIntegerOne")
 #' clrGet(testClassName, "StaticPropertyIntegerOne")
 clrGet <- function(objOrType, name) {
@@ -70,7 +69,6 @@ clrGet <- function(objOrType, name) {
 #' @examples
 #' testClassName <- rSharpEnv$testObjectTypeName
 #' testObj <- newObjectFromName(testClassName)
-#' testObj$reflect()
 #' clrSet(testObj, "FieldIntegerOne", as.integer(42))
 #' clrSet(testClassName, "StaticPropertyIntegerOne", as.integer(42))
 clrSet <- function(objOrType, name, value) {
