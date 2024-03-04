@@ -44,15 +44,6 @@ NetObject <- R6::R6Class(
       } else {
         private$.throwPropertyIsReadonly("pointer")
       }
-    },
-
-    #' @field cobjRef The underlying `cobjRef` object. Read-only
-    cobjRef = function(value) {
-      if (missing(value)) {
-        private$.cobjRef
-      } else {
-        private$.throwPropertyIsReadonly("cobjRef")
-      }
     }
   ),
   private = list(
@@ -60,8 +51,6 @@ NetObject <- R6::R6Class(
     .pointer = NULL,
     # Type of the .NET object as a string
     .type = NULL,
-    # The underlying `cobjRef` object
-    .cobjRef = NULL,
     .printLine = function(entry, value = NULL, addTab = TRUE) {
       entries <- paste0(entry, ":", sep = "")
 
@@ -97,7 +86,7 @@ NetObject <- R6::R6Class(
       .validateIsExtPtr(pointer)
       private$.pointer <- pointer
       # Get the type of the pointer
-      private$.type <- .External("r_get_typename_externalptr", pointer, PACKAGE = rSharpEnv$nativePkgName)
+      private$.type <- .clrTypeNameExtPtr(pointer)
       return(self)
     },
 
