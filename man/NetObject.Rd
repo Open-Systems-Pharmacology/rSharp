@@ -143,7 +143,7 @@ Print
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{type}}{The type of the .NET object. Read-only}
+\item{\code{type}}{String representation of the type of the .NET object. Read-only}
 
 \item{\code{pointer}}{The external pointer to the .NET object. Read-only}
 

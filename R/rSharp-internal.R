@@ -37,7 +37,7 @@
 #'
 #' Gets the type name of an object, given the SEXP external pointer to this .NET object.
 #'
-#' @param extPtr external pointer to a .NET object (not a cobjRef S4 object)
+#' @param extPtr external pointer to a .NET object (not a cobjRef S4 or a `NetObject` object)
 #' @return a character string, the type name
 #' @examples
 #' testClassName <- "ClrFacade.TestObject"

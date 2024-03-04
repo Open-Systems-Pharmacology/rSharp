@@ -7,7 +7,7 @@
 .clrTypeNameExtPtr(extPtr)
 }
 \arguments{
-\item{extPtr}{external pointer to a .NET object (not a cobjRef S4 object)}
+\item{extPtr}{external pointer to a .NET object (not a cobjRef S4 or a `NetObject` object)}
 }
 \value{
 a character string, the type name

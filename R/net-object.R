@@ -28,7 +28,7 @@ NetObject <- R6::R6Class(
   "NetObject",
   cloneable = FALSE,
   active = list(
-    #' @field type The type of the .NET object. Read-only
+    #' @field type String representation of the type of the .NET object. Read-only
     type = function(value) {
       if (missing(value)) {
         private$.type
@@ -58,7 +58,7 @@ NetObject <- R6::R6Class(
   private = list(
     # The external pointer to the .NET object
     .pointer = NULL,
-    # Type of the .NET object
+    # Type of the .NET object as a string
     .type = NULL,
     # The underlying `cobjRef` object
     .cobjRef = NULL,
@@ -181,17 +181,3 @@ NetObject <- R6::R6Class(
     }
   )
 )
-#'
-#'
-#' # functions to move here:
-#'
-#' # clrToString
-#' # clrGetMemberSignature
-#' # clrNew
-#' # clrCall
-#' # clrGet
-#' # clrSet
-#' # clrTypename
-#'
-#' # Obsolete
-#' # .clrGetExtPtr

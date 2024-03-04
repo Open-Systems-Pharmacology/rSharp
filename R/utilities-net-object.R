@@ -25,6 +25,25 @@ castToRObject <- function(obj) {
   return(obj)
 }
 
+#' Create a new NetObject R6 object given the type name.
+#'
+#' @param typename type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
+#' @param ... additional method arguments passed to the object constructor via the call to .External
+#' @return a `NetObject` R6 object
+#' @export
+#' @examples
+#' testClassName <- getRSharpSetting("testObjectTypeName")
+#' testObj <- newObjectFromName(testClassName)
+#' # object with a constructor that has parameters
+#' testObj <- newObjectFromName(testClassName, as.integer(123))
+newObjectFromName <- function(typename, ...) {
+  o <- .External("r_create_clr_object", typename, ..., PACKAGE = rSharpEnv$nativePkgName)
+  if (is.null(o)) {
+    stop("Failed to create instance of type '", typename, "'")
+  }
+  NetObject$new(o)
+}
+
 
 ###########################
 #' Call a method on an object
@@ -73,19 +92,4 @@ clrGet <- function(objOrType, name) {
 #' clrSet(testClassName, "StaticPropertyIntegerOne", as.integer(42))
 clrSet <- function(objOrType, name, value) {
   invisible(callStatic(rSharpEnv$clrFacadeTypeName, "SetFieldOrProperty", objOrType, name, value))
-}
-
-#' Gets the type name of an object
-#'
-#' Gets the .NET type name of an object, given an S4 clrobj object
-#'
-#' @param clrobj .NET object
-#' @return type name
-#' @export
-#' @examples
-#' testClassName <- "ClrFacade.TestObject"
-#' testObj <- newObjectFromName(testClassName)
-#' clrTypename(testObj)
-clrTypename <- function(clrobj) {
-  .clrTypeNameExtPtr(clrobj@clrobj)
 }
