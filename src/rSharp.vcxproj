@@ -241,16 +241,17 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions);MS_CLR;MS_CLR_TLB;USE_COR_RUNTIME_HOST;WINDOWS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);MS_CLR;MS_CLR_TLB;USE_COR_RUNTIME_HOST;WINDOWS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
       <AdditionalOptions>/TP %(AdditionalOptions)</AdditionalOptions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>NotSet</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Rdll.lib;packages\Microsoft.NETCore.App.Host.win-x64.8.0.2\runtimes\win-x64\native\nethost.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Rdll.lib;packages\Microsoft.NETCore.App.Host.win-x64.8.0.2\runtimes\win-x64\native\libnethost.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
       <ModuleDefinitionFile>rSharp-win.def</ModuleDefinitionFile>
@@ -300,12 +301,13 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);MS_CLR;MS_CLR_TLB;USE_COR_RUNTIME_HOST;WINDOWS</PreprocessorDefinitions>
       <AdditionalOptions>/TP %(AdditionalOptions)</AdditionalOptions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>packages\Microsoft.NETCore.App.Host.win-x64.8.0.2\runtimes\win-x64\native\nethost.lib;Rdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>packages\Microsoft.NETCore.App.Host.win-x64.8.0.2\runtimes\win-x64\native\libnethost.lib;Rdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>rSharp-win.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
