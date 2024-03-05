@@ -151,18 +151,15 @@ Backup*/
 UpgradeLog*.XML
 
 
-src/\.vs/
+shared/\.vs/
 \.vs/
 \.vscode/
-src/libfiles
-src/out
-src/obj
+shared/libfiles
+shared/out
+shared/obj
 
-inst/libs/*.*
 .Rproj.user
 .Rhistory
 .RData
-src/Makevars
-src/Makefile.win
-src/rSharp.so
-src/.idea
+shared/rSharp.so
+shared/.idea

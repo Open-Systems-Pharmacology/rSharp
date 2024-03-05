@@ -19,11 +19,11 @@ OUT_DIR := out
 SRC_DIR := .
 SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
-
+SHLIB_EXT := .so
 PKG_CPPFLAGS = --std=c++11 -lsupc++
 
-MONO_INSTALL_PATH=@MONO_INSTALL_PATH@
-MONO_INSTALL_PATH64=@MONO_INSTALL_PATH64@
+MONO_INSTALL_PATH=
+MONO_INSTALL_PATH64=
 OBJECTS=$(OUT_DIR)/rSharpUX.so
 ifeq "$(MONO_INSTALL_PATH)" ""
 XBUILD=xbuild
@@ -94,7 +94,7 @@ RM = 		rm -f
 
 # .PHONY: 	all clean
 
-all:		printarch instdir $(OUT_DIR)/rSharpUX.so rSharpLib rSharpInstrSharpUX
+all:		printarch instdir rSharpLib $(OUT_DIR)/rSharpUX.so rSharpInstrSharpUX
 
 clean:
 	${RM} $(OUT_DIR)/* $(OBJ_DIR)/*
