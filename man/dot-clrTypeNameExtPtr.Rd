@@ -7,7 +7,7 @@
 .clrTypeNameExtPtr(extPtr)
 }
 \arguments{
-\item{extPtr}{external pointer to a .NET object (not a cobjRef S4 or a `NetObject` object)}
+\item{extPtr}{external pointer to a .NET object (not a `cobjRef` S4 or a `NetObject` object)}
 }
 \value{
 a character string, the type name
@@ -19,6 +19,6 @@ Gets the type name of an object, given the SEXP external pointer to this .NET ob
 \dontrun{
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
-.clrTypeNameExtPtr(testObj@clrobj)
+.clrTypeNameExtPtr(testObj$pointer)
 }
 }

@@ -1,0 +1,28 @@
+---
+title: "User guide"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The `{rSharp}` package is a low-level interoperability bridge between R and 
+the .NET runtime. It offers access to .NET libraries from R, allowing to create .NET objects, access their fields, and call their methods.
+
+`{rSharp}` uses R's native interface to C++ which then calls the .NET runtime. To make working with .NET objects intuitive, `{rSharp}` utilizes the R6 object-oriented approach. This article
+will guide you through the basic usage of the package, starting from loading an assembly to calling methods and accessing fields.
+
+## Loading an assembly
+
+To start working with a .NET assembly, you need to load it into the R session. This is done using the `rSharp::loadAssembly` function.
+
+```r

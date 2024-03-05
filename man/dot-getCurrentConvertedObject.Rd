@@ -7,7 +7,7 @@
 .getCurrentConvertedObject()
 }
 \value{
-a CLR object
+a `cobjRef` S4 object
 }
 \description{
 This function is highly unlikely to be of any use to an end user, even an advanced one.

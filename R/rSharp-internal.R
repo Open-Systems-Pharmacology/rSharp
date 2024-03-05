@@ -1,4 +1,4 @@
-#' Create if possible an S4 CLR object.
+#' Create if possible an S4 `cobjRef` object.
 #'
 #' Create if possible and adequate the S4 object that wraps the external pointer to a `cobjRef` object.
 #'
@@ -27,7 +27,7 @@
 #' This function is highly unlikely to be of any use to an end user, even an advanced one.
 #' This is indirectly needed to unlock the benefits of using R.NET convert data structures between R and .NET.
 #'
-#' @return a CLR object
+#' @return a `cobjRef` S4 object
 .getCurrentConvertedObject <- function() {
   o <- .External("r_get_object_direct", PACKAGE = rSharpEnv$nativePkgName)
   .mkClrObjRef(o)
@@ -37,13 +37,13 @@
 #'
 #' Gets the type name of an object, given the SEXP external pointer to this .NET object.
 #'
-#' @param extPtr external pointer to a .NET object (not a cobjRef S4 or a `NetObject` object)
+#' @param extPtr external pointer to a .NET object (not a `cobjRef` S4 or a `NetObject` object)
 #' @return a character string, the type name
 #' @examples
 #' \dontrun{
 #' testClassName <- getRSharpSetting("testObjectTypeName")
 #' testObj <- newObjectFromName(testClassName)
-#' .clrTypeNameExtPtr(testObj@clrobj)
+#' .clrTypeNameExtPtr(testObj$pointer)
 #' }
 .clrTypeNameExtPtr <- function(extPtr) {
   .validateIsExtPtr(extPtr)
