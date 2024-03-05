@@ -101,11 +101,11 @@ test_that("Object members discovery behaves as expected", {
 
 test_that("$get works as expected", {
   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
-    fieldName <- "FieldIntegerOne"
-    propName <- "PropertyIntegerOne"
+  fieldName <- "FieldIntegerOne"
+  propName <- "PropertyIntegerOne"
 
-    expect_equal(testObj$get(fieldName), 0)
-    expect_equal(testObj$get(propName), 0)
+  expect_equal(testObj$get(fieldName), 0)
+  expect_equal(testObj$get(propName), 0)
 })
 
 test_that("$set works as expected", {

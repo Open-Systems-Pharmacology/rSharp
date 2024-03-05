@@ -20,7 +20,7 @@ tzIdR_AUest <- "Australia/Sydney"
 # IronPython: tz = [x for x in TimeZoneInfo.GetSystemTimeZones()]
 tzId_AUest <-
   ifelse(tolower(Sys.info()["sysname"]) == "windows",
-      "AUS Eastern Standard Time",
+    "AUS Eastern Standard Time",
     tzIdR_AUest # on Linux, use the Olson DB.
   )
 # Help with unit test labels
