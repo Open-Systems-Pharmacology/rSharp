@@ -83,11 +83,23 @@ getStatic <- function(type, name) {
 #'
 #' @param type Type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
 #' @param name the name of a field/property of the object
+#' @param asInteger Boolean whether to convert the value to an integer.
+#' Used for cases where .NET signature requires an integer. Ignored if `value` is not numeric.
 #' @param value The value to set the field with
+#'
 #' @export
 #' @examples
 #' testClassName <- getRSharpSetting("testObjectTypeName")
 #' setStatic(testClassName, "StaticPropertyIntegerOne", as.integer(42))
-setStatic <- function(type, name, value) {
+setStatic <- function(type, name, value, asInteger = FALSE) {
+  # Convert character to UTF-8
+  if (is(value, "character")) {
+      value <- enc2utf8(value)
+  }
+  # Workaround for cases where .NET signature requires an integer
+  if (is.numeric(value) && asInteger) {
+    value <- as.integer(value)
+  }
+
   invisible(callStatic(rSharpEnv$clrFacadeTypeName, "SetFieldOrProperty", type, name, value))
 }

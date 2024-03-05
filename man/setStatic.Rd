@@ -4,7 +4,7 @@
 \alias{setStatic}
 \title{Sets the value of a field or property of an object or class}
 \usage{
-setStatic(type, name, value)
+setStatic(type, name, value, asInteger = FALSE)
 }
 \arguments{
 \item{type}{Type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.}
@@ -12,6 +12,9 @@ setStatic(type, name, value)
 \item{name}{the name of a field/property of the object}
 
 \item{value}{The value to set the field with}
+
+\item{asInteger}{Boolean whether to convert the value to an integer.
+Used for cases where .NET signature requires an integer. Ignored if `value` is not numeric.}
 }
 \description{
 Sets the value of a field or property of an object or class

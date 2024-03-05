@@ -106,6 +106,13 @@ testObj$set("FieldIntegerOne", as.integer(42))
 \if{html}{\out{<a id="method-NetObject-new"></a>}}
 \if{latex}{\out{\hypertarget{method-NetObject-new}{}}}
 \subsection{Method \code{new()}}{
+Simple way to wrap a get;set; .NET property
+
+
+Wrap get/set of a read-only property.
+Useful in writing class wrappers, but rarely for the end-user
+
+
 Initializes the object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{NetObject$new(pointer)}\if{html}{\out{</div>}}
@@ -115,11 +122,24 @@ Initializes the object.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{pointer}}{The external pointer to the .NET object}
+
+\item{\code{name}}{the name of a field/property of the object}
+
+\item{\code{value}}{If a value is passed, `self$set(name, value)` is called. If no value is passed, `self$get(name)` is called.}
+
+\item{\code{shouldSetNull}}{If `value` is `NULL`, should the property be set to `NULL`? Default is `TRUE`. Used for edge-case scenarios where `NULL` is not a valid value for a property.}
+
+\item{\code{asInteger}}{Boolean whether to convert the value to an integer.
+Used for cases where .NET signature requires an integer. Ignored if `value` is not numeric.}
+
+\item{\code{name}}{the name of a field/property of the object}
+
+\item{\code{value}}{If a value is passed, an error is thrown. If no value is passed, `self$get(name)` is called.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-The initialized object
+`self$set(name, value)` if `value` is passed, `self$get(name)` if no `value` is passed.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -327,7 +347,7 @@ testObj$get("FieldIntegerOne")
 \subsection{Method \code{set()}}{
 Sets the value of a field or property of the object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{NetObject$set(name, value)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{NetObject$set(name, value, asInteger = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -336,6 +356,9 @@ Sets the value of a field or property of the object.
 \item{\code{name}}{the name of a field/property of the object}
 
 \item{\code{value}}{the value to set the field with}
+
+\item{\code{asInteger}}{Boolean whether to convert the value to an integer.
+Used for cases where .NET signature requires an integer. Ignored if `value` is not numeric.}
 }
 \if{html}{\out{</div>}}
 }

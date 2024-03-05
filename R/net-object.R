@@ -32,6 +32,43 @@ NetObject <- R6::R6Class(
     .pointer = NULL,
     # Type of the .NET object as a string
     .type = NULL,
+
+    #' @description
+    #' Simple way to wrap a get;set; .NET property
+    #' @param name the name of a field/property of the object
+    #' @param value If a value is passed, `self$set(name, value)` is called. If no value is passed, `self$get(name)` is called.
+    #' @param shouldSetNull If `value` is `NULL`, should the property be set to `NULL`? Default is `TRUE`. Used for edge-case scenarios where `NULL` is not a valid value for a property.
+    #' @param asInteger Boolean whether to convert the value to an integer.
+    #' Used for cases where .NET signature requires an integer. Ignored if `value` is not numeric.
+    #' @return `self$set(name, value)` if `value` is passed, `self$get(name)` if no `value` is passed.
+    .wrapProperty = function(name, value, shouldSetNull = TRUE, asInteger = FALSE) {
+      if (missing(value)) {
+        return(self$get(name))
+      } else {
+        # Problem converting reference object to `NULL`
+        if (is.null(value) && !shouldSetNull) {
+          return()
+        }
+        return(self$set(name, value, asInteger = asInteger))
+      }
+    },
+
+    #' @description
+    #' Wrap get/set of a read-only property.
+    #' Useful in writing class wrappers, but rarely for the end-user
+    #'
+    #'
+    #' @param name the name of a field/property of the object
+    #' @param value If a value is passed, an error is thrown. If no value is passed, `self$get(name)` is called.
+    #'
+    #' @return `self$get(name)` if no `value` is passed, or throws an error if `value` is passed.
+    .wrapReadOnlyProperty = function(name, value) {
+      if (missing(value)) {
+        return(self$get(name))
+      } else {
+        private$.throwPropertyIsReadonly(name)
+      }
+    },
     .printLine = function(entry, value = NULL, addTab = TRUE) {
       entries <- paste0(entry, ":", sep = "")
 
@@ -185,12 +222,14 @@ NetObject <- R6::R6Class(
     #'
     #' @param name the name of a field/property of the object
     #' @param value the value to set the field with
+    #' @param asInteger Boolean whether to convert the value to an integer.
+    #' Used for cases where .NET signature requires an integer. Ignored if `value` is not numeric.
     #' @export
     #' @examples
     #' testClassName <- getRSharpSetting("testObjectTypeName")
     #' testObj <- newObjectFromName(testClassName)
     #' testObj$set("FieldIntegerOne", as.integer(42))
-    set = function(name, value) {
+    set = function(name, value, asInteger = FALSE) {
       # Internally calling `setStatic` because it uses the same C++ code
       invisible(setStatic(self$pointer, name, value))
     },
