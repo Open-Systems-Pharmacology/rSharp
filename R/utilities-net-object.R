@@ -44,9 +44,27 @@ newObjectFromName <- function(typename, ..., R6objectClass = NetObject) {
   # if (!inherits(R6objectClass, "NetObject")) {
   #   stop(messages$errorNotANetObjectClass())
   # }
+  o <- newPointerFromName(typename, ...)
+  R6objectClass$new(o)
+}
+
+#' Create a new external pointer to a .NET object given the type name.
+#'
+#' @param typename type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
+#' @param ... additional method arguments passed to the object constructor via the call to .External
+#'
+#' @return an external pointer to a .NET object
+#' @export
+#'
+#' @examples
+#' testClassName <- getRSharpSetting("testObjectTypeName")
+#' testPtr <- newPointerFromName(testClassName)
+#' # Now we can create a NetObject from the pointer
+#' testObj <- NetObject$new(testPtr)
+newPointerFromName <- function(typename, ...) {
   o <- .External("r_create_clr_object", typename, ..., PACKAGE = rSharpEnv$nativePkgName)
   if (is.null(o)) {
     stop("Failed to create instance of type '", typename, "'")
   }
-  R6objectClass$new(o)
+  o
 }
