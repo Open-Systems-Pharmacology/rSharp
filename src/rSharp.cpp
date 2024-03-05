@@ -38,16 +38,6 @@ void freeObject(RSharpGenericValue* instance);
 /////////////////////////////////////////
 void rSharp_create_domain(char ** libraryPath)
 {
-	size_t lengthInWideFormat = 0;
-	//Gets the length of libPath in terms of a wide string.
-	mbstowcs_s(&lengthInWideFormat, nullptr, 0, *libraryPath, 0);
-	wchar_t* wideStringLibraryPath = new wchar_t[lengthInWideFormat + 1];
-	//Copies the libraryPath to a wchar_t with the size lengthInWideFormat
-	mbstowcs_s(nullptr, wideStringLibraryPath, lengthInWideFormat + 1, *libraryPath, lengthInWideFormat);
-
-	wchar_t* wideStringPath = MergeLibraryPath(wideStringLibraryPath, STR("/RSharp.runtimeconfig.json"));
-	dotnetlib_path = MergeLibraryPath(wideStringLibraryPath, STR("/ClrFacade.dll"));
-
 	// if already loaded in this process, do not load again
 	if (load_assembly_and_get_function_pointer != nullptr)
 		return;
@@ -60,6 +50,16 @@ void rSharp_create_domain(char ** libraryPath)
 	}
 
 	// STEP 2: Initialize and start the .NET Core runtime
+	size_t lengthInWideFormat = 0;
+	//Gets the length of libPath in terms of a wide string.
+	mbstowcs_s(&lengthInWideFormat, nullptr, 0, *libraryPath, 0);
+	wchar_t* wideStringLibraryPath = new wchar_t[lengthInWideFormat + 1];
+	//Copies the libraryPath to a wchar_t with the size lengthInWideFormat
+	mbstowcs_s(nullptr, wideStringLibraryPath, lengthInWideFormat + 1, *libraryPath, lengthInWideFormat);
+
+	wchar_t* wideStringPath = MergeLibraryPath(wideStringLibraryPath, STR("/RSharp.runtimeconfig.json"));
+	dotnetlib_path = MergeLibraryPath(wideStringLibraryPath, STR("/ClrFacade.dll"));
+
 	load_assembly_and_get_function_pointer = nullptr;
 	load_assembly_and_get_function_pointer = get_dotnet_load_assembly(wideStringPath);
 	assert(load_assembly_and_get_function_pointer != nullptr && "Failure: get_dotnet_load_assembly()");
