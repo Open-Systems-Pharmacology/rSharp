@@ -144,7 +144,6 @@ extern "C" {
 RSharpGenericValue ConvertToRSharpGenericValue(SEXP s);
 RSharpGenericValue** sexp_to_parameters(SEXP args);
 SEXP ConvertToSEXP(RSharpGenericValue& value);
-char_t* MergeLibPath(char** libPath, char* additionalPath);
 
 
 #ifndef  __cplusplus

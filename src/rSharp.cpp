@@ -9,7 +9,7 @@
 
 using string_t = std::basic_string<char_t>;
 
-const char_t* dotnetlib_path = nullptr;
+const wchar_t* dotnetlib_path = nullptr;
 const auto loadAssemblyDelegate = STR("ClrFacade.ClrFacade+LoadFromDelegate, ClrFacade");
 void* create_instance_fn_ptr = nullptr;
 void* load_from_fn_ptr = nullptr;
@@ -30,16 +30,23 @@ typedef int (CORECLR_DELEGATE_CALLTYPE* CreateSEXPWrapperDelegate)(intptr_t poin
 typedef int (CORECLR_DELEGATE_CALLTYPE* CreateInstanceDelegate)(const char*, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
 typedef void (CORECLR_DELEGATE_CALLTYPE* LoadFromDelegate)(const char*);
 
-
+wchar_t* MergeLibraryPath(const wchar_t* libraryPath, const wchar_t* additionalPath);
 void freeObject(RSharpGenericValue* instance);
 
 /////////////////////////////////////////
 // Initialization and disposal of the CLR
 /////////////////////////////////////////
-void rSharp_create_domain(char ** libPath)
+void rSharp_create_domain(char ** libraryPath)
 {
-	char_t* wideStringPath = MergeLibPath(libPath, "/RSharp.runtimeconfig.json");
-	dotnetlib_path = MergeLibPath(libPath, "/ClrFacade.dll");
+	size_t lengthInWideFormat = 0;
+	//Gets the length of libPath in terms of a wide string.
+	mbstowcs_s(&lengthInWideFormat, nullptr, 0, *libraryPath, 0);
+	wchar_t* wideStringLibraryPath = new wchar_t[lengthInWideFormat + 1];
+	//Copies the libraryPath to a wchar_t with the size lengthInWideFormat
+	mbstowcs_s(nullptr, wideStringLibraryPath, lengthInWideFormat + 1, *libraryPath, lengthInWideFormat);
+
+	wchar_t* wideStringPath = MergeLibraryPath(wideStringLibraryPath, STR("/RSharp.runtimeconfig.json"));
+	dotnetlib_path = MergeLibraryPath(wideStringLibraryPath, STR("/ClrFacade.dll"));
 
 	// if already loaded in this process, do not load again
 	if (load_assembly_and_get_function_pointer != nullptr)
@@ -58,25 +65,21 @@ void rSharp_create_domain(char ** libPath)
 	assert(load_assembly_and_get_function_pointer != nullptr && "Failure: get_dotnet_load_assembly()");
 
 	delete[] wideStringPath;
+	delete[] wideStringLibraryPath;
 }
 
-char_t* MergeLibPath(char** libPath, char* additionalPath)
+wchar_t* MergeLibraryPath(const wchar_t* libraryPath, const wchar_t* additionalPath)
 {
-	size_t libPathLen = strlen(*libPath);
-	size_t additionalPathLen = strlen(additionalPath);
+	size_t libraryPathLength = wcslen(libraryPath);
+	size_t additionalPathLength = wcslen(additionalPath);
+	size_t totalLength = libraryPathLength + additionalPathLength + 1; // +1 for null terminator
 
-	char* combinedPath = new char[libPathLen + additionalPathLen + 1];
+	wchar_t* mergedPaths = new wchar_t[totalLength];
 
-	strcpy(combinedPath, *libPath);
-	strcat(combinedPath, additionalPath);
+	wcscpy_s(mergedPaths, totalLength, libraryPath);
+	wcscat_s(mergedPaths, totalLength, additionalPath);
 
-	size_t length = 0;
-	mbstowcs_s(&length, nullptr, 0, combinedPath, 0);
-	char_t* wideStringPath = new char_t[length + 1];
-	mbstowcs_s(nullptr, wideStringPath, length + 1, combinedPath, length);
-
-	delete[] combinedPath;
-	return wideStringPath;
+	return mergedPaths;
 }
 
 void rSharp_shutdown_clr()
