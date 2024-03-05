@@ -28,7 +28,10 @@ castToRObject <- function(obj) {
 #' Create a new NetObject R6 object given the type name.
 #'
 #' @param typename type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
+#' @param R6objectClass the R6 class of the object to be created, defaults to `NetObject`.
+#' Can be used to create custom R6 classes that inherit from `NetObject`.
 #' @param ... additional method arguments passed to the object constructor via the call to .External
+#'
 #' @return a `NetObject` R6 object
 #' @export
 #' @examples
@@ -36,10 +39,14 @@ castToRObject <- function(obj) {
 #' testObj <- newObjectFromName(testClassName)
 #' # object with a constructor that has parameters
 #' testObj <- newObjectFromName(testClassName, as.integer(123))
-newObjectFromName <- function(typename, ...) {
+newObjectFromName <- function(typename, ..., R6objectClass = NetObject) {
+  # R6objectClass must be a subclass of NetObject - don't know how to validate!
+  # if (!inherits(R6objectClass, "NetObject")) {
+  #   stop(messages$errorNotANetObjectClass())
+  # }
   o <- .External("r_create_clr_object", typename, ..., PACKAGE = rSharpEnv$nativePkgName)
   if (is.null(o)) {
     stop("Failed to create instance of type '", typename, "'")
   }
-  NetObject$new(o)
+  R6objectClass$new(o)
 }

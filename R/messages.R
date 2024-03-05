@@ -33,3 +33,7 @@ messages$errorMethodNotFound <- function(methodName, typeName) {
     "'."
   )
 }
+
+messages$errorNotANetObjectClass <- function() {
+  "Trying to create an object, but the class is not a subclass of `NetObject`!"
+}

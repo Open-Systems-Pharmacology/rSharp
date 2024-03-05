@@ -23,7 +23,6 @@ test_that("Basic types of length zero are passed correctly from R to .NET", {
   expectArrayElementType(logical(0), "System.Boolean")
   expectArrayElementType(character(0), "System.String")
 
-
   aPosixCt <- numeric(0)
   attributes(aPosixCt) <- list(tzone = "UTC")
   class(aPosixCt) <- c("POSIXct", "POSIXt")
