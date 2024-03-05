@@ -75,12 +75,6 @@ loadAndInit <- function(chname, pkgname, libname, srcPkgLibPath=NULL) {
     # srcPkgLibPath ends with platform separator (e.g. '/')
     f <- file.path(srcPkgLibPath, paste0(chname, ext))
 
-    # save current working directory
-    og_wd <- getwd()
-
-    # change working directory to load libs
-    message("Temporary working directory:", srcPkgLibPath)
-    setwd(srcPkgLibPath)
     dyn.load(f)
 
   } else {
@@ -91,11 +85,6 @@ loadAndInit <- function(chname, pkgname, libname, srcPkgLibPath=NULL) {
   clrInit(debug_flag!="")
   appendStartupMsg(paste('Loaded Common Language Runtime version', getClrVersionString()))
   setRDotNet(TRUE)
-
-  if (exists("og_wd")) {
-    # restore the original working directory
-    setwd(og_wd)
-  }
 }
 
 appendStartupMsg <- function(msg) {

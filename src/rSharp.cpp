@@ -9,7 +9,7 @@
 
 using string_t = std::basic_string<char_t>;
 
-const string_t dotnetlib_path = STR("./ClrFacade.dll");
+const wchar_t* dotnetlib_path = nullptr;
 const auto loadAssemblyDelegate = STR("ClrFacade.ClrFacade+LoadFromDelegate, ClrFacade");
 void* create_instance_fn_ptr = nullptr;
 void* load_from_fn_ptr = nullptr;
@@ -30,14 +30,14 @@ typedef int (CORECLR_DELEGATE_CALLTYPE* CreateSEXPWrapperDelegate)(intptr_t poin
 typedef int (CORECLR_DELEGATE_CALLTYPE* CreateInstanceDelegate)(const char*, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
 typedef void (CORECLR_DELEGATE_CALLTYPE* LoadFromDelegate)(const char*);
 
-
+wchar_t* MergeLibraryPath(const wchar_t* libraryPath, const wchar_t* additionalPath);
 void freeObject(RSharpGenericValue* instance);
 
 /////////////////////////////////////////
 // Initialization and disposal of the CLR
 /////////////////////////////////////////
-void rSharp_create_domain() {
-
+void rSharp_create_domain(char ** libraryPath)
+{
 	// if already loaded in this process, do not load again
 	if (load_assembly_and_get_function_pointer != nullptr)
 		return;
@@ -50,10 +50,36 @@ void rSharp_create_domain() {
 	}
 
 	// STEP 2: Initialize and start the .NET Core runtime
-	const string_t config_path = STR("./RSharp.runtimeconfig.json");
+	size_t lengthInWideFormat = 0;
+	//Gets the length of libPath in terms of a wide string.
+	mbstowcs_s(&lengthInWideFormat, nullptr, 0, *libraryPath, 0);
+	wchar_t* wideStringLibraryPath = new wchar_t[lengthInWideFormat + 1];
+	//Copies the libraryPath to a wchar_t with the size lengthInWideFormat
+	mbstowcs_s(nullptr, wideStringLibraryPath, lengthInWideFormat + 1, *libraryPath, lengthInWideFormat);
+
+	wchar_t* wideStringPath = MergeLibraryPath(wideStringLibraryPath, STR("/RSharp.runtimeconfig.json"));
+	dotnetlib_path = MergeLibraryPath(wideStringLibraryPath, STR("/ClrFacade.dll"));
+
 	load_assembly_and_get_function_pointer = nullptr;
-	load_assembly_and_get_function_pointer = get_dotnet_load_assembly(config_path.c_str());
+	load_assembly_and_get_function_pointer = get_dotnet_load_assembly(wideStringPath);
 	assert(load_assembly_and_get_function_pointer != nullptr && "Failure: get_dotnet_load_assembly()");
+
+	delete[] wideStringPath;
+	delete[] wideStringLibraryPath;
+}
+
+wchar_t* MergeLibraryPath(const wchar_t* libraryPath, const wchar_t* additionalPath)
+{
+	size_t libraryPathLength = wcslen(libraryPath);
+	size_t additionalPathLength = wcslen(additionalPath);
+	size_t totalLength = libraryPathLength + additionalPathLength + 1; // +1 for null terminator
+
+	wchar_t* mergedPaths = new wchar_t[totalLength];
+
+	wcscpy_s(mergedPaths, totalLength, libraryPath);
+	wcscat_s(mergedPaths, totalLength, additionalPath);
+
+	return mergedPaths;
 }
 
 void rSharp_shutdown_clr()
@@ -179,7 +205,7 @@ void initializeCreateInstance()
 	auto functionDelegate = STR("ClrFacade.ClrFacade+CreateInstanceDelegate, ClrFacade");
 
 	int rc_1 = load_assembly_and_get_function_pointer(
-		dotnetlib_path.c_str(),
+		dotnetlib_path,
 		dotnet_type,
 		STR("CreateInstance"),
 		functionDelegate,//delegate_type_name
@@ -195,7 +221,7 @@ void initializeLoadAssembly()
 	auto functionDelegate = STR("ClrFacade.ClrFacade+LoadFromDelegate, ClrFacade");
 
 	int rc_1 = load_assembly_and_get_function_pointer(
-		dotnetlib_path.c_str(),
+		dotnetlib_path,
 		dotnet_type,
 		STR("LoadFrom"),
 		loadAssemblyDelegate,//delegate_type_name
@@ -211,7 +237,7 @@ void initializeGetFullTypeNameFunction()
 	auto functionDelegate = STR("ClrFacade.ClrFacade+GetObjectTypeNameDelegate, ClrFacade");
 
 	int rc_1 = load_assembly_and_get_function_pointer(
-		dotnetlib_path.c_str(),
+		dotnetlib_path,
 		dotnet_type,
 		STR("GetObjectTypeName"),
 		functionDelegate,//delegate_type_name
@@ -227,7 +253,7 @@ void initializeGetObjectDirectFunction()
 	auto functionDelegate = STR("ClrFacade.ClrFacade+CurrentObjectDelegate, ClrFacade");
 
 	int rc_1 = load_assembly_and_get_function_pointer(
-		dotnetlib_path.c_str(),
+		dotnetlib_path,
 		dotnet_type,
 		STR("CurrentObject"),
 		functionDelegate,//delegate_type_name
@@ -243,7 +269,7 @@ void initializeCreateSEXPFunction()
 	auto functionDelegate = STR("ClrFacade.ClrFacade+CreateSexpWrapperDelegate, ClrFacade");
 
 	int rc_1 = load_assembly_and_get_function_pointer(
-		dotnetlib_path.c_str(),
+		dotnetlib_path,
 		dotnet_type,
 		STR("CreateSexpWrapperLong"),
 		functionDelegate,//delegate_type_name
@@ -260,7 +286,7 @@ void initializeCallInstanceFunction()
 	auto functionDelegate = STR("ClrFacade.ClrFacade+CallInstanceMethodDelegate, ClrFacade");
 
 	int rc_1 = load_assembly_and_get_function_pointer(
-		dotnetlib_path.c_str(),
+		dotnetlib_path,
 		dotnet_type,
 		STR("CallInstanceMethod"),
 		functionDelegate,//delegate_type_name
@@ -276,7 +302,7 @@ void initializeFreeObjectFunction()
 	auto functionDelegate = STR("ClrFacade.ClrFacade+FreeObjectDelegate, ClrFacade");
 
 	int rc_1 = load_assembly_and_get_function_pointer(
-		dotnetlib_path.c_str(),
+		dotnetlib_path,
 		dotnet_type,
 		STR("FreeObject"),
 		functionDelegate,//delegate_type_name
@@ -293,7 +319,7 @@ void initializeCallStaticFunction()
 	auto functionDelegate = STR("ClrFacade.ClrFacade+CallStaticMethodDelegate, ClrFacade");
 
 	int rc_1 = load_assembly_and_get_function_pointer(
-		dotnetlib_path.c_str(),
+		dotnetlib_path,
 		dotnet_type,
 		STR("CallStaticMethod"),
 		functionDelegate,//delegate_type_name

@@ -15,7 +15,6 @@ DOTNET_CMD=dotnet
 MSB=@MSBUILD_EXE_PATH@
 
 INSTDIR= ../inst
-NETHOST=nethost
 RUNTIMECONFIG=RSharp.runtimeconfig
 
 # This can be helpful to diagnose the msbuild procedure
@@ -81,7 +80,6 @@ rSharpLib: rSharpLibComp
 	$(ROBOCP_CMD) $$bin_dir $(INSTDIR)/libs/ $$RSHARPBINS;\
 	
 	
-	$(ROBOCP_CMD) ./packages/Microsoft.NETCore.App.Host.win-x64.8.0.2/runtimes/win-x64/native $(INSTDIR)/libs/ $(NETHOST).dll
 	$(ROBOCP_CMD) ./ $(INSTDIR)/libs/ $(RUNTIMECONFIG).json;
 	-$(ROBOCP_CMD) ./ClrFacade/bin/$(BuildConfiguration)/net8.0/ $(INSTDIR)/libs/ $(CLR_FACADE_BINS)
 	-$(ROBOCP_CMD) ./ClrFacade/bin/$(BuildConfiguration)/net8.0/ $(INSTDIR)/libs/ $(RDOTNET_BINS)
