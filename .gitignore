@@ -158,7 +158,6 @@ src/libfiles
 src/out
 src/obj
 
-inst/libs/*.*
 .Rproj.user
 .Rhistory
 .RData
