@@ -1,9 +1,5 @@
 # this file is automatically loaded by testthat when running tests
 # Functions
-areClrRefEquals <- function(x, y) {
-  callStatic("System.Object", "ReferenceEquals", x, y)
-}
-
 expectArrayTypeConv <- function(clrType, arrayLength, expectedRObj) {
   tn <- "ClrFacade.TestArrayMemoryHandling"
   arrayLength <- as.integer(arrayLength)

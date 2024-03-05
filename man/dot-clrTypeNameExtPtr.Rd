@@ -16,7 +16,9 @@ a character string, the type name
 Gets the type name of an object, given the SEXP external pointer to this .NET object.
 }
 \examples{
-testClassName <- "ClrFacade.TestObject"
+\dontrun{
+testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 .clrTypeNameExtPtr(testObj@clrobj)
+}
 }

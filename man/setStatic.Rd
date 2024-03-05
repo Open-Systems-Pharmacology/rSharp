@@ -17,6 +17,6 @@ setStatic(type, name, value)
 Sets the value of a field or property of an object or class
 }
 \examples{
-testClassName <- rSharpEnv$testObjectTypeName
+testClassName <- getRSharpSetting("testObjectTypeName")
 setStatic(testClassName, "StaticPropertyIntegerOne", as.integer(42))
 }

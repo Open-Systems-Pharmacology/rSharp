@@ -73,7 +73,7 @@ callStatic <- function(typename, methodName, ...) {
 #' @return An object resulting from the call. May be a `NetObject` object, or a native R object for common types. Can be NULL.
 #' @export
 #' @examples
-#' testClassName <- rSharpEnv$testObjectTypeName
+#' testClassName <- getRSharpSetting("testObjectTypeName")
 #' getStatic(testClassName, "StaticPropertyIntegerOne")
 getStatic <- function(type, name) {
   return(callStatic(rSharpEnv$clrFacadeTypeName, "GetFieldOrProperty", type, name))
@@ -86,7 +86,7 @@ getStatic <- function(type, name) {
 #' @param value The value to set the field with
 #' @export
 #' @examples
-#' testClassName <- rSharpEnv$testObjectTypeName
+#' testClassName <- getRSharpSetting("testObjectTypeName")
 #' setStatic(testClassName, "StaticPropertyIntegerOne", as.integer(42))
 setStatic <- function(type, name, value) {
   invisible(callStatic(rSharpEnv$clrFacadeTypeName, "SetFieldOrProperty", type, name, value))

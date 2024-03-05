@@ -1,29 +1,10 @@
-#' #' @title NetObject
-#' #' @docType class
-#' #'
-#' #' @description
-#' #' Base wrapper class for the S4 class `cobjRef` which holds pointers to .NET objects
-#' #'
-#' #' @importFrom R6
-#' #'
-#' #' @examples
-#' #' myPrintable <- R6::R6Class(
-#' #'   "myPrintable",
-#' #'   inherit = Printable,
-#' #'   public = list(
-#' #'     x = NULL,
-#' #'     y = NULL,
-#' #'     print = function() {
-#' #'       private$printClass()
-#' #'       private$printLine("x", self$x)
-#' #'       private$printLine("y", self$y)
-#' #'       invisible(self)
-#' #'     }
-#' #'   )
-#' #' )
-#' #'
-#' #' x <- myPrintable$new()
-#' #' x
+#' @title NetObject
+#' @docType class
+#'
+#' @description
+#' Base wrapper class for the pointers to .NET objects. Offers basic methods to interact with the .NET objects.
+#'
+#' @importFrom R6 R6Class
 NetObject <- R6::R6Class(
   "NetObject",
   cloneable = FALSE,
@@ -72,16 +53,15 @@ NetObject <- R6::R6Class(
     }
   ),
   public = list(
-    #' Initialize
     #' @description Initializes the object.
     #' @param pointer The external pointer to the .NET object
     #' @return The initialized object
     #' @export
     #' @examples
-    #'   testClassName <- "ClrFacade.Tests.RefClasses.LevelOneClass"
-    #'   o <- .External("r_create_clr_object", testClassName, PACKAGE = getRSharpSetting("nativePkgName"))
-    #'   x <- newObjectFromName(testClassName)
-    #'   print(x)
+    #' testClassName <- "ClrFacade.Tests.RefClasses.LevelOneClass"
+    #' o <- .External("r_create_clr_object", testClassName, PACKAGE = getRSharpSetting("nativePkgName"))
+    #' x <- newObjectFromName(testClassName)
+    #' print(x)
     initialize = function(pointer) {
       .validateIsExtPtr(pointer)
       private$.pointer <- pointer
@@ -94,13 +74,14 @@ NetObject <- R6::R6Class(
     #   # call static method once implemented https://github.com/Open-Systems-Pharmacology/rSharp/issues/67
     # },
 
+    #' @description
     #' List the fields of the object
     #'
     #' @param contains a string that the field names returned must contain
     #' @return a list of names of the fields of the object
     #' @export
     #' @examples
-    #' testClassName <- rSharpEnv$testObjectTypeName
+    #' testClassName <- getRSharpSetting("testObjectTypeName")
     #' testObj <- newObjectFromName(testClassName)
     #' testObj$getFields()
     #' testObj$getFields("ieldInt")
@@ -109,13 +90,14 @@ NetObject <- R6::R6Class(
       callStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceFields", self$pointer, contains)
     },
 
+    #' @description
     #' List the properties of the object
     #'
     #' @param contains a string that the property names returned must contain
     #' @return a list of names of the properties of the object
     #' @export
     #' @examples
-    #' testClassName <- "ClrFacade.TestObject"
+    #' testClassName <- getRSharpSetting("testObjectTypeName")
     #' testObj <- newObjectFromName(testClassName)
     #' testObj$getProperties()
     #' testObj$getProperties("One")
@@ -124,13 +106,14 @@ NetObject <- R6::R6Class(
       callStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceProperties", self$pointer, contains)
     },
 
+    #' @description
     #' List the methods the object
     #'
     #' @param contains a string that the methods names returned must contain
     #' @return a list of names of the methods of the object
     #' @export
     #' @examples
-    #' testClassName <- "ClrFacade.TestObject"
+    #' testClassName <- getRSharpSetting("testObjectTypeName")
     #' testObj <- newObjectFromName(testClassName)
     #' testObj$getMethods()
     #' testObj$getMethods("Get")
@@ -139,8 +122,6 @@ NetObject <- R6::R6Class(
       callStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceMethods", self$pointer, contains)
     },
 
-    #' Gets the signature of a .NET object member
-    #'
     #' @description
     #' Gets a string representation of the signature of a member (i.e. field, property, method).
     #' Mostly used to interactively search for what arguments to pass to a method.
@@ -149,7 +130,7 @@ NetObject <- R6::R6Class(
     #' @return a character vector with summary information on the method/member signatures
     #' @export
     #' @examples
-    #' testClassName <- "ClrFacade.TestObject"
+    #' testClassName <- getRSharpSetting("testObjectTypeName")
     #' testObj <- newObjectFromName(testClassName)
     #' testObj$getMemberSignature("set_PropertyIntegerOne")
     #' testObj$getMemberSignature("FieldIntegerOne")
@@ -158,6 +139,7 @@ NetObject <- R6::R6Class(
       callStatic(rSharpEnv$reflectionHelperTypeName, "GetSignature", self$pointer, memberName)
     },
 
+    #' @description
     #' Call a method of the object
     #'
     #' @param methodName the name of a method of the object
@@ -165,7 +147,7 @@ NetObject <- R6::R6Class(
     #' @return An object resulting from the call. May be a `NetObject` object, or a native R object for common types. Can be NULL.
     #' @export
     #' @examples
-    #' testClassName <- rSharpEnv$testObjectTypeName
+    #' testClassName <- getRSharpSetting("testObjectTypeName")
     #' testObj <- newObjectFromName(testClassName)
     #' testObj$call("GetFieldIntegerOne")
     call = function(methodName, ...) {
@@ -183,13 +165,14 @@ NetObject <- R6::R6Class(
       return(castToRObject(result))
     },
 
+    #' @description
     #' Gets the value of a field or property of the object
     #'
     #' @param name the name of a field/property  of the object
     #' @return An object resulting from the call. May be a `NetObject` object, or a native R object for common types. Can be NULL.
     #' @export
     #' @examples
-    #' testClassName <- rSharpEnv$testObjectTypeName
+    #' testClassName <- getRSharpSetting("testObjectTypeName")
     #' testObj <- newObjectFromName(testClassName)
     #' testObj$get("FieldIntegerOne")
     get = function(name) {
@@ -197,13 +180,14 @@ NetObject <- R6::R6Class(
       return(getStatic(self$pointer, name))
     },
 
+    #' @description
     #' Sets the value of a field or property of the object.
     #'
     #' @param name the name of a field/property of the object
     #' @param value the value to set the field with
     #' @export
     #' @examples
-    #' testClassName <- rSharpEnv$testObjectTypeName
+    #' testClassName <- getRSharpSetting("testObjectTypeName")
     #' testObj <- newObjectFromName(testClassName)
     #' testObj$set("FieldIntegerOne", as.integer(42))
     set = function(name, value) {
@@ -211,8 +195,7 @@ NetObject <- R6::R6Class(
       invisible(setStatic(self$pointer, name, value))
     },
 
-    #' Print
-    #' @description print prints a summary of the object.
+    #' @description Prints a summary of the object.
     print = function() {
       private$.printClass()
       private$.printLine("Type", private$.type)

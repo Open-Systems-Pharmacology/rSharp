@@ -40,9 +40,11 @@
 #' @param extPtr external pointer to a .NET object (not a cobjRef S4 or a `NetObject` object)
 #' @return a character string, the type name
 #' @examples
-#' testClassName <- "ClrFacade.TestObject"
+#' \dontrun{
+#' testClassName <- getRSharpSetting("testObjectTypeName")
 #' testObj <- newObjectFromName(testClassName)
 #' .clrTypeNameExtPtr(testObj@clrobj)
+#' }
 .clrTypeNameExtPtr <- function(extPtr) {
   .validateIsExtPtr(extPtr)
   .External("r_get_typename_externalptr", extPtr, PACKAGE = rSharpEnv$nativePkgName)
