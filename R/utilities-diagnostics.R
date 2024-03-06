@@ -65,6 +65,6 @@ rToDotNetType <- function(x) {
 #' printTraceback() # prints the full stack trace
 #' }
 printTraceback <- function() {
-  cat(getStatic(rSharpEnv$clrFacadeTypeName, "LastException"))
+  cat(getStatic(rSharpEnv$InternalTypeName, "LastException"))
   invisible(NULL)
 }

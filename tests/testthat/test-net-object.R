@@ -90,7 +90,7 @@ test_that("Object members discovery behaves as expected", {
 # Expect an error? https://github.com/Open-Systems-Pharmacology/rSharp/issues/69
 # test_that("$getMemberSignature() when a member with the given name is not found", {
 #   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
-#   expect_error(clrGetMemberSignature(testObj, "NonExistentMethod"))
+#   expect_error(testObj$getMemberSignature(memberName = "NonExistentMethod"))
 # })
 
 # https://github.com/Open-Systems-Pharmacology/rSharp/issues/70

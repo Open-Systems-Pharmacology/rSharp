@@ -94,7 +94,7 @@ getStatic <- function(type, name) {
 setStatic <- function(type, name, value, asInteger = FALSE) {
   # Convert character to UTF-8
   if (is(value, "character")) {
-      value <- enc2utf8(value)
+    value <- enc2utf8(value)
   }
   # Workaround for cases where .NET signature requires an integer
   if (is.numeric(value) && asInteger) {

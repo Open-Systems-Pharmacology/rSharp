@@ -99,8 +99,25 @@ test_that("toStringNET works for primitive types", {
   expect_that(toStringNET(NaN), equals("NaN"))
 })
 
-# Re-enable when https://github.com/Open-Systems-Pharmacology/rSharp/issues/35 is fixed
-# test_that("Print traceback", {
-#   # callStatic(rSharpEnv$testCasesTypeName, "ThrowException", 10L) # will be truncated by the Rf_error API
-#   printTraceback() # prints the full stack trace
-# })
+test_that("Print traceback", {
+expected <- "Type:    System.Exception
+Message: An exception designed with a particular stack trace length
+Method:  Void ThrowException(Int32)
+Stack trace:
+   at ClrFacade.TestCases.ThrowException(Int32 stackDepth)
+   at ClrFacade.TestCases.ThrowException(Int32 stackDepth)
+   at ClrFacade.TestCases.ThrowException(Int32 stackDepth)
+   at ClrFacade.TestCases.ThrowException(Int32 stackDepth)
+   at ClrFacade.TestCases.ThrowException(Int32 stackDepth)
+   at ClrFacade.TestCases.ThrowException(Int32 stackDepth)
+   at ClrFacade.TestCases.ThrowException(Int32 stackDepth)
+   at ClrFacade.TestCases.ThrowException(Int32 stackDepth)
+   at ClrFacade.TestCases.ThrowException(Int32 stackDepth)
+   at ClrFacade.TestCases.ThrowException(Int32 stackDepth)
+   at InvokeStub_TestCases.ThrowException(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)"
+
+  expect_error(callStatic(rSharpEnv$testCasesTypeName, "ThrowException", 10L)) # will be truncated by the Rf_error API
+# Dont know how to test only for the first xx lines of code. The message thrown when executing tests is different from the one thrown when running the code in the console.
+  # expect_output(printTraceback(), expected, fixed = TRUE) # prints the full stack trace
+})
