@@ -21,13 +21,6 @@
   nativeLibrary <- file.path(srcPkgLibPath, paste0(rSharpEnv$nativePkgName, .Platform$dynlib.ext))
 
   # Load C++ library
-  # save current working directory
-  og_wd <- getwd()
-
-  # change working directory to load libs
-  message("Temporary working directory:", srcPkgLibPath)
-  setwd(srcPkgLibPath)
-
   dyn.load(nativeLibrary, DLLpath = srcPkgLibPath)
   # Load .NET library through C++
   # The call to `.C` always returns the list of arguments that were passed.
@@ -36,6 +29,4 @@
 
   # Turn on the the conversion of advanced data types with R.NET.
   invisible(callStatic("ClrFacade.RDotNetDataConverter", "SetRDotNet", TRUE))
-
-  setwd(og_wd)
 }
