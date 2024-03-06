@@ -1,33 +1,3 @@
-#' Create if possible an object of the R6 class `NetObject`
-#'
-#' @details
-#'
-#' Create if possible and adequate the R6 object of the class `NetObject`
-#' that wraps the external pointer to a .NET object.
-#' If `obj` is not a pointer, returns `obj` unchanged.
-#'
-#' @param obj the presumed external pointer.
-#'
-#' @return A `NetObject` R6 object if the argument is indeed an external pointer,
-#' otherwise returned unchanged.
-createNetObject <- function(obj) {
-  # Return NULL if `obj`is NULL
-  if (is.null(obj)) {
-    return(NULL)
-  }
-
-  # Create a new NetObject instance if obj is a pointer
-  if (is(obj, "externalptr")) {
-    return(NetObject$new(obj))
-  }
-
-  # Return the object unchanged
-  return(obj)
-}
-
-
-###########################
-
 #' Check whether an object is of a certain type
 #'
 #' This function is meant to match the behavior of the 'is' keyword in C#.

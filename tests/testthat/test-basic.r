@@ -77,10 +77,8 @@ test_that("Correct method binding based on parameter types", {
 })
 
 test_that("Conversion of non-bijective types can be turned on/off", {
-  # When the conversion is turned off, a `NetObject` is returned, which holds a reference to the .NET object.
+  # When the conversion is turned off, a `cobjRef` is returned, which holds a reference to the .NET object.
   setConvertAdvancedTypes(FALSE)
-  # expect_true(is(callTestCase("CreateStringDictionary"), "NetObject"))
-  # expect_true(is(callTestCase("CreateStringDoubleArrayDictionary"), "NetObject"))
   expect_true(is(callTestCase("CreateStringDictionary"), "cobjRef"))
   expect_true(is(callTestCase("CreateStringDoubleArrayDictionary"), "cobjRef"))
   # When the conversion is turned on, the .NET object is converted to an R list.

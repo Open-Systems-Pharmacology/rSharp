@@ -2,37 +2,16 @@
 % Please edit documentation in R/rSharp-exported.R
 \name{getType}
 \alias{getType}
-\title{Create a new NetObject R6 object}
+\title{Gets the type of a .NET object given its type name}
 \usage{
 getType(objOrTypename)
 }
 \arguments{
 \item{objOrTypename}{a character vector of length one. It can be the full file name of the assembly to load, or a fully qualified assembly name, or as a last resort a partial name.}
-
-\item{typename}{type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.}
-
-\item{...}{additional method arguments passed to the object constructor via the call to .External}
 }
 \value{
-a `NetObject` R6 object
-
 the .NET Type.
 }
 \description{
-Create a new NetObject R6 object
-}
-\examples{
-\dontrun{
-testClassName <- "Rclr.TestObject"
-(testObj <- clrNew(testClassName))
-# object with a constructor that has parameters
-(testObj <- clrNew(testClassName, as.integer(123)))
-loadAssembly("System.Windows.Forms, Version=2.0.0.0,
-  Culture=neutral, PublicKeyToken=b77a5c561934e089")
-f <- clrNew("System.Windows.Forms.Form")
-clrSet(f, "Text", "Hello from '.NET'")
-clrCall(f, "Show")
-}
 Gets the type of a .NET object given its type name
-
 }

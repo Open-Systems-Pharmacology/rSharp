@@ -136,33 +136,6 @@ clrNew <- function(typename, ...) {
   .mkClrObjRef(o, clrtype = typename)
 }
 
-
-#' Create a new NetObject R6 object
-#'
-#' @param typename type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
-#' @param ... additional method arguments passed to the object constructor via the call to .External
-#' @return a `NetObject` R6 object
-#' @export
-#' @examples
-#' \dontrun{
-#' testClassName <- "Rclr.TestObject"
-#' (testObj <- clrNew(testClassName))
-#' # object with a constructor that has parameters
-#' (testObj <- clrNew(testClassName, as.integer(123)))
-#' loadAssembly("System.Windows.Forms, Version=2.0.0.0,
-#'   Culture=neutral, PublicKeyToken=b77a5c561934e089")
-#' f <- clrNew("System.Windows.Forms.Form")
-#' clrSet(f, "Text", "Hello from '.NET'")
-#' clrCall(f, "Show")
-#' }
-# clrNew <- function(typename, ...) {
-#   o <- .External("r_create_clr_object", typename, ..., PACKAGE = rSharpEnv$nativePkgName)
-#   if (is.null(o)) {
-#     stop("Failed to create instance of type '", typename, "'")
-#   }
-#   NetObject$new(o)
-# }
-
 #' Gets the type of a .NET object given its type name
 #'
 #' @param objOrTypename a character vector of length one. It can be the full file name of the assembly to load, or a fully qualified assembly name, or as a last resort a partial name.
