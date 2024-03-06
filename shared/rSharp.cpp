@@ -569,8 +569,11 @@ RSharpGenericValue callStatic(const char* mnam, char* ns_qualified_typename, RSh
 
 	auto result = call_static(ns_qualified_typename, mnam, params, numberOfObjects, &return_value);
 
-	if (result < 0)
-		throw std::runtime_error("Error calling static method");
+	if (result < 0) 
+	{
+		// If the above call was not successfull, C# must return -1 and write the return_value must be a string containing the error message
+		throw std::runtime_error((char*)return_value.value);
+	}
 
 	return return_value;
 }
@@ -616,7 +619,9 @@ const char* get_type_full_name(RSharpGenericValue** genericValue) {
 	return (char*)(hr);
 }
 
-RSharpGenericValue* get_RSharp_generic_value(SEXP clrObj);
+RSharpGenericValue* get_RSharp_generic_value_from_EXTPTR(SEXP clrObj);
+
+RSharpGenericValue* get_RSharp_generic_value_from_S4(SEXP clrObj);
 
 SEXP r_get_typename_externalptr(SEXP p) {
 	SEXP methodParams;
@@ -887,7 +892,17 @@ RSHARP_BOOL r_has_class(SEXP s, const char* classname) {
 	return FALSE_BOOL;
 }
 
-RSharpGenericValue* get_RSharp_generic_value(SEXP clrObj) {
+RSharpGenericValue* get_RSharp_generic_value_from_EXTPTR(SEXP clrObj)
+{
+	if (clrObj != NULL && clrObj != R_NilValue && TYPEOF(clrObj) == EXTPTRSXP) {
+		return GET_RSHARP_GENERIC_VALUE_FROM_EXTPTR(clrObj);
+	}
+	else
+		return NULL;
+}
+
+RSharpGenericValue* get_RSharp_generic_value_from_S4(SEXP clrObj)
+{
 	SEXP a, clrobjSlotName;
 	SEXP s4classname = getAttrib(clrObj, R_ClassSymbol);
 	if (strcmp(CHAR(STRING_ELT(s4classname, 0)), "cobjRef") == 0)
@@ -896,11 +911,7 @@ RSharpGenericValue* get_RSharp_generic_value(SEXP clrObj) {
 		SET_STRING_ELT(clrobjSlotName, 0, mkChar("clrobj"));
 		a = getAttrib(clrObj, clrobjSlotName);
 		UNPROTECT(1);
-		if (a != NULL && a != R_NilValue && TYPEOF(a) == EXTPTRSXP) {
-			return GET_RSHARP_GENERIC_VALUE_FROM_EXTPTR(a);
-		}
-		else
-			return NULL;
+		return get_RSharp_generic_value_from_EXTPTR(a);
 	}
 	else
 	{
@@ -959,8 +970,10 @@ RSharpGenericValue ConvertToRSharpGenericValue(SEXP s)
 
 	int typeof = TYPEOF(s);
 	switch (typeof) {
+	case EXTPTRSXP:
+		return *get_RSharp_generic_value_from_EXTPTR(s);
 	case S4SXP:
-		return *get_RSharp_generic_value(s);
+		return *get_RSharp_generic_value_from_S4(s);
 	case VECSXP:
 		result.type = RSharpValueType::OBJECT_ARRAY;
 		result.size = LENGTH(s);
@@ -1000,7 +1013,7 @@ RSharpGenericValue ConvertToRSharpGenericValue(SEXP s)
 		break;
 	}
 	default:
-		result = *get_RSharp_generic_value(s);
+		result = *get_RSharp_generic_value_from_S4(s);
 		break;
 	}
 

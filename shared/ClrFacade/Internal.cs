@@ -68,8 +68,12 @@ public static class Internal
       }
       catch (Exception ex)
       {
-         if (!logThroughR(ex))
-            return -1;
+            if (!logThroughR(ex))
+            {
+                var tempRetVal = RSharpGenericValueExtensions.FromObject(LastException);
+                Marshal.StructureToPtr(tempRetVal, returnValue, false);
+                return -1;
+            }
       }
 
       return 1234;
