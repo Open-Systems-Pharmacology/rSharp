@@ -1,0 +1,12 @@
+test_that("CLR type compatibility checking", {
+  testObj <- clrNew(testClassName)
+  expect_true(clrIs(testObj, testClassName))
+  expect_true(clrIs(testObj, "System.Object"))
+  expect_false(clrIs(testObj, "System.Double"))
+  testObj <- clrNew("ClrFacade.TestMethodBinding")
+  expect_true(clrIs(testObj, "ClrFacade.ITestMethodBindings"))
+  expect_true(clrIs(testObj, getType("ClrFacade.ITestMethodBindings")))
+  expect_true(clrIs(testObj, getType("ClrFacade.TestMethodBinding")))
+  expect_false(clrIs(testObj, getType("System.Reflection.Assembly")))
+  expect_error(clrIs(testObj, testObj))
+})

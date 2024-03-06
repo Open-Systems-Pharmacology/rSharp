@@ -1,37 +1,43 @@
 Package: rSharp
 Type: Package
-Title: Accessing the Common Language Runtime (.NET/Mono) from R
-Version: 0.9.5
-Authors@R: c(person("Jean-Michel", "Perraud", email =
-    "jean-michel.perraud@csiro.au", role = c("aut", "cre")),
-    person("Open-Systems-Pharmacology Community", role = "cph"),
-      person("Michael", "Sevestre", role = c("aut", "cre"), email = "michael@design2code.ca"),
-      person("Pavel", "Balazki", role = "aut"),
-      person("Juri", "Solodenko", role = "aut", comment = c(ORCID = "0000-0001-6922-588X")),
-      person("Georgios", "Daskalakis", role = "aut"))
-Author: Jean-Michel Perraud [aut, cre], Kosei Abe, [aut] (R.NET), Nigel
-    <http://www.codeplex.com/site/users/view/evolvedmicrobe> [ctb] (fix for
-    finding the path to package libraries), R Core team [ctb] (showArgs
-    extracted from R extension manual)
-Maintainer: J-M <jean-michel.perraud@csiro.au>
-Description: rSharp is a package for low-level access from R to a Common Language
-    Runtime (CLR). The supported CLR implementations are Microsoft '.NET'
-    framework on Windows and Mono on several platforms, currently Windows and
-    at least Debian Linux. rSharp has been used at least in scientific modelling
-    work since 2013-06. Running it on Mono has been relatively experimental,
-    but as of November 2014 several factors have enabled very near functional
-    parity with the Windows/.NET.
-VignetteBuilder: knitr
+Title: Accessing .NET from R
+Version: 0.0.0.9000
+Authors@R: c(person(given = "Open-Systems-Pharmacology Community",
+             role = "cph"),
+      person("esqLABS GmbH", role = "fnd"),
+      person(given = "Pavel",
+             family = "Balazki",
+             role = c("aut", "cre"),
+             email = "pavel.balazki@gmail.com"),
+      person(given = "Juri",
+             family = "Solodenko",
+             role = "aut",
+             comment = c(ORCID = "0000-0001-6922-588X")),
+      person(given = "Michael",
+             family = "Sevestre",
+             role = c("aut"),
+             email = "michael@design2code.ca"),
+      person(given = "Robert",
+             family = "McIntosh",
+             role = c("aut")),
+      person(given = "Ian Peter",
+             family = "Du",
+             role = c("aut")),
+     person("Jean-Michel", "Perraud", email =
+    "jean-michel.perraud@csiro.au", role = "aut"))
+Maintainer: Ian Peter Du <ian_peter.du@esqlabs.com>
+Description: rSharp is a package for low-level access from R .NET runtime. It
+    provides a set of functions to create and manipulate .NET objects, call
+    methods, and access properties and fields.
+URL: https://github.com/Open-Systems-Pharmacology/rsharp/
+Encoding: UTF-8
+Depends:
+    R (>= 4.1)
 Suggests:
     testthat,
     knitr,
     xtable,
     markdown
-URL: https://github.com/Open-Systems-Pharmacology/rsharp/
 License: LGPL-3
-Depends:
-    R (>= 3.6),
-    methods
-RoxygenNote: 7.2.0
-SystemRequirements: GNU make
-NeedsCompilation: yes
+RoxygenNote: 7.3.1
+VignetteBuilder: knitr

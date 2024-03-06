@@ -18,16 +18,8 @@ a CLR object
 Create a new CLR object
 }
 \examples{
-\dontrun{
-library(rSharp)
-testClassName <- "ClrFacade.TestObject";
-(testObj <- clrNew(testClassName))
+testClassName <- rSharpEnv$testObjectTypeName
+testObj <- clrNew(testClassName)
 # object with a constructor that has parameters
-(testObj <- clrNew(testClassName, as.integer(123)))
-clrLoadAssembly("System.Windows.Forms, Version=2.0.0.0, 
-  Culture=neutral, PublicKeyToken=b77a5c561934e089")
-f <- clrNew('System.Windows.Forms.Form')
-clrSet(f, 'Text', "Hello from '.NET'")
-clrCall(f, 'Show')
-}
+testObj <- clrNew(testClassName, as.integer(123))
 }

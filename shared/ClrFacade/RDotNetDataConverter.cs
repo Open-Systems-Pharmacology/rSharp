@@ -587,7 +587,7 @@ public class RDotNetDataConverter : IDataConverter
 
    private Function _createClrS4Object;
 
-   public Function CreateClrS4Object => _createClrS4Object ??= _engine.Evaluate("invisible(rSharp::getCurrentConvertedObject)").AsFunction();
+   public Function CreateClrS4Object => _createClrS4Object ??= _engine.Evaluate("invisible(rSharp:::.getCurrentConvertedObject)").AsFunction();
 
    public static object CurrentObjectToConvert { get; private set; }
 

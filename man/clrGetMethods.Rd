@@ -2,7 +2,7 @@
 % Please edit documentation in R/rSharp-exported.R
 \name{clrGetMethods}
 \alias{clrGetMethods}
-\title{List the instance methods of a CLR object}
+\title{List the instance methods of a .NET object}
 \usage{
 clrGetMethods(clrobj, contains = "")
 }
@@ -12,17 +12,14 @@ clrGetMethods(clrobj, contains = "")
 \item{contains}{a string that the methods names returned must contain}
 }
 \value{
-a list of names of the methods of the CLR object
+a list of names of the methods of the .NET object
 }
 \description{
-List the instance methods of a CLR object
+List the instance methods of a .NET object
 }
 \examples{
-\dontrun{
-library(rSharp)
-testClassName <- "ClrFacade.TestObject";
+testClassName <- "ClrFacade.TestObject"
 testObj <- clrNew(testClassName)
 clrGetMethods(testObj)
-clrGetMethods(testObj, 'Get')
-}
+clrGetMethods(testObj, "Get")
 }

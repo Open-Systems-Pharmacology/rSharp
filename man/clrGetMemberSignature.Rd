@@ -2,7 +2,7 @@
 % Please edit documentation in R/rSharp-exported.R
 \name{clrGetMemberSignature}
 \alias{clrGetMemberSignature}
-\title{Gets the signature of a CLI object member}
+\title{Gets the signature of a .NET object member}
 \usage{
 clrGetMemberSignature(clrobj, memberName)
 }
@@ -15,17 +15,14 @@ clrGetMemberSignature(clrobj, memberName)
 a character vector with summary information on the method/member signatures
 }
 \description{
-Gets a string representation of the signature of a member (i.e. field, property, method). 
+Gets a string representation of the signature of a member (i.e. field, property, method).
 Mostly used to interactively search for what arguments to pass to a method.
 }
 \examples{
-\dontrun{
-library(rSharp)
-testClassName <- "ClrFacade.TestObject";
+testClassName <- "ClrFacade.TestObject"
 testObj <- clrNew(testClassName)
 clrReflect(testObj)
-clrGetMemberSignature(testObj, 'set_PropertyIntegerOne')
-clrGetMemberSignature(testObj, 'FieldIntegerOne')
-clrGetMemberSignature(testObj, 'PropertyIntegerTwo')
-}
+clrGetMemberSignature(testObj, "set_PropertyIntegerOne")
+clrGetMemberSignature(testObj, "FieldIntegerOne")
+clrGetMemberSignature(testObj, "PropertyIntegerTwo")
 }

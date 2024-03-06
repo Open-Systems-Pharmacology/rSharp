@@ -8,8 +8,13 @@ An Introduction to the **rSharp** package
 
 ```{r setup, include=FALSE}
 library(knitr)
-opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="center")
+opts_chunk$set(out.extra = 'style="display:block; margin: auto"', fig.align = "center")
 ```
+
+# Knowledge base
+- `NA` from R is treated as `NULL` in .NET
+
+
 
 Introduction
 ------------
@@ -41,18 +46,18 @@ To start with, the customary "Hello" example follows:
 
 ```{r methods, tidy=TRUE}
 library(rSharp)
-clrCallStatic('ClrFacade.HelloWorld', 'Hello')
+clrCallStatic("ClrFacade.HelloWorld", "Hello")
 ```
 
 To demonstrate something marginally snazzier:
 
 ```{r, tidy=TRUE}
-if (tolower(Sys.info()['sysname'])=='windows') {
+if (tolower(Sys.info()["sysname"]) == "windows") {
   # TODO: change that to a nicer prepackaged forms example. Or, allow for shorter forms for assembly names. Careful not to allow for ambiguity however.
   clrLoadAssembly("System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089")
-  f <- clrNew('System.Windows.Forms.Form')
-  clrSet(f, 'Text', "Hello from the .NET framework")
-  clrCall(f, 'Show')
+  f <- clrNew("System.Windows.Forms.Form")
+  clrSet(f, "Text", "Hello from the .NET framework")
+  clrCall(f, "Show")
 }
 ```
 
@@ -62,7 +67,7 @@ Main functions
 Most functions in the package are prefixed with `"clr"` for mnemonic. `clrNew` creates a new object, and returns an R object, either of (S4) class `cobjRef` or one of the common R data structures if a natural conversion is found, e.g. a System.String to an R character vector.
 
 ```{r clrNew}
-testClassName <- "ClrFacade.TestObject";
+testClassName <- "ClrFacade.TestObject"
 (testObj <- clrNew(testClassName))
 ```
 
@@ -70,20 +75,20 @@ It is possible to dynamically inspect the CLR object "members": in the .NET worl
 
 ```{r clrReflect}
 clrGetProperties(testObj)
-clrGetMemberSignature(testObj, 'GetMethodWithParameters')
+clrGetMemberSignature(testObj, "GetMethodWithParameters")
 ```
 
 Calling the instance methods on objects is done by specifying the method name as a string - convenience R functions may appear when the package is more mature. Static methods are called by specifying the type name, at least namespace qualified. We can determine the parameters necessary for calling the public method `CreateDateArray` on the class rSharp.TestCases. The method signature is expressed using CLR types, not R types.  The .NET method expects a `String` and an `Int32`.
 
 ```{r}
 clrCall(testObj, "GetFieldIntegerOne")
-clrGetMemberSignature('ClrFacade.TestCases', 'CreateDateArray')
+clrGetMemberSignature(getRSharpSetting("testCasesTypeName"), "CreateDateArray")
 ```
 
 Two arguments are passed to the function `clrCallStatic`: a string in an ISO date time format, and a numeric cast as an integer. **rSharp** will transparently convert these to CLR types. Note that if the last argument had just been `4`, the mode of the R vector would have been `numeric`, not `integer`. To avoid ambiguity in method calls you must pass an integer vector. The returned value of the .NET method is a `DateTime[]` i.e. an array of `System.DateTime` objects. Again **rSharp** transparently converts these to a standard R vector with the appropriate POSIX time class attribute.
 
 ```{r}
-dates <- clrCallStatic('ClrFacade.TestCases', 'CreateDateArray', '2001-01-01', as.integer(4))
+dates <- clrCallStatic(getRSharpSetting("testCasesTypeName"), "CreateDateArray", "2001-01-01", as.integer(4))
 str(dates)
 class(dates)
 ```
@@ -101,17 +106,17 @@ There are functions to list static members (a.k.a. class members). The discovery
 ```{r clrGetStatic}
 # clrGetStaticMembers(testObj)
 # would have the same result as:
-clrGetStaticMembers('ClrFacade.TestObject')
+clrGetStaticMembers("ClrFacade.TestObject")
 ```
 
 `clrGet` and `clrSet` can also set static fields and properties, but only if the argument is the name of a class (Type). To avoid risks of ambiguity and confusion, you cannot do this with a concrete object. 
 
 ```{r}
 # the following call would fail
-# clrGet(testObj,  "StaticFieldIntegerOne") 
+# clrGet(testObj,  "StaticFieldIntegerOne")
 # This is less ambiguous, and is supported
-clrGet('ClrFacade.TestObject',  "StaticFieldIntegerOne")
-clrSet('ClrFacade.TestObject',  "StaticFieldIntegerOne", as.integer(3))
+clrGet("ClrFacade.TestObject", "StaticFieldIntegerOne")
+clrSet("ClrFacade.TestObject", "StaticFieldIntegerOne", as.integer(3))
 ```
 
 Data conversion
@@ -126,31 +131,31 @@ The rationale for converting data to native types at the boundary of R and the C
 Objects in R are vectors, and single values are just a particular case of vectors of length one. In the CLR, scalar values and arrays are different types. An R vector will be translated to two different types in the CLR depending on its length. Any length other than one results in an array in the CLR, a length of one becomes a scalar value. This is a choice based on the expected behavior of .NET code, and on the typical code available for reuse. See the section on method bindings below.
 
 ```{r cache = F, tidy = TRUE, comment = NA, results = "asis"}
-r_types = list(
+r_types <- list(
   letters[1:3],
   as.integer(1:3),
   1:3 * 1.1,
   1:3 == 2,
-  complex(real=1:3, imaginary=4:6),
-  as.Date('2001-01-01') + 0:2,
-  as.POSIXct('2001-01-01') + 0:2,
-  as.difftime(3, units='secs') + 0:2
+  complex(real = 1:3, imaginary = 4:6),
+  as.Date("2001-01-01") + 0:2,
+  as.POSIXct("2001-01-01") + 0:2,
+  as.difftime(3, units = "secs") + 0:2
 )
 
 library(plyr)
-conversion = lapply(r_types, rToClrType)
-result <- ldply(lapply(conversion, FUN=as.data.frame))
+conversion <- lapply(r_types, rToClrType)
+result <- ldply(lapply(conversion, FUN = as.data.frame))
 
-r_vec_len_one = lapply(r_types, `[`, 1)
-conversion = lapply(r_vec_len_one, rToClrType)
-result2 <- ldply(lapply(conversion, FUN=as.data.frame))
+r_vec_len_one <- lapply(r_types, `[`, 1)
+conversion <- lapply(r_vec_len_one, rToClrType)
+result2 <- ldply(lapply(conversion, FUN = as.data.frame))
 result <- ldply(list(result, result2))
- 
+
 ## Cannot seem to get the proper Rmarkdown with pander.
 # library(pander)
 # print(pander(result, style='rmarkdown'))
 library(xtable)
-print(xtable(result),type='html')
+print(xtable(result), type = "html")
 ```
 
 ### More advanced data types
@@ -170,21 +175,33 @@ There are some cases where, as of version 0.7, automatic conversion can be turne
 
 ```{r cache = F, tidy = TRUE, comment = NA, results = "asis"}
 library(stringr)
-toShortTypeName <- function(x) {str_replace_all( x, ", mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", "") }
-getComplexDataCase <- function(i) {clrCallStatic(cTypename, "GetComplexDataCase", as.integer(i-1))}
-getComplexDataTypeName <- function(i) {clrCallStatic(cTypename, "GetComplexDataTypeName", as.integer(i-1))}
+toShortTypeName <- function(x) {
+  str_replace_all(x, ", mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", "")
+}
+getComplexDataCase <- function(i) {
+  clrCallStatic(cTypename, "GetComplexDataCase", as.integer(i - 1))
+}
+getComplexDataTypeName <- function(i) {
+  clrCallStatic(cTypename, "GetComplexDataTypeName", as.integer(i - 1))
+}
 
 numDataTestCases <- clrCallStatic(cTypename, "GetNumComplexDataCases")
 clrTnames <- toShortTypeName(sapply(1:numDataTestCases, getComplexDataTypeName))
-withConversion <- sapply(1:numDataTestCases, function(i) {class(getComplexDataCase(i))})
+withConversion <- sapply(1:numDataTestCases, function(i) {
+  class(getComplexDataCase(i))
+})
 
 setConvertAdvancedTypes(FALSE)
-withoutConversion <- sapply(1:numDataTestCases, function(i) {tryCatch(class(getComplexDataCase(i)), error = function(e){'Not supported'})})
+withoutConversion <- sapply(1:numDataTestCases, function(i) {
+  tryCatch(class(getComplexDataCase(i)), error = function(e) {
+    "Not supported"
+  })
+})
 setConvertAdvancedTypes(TRUE)
 
-convSummary <- data.frame(clrType=clrTnames, enabled=withConversion, disabled=withoutConversion)
+convSummary <- data.frame(clrType = clrTnames, enabled = withConversion, disabled = withoutConversion)
 
-print(xtable(convSummary),type='html')
+print(xtable(convSummary), type = "html")
 ```
 
 Method binding in the CLR
@@ -206,10 +223,10 @@ public static int TestParams(string a, string b, params int[] c)
 
 You can call such a method qith a variable number of arguments; however the types must match that in the CLR method.
 ```{r}
-testObj <- clrNew('ClrFacade.TestObject')
-clrCall(testObj, 'TestParams', "Hello, ", "World!", 1L, 2L, 3L, 6L, 5L, 4L, 9L)
+testObj <- clrNew("ClrFacade.TestObject")
+clrCall(testObj, "TestParams", "Hello, ", "World!", 1L, 2L, 3L, 6L, 5L, 4L, 9L)
 # As in C#, it also works if passing a vector
-clrCall(testObj, 'TestParams', "Hello, ", "World!", 1:5)
+clrCall(testObj, "TestParams", "Hello, ", "World!", 1:5)
 ```
 
 ### Optional parameter values in CLR methods
@@ -223,9 +240,9 @@ public void TestDefaultValues(string a, int b, int c=1, int d=2) { }
 These methods are supported, as demonstrated in the following code. Note that argument passing is based on the order of parameters. Named arguments is not yet supported, though it may be a feature available in future versions.
 
 ```{r}
-clrCall(testObj, 'TestDefaultValues', "Hello", 1L)
-clrCall(testObj, 'TestDefaultValues', "Hello", 1L, 2L)
-clrCall(testObj, 'TestDefaultValues', "Hello", 1L, 2L, 3L)
+clrCall(testObj, "TestDefaultValues", "Hello", 1L)
+clrCall(testObj, "TestDefaultValues", "Hello", 1L, 2L)
+clrCall(testObj, "TestDefaultValues", "Hello", 1L, 2L, 3L)
 ```
 
 ### Generic methods
@@ -245,24 +262,28 @@ While the primary concern of the package is the numerical correctness, attention
 The following code and figures show the effective transfer rate for numeric vectors, i.e. double precision array in the .NET world. The experimental design is such that 10 repetitions of the measurement are made for a given vector size. Performance is measured in both direction, with comparable speed. Note that the speed of execution is calculated by removing an estimate of the cost of measurement itself; you _may_ thus notice outliers and even negative transfer rates if the measurement was perturbed by garbage collection in R or the CLR.
 
 ```{r cache = T, tidy = TRUE, comment = NA, results = "asis", fig.width=11}
-perfMeasureFile <- list.files(system.file('extras', package='rSharp'), pattern='performance_profiling', full.names=TRUE)
-if(length(perfMeasureFile)==0) {stop('performance_profiling file not found in the installed rSharp package')}
+perfMeasureFile <- list.files(system.file("extras", package = "rSharp"), pattern = "performance_profiling", full.names = TRUE)
+if (length(perfMeasureFile) == 0) {
+  stop("performance_profiling file not found in the installed rSharp package")
+}
 stopifnot(file.exists(perfMeasureFile[1]))
 source(perfMeasureFile[1])
-maxArrayLen<-7.5e6
+maxArrayLen <- 7.5e6
 # need to reduce the size if we run this on 32 bits machines:
-if(Sys.info()['machine'] == 'x86') {maxArrayLen<-6.5e6}
-trials <- createCases(numReps=10, maxArrayLen=maxArrayLen)
-bench <- rSharpNumericPerf(trials, tag='no.r.net')
-plotRate(bench, case = 'CLR->R')
-plotRate(bench, case = 'CLR->R', logy=FALSE)
+if (Sys.info()["machine"] == "x86") {
+  maxArrayLen <- 6.5e6
+}
+trials <- createCases(numReps = 10, maxArrayLen = maxArrayLen)
+bench <- rSharpNumericPerf(trials, tag = "no.r.net")
+plotRate(bench, case = "CLR->R")
+plotRate(bench, case = "CLR->R", logy = FALSE)
 ```
 
 The transfer rate going form CLR arrays of double to R vectors peaks at a value ranging from 40 million to ~200 million items per second. This seems to largely depend on the hardware. The log/log plot of the conversion rate is particularly useful to visualize at which point the overhead of the function call becomes negligible compared to the array conversion itself: Below ~5000 elements in the vector the transfer rate is roughly linear in log-log space. You may notice a decrease in performance in that case of 'CLR->R'; this may be an artefact of the experimental design interplaying with garbage collection.
 
 ```{r cache = T, tidy = TRUE, comment = NA, results = "asis", fig.width=11}
-plotRate(bench, case = 'R->CLR')
-plotRate(bench, case = 'R->CLR', logy=FALSE)
+plotRate(bench, case = "R->CLR")
+plotRate(bench, case = "R->CLR", logy = FALSE)
 ```
 
 Related work

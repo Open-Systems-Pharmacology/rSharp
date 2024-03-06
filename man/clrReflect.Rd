@@ -2,24 +2,22 @@
 % Please edit documentation in R/rSharp-exported.R
 \name{clrReflect}
 \alias{clrReflect}
-\title{List the instance members of a CLR object}
+\title{List the instance members of a .NET object}
 \usage{
 clrReflect(clrobj)
 }
 \arguments{
-\item{clrobj}{CLR object}
+\item{clrobj}{.NET object encapsupated as `clrobj`}
 }
 \value{
 a list of methods, fields and properties of the CLR object
 }
 \description{
-List the instance members of a CLR object, i.e. its methods, fields and properties.
+List the instance members of a .NET object, i.e. its methods, fields and properties.
 }
 \examples{
-\dontrun{
 library(rSharp)
-testClassName <- "ClrFacade.TestObject";
+testClassName <- "ClrFacade.TestObject"
 testObj <- clrNew(testClassName)
 clrReflect(testObj)
-}
 }
