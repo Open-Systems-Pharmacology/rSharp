@@ -115,18 +115,18 @@ printarch:
 	-@echo **END Variable**
 
 instdir:
-	-@rm -rf $(INSTDIR)/libs$(R_ARCH)
+	-@rm -rf $(INSTDIR)/lib$(R_ARCH)
 	-@mkdir -p $(INSTDIR) 2>/dev/null
-	-@mkdir -p $(INSTDIR)/libs$(R_ARCH) 2>/dev/null
+	-@mkdir -p $(INSTDIR)/lib$(R_ARCH) 2>/dev/null
 
 rSharpInstrSharpUX: $(OUT_DIR)/rSharpUX.so
-	cp -u -p $< $(INSTDIR)/libs$(R_ARCH)
+	cp -u -p $< $(INSTDIR)/lib$(R_ARCH)
 
 rSharpLib: rSharpLibComp
-	if [ -e symbols.rds ] ; then cp -u -p symbols.rds $(INSTDIR)/libs$(R_ARCH) ; fi
-	-rm -f $(INSTDIR)/libs/*.*
-	-cp -u -p $(CLR_FACADE_BINS) $(INSTDIR)/libs
-	-cp -u -p ./$(RUNTIMECONFIG).json $(INSTDIR)/libs/
+	if [ -e symbols.rds ] ; then cp -u -p symbols.rds $(INSTDIR)/lib$(R_ARCH) ; fi
+	-rm -f $(INSTDIR)/lib/*.*
+	-cp -u -p $(CLR_FACADE_BINS) $(INSTDIR)/lib
+	-cp -u -p ./$(RUNTIMECONFIG).json $(INSTDIR)/lib/
 
 rSharpNugetRestore:
 	-$(DOTNET_CMD) restore
