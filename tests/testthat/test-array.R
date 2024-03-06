@@ -15,7 +15,7 @@ expectArrayElementType <- function(rObj, expectedTypeName) {
 }
 
 
-##########R to .NET tests##########
+########## R to .NET tests##########
 test_that("Basic types of length zero are passed correctly from R to .NET", {
   expectArrayElementType(numeric(0), "System.Double")
   expectArrayElementType(integer(0), "System.Int32")
@@ -78,7 +78,7 @@ test_that("Basic types of length zero are passed correctly from R to .NET", {
 # })
 
 
-##########.NET to R tests##########
+########## .NET to R tests##########
 test_that("Basic types of length zero are returned correctly from .NET", {
   expectArrayTypeConv("float", 0, numeric(0))
   expectArrayTypeConv("double", 0, numeric(0))
@@ -173,7 +173,7 @@ test_that("Numerical bi-dimensional arrays are marshalled correctly from .NET to
 })
 
 
-##########Mixed tests##########
+########## Mixed tests##########
 test_that("Numeric arrays are marshalled correctly", {
   expectedNumArray <- 1:5 * 1.1
   expect_that(callTestCase("CreateNumArray"), equals(expectedNumArray))
