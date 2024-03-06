@@ -196,9 +196,8 @@ NetObject <- R6::R6Class(
       #   stop(messages$errorMethodNotFound(methodName, self$type))
       # }
 
-      interface <- "r_call_method"
       result <- NULL
-      result <- .External(interface, self$pointer, methodName, ..., PACKAGE = rSharpEnv$nativePkgName)
+      result <- .External("r_call_method", self$pointer, methodName, ..., PACKAGE = rSharpEnv$nativePkgName)
       return(castToRObject(result))
     },
 
@@ -231,7 +230,7 @@ NetObject <- R6::R6Class(
     #' testObj$set("FieldIntegerOne", as.integer(42))
     set = function(name, value, asInteger = FALSE) {
       # Internally calling `setStatic` because it uses the same C++ code
-      invisible(setStatic(self$pointer, name, value))
+      invisible(setStatic(self$pointer, name, value, asInteger))
     },
 
     #' @description Prints a summary of the object.
