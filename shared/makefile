@@ -81,8 +81,6 @@ PKG_LIBS=$(PKG_LIBS_LOCAL)
 RSHARPBINDIRFACADE= ./ClrFacade/bin/$(BUILDTYPE)/net8.0
 endif  ## end if statement testing on  "$(R_OSTYPE)" is "windows" or not
 
-CLR_FACADE_BINS=$(RSHARPBINDIRFACADE)/*.*
-
 NETHOST= libnethost
 INSTDIR= ../inst
 
@@ -100,9 +98,11 @@ clean:
 	${RM} $(OUT_DIR)/* $(OBJ_DIR)/*
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	-@mkdir -p $(OBJ_DIR) 2>/dev/null
 	$(CXX) -std=c++11 -Ipackages/Microsoft.NETCore.App.Host.linux-x64.8.0.2/runtimes/linux-x64/native $(ALL_CPPFLAGS) -I/usr/share/R/include/ $(ALL_CFLAGS) -fPIC -c $<  -o $@  -lsupc++
 
 $(OUT_DIR)/rSharpUX.so:  $(OBJ_FILES)
+	-@mkdir -p $(OUT_DIR) 2>/dev/null
 	$(CXX) -std=c++11 -shared -Wl,-z,relro -o $@  $^ $(ALL_LIBS) -L./packages/Microsoft.NETCore.App.Host.linux-x64.8.0.2/runtimes/linux-x64/native -l:libnethost.a
 
 printarch:
@@ -124,8 +124,7 @@ rSharpInstrSharpUX: $(OUT_DIR)/rSharpUX.so
 
 rSharpLib: rSharpLibComp
 	if [ -e symbols.rds ] ; then cp -u -p symbols.rds $(INSTDIR)/lib$(R_ARCH) ; fi
-	-rm -f $(INSTDIR)/lib/*.*
-	-cp -u -p $(CLR_FACADE_BINS) $(INSTDIR)/lib
+
 	-cp -u -p ./$(RUNTIMECONFIG).json $(INSTDIR)/lib/
 
 rSharpNugetRestore:
