@@ -4,14 +4,17 @@
 \alias{castToRObject}
 \title{Create if possible an object of the R6 class `NetObject`}
 \usage{
-castToRObject(obj)
+castToRObject(obj, recursive = TRUE)
 }
 \arguments{
 \item{obj}{the presumed external pointer.}
+
+\item{recursive}{logical; if TRUE, the function is applied recursively to the list elements.}
 }
 \value{
 A `NetObject` R6 object if the argument is indeed an external pointer,
-otherwise returned unchanged.
+otherwise returned unchanged. If `recursive` is TRUE and `obj` is a list, the function is applied
+recursively to the list elements.
 }
 \description{
 Create if possible an object of the R6 class `NetObject`

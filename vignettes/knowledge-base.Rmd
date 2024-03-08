@@ -21,3 +21,4 @@ useful information that may help troubleshooting and understanding the package.
 ## Data type conversion
 
 - `NA` from R is treated as `NULL` in .NET
+- If the signature of a .NET method require an integer argument, it mast be passed as an integer using `as.integer()` from R. R assumes all numerics as doubles by default, and will cause an error if passed to a method that expects an integer.

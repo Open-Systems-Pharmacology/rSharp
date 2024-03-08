@@ -23,3 +23,21 @@ test_that("It returns a `NetObject` when a valid pointer is provided", {
   # Check if the object is a NetObject
   expect_true(inherits(netObj, "NetObject"))
 })
+
+test_that("It returns a list of `NetObject` when a list with valid pointers is provided", {
+  testClassName <- "ClrFacade.Tests.RefClasses.LevelOneClass"
+  o <- .External("r_create_clr_object", testClassName, PACKAGE = rSharpEnv$nativePkgName)
+  o2 <- .External("r_create_clr_object", testClassName, PACKAGE = rSharpEnv$nativePkgName)
+  netObj <- castToRObject(list(o, o2))
+  # Check if the object is a NetObject
+  expect_true(inherits(netObj[[1]], "NetObject"))
+})
+
+test_that("It returns a list of `NetObject` and integer when a list is provided", {
+  testClassName <- "ClrFacade.Tests.RefClasses.LevelOneClass"
+  o <- .External("r_create_clr_object", testClassName, PACKAGE = rSharpEnv$nativePkgName)
+  netObj <- castToRObject(list(o, 2))
+  # Check if the object is a NetObject
+  expect_true(inherits(netObj[[1]], "NetObject"))
+  expect_equal(netObj[[2]], 2)
+})

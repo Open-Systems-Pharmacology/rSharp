@@ -7,22 +7,36 @@
 #' If `obj` is not a pointer, returns `obj` unchanged.
 #'
 #' @param obj the presumed external pointer.
+#' @param recursive logical; if TRUE, the function is applied recursively to the list elements.
+#'
+#' @export
 #'
 #' @return A `NetObject` R6 object if the argument is indeed an external pointer,
-#' otherwise returned unchanged.
-castToRObject <- function(obj) {
-  # Create a new NetObject instance if obj is a pointer
-  if (is(obj, "externalptr")) {
-    return(NetObject$new(obj))
+#' otherwise returned unchanged. If `recursive` is TRUE and `obj` is a list, the function is applied
+#' recursively to the list elements.
+castToRObject <- function(obj, recursive = TRUE) {
+  # if object is not a list or recursive is FALSE, process is as is
+  # special case for data frames, which are recognized as lists
+  if (is.data.frame(obj)) {
+    return(obj)
+  }
+  if (!is.list(obj) || !recursive) {
+    # Create a new NetObject instance if obj is a pointer
+    if (is(obj, "externalptr")) {
+      return(NetObject$new(obj))
+    }
+
+    # If obj is the S4 object of type cobjRef, return create a new NetObject
+    if (inherits(obj, "cobjRef")) {
+      return(NetObject$new(obj@clrobj))
+    }
+
+    # Otherwise return the object unchanged
+    return(obj)
   }
 
-  # If obj is the S4 object of type cobjRef, return create a new NetObject
-  if (inherits(obj, "cobjRef")) {
-    return(NetObject$new(obj@clrobj))
-  }
-
-  # Otherwise return the object unchanged
-  return(obj)
+  # if object is a list and recursive is TRUE, process recursively
+  lapply(obj, castToRObject, recursive = TRUE)
 }
 
 #' Create a new NetObject R6 object given the type name.

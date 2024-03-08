@@ -2,6 +2,7 @@
 
 export(NetObject)
 export(callStatic)
+export(castToRObject)
 export(getConstructors)
 export(getEnumNames)
 export(getLoadedAssemblies)
