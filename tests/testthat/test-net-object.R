@@ -7,7 +7,7 @@ test_that("It creates a `NetObject` from a valid pointer is provided", {
   # Check the type
   expect_equal(netObj$type, testClassName)
   # Check the print method
-  netObj$print()
+  expect_output(netObj$print())
 })
 
 # Re-enable once https://github.com/Open-Systems-Pharmacology/rSharp/issues/67

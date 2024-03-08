@@ -100,7 +100,7 @@ test_that("toStringNET works for primitive types", {
 })
 
 test_that("Print traceback", {
-expected <- "Type:    System.Exception
+  expected <- "Type:    System.Exception
 Message: An exception designed with a particular stack trace length
 Method:  Void ThrowException(Int32)
 Stack trace:
@@ -118,6 +118,6 @@ Stack trace:
    at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)"
 
   expect_error(callStatic(rSharpEnv$testCasesTypeName, "ThrowException", 10L)) # will be truncated by the Rf_error API
-# Dont know how to test only for the first xx lines of code. The message thrown when executing tests is different from the one thrown when running the code in the console.
+  # Dont know how to test only for the first xx lines of code. The message thrown when executing tests is different from the one thrown when running the code in the console.
   # expect_output(printTraceback(), expected, fixed = TRUE) # prints the full stack trace
 })

@@ -196,8 +196,10 @@ NetObject <- R6::R6Class(
       #   stop(messages$errorMethodNotFound(methodName, self$type))
       # }
 
-      result <- NULL
-      result <- .External("r_call_method", self$pointer, methodName, ..., PACKAGE = rSharpEnv$nativePkgName)
+      # Extract the pointer for R6 objects
+      args <- .extractPointersFromArgs(list(...))
+      # Calling via `do.call` to pass the arguments
+      result <- do.call(".External", c(list("r_call_method", self$pointer, methodName), args, PACKAGE = rSharpEnv$nativePkgName))
       return(castToRObject(result))
     },
 

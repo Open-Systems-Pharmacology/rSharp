@@ -55,12 +55,7 @@ getStaticMethods <- function(objOrType, contains = "") {
 #' callStatic(cTypename, "IsTrue", TRUE)
 callStatic <- function(typename, methodName, ...) {
   # Extract the pointer for R6 objects
-  args <- list(...)
-  for (i in seq_along(args)) {
-    if (inherits(args[[i]], "NetObject")) {
-      args[[i]] <- args[[i]]$pointer
-    }
-  }
+  args <- .extractPointersFromArgs(list(...))
   # Calling via `do.call` to pass the arguments
   extPtr <- do.call(".External", c(list("r_call_static_method", typename, methodName), args, PACKAGE = rSharpEnv$nativePkgName))
   return(castToRObject(extPtr))

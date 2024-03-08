@@ -49,3 +49,20 @@
   .validateIsExtPtr(extPtr)
   .External("r_get_typename_externalptr", extPtr, PACKAGE = rSharpEnv$nativePkgName)
 }
+
+#' Extract the pointers from the arguments
+#'
+#' @details
+#' Iterates through the list of arguments and replaces `NetObjects` by their
+#' pointers. Required to pass to ClrFacade.
+#'
+#' @param args List of arguments
+.extractPointersFromArgs <- function(args) {
+  # Extract the pointer for R6 objects
+  for (i in seq_along(args)) {
+    if (inherits(args[[i]], "NetObject")) {
+      args[[i]] <- args[[i]]$pointer
+    }
+  }
+  return(args)
+}

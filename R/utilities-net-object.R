@@ -76,7 +76,10 @@ newObjectFromName <- function(typename, ..., R6objectClass = NetObject) {
 #' # Now we can create a NetObject from the pointer
 #' testObj <- NetObject$new(testPtr)
 newPointerFromName <- function(typename, ...) {
-  o <- .External("r_create_clr_object", typename, ..., PACKAGE = rSharpEnv$nativePkgName)
+  # Extract the pointer for R6 objects
+  args <- .extractPointersFromArgs(list(...))
+  # Calling via `do.call` to pass the arguments
+  o <- do.call(".External", c(list("r_create_clr_object", typename), args, PACKAGE = rSharpEnv$nativePkgName))
   if (is.null(o)) {
     stop("Failed to create instance of type '", typename, "'")
   }
