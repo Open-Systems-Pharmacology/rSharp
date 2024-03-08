@@ -13,17 +13,28 @@ public static class Internal
 {
    public static int CallInstanceMethod(IntPtr obj, string methodName, IntPtr arguments, int numObjects, IntPtr returnValue)
    {
-      var objectArguments = convertToObjectArguments(arguments, numObjects);
+      try
+      {
+         var objectArguments = convertToObjectArguments(arguments, numObjects);
 
-      var instPtr = Marshal.ReadIntPtr(obj, 0);
-      var t = Marshal.PtrToStructure<RSharpGenericValue>(instPtr);
-      var instance = convertRSharpParameters(new[] { t })[0];
+         var instPtr = Marshal.ReadIntPtr(obj, 0);
+         var t = Marshal.PtrToStructure<RSharpGenericValue>(instPtr);
+         var instance = convertRSharpParameters(new[] { t })[0];
 
-      var result = CallInstanceMethod(instance, methodName, objectArguments);
-      var tempRetVal = RSharpGenericValueExtensions.FromObject(result);
-
-      Marshal.StructureToPtr(tempRetVal, returnValue, false);
-      return 1;
+         var result = CallInstanceMethod(instance, methodName, objectArguments);
+         var tempRetVal = RSharpGenericValueExtensions.FromObject(result);
+         Marshal.StructureToPtr(tempRetVal, returnValue, false);
+      }
+      catch (Exception ex)
+      {
+         if (!logThroughR(ex))
+         {
+            var tempRetVal = RSharpGenericValueExtensions.FromObject(LastCallException);
+            Marshal.StructureToPtr(tempRetVal, returnValue, false);
+            return -1;
+         }
+      }
+      return 1234;
    }
 
    private static object[] convertToObjectArguments(IntPtr arguments, int numObjects)
@@ -69,7 +80,11 @@ public static class Internal
       catch (Exception ex)
       {
          if (!logThroughR(ex))
+         {
+            var tempRetVal = RSharpGenericValueExtensions.FromObject(LastCallException);
+            Marshal.StructureToPtr(tempRetVal, returnValue, false);
             return -1;
+         }
       }
 
       return 1234;
@@ -146,12 +161,22 @@ public static class Internal
 
    public static int CurrentObject(IntPtr returnValue)
    {
-      var result = DataConverter?.CurrentObject;
-
-      var tempRetVal = RSharpGenericValueExtensions.FromObject(result);
-
-      Marshal.StructureToPtr(tempRetVal, returnValue, false);
-      return 1;
+      try
+      {
+         var result = DataConverter?.CurrentObject;
+         var tempRetVal = RSharpGenericValueExtensions.FromObject(result);
+         Marshal.StructureToPtr(tempRetVal, returnValue, false);
+      }
+      catch (Exception ex)
+      {
+         if (!logThroughR(ex))
+         {
+            var tempRetVal = RSharpGenericValueExtensions.FromObject(LastCallException);
+            Marshal.StructureToPtr(tempRetVal, returnValue, false);
+            return -1;
+         }
+      }
+      return 1234;
    }
 
    public static int CreateInstance(string typename, IntPtr arguments, int numObjects, IntPtr returnValue)
@@ -168,16 +193,20 @@ public static class Internal
                : Activator.CreateInstance(t, objectArguments));
          else
             throw new ArgumentException($"Could not determine Type from string '{typename}'");
+         
+         var tempRetVal = RSharpGenericValueExtensions.FromObject(result);
+         Marshal.StructureToPtr(tempRetVal, returnValue, false);
       }
       catch (Exception ex)
       {
          if (!logThroughR(ex))
-            throw;
+         {
+            var tempRetVal = RSharpGenericValueExtensions.FromObject(LastCallException);
+            Marshal.StructureToPtr(tempRetVal, returnValue, false);
+            return -1;
+         }
       }
-
-      var tempRetVal = RSharpGenericValueExtensions.FromObject(result);
-      Marshal.StructureToPtr(tempRetVal, returnValue, false);
-
+      
       return 1234;
    }
 

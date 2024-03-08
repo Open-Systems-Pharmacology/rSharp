@@ -158,7 +158,12 @@ test_that("toStringNET works for primitive types", {
 })
 
 # Re-enable when https://github.com/Open-Systems-Pharmacology/rSharp/issues/35 is fixed
-# test_that("Print traceback", {
-#   # callStatic(rSharpEnv$testCasesTypeName, "ThrowException", 10L) # will be truncated by the Rf_error API
-#   printTraceback() # prints the full stack trace
-# })
+ test_that("Print Traceback", {
+   tryCatch(
+     callStatic(rSharpEnv$testCasesTypeName, "ThrowException", 10L), # will be truncated by the Rf_error API
+     error = function(e) {
+       cat("Caught an exception:\n", conditionMessage(e), "\n")
+     }
+   )
+   #printTraceback() # prints the full stack trace
+ })
