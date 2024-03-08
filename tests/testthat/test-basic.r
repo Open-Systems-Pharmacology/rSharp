@@ -165,5 +165,5 @@ test_that("toStringNET works for primitive types", {
        cat("Caught an exception:\n", conditionMessage(e), "\n")
      }
    )
-   #printTraceback() # prints the full stack trace
+   printTraceback() # prints the full stack trace
  })

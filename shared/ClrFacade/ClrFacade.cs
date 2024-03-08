@@ -5,6 +5,8 @@ namespace ClrFacade;
 
 public static class ClrFacade
 {
+   public static string LastException => Internal.LastException;
+
    // ReSharper disable UnusedMember.Global
    public delegate int CallInstanceMethodDelegate(IntPtr obj, string methodName, IntPtr arguments, int numObjects, IntPtr returnValue);
 

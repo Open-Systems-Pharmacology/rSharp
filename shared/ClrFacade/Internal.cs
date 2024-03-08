@@ -27,12 +27,7 @@ public static class Internal
       }
       catch (Exception ex)
       {
-         if (!logThroughR(ex))
-         {
-            var tempRetVal = RSharpGenericValueExtensions.FromObject(LastCallException);
-            Marshal.StructureToPtr(tempRetVal, returnValue, false);
-            return -1;
-         }
+         return processExceptionForR(ex, returnValue);
       }
       return 1234;
    }
@@ -79,12 +74,7 @@ public static class Internal
       }
       catch (Exception ex)
       {
-         if (!logThroughR(ex))
-         {
-            var tempRetVal = RSharpGenericValueExtensions.FromObject(LastCallException);
-            Marshal.StructureToPtr(tempRetVal, returnValue, false);
-            return -1;
-         }
+         return processExceptionForR(ex, returnValue);
       }
 
       return 1234;
@@ -169,12 +159,7 @@ public static class Internal
       }
       catch (Exception ex)
       {
-         if (!logThroughR(ex))
-         {
-            var tempRetVal = RSharpGenericValueExtensions.FromObject(LastCallException);
-            Marshal.StructureToPtr(tempRetVal, returnValue, false);
-            return -1;
-         }
+         return processExceptionForR(ex, returnValue);
       }
       return 1234;
    }
@@ -199,12 +184,7 @@ public static class Internal
       }
       catch (Exception ex)
       {
-         if (!logThroughR(ex))
-         {
-            var tempRetVal = RSharpGenericValueExtensions.FromObject(LastCallException);
-            Marshal.StructureToPtr(tempRetVal, returnValue, false);
-            return -1;
-         }
+         return processExceptionForR(ex, returnValue);
       }
       
       return 1234;
@@ -279,36 +259,32 @@ public static class Internal
    internal static object InternalCallInstanceMethod(object obj, string methodName, bool tryUseConverter, object[] arguments)
    {
       object result = null;
-      try
-      {
-         LastCallException = string.Empty;
 
-         arguments = convertSpecialObjects(arguments);
+      LastCallException = string.Empty;
 
-         var types = getTypes(arguments);
-         const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod;
-         var classType = obj.GetType();
-         var method = findMethod(classType, methodName, bindingFlags, types);
-         if (method != null)
-            result = invokeMethod(obj, arguments, method, tryUseConverter);
-         else
-            ReflectionHelper.ThrowMissingMethod(classType, methodName, "instance", types);
-      }
-      catch (Exception ex)
-      {
-         if (!logThroughR(ex))
-            throw;
-      }
+      arguments = convertSpecialObjects(arguments);
+
+      var types = getTypes(arguments);
+      const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod;
+      var classType = obj.GetType();
+      var method = findMethod(classType, methodName, bindingFlags, types);
+      if (method != null)
+         result = invokeMethod(obj, arguments, method, tryUseConverter);
+      else
+         ReflectionHelper.ThrowMissingMethod(classType, methodName, "instance", types);
 
       return result;
    }
 
-   private static bool logThroughR(Exception ex)
+   private static int processExceptionForR(Exception ex, IntPtr returnValue)
    {
       LastCallException = FormatExceptionInnermost(ex);
       LastException = LastCallException;
-      // Rely on this returning false so that caller rethrows the exception
-      return false;
+
+      var tempRetVal = RSharpGenericValueExtensions.FromObject(LastCallException);
+      Marshal.StructureToPtr(tempRetVal, returnValue, false);
+
+      return -1;
    }
 
    private static string checkSehExceptionAdditionalErrorMessage(Exception ex)
