@@ -31,7 +31,7 @@ typedef void (CORECLR_DELEGATE_CALLTYPE* LoadFromDelegate)(const char*);
 
 char_t* MergeLibraryPath(const char_t* libraryPath, const char_t* additionalPath);
 void freeObject(RSharpGenericValue* instance);
-RSharpGenericValue* get_RSharp_generic_value(SEXP clrObj);
+RSharpGenericValue* get_rSharp_generic_value_from_s4(SEXP clrObj);
 RSharpGenericValue createInstance(char* ns_qualified_typename, RSharpGenericValue** parameters, const R_len_t numberOfObjects);
 RSharpGenericValue getCurrentObjectDirect();
 
@@ -986,7 +986,14 @@ RSHARP_BOOL r_has_class(SEXP s, const char* classname) {
 	return FALSE_BOOL;
 }
 
-RSharpGenericValue* get_RSharp_generic_value(SEXP clrObj) {
+
+RSharpGenericValue* get_rSharp_generic_value_from_extptr(SEXP a)
+{
+	return GET_RSHARP_GENERIC_VALUE_FROM_EXTPTR(a);
+}
+
+RSharpGenericValue* get_rSharp_generic_value_from_s4(SEXP clrObj)
+{
 	SEXP a, clrobjSlotName;
 	SEXP s4classname = getAttrib(clrObj, R_ClassSymbol);
 	if (strcmp(CHAR(STRING_ELT(s4classname, 0)), "cobjRef") == 0)
@@ -996,16 +1003,12 @@ RSharpGenericValue* get_RSharp_generic_value(SEXP clrObj) {
 		a = getAttrib(clrObj, clrobjSlotName);
 		UNPROTECT(1);
 		if (a != NULL && a != R_NilValue && TYPEOF(a) == EXTPTRSXP) {
-			return GET_RSHARP_GENERIC_VALUE_FROM_EXTPTR(a);
+			return get_rSharp_generic_value_from_extptr(a);
 		}
-		else
-			return NULL;
-	}
-	else
-	{
-		error("Incorrect type of S4 Object: Not of type 'cobjRef'");
 		return NULL;
 	}
+	error("Incorrect type of S4 Object: Not of type 'cobjRef'");
+	return NULL;
 }
 
 /////////////////////////////////////////
@@ -1059,7 +1062,9 @@ RSharpGenericValue ConvertToRSharpGenericValue(SEXP s)
 	int typeof = TYPEOF(s);
 	switch (typeof) {
 	case S4SXP:
-		return *get_RSharp_generic_value(s);
+		return *get_rSharp_generic_value_from_s4(s);
+	case EXTPTRSXP:
+		return *get_rSharp_generic_value_from_extptr(s);
 	case VECSXP:
 		result.type = RSharpValueType::OBJECT_ARRAY;
 		result.size = LENGTH(s);
@@ -1099,7 +1104,7 @@ RSharpGenericValue ConvertToRSharpGenericValue(SEXP s)
 		break;
 	}
 	default:
-		result = *get_RSharp_generic_value(s);
+		result = *get_rSharp_generic_value_from_s4(s);
 		break;
 	}
 
