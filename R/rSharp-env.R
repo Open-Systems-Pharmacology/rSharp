@@ -11,7 +11,7 @@ if (.Platform$OS.type == "windows") {
   rSharpEnv$nativePkgName <- "RsharpMs"
 } else {
   # Assuming that everything non-windows is Linux (or will simply not work at all)
-  rSharpEnv$nativePkgName <- "RsharpUX"
+  rSharpEnv$nativePkgName <- "rSharpUX"
 }
 # Name of the .NET library
 rSharpEnv$dotnetPkgName <- "ClrFacade"

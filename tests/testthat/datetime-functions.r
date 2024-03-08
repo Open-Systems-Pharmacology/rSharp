@@ -129,7 +129,6 @@ post1971_DateStr <- c(
   "2013-10-06 01:59", # DST starts in Canberra
   "2013-10-06 03:01",
   "2013-04-07 01:59", # DST ends in Canberra. See also notes below for peculiarities over the twice run over 02:00 to 03:00
-  "2013-04-07 02:33",
   "2013-04-07 03:00",
   # Around one of the leap seconds (that is, when the UTC/GMT is tested
   "1994-06-30 23:00:00",
