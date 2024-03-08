@@ -116,12 +116,12 @@ typedef struct {
 #ifdef __cplusplus
 extern "C" {
 #endif
-	SEXP r_create_clr_object( SEXP p );
+	SEXP r_create_clr_object( SEXP parameters);
 	SEXP r_get_null_reference();
-	SEXP r_call_static_method(SEXP p);
+	SEXP r_call_static_method(SEXP parameters);
 	SEXP r_get_object_direct();
-	SEXP r_call_method(SEXP p);
-	SEXP r_get_typename_externalptr(SEXP p);
+	SEXP r_call_method(SEXP parameters);
+	SEXP r_get_typename_externalptr(SEXP parameters);
 	SEXP make_char_single_sexp(const char* str);
 	SEXP rsharp_object_to_SEXP(RSharpGenericValue& objptr);
 
