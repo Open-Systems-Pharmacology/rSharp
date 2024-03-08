@@ -3,7 +3,6 @@
 //for logging
 #include <fstream>
 
-
 #define TOPOF(A) CAR(A)
 #define POP(A) CDR(A)
 
@@ -32,6 +31,9 @@ typedef void (CORECLR_DELEGATE_CALLTYPE* LoadFromDelegate)(const char*);
 
 char_t* MergeLibraryPath(const char_t* libraryPath, const char_t* additionalPath);
 void freeObject(RSharpGenericValue* instance);
+RSharpGenericValue* get_RSharp_generic_value(SEXP clrObj);
+RSharpGenericValue createInstance(char* ns_qualified_typename, RSharpGenericValue** parameters, const R_len_t numberOfObjects);
+RSharpGenericValue getCurrentObjectDirect();
 
 /////////////////////////////////////////
 // Initialization and disposal of the CLR
@@ -533,44 +535,73 @@ void rSharp_load_assembly(char** filename) {
 	load_from(*filename);
 }
 
-SEXP r_create_clr_object(SEXP p) {
-	SEXP methodParams;
+SEXP r_create_clr_object(SEXP parameters)
+{
+	SEXP sExpressionParameterStack = parameters;
+	SEXP sExpressionMethodParameter;
 	RSharpGenericValue return_value;
 	char* ns_qualified_typename = NULL;
-	p = CDR(p); /* skip the first parameter: function name*/
-	get_FullTypeName(p, &ns_qualified_typename); p = CDR(p);
-	methodParams = p;
+	sExpressionParameterStack = POP(sExpressionParameterStack); /* skip the first parameter: function name*/
+	get_FullTypeName(sExpressionParameterStack, &ns_qualified_typename);
+	sExpressionParameterStack = POP(sExpressionParameterStack);
+	sExpressionMethodParameter = sExpressionParameterStack;
 
+	RSharpGenericValue** methodParameters = sexp_to_parameters(sExpressionMethodParameter);
+	R_len_t numberOfObjects = Rf_length(sExpressionMethodParameter);
 
-	//if the function pointer has not been initialized, initialize it
-	if (create_instance_fn_ptr == nullptr)
-		initializeCreateInstance();
-	auto create_instance = reinterpret_cast<CreateInstanceDelegate>(create_instance_fn_ptr);
-
-	RSharpGenericValue** params = sexp_to_parameters(methodParams);
-	R_len_t num_objects = Rf_length(methodParams);
-
-	create_instance(ns_qualified_typename, params, num_objects, &return_value);
-
-	free_params_array(params, num_objects);
-	return ConvertToSEXP(return_value);
+	try
+	{
+		auto return_value = createInstance(ns_qualified_typename, methodParameters, numberOfObjects);
+		free(ns_qualified_typename);
+		free_params_array(methodParameters, numberOfObjects);
+		return ConvertToSEXP(return_value);
+	}
+	catch (const std::exception& ex) 
+	{
+		free(ns_qualified_typename);
+		free_params_array(methodParameters, numberOfObjects);
+		error_return(ex.what())
+	}
 }
 
-RSharpGenericValue callInstance(RSharpGenericValue** instance, const char* mnam, char* ns_qualified_typename, RSharpGenericValue** params, const R_len_t numberOfObjects)
+RSharpGenericValue createInstance(char* ns_qualified_typename, RSharpGenericValue** parameters, const R_len_t numberOfObjects)
 {
-	RSharpGenericValue return_value;
+	RSharpGenericValue returnValue;
+
+	if (create_instance_fn_ptr == nullptr)
+		initializeCreateInstance();
+
+	auto create_instance = reinterpret_cast<CreateInstanceDelegate>(create_instance_fn_ptr);
+
+	auto result = create_instance(ns_qualified_typename, parameters, numberOfObjects, &returnValue);
+
+	if (result < 0)
+	{
+		char* errorMessage = (char*)returnValue.value;
+		throw std::runtime_error(errorMessage);
+	}
+
+	return returnValue;
+}
+
+RSharpGenericValue callInstance(RSharpGenericValue** instance, const char* calledMethodName, char* ns_qualified_typename, RSharpGenericValue** parameters, const R_len_t numberOfObjects)
+{
+	RSharpGenericValue returnValue;
 
 	if (call_instance_method_fn_ptr == nullptr)
 		initializeCallInstanceFunction();
 
 	const auto call_instance = reinterpret_cast<CallInstanceMethodDelegate>(call_instance_method_fn_ptr);
 
-	auto result = call_instance(instance, mnam, params, numberOfObjects, &return_value);
+	auto result = call_instance(instance, calledMethodName, parameters, numberOfObjects, &returnValue);
 
 	if (result < 0)
-		throw std::runtime_error("Error calling instance method");
+	{
+		char* errorMessage = (char*)returnValue.value;
+		throw std::runtime_error(errorMessage);
+	}
 
-	return return_value;
+	return returnValue;
 }
 
 void freeObject(RSharpGenericValue* instance)
@@ -582,20 +613,23 @@ void freeObject(RSharpGenericValue* instance)
 	free_object(reinterpret_cast<intptr_t>(instance));
 }
 
-RSharpGenericValue callStatic(const char* mnam, char* ns_qualified_typename, RSharpGenericValue** params, const R_len_t numberOfObjects)
+RSharpGenericValue callStatic(const char* calledMethodName, char* ns_qualified_typename, RSharpGenericValue** parameters, const R_len_t numberOfObjects)
 {
-	RSharpGenericValue return_value;
+	RSharpGenericValue returnValue;
 	if (call_static_method_fn_ptr == nullptr)
 		initializeCallStaticFunction();
 
 	const auto call_static = reinterpret_cast<CallStaticMethodDelegate>(call_static_method_fn_ptr);
 
-	auto result = call_static(ns_qualified_typename, mnam, params, numberOfObjects, &return_value);
+	auto result = call_static(ns_qualified_typename, calledMethodName, parameters, numberOfObjects, &returnValue);
 
 	if (result < 0)
-		throw std::runtime_error("Error calling static method");
+	{
+		char* errorMessage = (char*)returnValue.value;
+		throw std::runtime_error(errorMessage);
+	}
 
-	return return_value;
+	return returnValue;
 }
 
 RSharpGenericValue rclr_convert_element_rdotnet(SEXP p)
@@ -609,22 +643,45 @@ RSharpGenericValue rclr_convert_element_rdotnet(SEXP p)
 
 	auto result = call_static(reinterpret_cast<intptr_t>(p), &return_value);
 
-	return return_value;
-}
-
-SEXP r_get_object_direct() {
-	RSharpGenericValue return_value;
-	if (get_object_direct_fn_ptr == nullptr)
-		initializeGetObjectDirectFunction();
-
-	const auto call_static = reinterpret_cast<GetObjectDirectDelegate>(get_object_direct_fn_ptr);
-
-	auto result = call_static(&return_value);
+	
 
 	if (result < 0)
 		throw std::runtime_error("Error calling get object direct");
 
-	return ConvertToSEXP(return_value);
+	return return_value;
+}
+
+SEXP r_get_object_direct()
+{
+	try
+	{
+		auto return_value = getCurrentObjectDirect();
+		return ConvertToSEXP(return_value);
+	}
+	catch (const std::exception& ex) 
+	{
+		error_return(ex.what())
+	}
+}
+
+RSharpGenericValue getCurrentObjectDirect()
+{
+	RSharpGenericValue returnValue;
+
+	if (get_object_direct_fn_ptr == nullptr)
+		initializeGetObjectDirectFunction();
+
+	const auto get_object_direct = reinterpret_cast<GetObjectDirectDelegate>(get_object_direct_fn_ptr);
+
+	auto result = get_object_direct(&returnValue);
+
+	if (result < 0)
+	{
+		char* errorMessage = (char*)returnValue.value;
+		throw std::runtime_error(errorMessage);
+	}
+
+	return returnValue;
 }
 
 const char* get_type_full_name(RSharpGenericValue** genericValue) {
@@ -633,25 +690,30 @@ const char* get_type_full_name(RSharpGenericValue** genericValue) {
 	if (get_full_type_name_fn_ptr == nullptr)
 		initializeGetFullTypeNameFunction();
 
-	const auto call_static = reinterpret_cast<CallFullTypeNameDelegate>(get_full_type_name_fn_ptr);
+	const auto call_full_type_name = reinterpret_cast<CallFullTypeNameDelegate>(get_full_type_name_fn_ptr);
+	auto result = call_full_type_name(genericValue);
 
-	auto hr = call_static(genericValue);
-	return (char*)(hr);
+	return (char*)(result);
 }
 
-RSharpGenericValue* get_RSharp_generic_value(SEXP clrObj);
+SEXP r_get_typename_externalptr(SEXP parameters)
+{
+	SEXP sExpressionParameterStack = parameters, sExpressionMethodParameter;
 
-SEXP r_get_typename_externalptr(SEXP p) {
-	SEXP methodParams;
-	const char* mnam;
-	p = CDR(p); /* skip the first parameter: function name*/
-	methodParams = CAR(p);
-	SEXP el = CAR(methodParams);
+	sExpressionParameterStack = POP(sExpressionParameterStack); /* skip the first parameter: function name*/
+	sExpressionMethodParameter = TOPOF(sExpressionParameterStack);
+	SEXP sExpressionNameParameter = TOPOF(sExpressionMethodParameter);
 
-	return make_char_single_sexp(get_type_full_name(reinterpret_cast<RSharpGenericValue**>(el)));
+	try
+	{
+		auto return_value = get_type_full_name(reinterpret_cast<RSharpGenericValue**>(sExpressionNameParameter));
+		return mkString(return_value);
+	}
+	catch (const std::exception& ex)
+	{
+		error_return(ex.what())
+	}
 }
-
-
 
 SEXP rsharp_object_to_SEXP(RSharpGenericValue& objptr) {
 	RsharpObjectHandle* clroh_ptr;
@@ -669,60 +731,74 @@ SEXP rsharp_object_to_SEXP(RSharpGenericValue& objptr) {
 	return result;
 }
 
-SEXP r_call_method(SEXP par)
+SEXP r_call_method(SEXP parameters)
 {
-	SEXP sExpressionParameterStack = par, instance, sExpressinParameter;
+	SEXP sExpressionParameterStack = parameters, instance, sExpressionParameter;
 	const char* methodName = 0;
 
 
-	sExpressinParameter = TOPOF(sExpressionParameterStack);
-	auto functionName = CHAR(STRING_ELT(sExpressinParameter, 0));	// should be "r_call_method"
+	sExpressionParameter = TOPOF(sExpressionParameterStack);
+	auto functionName = CHAR(STRING_ELT(sExpressionParameter, 0));	// should be "r_call_method"
 	sExpressionParameterStack = POP(sExpressionParameterStack);
 
 	instance = TOPOF(TOPOF(sExpressionParameterStack));				// object instance is the second SEXP
 	sExpressionParameterStack = POP(sExpressionParameterStack);
 
-	sExpressinParameter = TOPOF(sExpressionParameterStack);			// instance method name is the third SEXP
-	methodName = CHAR(STRING_ELT(sExpressinParameter, 0));
+	sExpressionParameter = TOPOF(sExpressionParameterStack);			// instance method name is the third SEXP
+	methodName = CHAR(STRING_ELT(sExpressionParameter, 0));
 	sExpressionParameterStack = POP(sExpressionParameterStack);
 
 	RSharpGenericValue** params = sexp_to_parameters(sExpressionParameterStack);
 
-	const R_len_t number_of_objects = Rf_length(sExpressionParameterStack);
-	auto return_value = callInstance(reinterpret_cast<RSharpGenericValue**>(instance), methodName, "ClrFacade.ClrFacade,ClrFacade", params, number_of_objects);
-	free_params_array(params, number_of_objects);
-	return ConvertToSEXP(return_value);
+	const R_len_t numberOfObjects = Rf_length(sExpressionParameterStack);
+
+	try
+	{
+		auto return_value = callInstance(reinterpret_cast<RSharpGenericValue**>(instance), methodName, "ClrFacade.ClrFacade,ClrFacade", params, numberOfObjects);
+		free_params_array(params, numberOfObjects);
+		return ConvertToSEXP(return_value);
+	}
+	catch (const std::exception& ex) 
+	{
+		free_params_array(params, numberOfObjects);
+		error_return(ex.what())
+	}
 }
 
-SEXP r_call_static_method(SEXP p) {
-	SEXP e, methodParams;
-	const char* mnam;
+SEXP r_call_static_method(SEXP parameters)
+{
+	SEXP sExpressionParameterStack = parameters, sExpressionParameter;
+	SEXP sExpressionMethodParameter;
+	const char* methodName;
 	char* ns_qualified_typename = NULL; // My.Namespace.MyClass,MyAssemblyName
 
-	p = CDR(p); /* skip the first parameter: function name*/
-	get_FullTypeName(p, &ns_qualified_typename); p = CDR(p);
-	e = CAR(p);
-	mnam = CHAR(STRING_ELT(e, 0));
-	p = CDR(p); // get the method name.
-	methodParams = p;
+	sExpressionParameterStack = POP(sExpressionParameterStack); /* skip the first parameter: function name*/
+	get_FullTypeName(sExpressionParameterStack, &ns_qualified_typename);
+	sExpressionParameterStack = POP(sExpressionParameterStack);
+	sExpressionParameter = TOPOF(sExpressionParameterStack);
+	methodName = CHAR(STRING_ELT(sExpressionParameter, 0));
+	sExpressionParameterStack = POP(sExpressionParameterStack); 
+	sExpressionMethodParameter = sExpressionParameterStack;
 
-	RSharpGenericValue** params = sexp_to_parameters(methodParams);
-	if (TYPEOF(e) != STRSXP || LENGTH(e) != 1)
+	RSharpGenericValue** methodParameters = sexp_to_parameters(sExpressionMethodParameter);
+	if (TYPEOF(sExpressionParameter) != STRSXP || LENGTH(sExpressionParameter) != 1)
 	{
 		free(ns_qualified_typename);
 		error_return("r_call_static_method: invalid method name");
 	}
 
-	const R_len_t numberOfObjects = Rf_length(methodParams);
-	try {
-		//if the function pointer has not been initialized, initialize it
-		auto return_value = callStatic(mnam, ns_qualified_typename, params, numberOfObjects);
+	const R_len_t numberOfObjects = Rf_length(sExpressionMethodParameter);
+	try 
+	{
+		auto return_value = callStatic(methodName, ns_qualified_typename, methodParameters, numberOfObjects);
 		free(ns_qualified_typename);
-		free_params_array(params, numberOfObjects);
+		free_params_array(methodParameters, numberOfObjects);
 		return ConvertToSEXP(return_value);
 	}
-	catch (const std::exception& ex) {
+	catch (const std::exception& ex) 
+	{
 		free(ns_qualified_typename);
+		free_params_array(methodParameters, numberOfObjects);
 		error_return(ex.what())
 	}
 }
