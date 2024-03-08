@@ -757,7 +757,7 @@ SEXP r_call_static_method(SEXP parameters)
 	sExpressionParameterStack = POP(sExpressionParameterStack); 
 	sExpressionMethodParameter = sExpressionParameterStack;
 
-	RSharpGenericValue** mmethodParameters = sexp_to_parameters(sExpressionMethodParameter);
+	RSharpGenericValue** methodParameters = sexp_to_parameters(sExpressionMethodParameter);
 	if (TYPEOF(sExpressionParameter) != STRSXP || LENGTH(sExpressionParameter) != 1)
 	{
 		free(ns_qualified_typename);
@@ -767,15 +767,15 @@ SEXP r_call_static_method(SEXP parameters)
 	const R_len_t numberOfObjects = Rf_length(sExpressionMethodParameter);
 	try 
 	{
-		auto return_value = callStatic(methodName, ns_qualified_typename, mmethodParameters, numberOfObjects);
+		auto return_value = callStatic(methodName, ns_qualified_typename, methodParameters, numberOfObjects);
 		free(ns_qualified_typename);
-		free_params_array(mmethodParameters, numberOfObjects);
+		free_params_array(methodParameters, numberOfObjects);
 		return ConvertToSEXP(return_value);
 	}
 	catch (const std::exception& ex) 
 	{
 		free(ns_qualified_typename);
-		free_params_array(mmethodParameters, numberOfObjects);
+		free_params_array(methodParameters, numberOfObjects);
 		error_return(ex.what())
 	}
 }

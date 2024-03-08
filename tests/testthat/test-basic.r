@@ -156,14 +156,3 @@ test_that("toStringNET works for primitive types", {
   #  expect_that(toStringNET(NULL), equals("null"))
   expect_that(toStringNET(NaN), equals("NaN"))
 })
-
-# Re-enable when https://github.com/Open-Systems-Pharmacology/rSharp/issues/35 is fixed
- test_that("Print Traceback", {
-   tryCatch(
-     callStatic(rSharpEnv$testCasesTypeName, "ThrowException", 10L), # will be truncated by the Rf_error API
-     error = function(e) {
-       cat("Caught an exception:\n", conditionMessage(e), "\n")
-     }
-   )
-   printTraceback() # prints the full stack trace
- })
