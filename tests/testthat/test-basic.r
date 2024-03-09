@@ -51,7 +51,12 @@ test_that("Correct method binding based on parameter types", {
     g(letters[1:3], stringName)
     g(rep(TRUE, 3), boolName)
     g(as.Date("2001-01-01") + 1:3, dateTimeName)
+
+    # test handling of S4 Objects
     g(c(testObj, testObj, testObj), objectName)
+
+    # test handling of external pointer to .NET objects
+    g(c(testObj@clrobj, testObj@clrobj, testObj@clrobj), objectName)
 
     expect_equal(f(1.0, "a"), c(doubleName, stringName))
     expect_equal(f(1.0, "a", "b"), c(doubleName, stringName, stringName))
