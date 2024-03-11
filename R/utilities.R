@@ -31,5 +31,5 @@ setConvertAdvancedTypes <- function(enable = TRUE) {
 #' dt <- as.POSIXct("2001-01-01 02:03:04", tz = "UTC")
 #' toStringNET(dt)
 toStringNET <- function(x) {
-  return(callStatic(rSharpEnv$InternalTypeName, "ToString", x))
+  return(callStatic(rSharpEnv$clrFacadeTypeName, "ToString", x))
 }
