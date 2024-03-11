@@ -23,7 +23,6 @@ test_that("Basic types of length zero are passed correctly from R to .NET", {
   expectArrayElementType(logical(0), "System.Boolean")
   expectArrayElementType(character(0), "System.String")
 
-
   aPosixCt <- numeric(0)
   attributes(aPosixCt) <- list(tzone = "UTC")
   class(aPosixCt) <- c("POSIXct", "POSIXt")
@@ -133,7 +132,7 @@ test_that("non-empty arrays of non-basic .NET objects are created and passed fro
     })))
   }
 
-  obj <- clrNew(tName)
+  obj <- newObjectFromName(tName)
   actual <- callStatic(tn, "CreateArray_object", 3L, obj)
   testListEqual(obj, 3L, actual)
 

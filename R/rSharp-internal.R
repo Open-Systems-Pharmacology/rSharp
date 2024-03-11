@@ -1,4 +1,4 @@
-#' Create if possible an S4 CLR object.
+#' Create if possible an S4 `cobjRef` object.
 #'
 #' Create if possible and adequate the S4 object that wraps the external pointer to a `cobjRef` object.
 #'
@@ -27,7 +27,7 @@
 #' This function is highly unlikely to be of any use to an end user, even an advanced one.
 #' This is indirectly needed to unlock the benefits of using R.NET convert data structures between R and .NET.
 #'
-#' @return a CLR object
+#' @return a `cobjRef` S4 object
 .getCurrentConvertedObject <- function() {
   o <- .External("r_get_object_direct", PACKAGE = rSharpEnv$nativePkgName)
   .mkClrObjRef(o)
@@ -37,13 +37,32 @@
 #'
 #' Gets the type name of an object, given the SEXP external pointer to this .NET object.
 #'
-#' @param extPtr external pointer to a .NET object (not a cobjRef S4 object)
+#' @param extPtr external pointer to a .NET object (not a `cobjRef` S4 or a `NetObject` object)
 #' @return a character string, the type name
 #' @examples
-#' testClassName <- "ClrFacade.TestObject"
-#' testObj <- clrNew(testClassName)
-#' .clrTypeNameExtPtr(testObj@clrobj)
+#' \dontrun{
+#' testClassName <- getRSharpSetting("testObjectTypeName")
+#' testObj <- newObjectFromName(testClassName)
+#' .clrTypeNameExtPtr(testObj$pointer)
+#' }
 .clrTypeNameExtPtr <- function(extPtr) {
   .validateIsExtPtr(extPtr)
   .External("r_get_typename_externalptr", extPtr, PACKAGE = rSharpEnv$nativePkgName)
+}
+
+#' Extract the pointers from the arguments
+#'
+#' @details
+#' Iterates through the list of arguments and replaces `NetObjects` by their
+#' pointers. Required to pass to ClrFacade.
+#'
+#' @param args List of arguments
+.extractPointersFromArgs <- function(args) {
+  # Extract the pointer for R6 objects
+  for (i in seq_along(args)) {
+    if (inherits(args[[i]], "NetObject")) {
+      args[[i]] <- args[[i]]$pointer
+    }
+  }
+  return(args)
 }

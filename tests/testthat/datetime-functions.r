@@ -3,13 +3,13 @@
 ########################
 
 clrDateEquals <- function(d, isoDateTimeStr, tzIdClr) {
-  callStatic(rSharpEnv$testCasesTypeName, "UtcDateEquals", d, isoDateTimeStr, tzIdClr)
+  callStatic(getRSharpSetting("testCasesTypeName"), "UtcDateEquals", d, isoDateTimeStr, tzIdClr)
 }
 createDotNetDate <- function(...) {
-  callStatic(rSharpEnv$testCasesTypeName, "CreateDate", ...)
+  callStatic(getRSharpSetting("testCasesTypeName"), "CreateDate", ...)
 }
 createUtcDate <- function(isoDateTimeStr, tzIdClr) {
-  callStatic(rSharpEnv$testCasesTypeName, "UtcDateForTimeZone", isoDateTimeStr, tzIdClr)
+  callStatic(getRSharpSetting("testCasesTypeName"), "UtcDateForTimeZone", isoDateTimeStr, tzIdClr)
 }
 # convertClrTime <- function(isoDateTimeStr, tzIdClr_from, tzIdClr_to ) { callStatic(cTypename, "ConvertTime", isoDateTimeStr, tzIdClr_from, tzIdClr_to) }
 
@@ -20,14 +20,7 @@ tzIdR_AUest <- "Australia/Sydney"
 # IronPython: tz = [x for x in TimeZoneInfo.GetSystemTimeZones()]
 tzId_AUest <-
   ifelse(tolower(Sys.info()["sysname"]) == "windows",
-    ifelse(rSharpEnv$nativePkgName == "rClrMono",
-      # As of Mono 3.8.0, and probably earlier releases including 3.4.0, the time zone names have changed. Not Olson DB anymore. Not MS.NET either. *Sigh*
-      "E. Australia Standard Time",
-      # I think even on Linux Mono does not use the Olson DB names. If still, use something like the following line
-      #  'E. Australia Standard Time', tzIdR_AUest),
-      "AUS Eastern Standard Time"
-    ) # TODO: is 'Australia/Sydney' also OK for MS.NET?
-    ,
+    "AUS Eastern Standard Time",
     tzIdR_AUest # on Linux, use the Olson DB.
   )
 # Help with unit test labels
@@ -56,11 +49,11 @@ testRtoClr <- function(dateStr, pfun = as.POSIXct, tzIdR = tzIdR_AUest, tzId = t
   dayComponent <- format(rdate, "%Y-%m-%d")
   # when converting an R Date to a POSIXct it becomes encoded as the date plus 00:00:00 UTC.
   # Let's check this is the equivalent seen from the CLR
-  expect_that(clrDateEquals(rdate, dayComponent, tzIdClr = "UTC"), is_true(), label = paste("R Date", rdate, "becomes UTC DateTime", dayComponent))
+  expect_true(clrDateEquals(rdate, dayComponent, tzIdClr = "UTC"), label = paste("R Date", rdate, "becomes UTC DateTime", dayComponent))
 
   # if an R POSIXct date is created for a timezone, it is equal to a DateTime time zone
   dr <- pfun(dateStr, tz = tzIdR)
-  expect_that(clrDateEquals(dr, dateStr, tzIdClr = tzId), is_true(), label = paste("R POSIXct", pctToString(dr), "becomes", tzId, "DateTime", dateStr))
+  expect_true(clrDateEquals(dr, dateStr, tzIdClr = tzId), label = paste("R POSIXct", pctToString(dr), "becomes", tzId, "DateTime", dateStr))
 }
 
 expect_posixct_equal <- function(actual, expected, mAct = "Actual", mExp = "Expected") {
@@ -184,6 +177,3 @@ testRtoClrNoTz <- function(dateStr) {
 testRtoClrUtc <- function(dateStr) {
   testRtoClr(dateStr, pfun = as.POSIXct, tzIdR = "Utc", tzId = "UTC")
 }
-
-
-# testDotNetToR('2013-04-07 02:32')

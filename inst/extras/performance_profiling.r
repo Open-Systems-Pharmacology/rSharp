@@ -9,7 +9,7 @@ library(ggplot2)
 library(rSharp)
 
 profClassName <- 'ClrFacade.PerformanceProfiling'
-prof <- clrNew(profClassName)
+prof <- newObjectFromName(profClassName)
 nRepsColname <- 'numReps'
 arrayLenColname <- 'arrLen'
 
@@ -28,7 +28,7 @@ rToClrDataTransferFUNGEN <- function(numArray, arrLen) {
   rToClrDataTransfer
 }
 
-sw <- clrNew('System.Diagnostics.Stopwatch')
+sw <- newObjectFromName('System.Diagnostics.Stopwatch')
 startSw <- function () { clrCall(sw,'Stop'); clrCall(sw,'Reset'); clrCall(sw, 'Start') }
 stopSw <- function () { clrCall(sw,'Stop'); callStatic('ClrFacade.PerformanceProfiling', 'GetElapsedSeconds', sw) }
 
@@ -106,7 +106,7 @@ doMeasureFun <- function(trials, FUNGEN, dataClass,direction,tag=NA) {
 
 createCases <- function(numReps=10, maxArrayLen=7.5e6) {
   # May want to tailor to whether this is 32 or 64 bits; use:
-  # clrGet('System.Environment', 'Is64BitProcess')
+  # getStatic('System.Environment', 'Is64BitProcess')
   cases <- c(2,5,7.5)
   trials <- expand.grid ( numReps = numReps, arrLen = as.integer(cases) )
   mult <- c(1,2,5,7.5)

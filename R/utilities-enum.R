@@ -4,7 +4,11 @@
 #' @return a character vector of the names for the enum
 #' @export
 #' @examples
-#' getEnumNames("Rclr.TestEnum")
+#' enumName <- "ClrFacade.TestEnum"
+#' getEnumNames(enumName)
+#' # Get enum names from object
+#' enumObj <- newObjectFromName(enumName)
+#' getEnumNames(enumObj)
 getEnumNames <- function(enumType) {
   return(callStatic(rSharpEnv$reflectionHelperTypeName, "GetEnumNames", enumType))
 }

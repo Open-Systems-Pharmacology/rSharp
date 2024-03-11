@@ -1,0 +1,24 @@
+---
+title: "Knowledge base"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This article is a knowledge base for the`{rSharp}` package. It is a collection of 
+useful information that may help troubleshooting and understanding the package.
+
+## Data type conversion
+
+- `NA` from R is treated as `NULL` in .NET
+- If the signature of a .NET method require an integer argument, it must be passed as an integer using `as.integer()` from R. R assumes all numerics as doubles by default, and will cause an error if passed to a method that expects an integer.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/rSharp-internal.R
 \name{.mkClrObjRef}
 \alias{.mkClrObjRef}
-\title{Create if possible an S4 CLR object.}
+\title{Create if possible an S4 `cobjRef` object.}
 \usage{
 .mkClrObjRef(obj, clrtype = NULL)
 }

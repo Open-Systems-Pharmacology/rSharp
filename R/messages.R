@@ -23,3 +23,17 @@ messages$errorPropertyReadOnly <- function(propertyName, optionalMessage = NULL)
     }
   )
 }
+
+messages$errorMethodNotFound <- function(methodName, typeName) {
+  paste0(
+    "Method '",
+    methodName,
+    "' does not exist in the type '",
+    typeName,
+    "'."
+  )
+}
+
+messages$errorNotANetObjectClass <- function() {
+  "Trying to create an object, but the class is not a subclass of `NetObject`!"
+}

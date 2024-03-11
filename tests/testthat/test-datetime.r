@@ -1,12 +1,6 @@
-# adapting to behavior as of testthat_0.11.0
-wd <- getwd()
-source(file.path(wd, "datetime-functions.r"))
-
-context("Date and times")
+source(testthat::test_path("datetime-functions.R"))
 
 test_that("Date and Time objects are marshalled correctly", {
-  # TODO:  https://r2clr.codeplex.com/workitem/52
-
   ########################################################
   # handling date, time and time zone conversions in software is complicated. Doing it naively can quickly lead to nightmarish situation, so let's clarify the essential early, and determine the unambiguous behavior to expect in converting date and time information between R and the CLR.
   # Dates, Times, and Time Zones: http://msdn.microsoft.com/en-us/library/bb384268.aspx
