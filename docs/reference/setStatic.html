@@ -21,6 +21,13 @@
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/knowledge-base.html">Knowledge base</a>
+    <a class="dropdown-item" href="../articles/user-guide.html">User guide</a>
+  </div>
+</li>
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
@@ -51,7 +58,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">setStatic</span><span class="op">(</span><span class="va">type</span>, <span class="va">name</span>, <span class="va">value</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">setStatic</span><span class="op">(</span><span class="va">type</span>, <span class="va">name</span>, <span class="va">value</span>, asInteger <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -66,6 +73,11 @@
 
 <dt>value</dt>
 <dd><p>The value to set the field with</p></dd>
+
+
+<dt>asInteger</dt>
+<dd><p>Boolean whether to convert the value to an integer.
+Used for cases where .NET signature requires an integer. Ignored if `value` is not numeric.</p></dd>
 
 </dl></div>
 

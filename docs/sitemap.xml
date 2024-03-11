@@ -4,6 +4,15 @@
     <loc>https://www.open-systems-pharmacology.org/rSharp/404.html</loc>
   </url>
   <url>
+    <loc>https://www.open-systems-pharmacology.org/rSharp/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>https://www.open-systems-pharmacology.org/rSharp/articles/knowledge-base.html</loc>
+  </url>
+  <url>
+    <loc>https://www.open-systems-pharmacology.org/rSharp/articles/user-guide.html</loc>
+  </url>
+  <url>
     <loc>https://www.open-systems-pharmacology.org/rSharp/authors.html</loc>
   </url>
   <url>
@@ -83,6 +92,9 @@
   </url>
   <url>
     <loc>https://www.open-systems-pharmacology.org/rSharp/reference/newObjectFromName.html</loc>
+  </url>
+  <url>
+    <loc>https://www.open-systems-pharmacology.org/rSharp/reference/newPointerFromName.html</loc>
   </url>
   <url>
     <loc>https://www.open-systems-pharmacology.org/rSharp/reference/printTraceback.html</loc>
