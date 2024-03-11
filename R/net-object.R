@@ -107,6 +107,10 @@ NetObject <- R6::R6Class(
       return(self)
     },
 
+    finalize = function() {
+      private$.pointer <- NULL
+    }
+
     # is = function(type) {
     #   # call static method once implemented https://github.com/Open-Systems-Pharmacology/rSharp/issues/67
     # },
