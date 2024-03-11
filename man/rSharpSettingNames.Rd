@@ -5,7 +5,7 @@
 \alias{rSharpSettingNames}
 \title{Names of the settings stored in rSharpEnv Can be used with `getRSharpSetting()`}
 \format{
-An object of class \code{character} of length 10.
+An object of class \code{character} of length 9.
 }
 \usage{
 rSharpSettingNames

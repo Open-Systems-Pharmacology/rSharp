@@ -1,10 +1,10 @@
 
-# ospsuite.parameteridentification
+# rSharp
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 The **RSharp** R package provides access to .NET libraries from R. It
-allows to create .NET objects, access their field, and call their
+allows to create .NET objects, access their fields, and call their
 methods.
 
 This package is based on the [rClr](https://github.com/rdotnet/rClr)
@@ -18,8 +18,9 @@ package and utilizes some of its code base.
 
 ## User guide
 
-Examples of running parameter estimation tasks using this package are
-detailed in `vignette('user-guide')`.
+Examples of interacting with .NET assemblies using this package are
+detailed in `vignette('user-guide')`. Some useful tips around using the
+package are available in the `vignette('knowledge-base')`.
 
 ## Code of conduct
 

@@ -55,6 +55,7 @@
 #' @details
 #' Iterates through the list of arguments and replaces `NetObjects` by their
 #' pointers. Required to pass to ClrFacade.
+#' @noRd
 #'
 #' @param args List of arguments
 .extractPointersFromArgs <- function(args) {

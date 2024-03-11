@@ -1,0 +1,133 @@
+<!--
+%\VignetteEngine{knitr}
+%\VignetteIndexEntry{Technical reference documentation}
+-->
+
+Technical reference documentation
+=======================================
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="center")
+```
+
+Introduction
+------------
+
+This page gathers some more technical aspects of the **rSharp** package, and is not meant to be read by most users.
+One aim is to document a few processes such as the build process.
+
+Build process
+----------------------------
+
+## .Rd file documentation
+
+```{r, eval=FALSE}
+library(devtools)
+install_github("jmp75/rclr-devtools/packages/rClrDevtools")
+library(rClrDevtools) # https://github.com/jmp75/rClr-devtools
+roxyRclr()
+```
+
+## Vignettes
+You should start from a new R session; if you have regenerated doc from Roxygen, there may be some surprises with the result of the `system.file` function.
+
+```{r, eval=FALSE}
+library(rClrDevtools) # https://github.com/jmp75/rClr-devtools
+library(rSharp)
+pkgDir <- tryFindPkgDir()
+# seem to need to move working directory. Oddities with knitr figure output otherwise
+originalDir <- getwd()
+docDir <- file.path(pkgDir, 'inst', 'doc')
+setwd(docDir)
+vignettesRclr()
+```
+
+```
+set R="c:\Program Files\R\R-3.1.2\bin\x64\R.exe"
+if not exist %R% set R="c:\Program Files\R\R-3.1.2\bin\i386\R.exe"
+cd F:\src\codeplex
+:: set BuildConfiguration=Debug
+rm -rf rSharp.Rcheck
+del rSharp_0.*.tar.gz
+del rSharp_0.*.zip
+```
+
+Note that a call to R CMD build will now build the vignettes too, so maybe vignettesRclr is redundant.
+
+```
+%R% CMD build rSharp > logbuild.txt 2>&1
+%R% CMD check --as-cran rSharp_0.*.tar.gz > logcheck.txt 2>&1
+%R% CMD INSTALL --build rSharp_0.*.tar.gz
+```
+
+```{r, eval=FALSE}
+> setwd('c:/src/codeplex/rSharp')
+> tools::buildVignettes(dir='.', tangle=TRUE)
+Quitting from lines 224-232 (rSharp_intro.Rmd) 
+Error: processing vignette 'rSharp_intro.Rmd' failed with diagnostics:
+argument is of length zero
+```
+
+```{r, eval=FALSE}
+library(rClrDevtools) 
+cpDebugBins()
+library(testthat)
+test_package('rSharp')
+```
+
+Diagnosing
+---------------
+
+Have warnings, but by defaults could not see where, what. The following treats warnings as errors:
+```{r, eval=FALSE}
+options(warn=2)
+test_package('rSharp')
+# restore:
+options(warn=0)
+```
+
+Had an issue with memory footprint on 2015-03-26. A way to diagnose things:
+
+```{r, eval=FALSE}
+library(rSharp)
+cTypename <- "ClrFacade.TestCases"
+testClassName <- "ClrFacade.TestObject"
+callGcMethname <- "CallGC"
+forceDotNetGc <- function() { callTestCase( callGcMethname) }
+forceGc <- function() {gc() ; forceDotNetGc() ; gc() ; forceDotNetGc() ; }
+
+callTestCase <- function(...) {
+  clrCallStatic(cTypename, ...)
+}
+
+blah <- clrCallStatic(cTypename, "CreateArrayMemFootprint", 100L * 1024L * 1024L)
+forceGc()
+forceGc()
+clrCallStatic(cTypename, "SinkLargeObject", blah)
+forceGc()
+forceGc()
+rm(blah)
+forceGc()
+forceGc()
+```
+
+## Investigating issues with Mono.
+
+```
+git reset --hard HEAD
+git pull
+git branch mono-4.0.2.5 mono-4.0.2.5
+git checkout mono-4.0.2.5
+git submodule foreach git submodule init && git submodule update --recursive
+```
+
+Follow instructions on [Linux](http://www.mono-project.com/docs/compiling-mono/linux/)
+
+```
+PREFIX=/usr/local
+PATH=$PREFIX/bin:$PATH
+./autogen.sh --prefix=$PREFIX
+make
+make install
+```
