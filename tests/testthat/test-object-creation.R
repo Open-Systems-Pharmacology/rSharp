@@ -19,10 +19,9 @@ test_that("newObjectFromName calls constructors when a valid name is provided", 
   expect_that(obj$get("FieldDoubleTwo"), equals(d2))
 })
 
-# Re-enable when https://github.com/Open-Systems-Pharmacology/rSharp/issues/66 is fixed
-# test_that("newObjectFromName returns an error when an invalid name is provided", {
-#   expect_error(newObjectFromName("InvalidTypeName"))
-# })
+test_that("newObjectFromName returns an error when an invalid name is provided", {
+  expect_error(newObjectFromName("InvalidTypeName"))
+})
 
 test_that("Basic objects are created correctly", {
   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)

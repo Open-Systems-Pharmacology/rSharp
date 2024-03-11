@@ -41,3 +41,6 @@ test_that("Calling a static method with wrong type name throws an error", {
   expect_error(callStatic("foo", "GetInstanceFields", testObj$pointer))
 })
 
+# Load assembly
+
+
