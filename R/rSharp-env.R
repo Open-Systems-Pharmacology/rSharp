@@ -11,7 +11,7 @@ if (.Platform$OS.type == "windows") {
   rSharpEnv$nativePkgName <- "RsharpMs"
 } else {
   # Assuming that everything non-windows is Linux (or will simply not work at all)
-  rSharpEnv$nativePkgName <- "RsharpUX"
+  rSharpEnv$nativePkgName <- "rSharpUX"
 }
 # Name of the .NET library
 rSharpEnv$dotnetPkgName <- "ClrFacade"
@@ -20,8 +20,6 @@ rSharpEnv$dotnetPkgName <- "ClrFacade"
 rSharpEnv$reflectionHelperTypeName <- "ClrFacade.ReflectionHelper"
 # Full type name of the main facade to the interop code written in C#
 rSharpEnv$clrFacadeTypeName <- "ClrFacade.ClrFacade"
-# Full type name of the Internal code written in C#
-rSharpEnv$InternalTypeName <- "ClrFacade.Internal"
 # Full type name of the test cases
 rSharpEnv$testCasesTypeName <- "ClrFacade.TestCases"
 # Full name of test object class
