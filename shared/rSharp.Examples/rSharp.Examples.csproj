@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<ItemGroup>
+			<AssemblyFiles Include="$(TargetDir)*.dll" />
+			<ConfigFiles Include="$(SolutionDir)*.runtimeconfig.json" />
+		</ItemGroup>
+		<Copy
+			SourceFiles="@(AssemblyFiles); @(ConfigFiles)"
+			DestinationFolder="$(SolutionDir)..\inst\lib\"
+		/>
+	</Target>
+</Project>

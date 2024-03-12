@@ -8,6 +8,13 @@ test_that("Methods with variable number of parameters with c# 'params' keyword",
   expect_equal(actual, expected = expected)
 })
 
+test_that("Vignette examples work", {
+  loadAssembly("rSharp.Examples")
+  testObj <- newObjectFromName("rSharp.Examples.SampleInstanceClass")
+  expect_equal(callStatic("rSharp.Examples.SampleStaticClass", "GetAString"), "A string from static class")
+  expect_equal(testObj$call("GetAString"), "A string from instance class")
+})
+
 test_that("Correct method binding based on parameter types", {
   mkArrayTypeName <- function(typeName) {
     paste(typeName, "[]", sep = "")
