@@ -430,7 +430,12 @@ public static class Internal
       if (property == null)
          throw new ArgumentException($"Field or property name '{name}' not found on object of type '{t.Name}', for binding flags '{b.ToString()}'");
 
-      return property.GetValue(objOrNull, null);
+      var getFieldOrProperty = property.GetValue(objOrNull, null);
+
+      if(getFieldOrProperty is Enum enumeration)
+         return Convert.ToInt32(enumeration);
+
+      return getFieldOrProperty;
    }
 
    /// <summary>
