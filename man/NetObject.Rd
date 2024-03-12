@@ -92,6 +92,7 @@ testObj$set("FieldIntegerOne", as.integer(42))
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-NetObject-new}{\code{NetObject$new()}}
+\item \href{#method-NetObject-finalize}{\code{NetObject$finalize()}}
 \item \href{#method-NetObject-getFields}{\code{NetObject$getFields()}}
 \item \href{#method-NetObject-getProperties}{\code{NetObject$getProperties()}}
 \item \href{#method-NetObject-getMethods}{\code{NetObject$getMethods()}}
@@ -130,6 +131,16 @@ print(x)
 }
 \if{html}{\out{</div>}}
 
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-NetObject-finalize"></a>}}
+\if{latex}{\out{\hypertarget{method-NetObject-finalize}{}}}
+\subsection{Method \code{finalize()}}{
+Method called on object destruction
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{NetObject$finalize()}\if{html}{\out{</div>}}
 }
 
 }
