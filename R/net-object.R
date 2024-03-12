@@ -107,7 +107,7 @@ NetObject <- R6::R6Class(
       return(self)
     },
 
-#' @description Method called on object destruction
+    #' @description Method called on object destruction
     finalize = function() {
       private$.pointer <- NULL
     },

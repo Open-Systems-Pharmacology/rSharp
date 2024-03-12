@@ -42,5 +42,3 @@ test_that("Calling a static method with wrong type name throws an error", {
 })
 
 # Load assembly
-
-
