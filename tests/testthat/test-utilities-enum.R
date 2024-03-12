@@ -6,3 +6,16 @@ test_that("enums get/set", {
   expect_false(is.null(e))
   expect_that(e$call("ToString"), equals("B"))
 })
+
+test_that("instance enumerators are evaluated as int", {
+  tName <- "ClrFacade.TestObjectWithEnum"
+
+  obj <- newObjectFromName(tName)
+  value <- getStatic(obj, "EnumValue")
+  expect_that(value, equals(2))
+
+  setStatic(obj, "EnumValue", 0, asInteger = TRUE)
+
+  value <- getStatic(obj, "EnumValue")
+  expect_that(value, equals(0))
+})

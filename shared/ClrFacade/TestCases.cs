@@ -691,6 +691,11 @@ public class TestCases
    }
 }
 
+public class TestObjectWithEnum
+{
+   public TestEnum EnumValue { get; set; } = TestEnum.C;
+}
+
 public interface ITestInterface
 {
 }
