@@ -34,9 +34,9 @@ public static class ClrFacade
 
    public static string GetObjectTypeName(object obj) => Internal.GetObjectTypeName(obj);
 
-   public delegate void LoadFromDelegate(string pathOrAssemblyName);
+   public delegate int LoadFromDelegate(string pathOrAssemblyName, IntPtr returnValue);
 
-   public static void LoadFrom(string pathOrAssemblyName) => Internal.LoadFrom(pathOrAssemblyName);
+   public static int LoadFrom(string pathOrAssemblyName, IntPtr returnValue) => Internal.LoadFrom(pathOrAssemblyName, returnValue);
 
    public static void SetFieldOrProperty(object obj, string name, object value) => Internal.SetFieldOrProperty(obj, name, value);
 

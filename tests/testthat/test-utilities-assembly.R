@@ -2,7 +2,8 @@ test_that("Assembly loading", {
   expect_no_error(loadAssembly("System.Net.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"))
 
   # The use of partial assembly names is discouraged; nevertheless it is supported
-  expect_no_error(loadAssembly("System.Web.Services"))
+  expect_no_error(loadAssembly("System.Net.Http"))
+  expect_error(loadAssembly("Something.That.Isnt.There"))
 })
 
 test_that("Loaded assemblies discovery", {
