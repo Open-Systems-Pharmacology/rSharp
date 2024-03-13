@@ -5,17 +5,17 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{024B0C26-BED0-467D-B332-E9796B756133}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <Version>0.8.1</Version>
-    <Copyright>(c) 2014-2019 Jean-Michel Perraud</Copyright>
+    <Version>1.0.0</Version>
+    <Copyright></Copyright>
     <Description>.NET interoperability on top of R.NET for the rSharp package</Description>
-    <Product>rSharp</Product>
+    <Product>$(AssemblyName)</Product>
     <Company />
-    <Authors>Jean-Michel Perraud</Authors>
-    <Title>ClrFacade; embed .NET in R</Title>
+    <Authors>Open-Systems-Pharmacology</Authors>
+    <Title>rSharp; embed .NET in R</Title>
     <PackageLicenseUrl>https://github.com/Open-Systems-Pharmacology/rsharp/blob/master/License.txt</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Open-Systems-Pharmacology/rsharp</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Open-Systems-Pharmacology/rsharp</PackageProjectUrl>
-    <PackageReleaseNotes>Migration to .NET Standard 2.0 and supporting R 3.5.x</PackageReleaseNotes>
+    <PackageReleaseNotes></PackageReleaseNotes>
     <!-- forces SDK to copy dependencies into build output to make packing easier -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <TargetFramework>net8.0</TargetFramework>
@@ -30,9 +30,6 @@
       <AssemblyFiles Include="$(TargetDir)*.dll" />
       <ConfigFiles Include="$(SolutionDir)*.runtimeconfig.json" />
     </ItemGroup>
-    <Copy 
-      SourceFiles="@(AssemblyFiles); @(ConfigFiles)"
-      DestinationFolder="$(SolutionDir)..\inst\lib\"
-      />
+    <Copy SourceFiles="@(AssemblyFiles); @(ConfigFiles)" DestinationFolder="$(SolutionDir)..\inst\lib\" />
   </Target>
 </Project>

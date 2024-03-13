@@ -5,17 +5,17 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{D07290EB-5755-453C-8CD6-5CDDED3400BE}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <Version>0.8.1</Version>
-    <Copyright>(c) 2014-2019 Jean-Michel Perraud</Copyright>
+    <Version>1.0.0</Version>
+    <Copyright></Copyright>
     <Description>.NET interoperability on top of R.NET for the rSharp package</Description>
     <Product>rSharp</Product>
     <Company />
-    <Authors>Jean-Michel Perraud</Authors>
+    <Authors>Open-Systems-Pharmacology</Authors>
     <Title>rSharpTests; embed .NET in R</Title>
     <PackageLicenseUrl>https://github.com/Open-Systems-Pharmacology/rsharp/blob/master/License.txt</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/Open-Systems-Pharmacology/rsharp</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Open-Systems-Pharmacology/rsharp</PackageProjectUrl>
-    <PackageReleaseNotes>Migration to .NET Standard 2.0 and supporting R 3.5.x</PackageReleaseNotes>
+    <PackageReleaseNotes></PackageReleaseNotes>
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
