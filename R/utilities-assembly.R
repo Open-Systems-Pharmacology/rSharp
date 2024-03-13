@@ -5,8 +5,10 @@
 #' Note that this is loaded in the single application domain that is created by rSharp, not a separate application domain.
 #'
 #' @param name a character vector of length one. It can be the full file name of the assembly to load, or a fully qualified assembly name, or as a last resort a partial name.
+#'
 #' @seealso \code{\link{.C}} which this function wraps
 #' @export
+#' @return Name of the loaded assembly, if successfull.
 #' @examples
 #' \dontrun{
 #' f <- file.path("SomeDirectory", "YourDotNetBinaryFile.dll")
@@ -16,6 +18,7 @@
 #' }
 loadAssembly <- function(name) {
   result <- .C("rSharp_load_assembly", name, PACKAGE = rSharpEnv$nativePkgName)
+  return(result)
 }
 
 #' List the names of loaded assemblies
