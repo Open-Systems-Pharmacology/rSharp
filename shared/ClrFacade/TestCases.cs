@@ -445,7 +445,7 @@ public class TestCases
 
    public static string GetExceptionMessage()
    {
-      return Internal.FormatExceptionInnermost(CreateInnerExceptions());
+      return InternalRSharpFacade.FormatExceptionInnermost(CreateInnerExceptions());
    }
 
    public static Exception CreateInnerExceptions()

@@ -126,7 +126,7 @@ public class reflection_tests
          new[] { new Exception("some inner message") },
          "reflection type load exception message");
 
-      string s = Internal.FormatExceptionInnermost(reflectionTypeLoadException);
+      string s = InternalRSharpFacade.FormatExceptionInnermost(reflectionTypeLoadException);
       Assert.Contains("some inner message", s);
       Assert.Contains("reflection type load exception message", s);
    }
@@ -175,23 +175,23 @@ public class reflection_tests
    {
       // TODO tighter checks. Start with: it does not bomb...
       var obj = new MyTestClass();
-      Internal.CallInstanceMethod(obj, "OptionalInt");
-      Internal.CallInstanceMethod(obj, "OptionalInt", 3);
+      InternalRSharpFacade.CallInstanceMethod(obj, "OptionalInt");
+      InternalRSharpFacade.CallInstanceMethod(obj, "OptionalInt", 3);
 
-      Internal.CallInstanceMethod(obj, "IntOptionalInt", 3);
-      Internal.CallInstanceMethod(obj, "IntOptionalInt", 3, 5);
+      InternalRSharpFacade.CallInstanceMethod(obj, "IntOptionalInt", 3);
+      InternalRSharpFacade.CallInstanceMethod(obj, "IntOptionalInt", 3, 5);
 
-      Internal.CallInstanceMethod(obj, "DoubleOptionalInt", 3.0);
-      Internal.CallInstanceMethod(obj, "DoubleOptionalInt", 3.0, 5);
+      InternalRSharpFacade.CallInstanceMethod(obj, "DoubleOptionalInt", 3.0);
+      InternalRSharpFacade.CallInstanceMethod(obj, "DoubleOptionalInt", 3.0, 5);
 
-      Internal.CallInstanceMethod(obj, "DoubleOptionalIntDoubleString", 3.0, 5, 4.5, "blah");
-      Internal.CallInstanceMethod(obj, "DoubleOptionalIntDoubleString", 3.0, 5);
-      Internal.CallInstanceMethod(obj, "DoubleOptionalIntDoubleString", 3.0, 5);
-      Internal.CallInstanceMethod(obj, "DoubleOptionalIntDoubleString", 3.0);
+      InternalRSharpFacade.CallInstanceMethod(obj, "DoubleOptionalIntDoubleString", 3.0, 5, 4.5, "blah");
+      InternalRSharpFacade.CallInstanceMethod(obj, "DoubleOptionalIntDoubleString", 3.0, 5);
+      InternalRSharpFacade.CallInstanceMethod(obj, "DoubleOptionalIntDoubleString", 3.0, 5);
+      InternalRSharpFacade.CallInstanceMethod(obj, "DoubleOptionalIntDoubleString", 3.0);
 
-      Assert.Equal("LevelOneClass", Internal.CallInstanceMethod(obj, "OptionalArgsMatch", new LevelOneClass()));
-      Assert.Equal("LevelTwoClass", Internal.CallInstanceMethod(obj, "OptionalArgsMatch", new LevelTwoClass()));
-      Assert.Equal("IMyInterface", Internal.CallInstanceMethod(obj, "OptionalArgsMatch", new OtherLevelOneClass()));
+      Assert.Equal("LevelOneClass", InternalRSharpFacade.CallInstanceMethod(obj, "OptionalArgsMatch", new LevelOneClass()));
+      Assert.Equal("LevelTwoClass", InternalRSharpFacade.CallInstanceMethod(obj, "OptionalArgsMatch", new LevelTwoClass()));
+      Assert.Equal("IMyInterface", InternalRSharpFacade.CallInstanceMethod(obj, "OptionalArgsMatch", new OtherLevelOneClass()));
    }
 
    private MethodInfo getSingleMethod(Type classType, string methodName, BindingFlags bf, Binder binder = null, Type[] types = null)

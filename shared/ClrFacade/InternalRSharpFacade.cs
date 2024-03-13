@@ -5,11 +5,10 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using RDotNet.NativeLibrary;
 
 namespace ClrFacade;
 
-public static class Internal
+public static class InternalRSharpFacade
 {
    public static int CallInstanceMethod(IntPtr obj, string methodName, IntPtr arguments, int numObjects, IntPtr returnValue)
    {
