@@ -76,7 +76,7 @@ public static class InternalReflectionHelper
 
    public static string[] GetSignature(string typeName, string memberName)
    {
-      var type = InternalClrFacade.GetType(typeName);
+      var type = InternalRSharpFacade.GetType(typeName);
       return type != null ? GetSignature_Type(type, memberName) : new string[] { };
    }
 
@@ -173,7 +173,7 @@ public static class InternalReflectionHelper
    /// <param name="typeName">type name</param>
    public static string[] GetConstructors(string typeName)
    {
-      return GetConstructors(InternalClrFacade.GetType(typeName));
+      return GetConstructors(InternalRSharpFacade.GetType(typeName));
    }
 
    /// <summary>
@@ -198,7 +198,7 @@ public static class InternalReflectionHelper
 
    public static string[] GetStaticMethods(string typeName, string pattern)
    {
-      var type = InternalClrFacade.GetType(typeName);
+      var type = InternalRSharpFacade.GetType(typeName);
       return getMethods(type, pattern, BindingFlags.Public | BindingFlags.Static);
    }
 
@@ -237,7 +237,7 @@ public static class InternalReflectionHelper
 
    public static string[] GetStaticFields(string typeName, string pattern)
    {
-      Type type = InternalClrFacade.GetType(typeName);
+      Type type = InternalRSharpFacade.GetType(typeName);
       return getFields(type, pattern, BindingFlags.Public | BindingFlags.Static);
    }
 
@@ -297,7 +297,7 @@ public static class InternalReflectionHelper
 
    public static string[] GetStaticProperties(string typeName, string pattern)
    {
-      Type type = InternalClrFacade.GetType(typeName);
+      Type type = InternalRSharpFacade.GetType(typeName);
       return getProperties(type, pattern, BindingFlags.Public | BindingFlags.Static);
    }
 
@@ -319,7 +319,7 @@ public static class InternalReflectionHelper
 
    public static string[] GetEnumNames(string enumTypename)
    {
-      var t = InternalClrFacade.GetType(enumTypename);
+      var t = InternalRSharpFacade.GetType(enumTypename);
       if (t == null)
          throw new ArgumentException($"Type not found: {enumTypename}");
 
