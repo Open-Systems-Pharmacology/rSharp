@@ -14,70 +14,89 @@ package and utilizes some of its code base.
 
 ### Windows
 
+Start your preferred R environment and run the following R commands from
+within the `rSharp` folder to install the package using prebuilt
+binaries
+
+    install.packages("devtools")
+    devtools::install_github("https://github.com/Open-Systems-Pharmacology/rSharp")
+
 ### Ubuntu
 
-Run the following commands to get set up to install and use the R package using prebuilt binaries
+Run the following commands to get set up to install and use the R
+package using prebuilt binaries
 
-```
-sudo apt-get install dotnet-runtime-8.0 libcurl4-openssl-dev libssl-dev libxml2-dev 
-sudo apt-get install libfontconfig1-dev libharfbuzz-dev libfribidi-dev
-sudo apt-get install libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
-sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
-```
+    sudo apt-get install dotnet-runtime-8.0 libcurl4-openssl-dev libssl-dev libxml2-dev 
+    sudo apt-get install libfontconfig1-dev libharfbuzz-dev libfribidi-dev
+    sudo apt-get install libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
+    sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
+
 Symlink libdl.so.2 to libdl.so
 
-```
-sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
-```
+    sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
 
-Start your preferred R environment and run the following R commands from within the ```rSharp``` folder
+Start your preferred R environment and run the following R commands from
+within the `rSharp` folder
 
-```
-install.packages("devtools")
-devtools::install_github("https://github.com/Open-Systems-Pharmacology/rSharp")
-```
+    install.packages("devtools")
+    devtools::install_github("https://github.com/Open-Systems-Pharmacology/rSharp")
 
 ## Build
 
 ### Windows
 
+Download and install R
+<https://cran.r-project.org/bin/windows/base/old/4.3.1/>
+
+Open your preferred R environment and run the following R commands from
+within the `rSharp` folder
+
+    install.packages("devtools")
+    devtools::build()
+
+To optionally set up to build the binaries make sure
+`Desktop development with C++` workload is installed in Visual Studio.
+
+Start Visual Studio and open the `rSharp.sln` solution file and build
+the solution.
+
+Then start your preferred R environment and run the following R commands
+from within the `rSharp` folder
+
+    devtools::install()
+
 ### Ubuntu
 
 Run the following commands to get set up to build the R package
 
-``` 
-git clone https://github.com/Open-Systems-Pharmacology/rSharp.git
-sudo apt-get install dotnet-runtime-8.0 libcurl4-openssl-dev libssl-dev libxml2-dev 
-sudo apt-get install libfontconfig1-dev libharfbuzz-dev libfribidi-dev
-sudo apt-get install libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
-```
+    git clone https://github.com/Open-Systems-Pharmacology/rSharp.git
+    sudo apt-get install dotnet-runtime-8.0 libcurl4-openssl-dev libssl-dev libxml2-dev 
+    sudo apt-get install libfontconfig1-dev libharfbuzz-dev libfribidi-dev
+    sudo apt-get install libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
 
 Symlink libdl.so.2 to libdl.so
-```
-sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
-```
+
+    sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
 
 Optionally set up to build the binaries
-```
-sudo apt-get install dotnet-sdk-8.0
-sudo apt-get install nuget
-```
 
-Start your preferred R environment and run the following R commands from within the ```rSharp``` folder
-```
-install.packages("devtools")
-devtools::build()
-```
+    sudo apt-get install dotnet-sdk-8.0
+    sudo apt-get install nuget
 
-To build the binaries change to the ```rSharp\shared``` directory and run
-```
-make
-```
+Start your preferred R environment and run the following R commands from
+within the `rSharp` folder
 
-Then change back to the ```rSharp``` directory start your preferred R environment and run the following R commands
-```
-devtools::install()
-```
+    install.packages("devtools")
+    devtools::build()
+
+To build the binaries change to the `rSharp\shared` directory and run
+
+    make
+
+Then change back to the `rSharp` directory start your preferred R
+environment and run the following R commands
+
+    devtools::install()
 
 ## User guide
 

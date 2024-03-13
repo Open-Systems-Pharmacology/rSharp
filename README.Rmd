@@ -31,6 +31,13 @@ utilizes some of its code base.
 
 ### Windows
 
+Start your preferred R environment and run the following R commands from within the ```rSharp``` folder to install the package using prebuilt binaries
+
+```
+install.packages("devtools")
+devtools::install_github("https://github.com/Open-Systems-Pharmacology/rSharp")
+```
+
 ### Ubuntu
 
 Run the following commands to get set up to install and use the R package using prebuilt binaries
@@ -58,7 +65,26 @@ devtools::install_github("https://github.com/Open-Systems-Pharmacology/rSharp")
 
 ### Windows
 
-Optionally set up to build the binaries make sure ```Desktop development with C++``` workflow is installed in Visual Studio.
+Download and install R https://cran.r-project.org/bin/windows/base/old/4.3.1/
+
+Open your preferred R environment and run the following R commands from within the ```rSharp``` folder
+
+```
+install.packages("devtools")
+devtools::build()
+```
+
+To optionally set up to build the binaries make sure ```Desktop development with C++``` workload is installed in Visual Studio.
+
+Start Visual Studio and open the ```rSharp.sln``` solution file and build the solution.
+
+Then start your preferred R environment and run the following R commands from within the ```rSharp``` folder
+
+```
+devtools::install()
+```
+
+
 
 ### Ubuntu
 
