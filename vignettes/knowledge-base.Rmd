@@ -20,5 +20,7 @@ useful information that may help troubleshooting and understanding the package.
 
 ## Data type conversion
 
-- `NA` from R is treated as `NULL` in .NET
+- `NA` is a concept of marking "missing values" in R which is not available in .NET.
+What might appear conterintuitive is that `NA` has a type "logical" and is interpreted as 
+`TRUE` when sent to .NET. Attention should be payed when sending `NA` to .NET methods.
 - If the signature of a .NET method require an integer argument, it must be passed as an integer using `as.integer()` from R. R assumes all numerics as doubles by default, and will cause an error if passed to a method that expects an integer.

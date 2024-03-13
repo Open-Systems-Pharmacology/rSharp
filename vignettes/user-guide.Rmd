@@ -23,6 +23,17 @@ will guide you through the basic usage of the package, starting from loading an 
 
 ## Loading an assembly
 
-To start working with a .NET assembly, you need to load it into the R session. This is done using the `rSharp::loadAssembly` function.
+To start working with a .NET assembly, you need to load it into the R session. This is done using the `rSharp::loadAssembly` function. In this example, we will use the library `rSharp.Examples.dll` 
+provided with this package.
 
 ```r
+library(rSharp)
+assembly <- loadAssembly(system.file("extdata", "rSharp.Examples.dll", package = "rSharp"))
+```
+
+We can get the list of all loaded assemblies using the `getLoadedAssemblies` function:
+
+```r
+getLoadedAssemblies()
+```
+

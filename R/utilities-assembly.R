@@ -48,3 +48,22 @@ getLoadedAssemblies <- function(fullname = FALSE, filenames = FALSE) {
 getTypesInAssembly <- function(assemblyName) {
   callStatic(rSharpEnv$reflectionHelperTypeName, "GetTypesInAssembly", assemblyName)
 }
+
+
+#' Is the assembly loaded?
+#'
+#' @param assemblyName The name of the assembly, e.g. 'ClrFacade'
+#'
+#' @return TRUE if the assembly is loaded, FALSE otherwise
+#' @export
+#'
+#' @examples
+#' isAssemblyLoaded("ClrFacade")
+isAssemblyLoaded <- function(assemblyName) {
+  loadedAssemblies <- getLoadedAssemblies()
+  if (assemblyName %in% loadedAssemblies) {
+    return(TRUE)
+  }
+
+  return(FALSE)
+}
