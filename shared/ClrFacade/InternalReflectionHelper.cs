@@ -4,22 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ClrFacade;
    
 public static class InternalReflectionHelper
 {
-   /// <summary>
-   ///    Gets information on the common language runtime on which this code is executing.
-   ///    Purpose is to have human-readable information ot diagnose interop issues between R and the CLR runtime.
-   /// </summary>
-   public static string[] GetClrInfo()
-   {
-      var result = new List<string> { Environment.Version.ToString() };
-      return result.ToArray();
-   }
-
    /// <summary>
    ///    Gets the simple names of assemblies loaded in the current domain.
    /// </summary>
@@ -144,19 +133,6 @@ public static class InternalReflectionHelper
    }
 
    /// <summary>
-   ///    Gets all the methods of an object with a name that contains a specific string.
-   /// </summary>
-   /// <param name="obj">The object to reflect on, or its type</param>
-   /// <param name="pattern">The case-sensitive string to look for in member names</param>
-   public static string[] GetMethods(object obj, string pattern)
-   {
-      if (obj is not Type type)
-         type = obj.GetType();
-
-      return getMethods(type, pattern, BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
-   }
-
-   /// <summary>
    ///    Gets all the non-static public methods of an object with a name that contains a specific string.
    /// </summary>
    /// <param name="obj">The object to reflect on, or its type</param>
@@ -247,23 +223,6 @@ public static class InternalReflectionHelper
    }
 
    /// <summary>
-   ///    Gets the value of a field of an object.
-   /// </summary>
-   public static object GetFieldValue(object obj, string fieldName)
-   {
-      if (obj == null)
-         throw new ArgumentNullException(nameof(obj), "obj");
-
-      // FIXME: accessing private fields should be discouraged.
-      var field = obj.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-      if (field != null) 
-         return field.GetValue(obj);
-
-      throw new ArgumentException($"Field {fieldName} not found on object of type {obj.GetType().FullName}");
-
-   }
-
-   /// <summary>
    ///    Gets all the properties of an object with a name that contains a specific string.
    /// </summary>
    /// <param name="obj">The object to reflect on, or its type</param>
@@ -302,23 +261,6 @@ public static class InternalReflectionHelper
       return getProperties(type, pattern, BindingFlags.Public | BindingFlags.Static);
    }
 
-   /// <summary>
-   ///    Gets the value of a property of an object.
-   /// </summary>
-   public static object GetPropertyValue(object obj, string propertyName)
-   {
-      if (obj == null)
-         throw new ArgumentNullException(nameof(obj), "obj");
-
-      // FIXME: accessing private fields should be discouraged.
-      var field = obj.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-      if (field != null) 
-         return field.GetValue(obj, null);
-
-      throw new ArgumentException($"Property {propertyName} not found on object of type {obj.GetType().FullName}");
-
-   }
-
    public static string[] GetEnumNames(string enumTypename)
    {
       var t = InternalRSharpFacade.GetType(enumTypename);
@@ -343,18 +285,6 @@ public static class InternalReflectionHelper
    public static string[] GetEnumNames(Enum e)
    {
       return GetEnumNames(e.GetType());
-   }
-
-   public static string[] GetInterfacesFullNames(Type type)
-   {
-      var interfaces = type.GetInterfaces();
-      return Array.ConvertAll(interfaces, x => x.FullName);
-   }
-
-   public static string[] GetDeclaredMethodNames(Type type, BindingFlags bindings = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance)
-   {
-      var methods = type.GetMethods(bindings);
-      return Array.ConvertAll(methods, x => x.Name);
    }
    
    private static bool matchAssemblyName(Assembly a, string name)

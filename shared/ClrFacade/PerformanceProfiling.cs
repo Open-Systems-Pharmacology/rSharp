@@ -3,6 +3,9 @@ using System.Diagnostics;
 
 namespace ClrFacade;
 
+// Classes and methods in this file are used dynamically by their names. 
+// Do not change the names or signatures without also updating usages in R
+
 /// <summary>
 ///    A class to use in order to measure the time cost of rSharp features.
 /// </summary>

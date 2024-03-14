@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Reflection;
 using ClrFacade.Tests.RefClasses;
 
-// ReSharper disable UnusedMember.Global called dynamically
-
 namespace ClrFacade;
+
+// Classes and methods in this file are used dynamically by their names. 
+// Do not change the names or signatures without also updating usages in R
 
 /// <summary>
 ///    Do not modify the .cs file: T4 generated class to support the unit tests for method binding

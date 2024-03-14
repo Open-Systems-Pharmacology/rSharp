@@ -9,12 +9,10 @@ public class reflection_tests
 {
    private class MyTestClass
    {
-      // ReSharper disable UnusedMember.Local
       public void NoParams()
       {
       }
 
-      // ReSharper disable UnusedParameter.Local
       public void IntParams(params int[] p)
       {
       }
@@ -73,8 +71,6 @@ public class reflection_tests
       {
          return "LevelTwoClass";
       }
-      // ReSharper restore UnusedParameter.Local
-      // ReSharper restore UnusedMember.Local
    }
 
    private interface IMyInterface
