@@ -1,8 +1,5 @@
 ﻿using System;
 
-// ReSharper disable InconsistentNaming match with R names
-// ReSharper disable UnusedMember.Global called dynamically
-
 namespace ClrFacade;
 
 public class TestArrayMemoryHandling

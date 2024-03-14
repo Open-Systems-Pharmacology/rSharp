@@ -3,7 +3,7 @@ using System.Reflection;
 using ClrFacade;
 using ClrFacade.Tests.RefClasses;
 using Xunit;
-using static ClrFacade.Internal;
+using static ClrFacade.InternalRSharpFacade;
 
 namespace rSharpTests
 {

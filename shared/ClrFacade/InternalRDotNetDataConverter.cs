@@ -1,22 +1,19 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Threading;
-using DynamicInterop;
 using RDotNet;
 using RDotNet.NativeLibrary;
 
 namespace ClrFacade;
 
-public class RDotNetDataConverter : IDataConverter
+internal class InternalRDotNetDataConverter : IDataConverter
 {
-   private RDotNetDataConverter(string pathToNativeSharedObj)
+   private InternalRDotNetDataConverter(string pathToNativeSharedObj)
    {
       var dllName = pathToNativeSharedObj;
       // HACK - this feels wrong, at least not clean. All I have time for.
@@ -26,7 +23,6 @@ public class RDotNetDataConverter : IDataConverter
          assemblyPath = Path.GetFullPath(assemblyPath);
          var libDir = Path.GetDirectoryName(assemblyPath);
 
-         var version = Environment.Is64BitProcess.ToString();
          CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
          CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
          CultureInfo.CurrentUICulture = new CultureInfo("en-US");
@@ -109,20 +105,6 @@ public class RDotNetDataConverter : IDataConverter
       _converterFunctions.Add(typeof(string[][]), convertMatrixJaggedString);
    }
 
-   private void removeMultidimensionalArrays()
-   {
-      if (!_converterFunctions.ContainsKey(typeof(float[,]))) return;
-      _converterFunctions.Remove(typeof(float[,]));
-      _converterFunctions.Remove(typeof(double[,]));
-      _converterFunctions.Remove(typeof(int[,]));
-      _converterFunctions.Remove(typeof(string[,]));
-
-      _converterFunctions.Remove(typeof(float[][]));
-      _converterFunctions.Remove(typeof(double[][]));
-      _converterFunctions.Remove(typeof(int[][]));
-      _converterFunctions.Remove(typeof(string[][]));
-   }
-
    private void addBijectiveConversions()
    {
       _converterFunctions.Add(typeof(float), convertSingle);
@@ -147,13 +129,7 @@ public class RDotNetDataConverter : IDataConverter
       _converterFunctions.Add(typeof(TimeSpan[]), convertArrayTimeSpan);
       _converterFunctions.Add(typeof(Complex[]), convertArrayComplex);
    }
-
-   public void Error(string msg)
-   {
-      // TODO consider removing; since this looked like not working.
-      throw new NotSupportedException();
-   }
-
+   
    public object CurrentObject => CurrentObjectToConvert;
 
    private static void setUseRDotNet(bool useIt)
@@ -172,7 +148,7 @@ public class RDotNetDataConverter : IDataConverter
    /// </summary>
    public static void SetRDotNet(bool setIt, string pathToNativeSharedObj = null)
    {
-      Internal.DataConverter = setIt ? getInstance(pathToNativeSharedObj) : null;
+      InternalRSharpFacade.DataConverter = setIt ? getInstance(pathToNativeSharedObj) : null;
       setUseRDotNet(setIt);
    }
 
@@ -207,7 +183,7 @@ public class RDotNetDataConverter : IDataConverter
       return sexp == null ? obj : returnHandle(sexp);
    }
 
-   private void clearSexpHandles()
+   private static void clearSexpHandles()
    {
       _handles.Clear();
    }
@@ -228,13 +204,7 @@ public class RDotNetDataConverter : IDataConverter
    ///    This is to prevent .NET and R to trigger GC before rSharp function calls have returned to R.
    /// </summary>
    private static readonly List<SymbolicExpression> _handles = new();
-
-   public object ConvertFromR(IntPtr pointer, int sExpressionType)
-   {
-      throw new NotImplementedException();
-      //return new DataFrame(engine, pointer);
-   }
-
+   
    /// <summary>
    ///    Gets/sets whether to convert vectors using R.NET. Most users should never need to modify the default.
    /// </summary>
@@ -270,34 +240,36 @@ public class RDotNetDataConverter : IDataConverter
       }
    }
 
-   private void setupREngine()
+   private static void setupREngine()
    {
-      if (_engine == null)
-      {
-         _engine = REngine.GetInstance(initialize: false);
-         _engine.Initialize(setupMainLoop: false);
-         _engine.AutoPrint = false;
-      }
+      if (_engine != null) 
+         return;
+
+      _engine = REngine.GetInstance(initialize: false);
+      _engine.Initialize(setupMainLoop: false);
+      _engine.AutoPrint = false;
    }
 
-   private static RDotNetDataConverter _singleton;
+   private static InternalRDotNetDataConverter _singleton;
 
-   private static RDotNetDataConverter getInstance(string pathToNativeSharedObj)
+   private static InternalRDotNetDataConverter getInstance(string pathToNativeSharedObj)
    {
       // Make sure this is set only once (RDotNet known limitation to one engine per session, effectively a singleton).
-      return _singleton ??= new RDotNetDataConverter(pathToNativeSharedObj);
+      return _singleton ??= new InternalRDotNetDataConverter(pathToNativeSharedObj);
    }
 
    private readonly Dictionary<Type, Func<object, SymbolicExpression>> _converterFunctions;
 
    private SymbolicExpression tryConvertToSexp(object obj)
    {
-      if (obj == null)
-         throw new ArgumentNullException("object to convert to R must not be a null reference");
+      if (obj != null)
+      {
+         var converter = tryGetConverter(obj);
+         var sHandle = converter?.Invoke(obj);
+         return sHandle;
+      }
 
-      var converter = tryGetConverter(obj);
-      var sHandle = converter?.Invoke(obj);
-      return sHandle;
+      throw new ArgumentNullException(nameof(obj));
    }
 
    private Func<object, SymbolicExpression> tryGetConverter(object obj)
@@ -314,7 +286,7 @@ public class RDotNetDataConverter : IDataConverter
 
    private Func<object, SymbolicExpression> tryGetConverter(Type t)
    {
-      return _converterFunctions.TryGetValue(t, out var converter) ? converter : null;
+      return _converterFunctions.GetValueOrDefault(t);
    }
 
    private bool tryGetGenericConverters(object obj, out Func<object, SymbolicExpression> converter)
@@ -327,7 +299,6 @@ public class RDotNetDataConverter : IDataConverter
             return _converterFunctions.TryGetValue(typeof(Array), out converter);
       }
 
-      converter = null;
       return _converterFunctions.TryGetValue(typeof(object), out converter);
    }
 
@@ -448,7 +419,7 @@ public class RDotNetDataConverter : IDataConverter
 
       var array = (DateTime[])obj;
 
-      var doubleArray = Array.ConvertAll(array, Internal.GetRPosixCtDoubleRepresentation);
+      var doubleArray = Array.ConvertAll(array, InternalRSharpFacade.GetRPosixCtDoubleRepresentation);
       var result = convertArrayDouble(doubleArray);
       AddPOSIXctAttributes(result);
       return result;
@@ -556,7 +527,7 @@ public class RDotNetDataConverter : IDataConverter
          return null;
 
       var value = (DateTime)obj;
-      var doubleValue = Internal.GetRPosixCtDoubleRepresentation(value);
+      var doubleValue = InternalRSharpFacade.GetRPosixCtDoubleRepresentation(value);
       var result = convertDouble(doubleValue);
       AddPOSIXctAttributes(result);
       return result;
@@ -662,12 +633,12 @@ public class RDotNetDataConverter : IDataConverter
 
    public static void SetTimeZoneAttribute(SymbolicExpression sexp, string timeZoneId)
    {
-      SetAttribute(sexp, new[] { timeZoneId }, attributeName: "tzone");
+      SetAttribute(sexp, [timeZoneId], attributeName: "tzone");
    }
 
    public static void SetUnitsAttribute(SymbolicExpression sexp, string units)
    {
-      SetAttribute(sexp, new[] { units }, attributeName: "units");
+      SetAttribute(sexp, [units], attributeName: "units");
    }
 
    public static void SetClassAttribute(SymbolicExpression sexp, params string[] classes)
@@ -708,8 +679,7 @@ public class RDotNetDataConverter : IDataConverter
    public static string GetTimeZoneAttribute(SymbolicExpression sexp)
    {
       var v = GetAttribute(sexp, "tzone");
-      if (v == null) return null;
-      else return v[0];
+      return v?[0];
    }
 
    public static void AddDiffTimeAttributes(SymbolicExpression result)
@@ -717,12 +687,7 @@ public class RDotNetDataConverter : IDataConverter
       SetClassAttribute(result, "difftime");
       SetUnitsAttribute(result, "secs");
    }
-
-   private static string getRDllName()
-   {
-      return NativeUtility.GetRLibraryFileName();
-   }
-
+   
    public static REngine GetEngine()
    {
       return _engine;

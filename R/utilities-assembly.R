@@ -27,9 +27,9 @@ loadAssembly <- function(name) {
 #' @examples
 #' getLoadedAssemblies()
 getLoadedAssemblies <- function(fullname = FALSE, filenames = FALSE) {
-  assNames <- callStatic(rSharpEnv$reflectionHelperTypeName, "GetLoadedAssemblyNames", fullname)
+  assNames <- callStatic(rSharpEnv$clrFacadeTypeName, "GetLoadedAssemblyNames", fullname)
   if (filenames) {
-    data.frame(AssemblyName = assNames, URI = callStatic(rSharpEnv$reflectionHelperTypeName, "GetLoadedAssemblyURI", assNames))
+    data.frame(AssemblyName = assNames, URI = callStatic(rSharpEnv$clrFacadeTypeName, "GetLoadedAssemblyURI", assNames))
   } else {
     assNames
   }
@@ -43,5 +43,5 @@ getLoadedAssemblies <- function(fullname = FALSE, filenames = FALSE) {
 #' @examples
 #' getTypesInAssembly("ClrFacade")
 getTypesInAssembly <- function(assemblyName) {
-  callStatic(rSharpEnv$reflectionHelperTypeName, "GetTypesInAssembly", assemblyName)
+  callStatic(rSharpEnv$clrFacadeTypeName, "GetTypesInAssembly", assemblyName)
 }
