@@ -129,7 +129,7 @@ NetObject <- R6::R6Class(
     #' testObj$getFields("ieldInt")
     getFields = function(contains = "") {
       # Validate contains is string
-      callStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceFields", self$pointer, contains)
+      callStatic(rSharpEnv$clrFacadeTypeName, "GetInstanceFields", self$pointer, contains)
     },
 
     #' @description
@@ -145,7 +145,7 @@ NetObject <- R6::R6Class(
     #' testObj$getProperties("One")
     getProperties = function(contains = "") {
       # Validate contains is string
-      callStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceProperties", self$pointer, contains)
+      callStatic(rSharpEnv$clrFacadeTypeName, "GetInstanceProperties", self$pointer, contains)
     },
 
     #' @description
@@ -161,7 +161,7 @@ NetObject <- R6::R6Class(
     #' testObj$getMethods("Get")
     getMethods = function(contains = "") {
       # Validate contains is string
-      callStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceMethods", self$pointer, contains)
+      callStatic(rSharpEnv$clrFacadeTypeName, "GetInstanceMethods", self$pointer, contains)
     },
 
     #' @description
@@ -178,7 +178,7 @@ NetObject <- R6::R6Class(
     #' testObj$getMemberSignature("FieldIntegerOne")
     #' testObj$getMemberSignature("PropertyIntegerTwo")
     getMemberSignature = function(memberName) {
-      callStatic(rSharpEnv$reflectionHelperTypeName, "GetSignature", self$pointer, memberName)
+      callStatic(rSharpEnv$clrFacadeTypeName, "GetSignature", self$pointer, memberName)
     },
 
     #' @description

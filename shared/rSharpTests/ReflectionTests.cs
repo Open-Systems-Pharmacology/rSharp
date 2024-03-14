@@ -98,24 +98,24 @@ public class reflection_tests
    {
       const BindingFlags bf = BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod;
       var t = typeof(MyTestClass);
-      Assert.False(ReflectionHelper.HasVarArgs(getSingleMethod(t, "NoParams", bf)));
-      Assert.True(ReflectionHelper.HasVarArgs(getSingleMethod(t, "IntParams", bf)));
+      Assert.False(InternalReflectionHelper.HasVarArgs(getSingleMethod(t, "NoParams", bf)));
+      Assert.True(InternalReflectionHelper.HasVarArgs(getSingleMethod(t, "IntParams", bf)));
 
       var tint = typeof(int);
       var td = typeof(double);
       var to = typeof(object);
       var ts = typeof(string);
 
-      Assert.NotNull(ReflectionHelper.GetMethod(t, "IntParams", null, bf, new[] { tint, tint, tint, tint }));
-      Assert.NotNull(ReflectionHelper.GetMethod(t, "IntParams", null, bf, new[] { tint }));
-      Assert.NotNull(ReflectionHelper.GetMethod(t, "IntParams", null, bf, Type.EmptyTypes));
-      Assert.Null(ReflectionHelper.GetMethod(t, "IntParams", null, bf, new[] { to, to }));
+      Assert.NotNull(InternalReflectionHelper.GetMethod(t, "IntParams", null, bf, new[] { tint, tint, tint, tint }));
+      Assert.NotNull(InternalReflectionHelper.GetMethod(t, "IntParams", null, bf, new[] { tint }));
+      Assert.NotNull(InternalReflectionHelper.GetMethod(t, "IntParams", null, bf, Type.EmptyTypes));
+      Assert.Null(InternalReflectionHelper.GetMethod(t, "IntParams", null, bf, new[] { to, to }));
 
-      Assert.NotNull(ReflectionHelper.GetMethod(t, "StringSameNameParams", null, bf, new[] { ts, tint, tint, tint }));
-      Assert.NotNull(ReflectionHelper.GetMethod(t, "StringSameNameParams", null, bf, new[] { ts, td, td, td }));
+      Assert.NotNull(InternalReflectionHelper.GetMethod(t, "StringSameNameParams", null, bf, new[] { ts, tint, tint, tint }));
+      Assert.NotNull(InternalReflectionHelper.GetMethod(t, "StringSameNameParams", null, bf, new[] { ts, td, td, td }));
 
-      Assert.NotNull(ReflectionHelper.GetMethod(t, "NoDiffSameNameParams", null, bf, new[] { tint, tint, tint }));
-      Assert.NotNull(ReflectionHelper.GetMethod(t, "NoDiffSameNameParams", null, bf, new[] { td, td, td }));
+      Assert.NotNull(InternalReflectionHelper.GetMethod(t, "NoDiffSameNameParams", null, bf, new[] { tint, tint, tint }));
+      Assert.NotNull(InternalReflectionHelper.GetMethod(t, "NoDiffSameNameParams", null, bf, new[] { td, td, td }));
    }
 
    [Fact]
@@ -136,38 +136,38 @@ public class reflection_tests
    {
       var bf = BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod;
       var t = typeof(MyTestClass);
-      Assert.False(ReflectionHelper.HasOptionalParams(getSingleMethod(t, "NoParams", bf)));
-      Assert.True(ReflectionHelper.HasOptionalParams(getSingleMethod(t, "OptionalInt", bf)));
-      Assert.True(ReflectionHelper.HasOptionalParams(getSingleMethod(t, "IntOptionalInt", bf)));
+      Assert.False(InternalReflectionHelper.HasOptionalParams(getSingleMethod(t, "NoParams", bf)));
+      Assert.True(InternalReflectionHelper.HasOptionalParams(getSingleMethod(t, "OptionalInt", bf)));
+      Assert.True(InternalReflectionHelper.HasOptionalParams(getSingleMethod(t, "IntOptionalInt", bf)));
 
       var tint = typeof(int);
       var td = typeof(double);
       var to = typeof(object);
       var ts = typeof(string);
 
-      Assert.NotNull(ReflectionHelper.GetMethod(t, "OptionalInt", null, bf, new[] { tint }));
-      Assert.NotNull(ReflectionHelper.GetMethod(t, "OptionalInt", null, bf, Type.EmptyTypes));
-      Assert.Null(ReflectionHelper.GetMethod(t, "OptionalInt", null, bf, new[] { tint, tint }));
-      Assert.Null(ReflectionHelper.GetMethod(t, "OptionalInt", null, bf, new[] { td, tint }));
-      Assert.Null(ReflectionHelper.GetMethod(t, "OptionalInt", null, bf, new[] { tint, td }));
+      Assert.NotNull(InternalReflectionHelper.GetMethod(t, "OptionalInt", null, bf, new[] { tint }));
+      Assert.NotNull(InternalReflectionHelper.GetMethod(t, "OptionalInt", null, bf, Type.EmptyTypes));
+      Assert.Null(InternalReflectionHelper.GetMethod(t, "OptionalInt", null, bf, new[] { tint, tint }));
+      Assert.Null(InternalReflectionHelper.GetMethod(t, "OptionalInt", null, bf, new[] { td, tint }));
+      Assert.Null(InternalReflectionHelper.GetMethod(t, "OptionalInt", null, bf, new[] { tint, td }));
 
-      Assert.NotNull(ReflectionHelper.GetMethod(t, "IntOptionalInt", null, bf, new[] { tint }));
-      Assert.NotNull(ReflectionHelper.GetMethod(t, "IntOptionalInt", null, bf, new[] { tint, tint }));
-      Assert.Null(ReflectionHelper.GetMethod(t, "IntOptionalInt", null, bf, new[] { tint, tint, tint }));
+      Assert.NotNull(InternalReflectionHelper.GetMethod(t, "IntOptionalInt", null, bf, new[] { tint }));
+      Assert.NotNull(InternalReflectionHelper.GetMethod(t, "IntOptionalInt", null, bf, new[] { tint, tint }));
+      Assert.Null(InternalReflectionHelper.GetMethod(t, "IntOptionalInt", null, bf, new[] { tint, tint, tint }));
 
-      Assert.NotNull(ReflectionHelper.GetMethod(t, "DoubleOptionalInt", null, bf, new[] { td }));
-      Assert.NotNull(ReflectionHelper.GetMethod(t, "DoubleOptionalInt", null, bf, new[] { td, tint }));
-      Assert.Null(ReflectionHelper.GetMethod(t, "DoubleOptionalInt", null, bf, new[] { td, tint, tint }));
+      Assert.NotNull(InternalReflectionHelper.GetMethod(t, "DoubleOptionalInt", null, bf, new[] { td }));
+      Assert.NotNull(InternalReflectionHelper.GetMethod(t, "DoubleOptionalInt", null, bf, new[] { td, tint }));
+      Assert.Null(InternalReflectionHelper.GetMethod(t, "DoubleOptionalInt", null, bf, new[] { td, tint, tint }));
 
-      Assert.NotNull(ReflectionHelper.GetMethod(t, "DoubleOptionalIntDoubleString", null, bf, new[] { td, tint, td, ts }));
-      Assert.NotNull(ReflectionHelper.GetMethod(t, "DoubleOptionalIntDoubleString", null, bf, new[] { td, tint, td }));
-      Assert.NotNull(ReflectionHelper.GetMethod(t, "DoubleOptionalIntDoubleString", null, bf, new[] { td, tint }));
-      Assert.NotNull(ReflectionHelper.GetMethod(t, "DoubleOptionalIntDoubleString", null, bf, new[] { td }));
+      Assert.NotNull(InternalReflectionHelper.GetMethod(t, "DoubleOptionalIntDoubleString", null, bf, new[] { td, tint, td, ts }));
+      Assert.NotNull(InternalReflectionHelper.GetMethod(t, "DoubleOptionalIntDoubleString", null, bf, new[] { td, tint, td }));
+      Assert.NotNull(InternalReflectionHelper.GetMethod(t, "DoubleOptionalIntDoubleString", null, bf, new[] { td, tint }));
+      Assert.NotNull(InternalReflectionHelper.GetMethod(t, "DoubleOptionalIntDoubleString", null, bf, new[] { td }));
 
-      Assert.Null(ReflectionHelper.GetMethod(t, "DoubleOptionalIntDoubleString", null, bf, new[] { td, tint, td, ts, to }));
-      Assert.Null(ReflectionHelper.GetMethod(t, "DoubleOptionalIntDoubleString", null, bf, new[] { td, tint, td, to }));
-      Assert.Null(ReflectionHelper.GetMethod(t, "DoubleOptionalIntDoubleString", null, bf, new[] { td, to }));
-      Assert.Null(ReflectionHelper.GetMethod(t, "DoubleOptionalIntDoubleString", null, bf, Type.EmptyTypes));
+      Assert.Null(InternalReflectionHelper.GetMethod(t, "DoubleOptionalIntDoubleString", null, bf, new[] { td, tint, td, ts, to }));
+      Assert.Null(InternalReflectionHelper.GetMethod(t, "DoubleOptionalIntDoubleString", null, bf, new[] { td, tint, td, to }));
+      Assert.Null(InternalReflectionHelper.GetMethod(t, "DoubleOptionalIntDoubleString", null, bf, new[] { td, to }));
+      Assert.Null(InternalReflectionHelper.GetMethod(t, "DoubleOptionalIntDoubleString", null, bf, Type.EmptyTypes));
    }
 
    [Fact]

@@ -16,8 +16,6 @@ if (.Platform$OS.type == "windows") {
 # Name of the .NET library
 rSharpEnv$dotnetPkgName <- "ClrFacade"
 
-# Full type name of the reflection helper the interop code written in C#
-rSharpEnv$reflectionHelperTypeName <- "ClrFacade.ReflectionHelper"
 # Full type name of the main facade to the interop code written in C#
 rSharpEnv$clrFacadeTypeName <- "ClrFacade.ClrFacade"
 # Full type name of the test cases

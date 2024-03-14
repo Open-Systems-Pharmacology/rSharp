@@ -30,11 +30,11 @@ test_that("Calling a method with wrong method name throws an error", {
 
 # r_call_static_method
 test_that("Calling a static method with wrong arguments throws an error", {
-  expect_error(callStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceFields", testObj$pointer, 2))
+  expect_error(callStatic(rSharpEnv$clrFacadeTypeName, "GetInstanceFields", testObj$pointer, 2))
 })
 
 test_that("Calling a static method with wrong method name throws an error", {
-  expect_error(callStatic(rSharpEnv$reflectionHelperTypeName, "foo", testObj$pointer))
+  expect_error(callStatic(rSharpEnv$clrFacadeTypeName, "foo", testObj$pointer))
 })
 
 test_that("Calling a static method with wrong type name throws an error", {

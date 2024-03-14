@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace ClrFacade;
 
@@ -7,6 +8,7 @@ namespace ClrFacade;
 
 public static class ClrFacade
 {
+   #region RSHARPFACADE
    public static string LastException => InternalRSharpFacade.LastException;
 
    public delegate int CallInstanceMethodDelegate(IntPtr obj, string methodName, IntPtr arguments, int numObjects, IntPtr returnValue);
@@ -54,4 +56,124 @@ public static class ClrFacade
    public static void FreeObject(IntPtr obj) => InternalRSharpFacade.FreeObject(obj);
    
    public static string ToString(object obj) => InternalRSharpFacade.ToString(obj);
+
+   #endregion RSHARPFACADE
+
+   #region REFLECTIONHELPER
+
+   /// <summary>
+   ///    Gets the paths of assemblies if loaded in the current domain.
+   /// </summary>
+   public static string[] GetLoadedAssemblyURI(string[] assemblyNames) => InternalReflectionHelper.GetLoadedAssemblyURI(assemblyNames);
+
+   /// <summary>
+   ///    Gets the simple names of assemblies loaded in the current domain.
+   /// </summary>
+   public static string[] GetLoadedAssemblyNames(bool fullName = false) => InternalReflectionHelper.GetLoadedAssemblyNames(fullName);
+
+   /// <summary>
+   ///    Gets the full name of types (Type.FullName) contained in an assembly, given its simple name
+   /// </summary>
+   public static string[] GetTypesInAssembly(string assemblyName) => InternalReflectionHelper.GetTypesInAssembly(assemblyName);
+
+   /// <summary>
+   ///    Gets human-readable signatures of the member(s) of an object or its type.
+   ///    The purpose is to explore CLR object members from R.
+   /// </summary>
+   /// <param name="obj">The object to reflect on, or the type of the object if already known</param>
+   /// <param name="memberName">The name of the object/class member, e.g. the method name</param>
+   public static string[] GetSignature(object obj, string memberName) => InternalReflectionHelper.GetSignature(obj, memberName);
+
+   public static string[] GetSignature(string typeName, string memberName) => InternalReflectionHelper.GetSignature(typeName, memberName);
+   
+   /// <summary>
+   ///    Gets all the non-static public methods of an object with a name that contains a specific string.
+   /// </summary>
+   /// <param name="obj">The object to reflect on, or its type</param>
+   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   public static string[] GetInstanceMethods(object obj, string pattern) => InternalReflectionHelper.GetInstanceMethods(obj, pattern);
+
+   /// <summary>
+   ///    Gets all the non-static public constructors of a class.
+   /// </summary>
+   /// <param name="typeName">type name</param>
+   public static string[] GetConstructors(string typeName) => InternalReflectionHelper.GetConstructors(typeName);
+
+   /// <summary>
+   ///    Gets all the non-static public constructors of a class.
+   /// </summary>
+   /// <param name="type">type</param>
+   public static string[] GetConstructors(Type type) => InternalReflectionHelper.GetConstructors(type);
+
+   /// <summary>
+   ///    Gets all the static public methods of an object with a name that contains a specific string.
+   /// </summary>
+   /// <param name="obj">The object to reflect on, or its type</param>
+   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   public static string[] GetStaticMethods(object obj, string pattern) => InternalReflectionHelper.GetStaticMethods(obj, pattern);
+
+   public static string[] GetStaticMethods(string typeName, string pattern) => InternalReflectionHelper.GetStaticMethods(typeName, pattern);
+
+   /// <summary>
+   ///    Gets all the public fields of an object with a name that contains a specific string.
+   /// </summary>
+   /// <param name="obj">The object to reflect on, or its type</param>
+   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   public static string[] GetFields(object obj, string pattern) => InternalReflectionHelper.GetFields(obj, pattern);
+
+   /// <summary>
+   ///    Gets all the non-static public fields of an object with a name that contains a specific string.
+   /// </summary>
+   /// <param name="obj">The object to reflect on, or its type</param>
+   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   public static string[] GetInstanceFields(object obj, string pattern) => InternalReflectionHelper.GetInstanceFields(obj, pattern);
+
+   /// <summary>
+   ///    Gets all the static fields of an object with a name that contains a specific string.
+   /// </summary>
+   /// <param name="obj">The object to reflect on, or its type</param>
+   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   public static string[] GetStaticFields(object obj, string pattern) => InternalReflectionHelper.GetStaticFields(obj, pattern);
+
+   public static string[] GetStaticFields(string typeName, string pattern) => InternalReflectionHelper.GetStaticFields(typeName, pattern);
+
+   public static string[] GetStaticFields(Type type, string pattern) => InternalReflectionHelper.GetStaticFields(type, pattern);
+
+   /// <summary>
+   ///    Gets all the properties of an object with a name that contains a specific string.
+   /// </summary>
+   /// <param name="obj">The object to reflect on, or its type</param>
+   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   public static string[] GetProperties(object obj, string pattern) => InternalReflectionHelper.GetProperties(obj, pattern);
+
+   /// <summary>
+   ///    Gets all the non-static public properties of an object with a name that contains a specific string.
+   /// </summary>
+   /// <param name="obj">The object to reflect on, or its type</param>
+   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   public static string[] GetInstanceProperties(object obj, string pattern) => InternalReflectionHelper.GetInstanceProperties(obj, pattern);
+
+   /// <summary>
+   ///    Gets all the static public properties of an object with a name that contains a specific string.
+   /// </summary>
+   /// <param name="obj">The object to reflect on, or its type</param>
+   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   public static string[] GetStaticProperties(object obj, string pattern) => InternalReflectionHelper.GetStaticProperties(obj, pattern);
+
+   public static string[] GetStaticProperties(string typeName, string pattern) => InternalReflectionHelper.GetStaticProperties(typeName, pattern);
+
+   public static string[] GetEnumNames(string enumTypename) => InternalReflectionHelper.GetEnumNames(enumTypename);
+
+   public static string[] GetEnumNames(Type enumType) => InternalReflectionHelper.GetEnumNames(enumType);
+
+   public static string[] GetEnumNames(Enum e) => InternalReflectionHelper.GetEnumNames(e);
+   
+   #endregion REFLECTIONHELPER
+
+   #region RDOTNETDATACONVERTER
+   public static void SetRDotNet(bool setIt, string pathToNativeSharedObj = null) => InternalRDotNetDataConverter.SetRDotNet(setIt, pathToNativeSharedObj);
+
+   public static void SetConvertAdvancedTypes(bool enable) => InternalRDotNetDataConverter.SetConvertAdvancedTypes(enable);
+
+   #endregion RDOTNETDATACONVERTER
 }

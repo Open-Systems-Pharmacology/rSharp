@@ -54,7 +54,7 @@ public static class InternalReflectionHelper
       var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
       var assembly = loadedAssemblies.FirstOrDefault((x => x.GetName().Name == assemblyName));
       if (assembly == null)
-         return new[] { $"Assembly '{assemblyName}' not found" };
+         return [$"Assembly '{assemblyName}' not found"];
 
       var types = assembly.GetExportedTypes();
       return Array.ConvertAll(types, t => t.FullName);
@@ -77,7 +77,7 @@ public static class InternalReflectionHelper
    public static string[] GetSignature(string typeName, string memberName)
    {
       var type = InternalRSharpFacade.GetType(typeName);
-      return type != null ? GetSignature_Type(type, memberName) : new string[] { };
+      return type != null ? GetSignature_Type(type, memberName) : [];
    }
 
    /// <summary>
@@ -147,7 +147,7 @@ public static class InternalReflectionHelper
    ///    Gets all the methods of an object with a name that contains a specific string.
    /// </summary>
    /// <param name="obj">The object to reflect on, or its type</param>
-   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   /// <param name="pattern">The case-sensitive string to look for in member names</param>
    public static string[] GetMethods(object obj, string pattern)
    {
       if (obj is not Type type)
@@ -160,7 +160,7 @@ public static class InternalReflectionHelper
    ///    Gets all the non-static public methods of an object with a name that contains a specific string.
    /// </summary>
    /// <param name="obj">The object to reflect on, or its type</param>
-   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   /// <param name="pattern">The case-sensitive string to look for in member names</param>
    public static string[] GetInstanceMethods(object obj, string pattern)
    {
       var type = obj.GetType();
@@ -189,7 +189,7 @@ public static class InternalReflectionHelper
    ///    Gets all the static public methods of an object with a name that contains a specific string.
    /// </summary>
    /// <param name="obj">The object to reflect on, or its type</param>
-   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   /// <param name="pattern">The case-sensitive string to look for in member names</param>
    public static string[] GetStaticMethods(object obj, string pattern)
    {
       var type = obj.GetType();
@@ -206,7 +206,7 @@ public static class InternalReflectionHelper
    ///    Gets all the public fields of an object with a name that contains a specific string.
    /// </summary>
    /// <param name="obj">The object to reflect on, or its type</param>
-   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   /// <param name="pattern">The case-sensitive string to look for in member names</param>
    public static string[] GetFields(object obj, string pattern)
    {
       var type = obj.GetType();
@@ -217,7 +217,7 @@ public static class InternalReflectionHelper
    ///    Gets all the non-static public fields of an object with a name that contains a specific string.
    /// </summary>
    /// <param name="obj">The object to reflect on, or its type</param>
-   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   /// <param name="pattern">The case-sensitive string to look for in member names</param>
    public static string[] GetInstanceFields(object obj, string pattern)
    {
       Type type = obj.GetType();
@@ -228,7 +228,7 @@ public static class InternalReflectionHelper
    ///    Gets all the static fields of an object with a name that contains a specific string.
    /// </summary>
    /// <param name="obj">The object to reflect on, or its type</param>
-   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   /// <param name="pattern">The case-sensitive string to look for in member names</param>
    public static string[] GetStaticFields(object obj, string pattern)
    {
       Type type = obj.GetType();
@@ -256,20 +256,21 @@ public static class InternalReflectionHelper
 
       // FIXME: accessing private fields should be discouraged.
       var field = obj.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-      if (field == null)
-         throw new ArgumentException($"Field {fieldName} not found on object of type {obj.GetType().FullName}");
+      if (field != null) 
+         return field.GetValue(obj);
 
-      return field.GetValue(obj);
+      throw new ArgumentException($"Field {fieldName} not found on object of type {obj.GetType().FullName}");
+
    }
 
    /// <summary>
    ///    Gets all the properties of an object with a name that contains a specific string.
    /// </summary>
    /// <param name="obj">The object to reflect on, or its type</param>
-   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   /// <param name="pattern">The case-sensitive string to look for in member names</param>
    public static string[] GetProperties(object obj, string pattern)
    {
-      Type type = obj.GetType();
+      var type = obj.GetType();
       return getProperties(type, pattern, BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
    }
 
@@ -277,10 +278,10 @@ public static class InternalReflectionHelper
    ///    Gets all the non-static public properties of an object with a name that contains a specific string.
    /// </summary>
    /// <param name="obj">The object to reflect on, or its type</param>
-   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   /// <param name="pattern">The case-sensitive string to look for in member names</param>
    public static string[] GetInstanceProperties(object obj, string pattern)
    {
-      Type type = obj.GetType();
+      var type = obj.GetType();
       return getProperties(type, pattern, BindingFlags.Public | BindingFlags.Instance);
    }
    
@@ -288,16 +289,16 @@ public static class InternalReflectionHelper
    ///    Gets all the static public properties of an object with a name that contains a specific string.
    /// </summary>
    /// <param name="obj">The object to reflect on, or its type</param>
-   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   /// <param name="pattern">The case-sensitive string to look for in member names</param>
    public static string[] GetStaticProperties(object obj, string pattern)
    {
-      Type type = obj.GetType();
+      var type = obj.GetType();
       return getProperties(type, pattern, BindingFlags.Public | BindingFlags.Static);
    }
 
    public static string[] GetStaticProperties(string typeName, string pattern)
    {
-      Type type = InternalRSharpFacade.GetType(typeName);
+      var type = InternalRSharpFacade.GetType(typeName);
       return getProperties(type, pattern, BindingFlags.Public | BindingFlags.Static);
    }
 
@@ -311,19 +312,21 @@ public static class InternalReflectionHelper
 
       // FIXME: accessing private fields should be discouraged.
       var field = obj.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-      if (field == null)
-         throw new ArgumentException($"Property {propertyName} not found on object of type {obj.GetType().FullName}");
+      if (field != null) 
+         return field.GetValue(obj, null);
 
-      return field.GetValue(obj, null);
+      throw new ArgumentException($"Property {propertyName} not found on object of type {obj.GetType().FullName}");
+
    }
 
    public static string[] GetEnumNames(string enumTypename)
    {
       var t = InternalRSharpFacade.GetType(enumTypename);
-      if (t == null)
-         throw new ArgumentException($"Type not found: {enumTypename}");
+      if (t != null) 
+         return GetEnumNames(t);
 
-      return GetEnumNames(t);
+      throw new ArgumentException($"Type not found: {enumTypename}");
+
    }
 
    public static string[] GetEnumNames(Type enumType)
