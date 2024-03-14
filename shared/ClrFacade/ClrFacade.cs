@@ -8,7 +8,6 @@ namespace ClrFacade;
 
 public static class ClrFacade
 {
-   #region RSHARPFACADE
    public static string LastException => InternalRSharpFacade.LastException;
 
    public delegate int CallInstanceMethodDelegate(IntPtr obj, string methodName, IntPtr arguments, int numObjects, IntPtr returnValue);
@@ -56,10 +55,6 @@ public static class ClrFacade
    public static void FreeObject(IntPtr obj) => InternalRSharpFacade.FreeObject(obj);
    
    public static string ToString(object obj) => InternalRSharpFacade.ToString(obj);
-
-   #endregion RSHARPFACADE
-
-   #region REFLECTIONHELPER
 
    /// <summary>
    ///    Gets the paths of assemblies if loaded in the current domain.
@@ -168,12 +163,8 @@ public static class ClrFacade
 
    public static string[] GetEnumNames(Enum e) => InternalReflectionHelper.GetEnumNames(e);
    
-   #endregion REFLECTIONHELPER
-
-   #region RDOTNETDATACONVERTER
    public static void SetRDotNet(bool setIt, string pathToNativeSharedObj = null) => InternalRDotNetDataConverter.SetRDotNet(setIt, pathToNativeSharedObj);
 
    public static void SetConvertAdvancedTypes(bool enable) => InternalRDotNetDataConverter.SetConvertAdvancedTypes(enable);
 
-   #endregion RDOTNETDATACONVERTER
 }
