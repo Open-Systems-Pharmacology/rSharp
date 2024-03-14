@@ -85,7 +85,7 @@ public static class ClrFacade
    ///    Gets all the non-static public methods of an object with a name that contains a specific string.
    /// </summary>
    /// <param name="obj">The object to reflect on, or its type</param>
-   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   /// <param name="pattern">The case-sensitive string to look for in member names</param>
    public static string[] GetInstanceMethods(object obj, string pattern) => InternalReflectionHelper.GetInstanceMethods(obj, pattern);
 
    /// <summary>
@@ -104,7 +104,7 @@ public static class ClrFacade
    ///    Gets all the static public methods of an object with a name that contains a specific string.
    /// </summary>
    /// <param name="obj">The object to reflect on, or its type</param>
-   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   /// <param name="pattern">The case-sensitive string to look for in member names</param>
    public static string[] GetStaticMethods(object obj, string pattern) => InternalReflectionHelper.GetStaticMethods(obj, pattern);
 
    public static string[] GetStaticMethods(string typeName, string pattern) => InternalReflectionHelper.GetStaticMethods(typeName, pattern);
@@ -113,21 +113,21 @@ public static class ClrFacade
    ///    Gets all the public fields of an object with a name that contains a specific string.
    /// </summary>
    /// <param name="obj">The object to reflect on, or its type</param>
-   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   /// <param name="pattern">The case-sensitive string to look for in member names</param>
    public static string[] GetFields(object obj, string pattern) => InternalReflectionHelper.GetFields(obj, pattern);
 
    /// <summary>
    ///    Gets all the non-static public fields of an object with a name that contains a specific string.
    /// </summary>
    /// <param name="obj">The object to reflect on, or its type</param>
-   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   /// <param name="pattern">The case-sensitive string to look for in member names</param>
    public static string[] GetInstanceFields(object obj, string pattern) => InternalReflectionHelper.GetInstanceFields(obj, pattern);
 
    /// <summary>
    ///    Gets all the static fields of an object with a name that contains a specific string.
    /// </summary>
    /// <param name="obj">The object to reflect on, or its type</param>
-   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   /// <param name="pattern">The case-sensitive string to look for in member names</param>
    public static string[] GetStaticFields(object obj, string pattern) => InternalReflectionHelper.GetStaticFields(obj, pattern);
 
    public static string[] GetStaticFields(string typeName, string pattern) => InternalReflectionHelper.GetStaticFields(typeName, pattern);
@@ -138,21 +138,21 @@ public static class ClrFacade
    ///    Gets all the properties of an object with a name that contains a specific string.
    /// </summary>
    /// <param name="obj">The object to reflect on, or its type</param>
-   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   /// <param name="pattern">The case-sensitive string to look for in member names</param>
    public static string[] GetProperties(object obj, string pattern) => InternalReflectionHelper.GetProperties(obj, pattern);
 
    /// <summary>
    ///    Gets all the non-static public properties of an object with a name that contains a specific string.
    /// </summary>
    /// <param name="obj">The object to reflect on, or its type</param>
-   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   /// <param name="pattern">The case-sensitive string to look for in member names</param>
    public static string[] GetInstanceProperties(object obj, string pattern) => InternalReflectionHelper.GetInstanceProperties(obj, pattern);
 
    /// <summary>
    ///    Gets all the static public properties of an object with a name that contains a specific string.
    /// </summary>
    /// <param name="obj">The object to reflect on, or its type</param>
-   /// <param name="pattern">The case sensitive string to look for in member names</param>
+   /// <param name="pattern">The case-sensitive string to look for in member names</param>
    public static string[] GetStaticProperties(object obj, string pattern) => InternalReflectionHelper.GetStaticProperties(obj, pattern);
 
    public static string[] GetStaticProperties(string typeName, string pattern) => InternalReflectionHelper.GetStaticProperties(typeName, pattern);
