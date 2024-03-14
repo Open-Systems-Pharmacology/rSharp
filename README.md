@@ -45,8 +45,7 @@ within the `rSharp` folder
 
 ### Windows
 
-Download and install R
-<https://cran.r-project.org/bin/windows/base/old/4.3.1/>
+Download and install R <https://cran.r-project.org/bin/windows/base/>
 
 Open your preferred R environment and run the following R commands from
 within the `rSharp` folder
@@ -56,6 +55,11 @@ within the `rSharp` folder
 
 To optionally set up to build the binaries make sure
 `Desktop development with C++` workload is installed in Visual Studio.
+
+Create an environment variable `R_INSTALL_PATH` and set the value to the
+path where R is installed
+
+    set R_INSTALL_PATH = "C:\Program Files\R\R-4.3.3"
 
 Start Visual Studio and open the `rSharp.sln` solution file and build
 the solution.
