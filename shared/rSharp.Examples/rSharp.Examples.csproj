@@ -12,7 +12,7 @@
 		</ItemGroup>
 		<Copy
 			SourceFiles="@(AssemblyFiles); @(ConfigFiles)"
-			DestinationFolder="$(SolutionDir)..\inst\lib\"
+			DestinationFolder="$(SolutionDir)..\inst\extdata\"
 		/>
 	</Target>
 </Project>

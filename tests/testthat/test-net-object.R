@@ -89,9 +89,11 @@ test_that("$getStaticMethods lists all methods of an object", {
 })
 
 test_that("$getStaticMethods lists all methods of an object that include a given string", {
-  expectedMethods <- c("get_StaticPropertyIntegerOne",
-                       "set_StaticPropertyIntegerOne",
-                       "StaticGetFieldIntegerOne")
+  expectedMethods <- c(
+    "get_StaticPropertyIntegerOne",
+    "set_StaticPropertyIntegerOne",
+    "StaticGetFieldIntegerOne"
+  )
 
   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
   expect_true(all(testObj$getStaticMethods(contains = "IntegerOne") %in% expectedMethods))
@@ -99,9 +101,11 @@ test_that("$getStaticMethods lists all methods of an object that include a given
 
 
 test_that("$getStaticFields lists all fields of an object", {
-  expectedFields <- c("StaticFieldIntegerOne",
-                      "StaticFieldIntegerTwo",
-                      "StaticPublicInt")
+  expectedFields <- c(
+    "StaticFieldIntegerOne",
+    "StaticFieldIntegerTwo",
+    "StaticPublicInt"
+  )
 
   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
   expect_true(all(testObj$getStaticFields() %in% expectedFields))

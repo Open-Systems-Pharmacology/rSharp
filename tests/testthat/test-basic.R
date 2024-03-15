@@ -9,7 +9,8 @@ test_that("Methods with variable number of parameters with c# 'params' keyword",
 })
 
 test_that("Vignette examples work", {
-  expect_equal(loadAssembly("rSharp.Examples")[[1]], "rSharp.Examples")
+  assemblyPath <- system.file("extdata", "rSharp.Examples.dll", package = "rSharp")
+  expect_equal(loadAssembly(assemblyPath)[[1]], assemblyPath)
   testObj <- newObjectFromName("rSharp.Examples.SampleInstanceClass")
   expect_equal(callStatic("rSharp.Examples.SampleStaticClass", "GetAString"), "A string from static class")
   expect_equal(testObj$call("GetAString"), "A string from instance class")
