@@ -72,6 +72,62 @@ test_that("$getProperties lists all properties of an object that include a given
   expect_true(all(testObj$getProperties(contains = "IntegerOne") %in% expectedProperties))
 })
 
+test_that("$getStaticMethods lists all methods of an object", {
+  expectedMethods <- c(
+    "get_StaticPropertyIntegerOne",
+    "get_StaticPropertyIntegerTwo",
+    "set_StaticPropertyIntegerOne",
+    "set_StaticPropertyIntegerTwo",
+    "StaticGetFieldIntegerOne",
+    "StaticGetFieldIntegerTwo",
+    "StaticGetMethodWithParameters",
+    "StaticGetPublicInt"
+  )
+
+  testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
+  expect_true(all(testObj$getStaticMethods() %in% expectedMethods))
+})
+
+test_that("$getStaticMethods lists all methods of an object that include a given string", {
+  expectedMethods <- c("get_StaticPropertyIntegerOne",
+                       "set_StaticPropertyIntegerOne",
+                       "StaticGetFieldIntegerOne")
+
+  testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
+  expect_true(all(testObj$getStaticMethods(contains = "IntegerOne") %in% expectedMethods))
+})
+
+
+test_that("$getStaticFields lists all fields of an object", {
+  expectedFields <- c("StaticFieldIntegerOne",
+                      "StaticFieldIntegerTwo",
+                      "StaticPublicInt")
+
+  testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
+  expect_true(all(testObj$getStaticFields() %in% expectedFields))
+})
+
+test_that("$getStaticFields lists all fields of an object that include a given string", {
+  expectedFields <- c("StaticFieldIntegerOne")
+
+  testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
+  expect_true(all(testObj$getStaticFields(contains = "IntegerOne") %in% expectedFields))
+})
+
+test_that("$getProperties lists all properties of an object", {
+  expectedProperties <- c("PropertyIntegerOne", "PropertyIntegerTwo")
+
+  testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
+  expect_true(all(testObj$getProperties() %in% expectedProperties))
+})
+
+test_that("$getProperties lists all properties of an object that include a given string", {
+  expectedProperties <- c("PropertyIntegerOne")
+
+  testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
+  expect_true(all(testObj$getProperties(contains = "IntegerOne") %in% expectedProperties))
+})
+
 
 test_that("Object members discovery behaves as expected", {
   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)

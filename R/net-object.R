@@ -133,6 +133,22 @@ NetObject <- R6::R6Class(
     },
 
     #' @description
+    #' List the static fields of the object
+    #'
+    #' @param contains a string that the field names returned must contain
+    #' @return a list of names of the static fields of the object
+    #' @export
+    #' @examples
+    #' testClassName <- getRSharpSetting("testObjectTypeName")
+    #' testObj <- newObjectFromName(testClassName)
+    #' testObj$getStaticFields()
+    #' testObj$getStaticFields("ieldInt")
+    getStaticFields = function(contains = "") {
+      # Validate contains is string
+      callStatic(rSharpEnv$reflectionHelperTypeName, "GetStaticFields", self$pointer, contains)
+    },
+
+    #' @description
     #' List the properties of the object
     #'
     #' @param contains a string that the property names returned must contain
@@ -149,6 +165,22 @@ NetObject <- R6::R6Class(
     },
 
     #' @description
+    #' List the static properties of the object
+    #'
+    #' @param contains a string that the property names returned must contain
+    #' @return a list of names of the static properties of the object
+    #' @export
+    #' @examples
+    #' testClassName <- getRSharpSetting("testObjectTypeName")
+    #' testObj <- newObjectFromName(testClassName)
+    #' testObj$getStaticProperties()
+    #' testObj$getStaticProperties("One")
+    getStaticProperties = function(contains = "") {
+      # Validate contains is string
+      callStatic(rSharpEnv$reflectionHelperTypeName, "GetStaticProperties", self$pointer, contains)
+    },
+
+    #' @description
     #' List the methods the object
     #'
     #' @param contains a string that the methods names returned must contain
@@ -162,6 +194,22 @@ NetObject <- R6::R6Class(
     getMethods = function(contains = "") {
       # Validate contains is string
       callStatic(rSharpEnv$reflectionHelperTypeName, "GetInstanceMethods", self$pointer, contains)
+    },
+
+    #' @description
+    #' List the static methods the object
+    #'
+    #' @param contains a string that the methods names returned must contain
+    #' @return a list of names of the static methods of the object
+    #' @export
+    #' @examples
+    #' testClassName <- getRSharpSetting("testObjectTypeName")
+    #' testObj <- newObjectFromName(testClassName)
+    #' testObj$geStaticMethods()
+    #' testObj$getStaticMethods("Get")
+    getStaticMethods = function(contains = "") {
+      # Validate contains is string
+      callStatic(rSharpEnv$reflectionHelperTypeName, "GetStaticMethods", self$pointer, contains)
     },
 
     #' @description
