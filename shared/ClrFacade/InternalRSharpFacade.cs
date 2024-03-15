@@ -204,19 +204,36 @@ public static class InternalRSharpFacade
       return Marshal.StringToHGlobalAnsi(GetObjectTypeName(instance));
    }
 
-   public static void LoadFrom(string pathOrAssemblyName)
+   public static int LoadFrom(string pathOrAssemblyName, IntPtr returnValue)
    {
       Assembly result;
-      if (File.Exists(pathOrAssemblyName))
-         Assembly.LoadFrom(pathOrAssemblyName);
-      else if (isFullyQualifiedAssemblyName(pathOrAssemblyName))
-         Assembly.Load(pathOrAssemblyName);
-      else
-         // the use of LoadWithPartialName is deprecated, but this is highly convenient for the end user until there is 
-         // another safer and convenient alternative
+      try
+      {
+         if (File.Exists(pathOrAssemblyName))
+            result = Assembly.LoadFrom(pathOrAssemblyName);
+         else if (isFullyQualifiedAssemblyName(pathOrAssemblyName))
+            result = Assembly.Load(pathOrAssemblyName);
+         else
+            // the use of LoadWithPartialName is deprecated, but this is highly convenient for the end user until there is 
+            // another safer and convenient alternative
 #pragma warning disable 618, 612
-         Assembly.LoadWithPartialName(pathOrAssemblyName);
+            result = Assembly.LoadWithPartialName(pathOrAssemblyName);
 #pragma warning restore 618, 612
+      }
+      catch (Exception ex)
+      {
+         return processExceptionForR(ex, returnValue);
+      }
+
+      if (result != null)
+      {
+         Marshal.StructureToPtr(RSharpGenericValueExtensions.FromObject(true), returnValue, false);
+         return 1;
+      }
+      
+      Marshal.StructureToPtr(RSharpGenericValueExtensions.FromObject($"Assembly was not loaded. Is the file name and path correct: {pathOrAssemblyName}"), returnValue, false);
+      return -1;
+
    }
 
    public static void SetFieldOrProperty(object obj, string name, object value)

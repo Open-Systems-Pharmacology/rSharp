@@ -9,6 +9,9 @@ loadAssembly(name)
 \arguments{
 \item{name}{a character vector of length one. It can be the full file name of the assembly to load, or a fully qualified assembly name, or as a last resort a partial name.}
 }
+\value{
+Name of the loaded assembly, if successfull.
+}
 \description{
 Loads a .NET assembly.
 }

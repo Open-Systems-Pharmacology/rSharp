@@ -27,7 +27,7 @@ typedef intptr_t(CORECLR_DELEGATE_CALLTYPE* CallFullTypeNameDelegate)(RSharpGene
 typedef int (CORECLR_DELEGATE_CALLTYPE* GetObjectDirectDelegate)(RSharpGenericValue* returnValue);
 typedef int (CORECLR_DELEGATE_CALLTYPE* CreateSEXPWrapperDelegate)(intptr_t pointer, RSharpGenericValue* returnValue);
 typedef int (CORECLR_DELEGATE_CALLTYPE* CreateInstanceDelegate)(const char*, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
-typedef void (CORECLR_DELEGATE_CALLTYPE* LoadFromDelegate)(const char*);
+typedef int (CORECLR_DELEGATE_CALLTYPE* LoadFromDelegate)(const char*, RSharpGenericValue *returnValue);
 
 char_t* MergeLibraryPath(const char_t* libraryPath, const char_t* additionalPath);
 void freeObject(RSharpGenericValue* instance);
@@ -527,12 +527,18 @@ SEXP r_get_sexp_type(SEXP par) {
 // Calling ClrFacade methods
 /////////////////////////////////////////
 
-void rSharp_load_assembly(char** filename) {
+SEXP rSharp_load_assembly(char** filename) {
 	if (load_from_fn_ptr == nullptr)
 		initializeLoadAssembly();
 
 	auto load_from = reinterpret_cast<LoadFromDelegate>(load_from_fn_ptr);
-	load_from(*filename);
+	RSharpGenericValue returnValue;
+	if(load_from(*filename, &returnValue) < 0)
+	{
+		error_return(reinterpret_cast<char*>(returnValue.value))
+	}
+
+	return ConvertToSEXP(returnValue);
 }
 
 SEXP r_create_clr_object(SEXP parameters)

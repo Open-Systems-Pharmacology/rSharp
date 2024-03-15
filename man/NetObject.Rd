@@ -28,6 +28,15 @@ testObj$getFields()
 testObj$getFields("ieldInt")
 
 ## ------------------------------------------------
+## Method `NetObject$getStaticFields`
+## ------------------------------------------------
+
+testClassName <- getRSharpSetting("testObjectTypeName")
+testObj <- newObjectFromName(testClassName)
+testObj$getStaticFields()
+testObj$getStaticFields("ieldInt")
+
+## ------------------------------------------------
 ## Method `NetObject$getProperties`
 ## ------------------------------------------------
 
@@ -37,6 +46,15 @@ testObj$getProperties()
 testObj$getProperties("One")
 
 ## ------------------------------------------------
+## Method `NetObject$getStaticProperties`
+## ------------------------------------------------
+
+testClassName <- getRSharpSetting("testObjectTypeName")
+testObj <- newObjectFromName(testClassName)
+testObj$getStaticProperties()
+testObj$getStaticProperties("One")
+
+## ------------------------------------------------
 ## Method `NetObject$getMethods`
 ## ------------------------------------------------
 
@@ -44,6 +62,15 @@ testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 testObj$getMethods()
 testObj$getMethods("Get")
+
+## ------------------------------------------------
+## Method `NetObject$getStaticMethods`
+## ------------------------------------------------
+
+testClassName <- getRSharpSetting("testObjectTypeName")
+testObj <- newObjectFromName(testClassName)
+testObj$geStaticMethods()
+testObj$getStaticMethods("Get")
 
 ## ------------------------------------------------
 ## Method `NetObject$getMemberSignature`
@@ -94,8 +121,11 @@ testObj$set("FieldIntegerOne", as.integer(42))
 \item \href{#method-NetObject-new}{\code{NetObject$new()}}
 \item \href{#method-NetObject-finalize}{\code{NetObject$finalize()}}
 \item \href{#method-NetObject-getFields}{\code{NetObject$getFields()}}
+\item \href{#method-NetObject-getStaticFields}{\code{NetObject$getStaticFields()}}
 \item \href{#method-NetObject-getProperties}{\code{NetObject$getProperties()}}
+\item \href{#method-NetObject-getStaticProperties}{\code{NetObject$getStaticProperties()}}
 \item \href{#method-NetObject-getMethods}{\code{NetObject$getMethods()}}
+\item \href{#method-NetObject-getStaticMethods}{\code{NetObject$getStaticMethods()}}
 \item \href{#method-NetObject-getMemberSignature}{\code{NetObject$getMemberSignature()}}
 \item \href{#method-NetObject-call}{\code{NetObject$call()}}
 \item \href{#method-NetObject-get}{\code{NetObject$get()}}
@@ -176,6 +206,37 @@ testObj$getFields("ieldInt")
 
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-NetObject-getStaticFields"></a>}}
+\if{latex}{\out{\hypertarget{method-NetObject-getStaticFields}{}}}
+\subsection{Method \code{getStaticFields()}}{
+List the static fields of the object
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{NetObject$getStaticFields(contains = "")}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{contains}}{a string that the field names returned must contain}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+a list of names of the static fields of the object
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{testClassName <- getRSharpSetting("testObjectTypeName")
+testObj <- newObjectFromName(testClassName)
+testObj$getStaticFields()
+testObj$getStaticFields("ieldInt")
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NetObject-getProperties"></a>}}
 \if{latex}{\out{\hypertarget{method-NetObject-getProperties}{}}}
 \subsection{Method \code{getProperties()}}{
@@ -207,6 +268,37 @@ testObj$getProperties("One")
 
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-NetObject-getStaticProperties"></a>}}
+\if{latex}{\out{\hypertarget{method-NetObject-getStaticProperties}{}}}
+\subsection{Method \code{getStaticProperties()}}{
+List the static properties of the object
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{NetObject$getStaticProperties(contains = "")}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{contains}}{a string that the property names returned must contain}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+a list of names of the static properties of the object
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{testClassName <- getRSharpSetting("testObjectTypeName")
+testObj <- newObjectFromName(testClassName)
+testObj$getStaticProperties()
+testObj$getStaticProperties("One")
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NetObject-getMethods"></a>}}
 \if{latex}{\out{\hypertarget{method-NetObject-getMethods}{}}}
 \subsection{Method \code{getMethods()}}{
@@ -231,6 +323,37 @@ a list of names of the methods of the object
 testObj <- newObjectFromName(testClassName)
 testObj$getMethods()
 testObj$getMethods("Get")
+}
+\if{html}{\out{</div>}}
+
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-NetObject-getStaticMethods"></a>}}
+\if{latex}{\out{\hypertarget{method-NetObject-getStaticMethods}{}}}
+\subsection{Method \code{getStaticMethods()}}{
+List the static methods the object
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{NetObject$getStaticMethods(contains = "")}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{contains}}{a string that the methods names returned must contain}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+a list of names of the static methods of the object
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{testClassName <- getRSharpSetting("testObjectTypeName")
+testObj <- newObjectFromName(testClassName)
+testObj$geStaticMethods()
+testObj$getStaticMethods("Get")
 }
 \if{html}{\out{</div>}}
 
