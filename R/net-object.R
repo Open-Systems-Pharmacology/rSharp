@@ -145,7 +145,7 @@ NetObject <- R6::R6Class(
     #' testObj$getStaticFields("ieldInt")
     getStaticFields = function(contains = "") {
       # Validate contains is string
-      callStatic(rSharpEnv$reflectionHelperTypeName, "GetStaticFields", self$pointer, contains)
+      callStatic(rSharpEnv$clrFacadeTypeName, "GetStaticFields", self$pointer, contains)
     },
 
     #' @description
@@ -177,7 +177,7 @@ NetObject <- R6::R6Class(
     #' testObj$getStaticProperties("One")
     getStaticProperties = function(contains = "") {
       # Validate contains is string
-      callStatic(rSharpEnv$reflectionHelperTypeName, "GetStaticProperties", self$pointer, contains)
+      callStatic(rSharpEnv$clrFacadeTypeName, "GetStaticProperties", self$pointer, contains)
     },
 
     #' @description
@@ -209,7 +209,7 @@ NetObject <- R6::R6Class(
     #' testObj$getStaticMethods("Get")
     getStaticMethods = function(contains = "") {
       # Validate contains is string
-      callStatic(rSharpEnv$reflectionHelperTypeName, "GetStaticMethods", self$pointer, contains)
+      callStatic(rSharpEnv$clrFacadeTypeName, "GetStaticMethods", self$pointer, contains)
     },
 
     #' @description
