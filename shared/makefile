@@ -14,7 +14,7 @@ NUGET_CMD=nuget
 DOTNET_CMD=dotnet
 
 ifeq "$(BUILDTYPE)" "Release"
-BuildConfiguration=Unix
+BuildConfiguration=UnixRelease
 else
 BuildConfiguration=UnixDebug
 endif  ## ifeq "$(BUILDTYPE)" "Release"

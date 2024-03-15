@@ -28,5 +28,5 @@
   invisible(.C("rSharp_create_domain", srcPkgLibPath, PACKAGE = rSharpEnv$nativePkgName))
 
   # Turn on the the conversion of advanced data types with R.NET.
-  invisible(callStatic("ClrFacade.RDotNetDataConverter", "SetRDotNet", TRUE))
+  invisible(callStatic("ClrFacade.ClrFacade", "SetRDotNet", TRUE))
 }

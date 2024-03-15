@@ -10,5 +10,5 @@
 #' enumObj <- newObjectFromName(enumName)
 #' getEnumNames(enumObj)
 getEnumNames <- function(enumType) {
-  return(callStatic(rSharpEnv$reflectionHelperTypeName, "GetEnumNames", enumType))
+  return(callStatic(rSharpEnv$clrFacadeTypeName, "GetEnumNames", enumType))
 }

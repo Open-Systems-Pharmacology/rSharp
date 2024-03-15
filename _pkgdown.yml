@@ -28,6 +28,7 @@ reference:
   - loadAssembly
   - getLoadedAssemblies
   - getTypesInAssembly
+  - isAssemblyLoaded
 - title: Creating objects
   contents:
   - NetObject

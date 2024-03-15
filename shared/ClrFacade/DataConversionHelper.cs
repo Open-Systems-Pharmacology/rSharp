@@ -73,7 +73,7 @@ public class SymbolicExpressionWrapper
    private static object convertNumericVector(SymbolicExpression sexp)
    {
       var values = sexp.AsNumeric().ToArray();
-      var classNames = RDotNetDataConverter.GetClassAttribute(sexp);
+      var classNames = InternalRDotNetDataConverter.GetClassAttribute(sexp);
       if (classNames == null)
          return convertVector(values);
 
@@ -95,7 +95,7 @@ public class SymbolicExpressionWrapper
 
    private static TimeSpan[] rDiffTimeToTimespan(SymbolicExpression sexp, double[] values)
    {
-      var units = RDotNetDataConverter.GetAttribute(sexp, "units")[0];
+      var units = InternalRDotNetDataConverter.GetAttribute(sexp, "units")[0];
       if (!_timeDiffUnits.Contains(units)) throw new NotSupportedException("timeDiff units {0} are not supported");
       return units switch
       {
@@ -111,7 +111,7 @@ public class SymbolicExpressionWrapper
 
    private static DateTime[] rPOSIXctToDateTime(SymbolicExpression sexp, double[] values)
    {
-      var tz = RDotNetDataConverter.GetTimeZoneAttribute(sexp);
+      var tz = InternalRDotNetDataConverter.GetTimeZoneAttribute(sexp);
       if (!isSupportedTimeZone(tz))
          throw new NotSupportedException("POSIXct conversion supported only for UTC or unspecified (local) time zone, not for " + tz);
 
@@ -120,7 +120,7 @@ public class SymbolicExpressionWrapper
          v =>
          {
             var utc = isUtc(tz);
-            return Internal.ForceDateKind(_rDateOrigin + TimeSpan.FromTicks((long)(TimeSpan.TicksPerSecond * v)), utc);
+            return InternalRSharpFacade.ForceDateKind(_rDateOrigin + TimeSpan.FromTicks((long)(TimeSpan.TicksPerSecond * v)), utc);
          }
       );
    }

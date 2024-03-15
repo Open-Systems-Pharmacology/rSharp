@@ -8,7 +8,7 @@
 #' testClassName <- "ClrFacade.TestObject"
 #' getConstructors(testClassName)
 getConstructors <- function(type) {
-  callStatic(rSharpEnv$reflectionHelperTypeName, "GetConstructors", type)
+  callStatic(rSharpEnv$clrFacadeTypeName, "GetConstructors", type)
 }
 
 #' Gets the pointer to the `System.RuntimeType` of a `NetObject` object or a .NET type name.
