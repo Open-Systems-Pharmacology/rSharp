@@ -35,8 +35,8 @@ public class RdotnetDataConverterTests
    {
       get
       {
-         var rDotNetConverter = Internal.DataConverter as RDotNetDataConverter;
-         return rDotNetConverter == null ? null : RDotNetDataConverter.GetEngine();
+         var rDotNetConverter = InternalRSharpFacade.DataConverter as InternalRDotNetDataConverter;
+         return rDotNetConverter == null ? null : InternalRDotNetDataConverter.GetEngine();
       }
    }
 

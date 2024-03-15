@@ -15,7 +15,7 @@ getStaticMembers <- function(objOrType) {
 #' @param memberName The exact name of the member (i.e. field, property, method) to search for
 #' @export
 getStaticMemberSignature <- function(typename, memberName) {
-  callStatic(rSharpEnv$reflectionHelperTypeName, "GetSignature", typename, memberName)
+  callStatic(rSharpEnv$clrFacadeTypeName, "GetSignature", typename, memberName)
 }
 
 #' Gets the static fields for a type
@@ -24,7 +24,7 @@ getStaticMemberSignature <- function(typename, memberName) {
 #' @param contains a string that the property names returned must contain
 #' @export
 getStaticFields <- function(objOrType, contains = "") {
-  callStatic(rSharpEnv$reflectionHelperTypeName, "GetStaticFields", objOrType, contains)
+  callStatic(rSharpEnv$clrFacadeTypeName, "GetStaticFields", objOrType, contains)
 }
 
 #' Gets the static properties for a type
@@ -32,7 +32,7 @@ getStaticFields <- function(objOrType, contains = "") {
 #' @inheritParams getStaticFields
 #' @export
 getStaticProperties <- function(objOrType, contains = "") {
-  callStatic(rSharpEnv$reflectionHelperTypeName, "GetStaticProperties", objOrType, contains)
+  callStatic(rSharpEnv$clrFacadeTypeName, "GetStaticProperties", objOrType, contains)
 }
 
 #' Gets the static methods for a type
@@ -40,7 +40,7 @@ getStaticProperties <- function(objOrType, contains = "") {
 #' @inheritParams getStaticFields
 #' @export
 getStaticMethods <- function(objOrType, contains = "") {
-  callStatic(rSharpEnv$reflectionHelperTypeName, "GetStaticMethods", objOrType, contains)
+  callStatic(rSharpEnv$clrFacadeTypeName, "GetStaticMethods", objOrType, contains)
 }
 
 #' Call a static method on a .NET type

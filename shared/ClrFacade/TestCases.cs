@@ -8,10 +8,10 @@ using System.Numerics;
 using System.Text;
 using RDotNet;
 
-// ReSharper disable UnusedMember.Global called dynamically
-
 namespace ClrFacade;
 
+// Classes and methods in this file are used dynamically by their names. 
+// Do not change the names or signatures without also updating usages in R
 public class TestCases
 {
    public static bool GetTrue()
@@ -445,7 +445,7 @@ public class TestCases
 
    public static string GetExceptionMessage()
    {
-      return Internal.FormatExceptionInnermost(CreateInnerExceptions());
+      return InternalRSharpFacade.FormatExceptionInnermost(CreateInnerExceptions());
    }
 
    public static Exception CreateInnerExceptions()

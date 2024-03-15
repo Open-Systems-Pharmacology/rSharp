@@ -5,11 +5,10 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using RDotNet.NativeLibrary;
 
 namespace ClrFacade;
 
-public static class Internal
+public static class InternalRSharpFacade
 {
    public static int CallInstanceMethod(IntPtr obj, string methodName, IntPtr arguments, int numObjects, IntPtr returnValue)
    {
@@ -83,7 +82,7 @@ public static class Internal
    internal static object InternalCallStaticMethod(Type classType, string methodName, bool tryUseConverter, object[] arguments)
    {
       if (arguments.GetType() == typeof(string[]))
-         arguments = new object[] { arguments };
+         arguments = [arguments];
 
       // In order to handle the R Date and POSIX time conversion, we have to standardize on UTC in the C layer. 
       // The CLR hosting API seems to only marshall to date-times to Unspecified (probably cannot do otherwise)
@@ -95,7 +94,7 @@ public static class Internal
       if (method != null)
          return invokeMethod(null, arguments, method, tryUseConverter);
 
-      ReflectionHelper.ThrowMissingMethod(classType, methodName, "static", types);
+      InternalReflectionHelper.ThrowMissingMethod(classType, methodName, "static", types);
 
       return null;
    }
@@ -166,9 +165,10 @@ public static class Internal
 
    public static int CreateInstance(string typename, IntPtr arguments, int numObjects, IntPtr returnValue)
    {
-      object result = null;
       try
       {
+         object result = null;
+
          var objectArguments = convertToObjectArguments(arguments, numObjects);
 
          var t = GetType(typename);
@@ -199,7 +199,7 @@ public static class Internal
    {
       var instPtr = Marshal.ReadIntPtr(obj, 0);
       var t = Marshal.PtrToStructure<RSharpGenericValue>(instPtr);
-      var instance = convertRSharpParameters(new[] { t })[0];
+      var instance = convertRSharpParameters([t])[0];
 
       return Marshal.StringToHGlobalAnsi(GetObjectTypeName(instance));
    }
@@ -288,7 +288,7 @@ public static class Internal
       if (method != null)
          result = invokeMethod(obj, arguments, method, tryUseConverter);
       else
-         ReflectionHelper.ThrowMissingMethod(classType, methodName, "instance", types);
+         InternalReflectionHelper.ThrowMissingMethod(classType, methodName, "instance", types);
 
       return result;
    }
@@ -463,7 +463,7 @@ public static class Internal
 
    private static MethodInfo findMethod(Type classType, string methodName, BindingFlags bf, Type[] types)
    {
-      return ReflectionHelper.GetMethod(classType, methodName, _methodBinder, bf, types);
+      return InternalReflectionHelper.GetMethod(classType, methodName, _methodBinder, bf, types);
    }
 
    private static object invokeMethod(object obj, object[] arguments, MethodInfo method, bool tryUseConverter)
@@ -477,7 +477,7 @@ public static class Internal
          if (numberOfParameters == (arguments.Length + 1))
          {
             var lastParamInfo = parameters[^1];
-            if (ReflectionHelper.IsVarArg(lastParamInfo))
+            if (InternalReflectionHelper.IsVarArg(lastParamInfo))
                newArgs[numberOfParameters - 1] = Array.CreateInstance(lastParamInfo.ParameterType.GetElementType(), 0);
          }
          else
@@ -495,7 +495,7 @@ public static class Internal
          // check whether we have a method with the last argument with a 'params' keyword
          // This is not handled magically when using reflection.
          var p = parameters[^1];
-         if (ReflectionHelper.IsVarArg(p))
+         if (InternalReflectionHelper.IsVarArg(p))
             arguments = packParameters(arguments, numberOfParameters, p);
       }
 
@@ -657,12 +657,12 @@ public static class Internal
    // Work around https://r2clr.codeplex.com/workitem/67
 
    /// <summary>
-   ///    A transient property with the printable format of the innermost exception of the latest clrCall[...] call.
+   ///    A transient property with the printable format of the innermost exception to the latest clrCall[...] call.
    /// </summary>
    public static string LastCallException { get; private set; }
 
    /// <summary>
-   ///    A property with the printable format of the innermost exception of the last failed clrCall[...] call.
+   ///    A property with the printable format of the innermost exception to the last failed clrCall[...] call.
    /// </summary>
    public static string LastException { get; private set; }
 
