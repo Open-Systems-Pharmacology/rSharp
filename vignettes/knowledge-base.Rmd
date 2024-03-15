@@ -24,3 +24,8 @@ useful information that may help troubleshooting and understanding the package.
 What might appear conterintuitive is that `NA` has a type "logical" and is interpreted as 
 `TRUE` when sent to .NET. Attention should be payed when sending `NA` to .NET methods.
 - If the signature of a .NET method require an integer argument, it must be passed as an integer using `as.integer()` from R. R assumes all numerics as doubles by default, and will cause an error if passed to a method that expects an integer.
+- Objects in R are vectors, and single values are just a particular case of vectors 
+of length one. In the .NET, scalar values and arrays are different types.  In current implementation, 
+an R vector with length >1 will be translated to an array in the .NET, a length 
+of one becomes a scalar value. This might lead to problems when calling .NET methods
+expecting a an array when passing a vector of 1.

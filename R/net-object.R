@@ -195,7 +195,7 @@ NetObject <- R6::R6Class(
     call = function(methodName, ...) {
       # validateIsString methodName
       # First I implemented checking for the method name in the list of methods,
-      # but the the test for explicitely implemented methods fails. The check must
+      # but the the test for explicitly implemented methods fails. The check must
       # be performed in C++ https://github.com/Open-Systems-Pharmacology/rSharp/issues/70
       # if (!any(methodName == self$getMethods())) {
       #   stop(messages$errorMethodNotFound(methodName, self$type))
