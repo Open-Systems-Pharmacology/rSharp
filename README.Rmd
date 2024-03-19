@@ -65,7 +65,6 @@ Run the following commands to install the required dependencies:
 sudo apt-get install dotnet-runtime-8.0 libcurl4-openssl-dev libssl-dev libxml2-dev 
 sudo apt-get install libfontconfig1-dev libharfbuzz-dev libfribidi-dev
 sudo apt-get install libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
-sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
 ```
 Symlink libdl.so.2 to libdl.so
 
