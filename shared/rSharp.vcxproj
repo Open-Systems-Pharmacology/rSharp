@@ -43,23 +43,21 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="rSharp.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="rSharp.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath);packages\Microsoft.NETCore.App.Host.win-x64.8.0.2\runtimes\win-x64\native;$(VCInstallDir)atlmfc\include;$(RInstallPath)\include;$(SolutionDir)\inc</IncludePath>
+    <IncludePath>$(IncludePath);packages\Microsoft.NETCore.App.Host.win-x64.8.0.2\runtimes\win-x64\native;$(VCInstallDir)atlmfc\include;$(R_INSTALL_PATH)\include;$(SolutionDir)\inc</IncludePath>
     <LibraryPath>$(LibraryPath);$(VSInstallDir);$(VSInstallDir)lib;.\libfiles\x64;$(RInstallPath)\bin\x64</LibraryPath>
     <ReferencePath>.\libfiles\x64;$(RInstallPath)\bin\x64</ReferencePath>
     <TargetName>$(ProjectName)Ms</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(IncludePath);packages\Microsoft.NETCore.App.Host.win-x64.8.0.2\runtimes\win-x64\native;$(VCInstallDir)atlmfc\include;$(RInstallPath)\include</IncludePath>
+    <IncludePath>$(IncludePath);packages\Microsoft.NETCore.App.Host.win-x64.8.0.2\runtimes\win-x64\native;$(VCInstallDir)atlmfc\include;$(R_INSTALL_PATH)\include;</IncludePath>
     <LibraryPath>$(LibraryPath);$(VSInstallDir);$(VSInstallDir)lib;.\libfiles\x64;$(RInstallPath)\bin\x64</LibraryPath>
     <ReferencePath>.\libfiles\x64;$(RInstallPath)\bin\x64</ReferencePath>
     <TargetName>$(ProjectName)Ms</TargetName>

@@ -8,10 +8,9 @@
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<ItemGroup>
 			<AssemblyFiles Include="$(TargetDir)*.dll" />
-			<ConfigFiles Include="$(SolutionDir)*.runtimeconfig.json" />
 		</ItemGroup>
 		<Copy
-			SourceFiles="@(AssemblyFiles); @(ConfigFiles)"
+			SourceFiles="@(AssemblyFiles)"
 			DestinationFolder="$(SolutionDir)..\inst\extdata\"
 		/>
 	</Target>
