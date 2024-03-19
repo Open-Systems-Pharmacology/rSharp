@@ -446,6 +446,7 @@ internal class InternalRDotNetDataConverter : IDataConverter
          return null;
 
       var value = (double)obj;
+      
       return _engine.CreateNumeric(value);
    }
 

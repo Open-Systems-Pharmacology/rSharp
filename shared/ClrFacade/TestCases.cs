@@ -689,6 +689,35 @@ public class TestCases
          result[i] = new ImplITestGenericInterface();
       return result;
    }
+   
+   public static object IsNull(object obj)
+   {
+      return (obj == null); 
+   }
+
+   public static object IsNA(object obj)
+   {
+      return obj;
+   }
+
+   public static object IsNaN(object obj)
+   {
+      if ((double?)obj == null) 
+         return false;
+
+      return double.IsNaN((double)obj);
+   }
+
+   public static object GetNull()
+   {
+      return null;
+   }
+
+   public static object GetNaN()
+   {
+      
+      return Double.NaN;
+   }
 }
 
 public class TestObjectWithEnum
@@ -839,6 +868,7 @@ public class TestObject
 
    public static int StaticPropertyIntegerOne { get; set; }
    public static int StaticPropertyIntegerTwo { get; set; }
+
 
    public string TestParams(string a, string b, params int[] c)
    {
