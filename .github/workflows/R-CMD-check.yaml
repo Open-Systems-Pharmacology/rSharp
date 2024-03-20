@@ -77,7 +77,7 @@ jobs:
 
       - name: get R version and set as environment variable
         run: |
-          echo "R_VERSION=$(R -e 'paste(R.version$major, R.version$minor, sep = ".")')" >> $GITHUB_ENV
+          echo "R_VERSION=$(Rscript -e 'cat(R.version$major, R.version$minor, sep = ".")')" >> $GITHUB_ENV
           echo "$R_VERSION"
         shell: bash
 
