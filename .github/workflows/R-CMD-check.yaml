@@ -47,7 +47,6 @@ jobs:
           sudo apt-get install libfontconfig1-dev libharfbuzz-dev libfribidi-dev
           sudo apt-get install libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
           sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
-          sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
