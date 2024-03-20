@@ -67,12 +67,17 @@ jobs:
                                   "built_package")
           dir.create(output_dir)
           devtools::build(binary = TRUE, path = output_dir)
-          writeLines(paste0('"PKG_VERSION=', as.character(desc::desc_get_version()),'"'), "$GITHUB_ENV")
         shell: Rscript {0}
+
+      - name: Get package version from DESCRIPTION file and set as environment variable
+        run: |
+          echo "PKG_VERSION=$(grep -oP '(?<=Version: )\d+\.\d+\.\d+\.*\d*' DESCRIPTION)" >> $GITHUB_ENV
+          echo $PKG_VERSION
+        shell: bash
 
       - name: Upload built package
         if: ${{ success() }}
         uses: actions/upload-artifact@v4
         with:
-          name: rSharp-${{runner.os}}-r${{ matrix.config.r }}-${{ env.PKG_VERSION }}
+          name: rSharp-${{runner.os}}-r_${{ matrix.config.r }}-${{ env.PKG_VERSION }}
           path: ${{ runner.temp }}/built_package/*
