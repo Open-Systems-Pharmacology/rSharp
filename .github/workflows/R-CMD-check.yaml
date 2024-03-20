@@ -67,7 +67,7 @@ jobs:
                                   "built_package")
           dir.create(output_dir)
           devtools::build(binary = TRUE, path = output_dir)
-          Sys.setenv("PKG_VERSION" = desc::desc_get_version())
+          Sys.setenv("PKG_VERSION" = as.character(desc::desc_get_version()))
         shell: Rscript {0}
 
       - name: Upload built package
