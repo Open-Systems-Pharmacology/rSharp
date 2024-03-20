@@ -67,12 +67,12 @@ jobs:
                                   "built_package")
           dir.create(output_dir)
           devtools::build(binary = TRUE, path = output_dir)
-          Sys.setenv("PKG_VERSION" = as.character(desc::desc_get_version()))
+          writeLines(paste0('"PKG_VERSION=', as.character(desc::desc_get_version()),'"'), "$GITHUB_ENV")
         shell: Rscript {0}
 
       - name: Upload built package
         if: ${{ success() }}
         uses: actions/upload-artifact@v4
         with:
-          name: rSharp-${{runner.os}}-${{ env.PKG_VERSION }}
+          name: rSharp-${{runner.os}}-r${{ matrix.config.r }}-${{ env.PKG_VERSION }}
           path: ${{ runner.temp }}/built_package/*
