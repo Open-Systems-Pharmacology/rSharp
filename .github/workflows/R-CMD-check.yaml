@@ -79,5 +79,5 @@ jobs:
         if: ${{ success() }}
         uses: actions/upload-artifact@v4
         with:
-          name: rSharp-${{runner.os}}-r_${{ matrix.config.r }}-${{ env.PKG_VERSION }}
+          name: rSharp-v${{ env.PKG_VERSION }}-${{runner.os}}-r_${{ matrix.config.r }}
           path: ${{ runner.temp }}/built_package/*
