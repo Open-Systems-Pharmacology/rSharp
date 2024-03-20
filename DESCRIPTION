@@ -41,6 +41,6 @@ Suggests:
     testthat,
     knitr,
     rmarkdown
-License: LGPL-3
+License: file LICENSE
 RoxygenNote: 7.3.1
 VignetteBuilder: knitr
