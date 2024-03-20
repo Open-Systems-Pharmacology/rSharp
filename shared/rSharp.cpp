@@ -1068,13 +1068,6 @@ RSharpGenericValue ConvertToRSharpGenericValue(SEXP s)
 	int typeof = TYPEOF(s);
 	switch (typeof)
 	{
-	//case NILSXP:
-	////case LGLSXP:
-	////case REALSXP:
-	//	result.type = RSharpValueType::OBJECT;
-	//	result.size = LENGTH(s);
-	//	result.value = reinterpret_cast<intptr_t>(nullptr);
-	//	return result;
 	case S4SXP:
 		return *get_rSharp_generic_value_from_s4(s);
 	case EXTPTRSXP:
