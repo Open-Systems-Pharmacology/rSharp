@@ -37,6 +37,7 @@ Imports:
     R6,
     methods
 Suggests:
+    devtools,
     covr,
     testthat,
     knitr,
