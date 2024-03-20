@@ -48,5 +48,5 @@ test_that("Array NULL is passed from .NET as null", {
 #   expect_equal(callTestCase("GetNAArray", c(1, NA, 3)))
 # })
 test_that("Array NaN is passed from .NET as NaN", {
-  expect_equal(callTestCase("GetNaNlArray", c(1, NaN, 3)))
+  expect_equal(callTestCase("GetNaNArray", c(1, NaN, 3)))
 })
