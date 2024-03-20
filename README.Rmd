@@ -5,6 +5,10 @@ output:
 
 # rSharp
 
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/Open-Systems-Pharmacology/rSharp/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Open-Systems-Pharmacology/rSharp/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -19,6 +23,7 @@ knitr::opts_chunk$set(
 
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
 
 
 The **RSharp** R package provides access to .NET libraries from R. It allows
