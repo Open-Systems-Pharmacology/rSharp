@@ -58,3 +58,21 @@ jobs:
           upload-snapshots: true
           build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
           error-on: '"error"'
+
+      - name: Build package
+        if: ${{ success() }}
+        run: |
+          output_dir <- file.path(normalizePath(Sys.getenv("RUNNER_TEMP"),
+                                                winslash = "/"),
+                                  "built_package")
+          dir.create(output_dir)
+          devtools::build(binary = TRUE, path = output_dir)
+          Sys.setenv("PKG_VERSION" = desc::desc_get_version())
+        shell: Rscript {0}
+
+      - name: Upload built package
+        if: ${{ success() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: rSharp-${{runner.os}}-${{ env.PKG_VERSION }}
+          path: ${{ runner.temp }}/built_package/*
