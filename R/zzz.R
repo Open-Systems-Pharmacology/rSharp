@@ -30,3 +30,11 @@
   # Turn on the the conversion of advanced data types with R.NET.
   invisible(callStatic("ClrFacade.ClrFacade", "SetRDotNet", TRUE))
 }
+
+.onUnload <- function(...) {
+  nativeLibrary <- file.path(system.file("lib", package = rSharpEnv$packageName), paste0(rSharpEnv$nativePkgName, .Platform$dynlib.ext))
+  # Shut down the .NET domain
+  #.External("rSharp_shutdown_clr", PACKAGE = rSharpEnv$nativePkgName)
+  # Unload the C++ library. But it does not release the dll?
+  dyn.unload(nativeLibrary)
+}
