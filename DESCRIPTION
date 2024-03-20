@@ -29,7 +29,7 @@ Maintainer: Ian Peter Du <ian_peter.du@esqlabs.com>
 Description: rSharp is a package for low-level access from R .NET runtime. It
     provides a set of functions to create and manipulate .NET objects, call
     methods, and access properties and fields.
-URL: https://github.com/Open-Systems-Pharmacology/rsharp/
+URL: https://github.com/Open-Systems-Pharmacology/rsharp/, http://www.open-systems-pharmacology.org/rSharp/
 Encoding: UTF-8
 Depends:
     R (>= 4.1)
