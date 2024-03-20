@@ -124,6 +124,8 @@ extern "C" {
 	SEXP r_get_typename_externalptr(SEXP parameters);
 	SEXP make_char_single_sexp(const char* str);
 	SEXP rsharp_object_to_SEXP(RSharpGenericValue& objptr);
+	SEXP r_get_sexp_type(SEXP par);
+	SEXP r_show_args(SEXP args);
 
 	/**
 	 * \brief	Gets a SEXP, bypassing the custom data converters e.g. offered by RDotNetDataConverter.
