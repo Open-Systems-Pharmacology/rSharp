@@ -69,7 +69,7 @@ testObj$getMethods("Get")
 
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
-testObj$geStaticMethods()
+testObj$getStaticMethods()
 testObj$getStaticMethods("Get")
 
 ## ------------------------------------------------
@@ -352,7 +352,7 @@ a list of names of the static methods of the object
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
-testObj$geStaticMethods()
+testObj$getStaticMethods()
 testObj$getStaticMethods("Get")
 }
 \if{html}{\out{</div>}}

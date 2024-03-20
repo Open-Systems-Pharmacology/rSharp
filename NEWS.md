@@ -2,10 +2,14 @@
 
 - First release of the {`rSharp`} package.
 
-### BREAKING CHANGES
+## Minor improvements and bug fixes
 
-### MAJOR CHANGES
+- github actions implementation for windows and ubuntu builds.
 
-### MINOR CHANGES
+<!--
+## Breaking Changes
 
-### BUG FIXES
+## Major changes
+
+
+-->

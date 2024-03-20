@@ -1,5 +1,4 @@
-# nocov start
-.onLoad <- function(...) {
+.onLoad <- function(...) { # nocov start
   # Check for C++ distrib availability
   if (.Platform$OS.type == "windows") {
     if (Sys.which(rSharpEnv$msvcrFileName) == "") {
@@ -29,4 +28,4 @@
 
   # Turn on the the conversion of advanced data types with R.NET.
   invisible(callStatic("ClrFacade.ClrFacade", "SetRDotNet", TRUE))
-}
+} # nocov end

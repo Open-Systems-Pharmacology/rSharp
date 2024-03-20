@@ -205,7 +205,7 @@ NetObject <- R6::R6Class(
     #' @examples
     #' testClassName <- getRSharpSetting("testObjectTypeName")
     #' testObj <- newObjectFromName(testClassName)
-    #' testObj$geStaticMethods()
+    #' testObj$getStaticMethods()
     #' testObj$getStaticMethods("Get")
     getStaticMethods = function(contains = "") {
       # Validate contains is string

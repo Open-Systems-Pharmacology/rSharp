@@ -141,3 +141,4 @@ shared/obj
 .RData
 shared/rSharp.so
 shared/.idea
+docs

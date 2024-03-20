@@ -29,7 +29,7 @@ Maintainer: Ian Peter Du <ian_peter.du@esqlabs.com>
 Description: rSharp is a package for low-level access from R .NET runtime. It
     provides a set of functions to create and manipulate .NET objects, call
     methods, and access properties and fields.
-URL: https://github.com/Open-Systems-Pharmacology/rsharp/
+URL: https://github.com/Open-Systems-Pharmacology/rsharp/, http://www.open-systems-pharmacology.org/rSharp/
 Encoding: UTF-8
 Depends:
     R (>= 4.1)
@@ -37,10 +37,12 @@ Imports:
     R6,
     methods
 Suggests:
-    testthat,
+    devtools,
+    covr,
+    testthat (>= 3.0.0),
     knitr,
-    xtable,
-    markdown
-License: LGPL-3
+    rmarkdown
+License: file LICENSE
 RoxygenNote: 7.3.1
 VignetteBuilder: knitr
+Config/testthat/edition: 3

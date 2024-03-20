@@ -1,6 +1,13 @@
 
 # rSharp
 
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/Open-Systems-Pharmacology/rSharp/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Open-Systems-Pharmacology/rSharp/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/Open-Systems-Pharmacology/rSharp/branch/develop/graph/badge.svg)](https://app.codecov.io/gh/Open-Systems-Pharmacology/rSharp?branch=develop)
+<!-- badges: end -->
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 The **RSharp** R package provides access to .NET libraries from R. It
@@ -25,11 +32,15 @@ from source. For this, follow the instructions in section
 
 ### Windows
 
-You will need the latest Microsoft Visual C++ Redistributable for Visual
-Studio 2015, 2017 and 2019 (you can get it from
-[here](https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads)
-and .NET 8 runtime (you can get it from
-[here](https://dotnet.microsoft.com/download/dotnet/8.0/runtime)).
+#### Prerequisites
+
+- Latest Microsoft Visual C++ Redistributable for Visual Studio 2015,
+  2017 and 2019 available
+  [here](https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads)
+- .NET 8 runtime available
+  [here](https://dotnet.microsoft.com/download/dotnet/8.0/runtime).
+
+#### Install from Github
 
 You can install the package from GitHub with pre-build binaries by
 running:
@@ -45,9 +56,15 @@ Get the latest development version with:
 remotes::install_github("Open-Systems-Pharmacology/rSharp")
 ```
 
-Alternatively, download the [latest
-release](https://github.com/Open-Systems-Pharmacology/rSharp/releases)
-of the package and install it locally.
+#### Install from Binary
+
+Alternatively, download the attached binary file from [latest
+release](https://github.com/Open-Systems-Pharmacology/rSharp/releases),
+and install it locally using:
+
+``` r
+install.packages("path/to/rSharp_X.zip",  type = "win.binary")
+```
 
 ### Ubuntu
 
@@ -56,7 +73,6 @@ Run the following commands to install the required dependencies:
     sudo apt-get install dotnet-runtime-8.0 libcurl4-openssl-dev libssl-dev libxml2-dev 
     sudo apt-get install libfontconfig1-dev libharfbuzz-dev libfribidi-dev
     sudo apt-get install libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
-    sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
 
 Symlink libdl.so.2 to libdl.so
 

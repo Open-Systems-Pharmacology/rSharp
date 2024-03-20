@@ -1,8 +1,6 @@
-url: https://www.open-systems-pharmacology.org/rSharp/
-
+url: http://www.open-systems-pharmacology.org/rSharp/
 template:
   bootstrap: 5
-
 authors:
   esqLABS GmbH:
     href: https://esqlabs.com/
@@ -18,10 +16,8 @@ authors:
     href: https://github.com/rwmcintosh
   Ian Peter Du:
     href: https://github.com/Ian-Du
-
 development:
   mode: auto
-
 reference:
 - title: Loading and managing assemblies
   contents:
@@ -37,11 +33,9 @@ reference:
   - getConstructors
   - castToRObject
 - title: Working with static members
-  contents:
-  - contains("Static")
+  contents: contains("Static")
 - title: Working with enums
-  contents:
-  - getEnumNames
+  contents: getEnumNames
 - title: Diagnostics
   contents:
   - toStringNET
@@ -60,3 +54,4 @@ reference:
   - .clrTypeNameExtPtr
   - .getCurrentConvertedObject
   - .mkClrObjRef
+
