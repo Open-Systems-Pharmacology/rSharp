@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Threading;
 using RDotNet;
 
 namespace ClrFacade;
@@ -692,7 +693,7 @@ public class TestCases
    
    public static object IsNull(object obj)
    {
-      return (obj == null); 
+      return obj == null; 
    }
 
    public static object IsNA(object obj)
@@ -702,10 +703,45 @@ public class TestCases
 
    public static object IsNaN(object obj)
    {
-      if ((double?)obj == null) 
+      if (!(obj is double d))
          return false;
 
-      return double.IsNaN((double)obj);
+      return double.IsNaN(d);
+   }
+   
+   public static object IsNullInArray(object[] obj)
+   {
+      object[] validationObjectArray = new object[] { (double)1, null, (double)3 };
+      
+      if (validationObjectArray.Length != obj.Length)
+         return false;
+
+      for (int i = 0; i < validationObjectArray.Length; i++)
+      {
+         if ((double?)validationObjectArray[i] != (double?)obj[i])
+               return false;
+      }
+
+      return true;
+   }
+
+   public static object IsNaNInArray(double[] obj)
+   {
+      double[] validationObjectArray = new double[] { (double)1, double.NaN, (double)3 };
+      
+      if (validationObjectArray.Length != obj.Length)
+         return false;
+
+      for (int i = 0; i < validationObjectArray.Length; i++)
+      {
+         if (double.IsNaN(validationObjectArray[i]) && double.IsNaN(obj[i]))
+            continue;
+
+         if (validationObjectArray[i] != obj[i])
+            return false;
+      }
+
+      return true;
    }
 
    public static object GetNull()
@@ -715,9 +751,19 @@ public class TestCases
 
    public static object GetNaN()
    {
-      
-      return Double.NaN;
+      return double.NaN;
    }
+   
+   public static object[] GetNULLArray()
+   {
+      return [(double)1, null, (double)3];
+   }
+
+   public static double[] GetNaNArray()
+   {
+      return [1, double.NaN, 3];
+   }
+
 }
 
 public class TestObjectWithEnum
