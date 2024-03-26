@@ -41,7 +41,7 @@ test_that("Basic NaN is passed from .NET as NaN", {
 })
 
 test_that("Array NULL is passed from .NET as null", {
-  expect_equal(callTestCase("GetNULLArray"), list(1, NULL, 3))
+  expect_equal(callTestCase("GetNullArray"), list(1, NULL, 3))
 })
 
 # # No such concept in .NET
