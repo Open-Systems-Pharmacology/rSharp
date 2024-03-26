@@ -6,7 +6,6 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Text;
-using System.Threading;
 using RDotNet;
 
 namespace ClrFacade;
@@ -754,7 +753,7 @@ public class TestCases
       return double.NaN;
    }
    
-   public static object[] GetNULLArray()
+   public static object[] GetNullArray()
    {
       return [(double)1, null, (double)3];
    }
