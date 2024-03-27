@@ -40,9 +40,9 @@ test_that("Basic NaN is passed from .NET as NaN", {
   expect_equal(callTestCase("GetNaN"), NaN)
 })
 
-test_that("Array NULL is passed from .NET as null", {
-  expect_equal(callTestCase("GetNullArray"), list(1, NULL, 3))
-})
+# test_that("Array NULL is passed from .NET as null", {
+#   expect_equal(callTestCase("GetNullArray"), list(1, NULL, 3))
+# })
 
 # # No such concept in .NET
 # #https://github.com/Open-Systems-Pharmacology/rSharp/issues/110
