@@ -6,6 +6,7 @@ test_that("callStatic returns a NetObject when the static .NET method returns a 
   testObj <- callTestCase("CreateTestObjectGenericInstance")
   expect_true(inherits(testObj, "NetObject"))
   # 2DO: Test for IS!
+  # https://github.com/Open-Systems-Pharmacology/rSharp/issues/67
 
   # Not clear what should be tested here...
   testObj <- callTestCase("CreateTestArrayGenericObjects")

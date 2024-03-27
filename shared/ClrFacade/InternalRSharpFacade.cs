@@ -404,7 +404,7 @@ public static class InternalRSharpFacade
    /// <remarks>This is useful e.g. to quickly check from R the CLR equivalent of an R POSIX time object</remarks>
    public static string ToString(object obj)
    {
-      return obj.ToString();
+      return (obj == null) ? "null" : obj.ToString();
    }
 
    public static void SetFieldOrProperty(Type type, string name, object value)

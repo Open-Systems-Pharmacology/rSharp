@@ -1066,7 +1066,8 @@ RSharpGenericValue ConvertToRSharpGenericValue(SEXP s)
 	RSharpGenericValue result;
 
 	int typeof = TYPEOF(s);
-	switch (typeof) {
+	switch (typeof)
+	{
 	case S4SXP:
 		return *get_rSharp_generic_value_from_s4(s);
 	case EXTPTRSXP:
