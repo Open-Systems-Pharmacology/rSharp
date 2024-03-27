@@ -324,22 +324,13 @@ internal class InternalRDotNetDataConverter : IDataConverter
       return values.AsList();
    }
 
-   private SymbolicExpression convertAll(IReadOnlyList<object> objects)
+   private SymbolicExpression convertAll(IReadOnlyList<object> objects, Func<object, SymbolicExpression> converter = null)
    {
       var sexpArray = new SymbolicExpression[objects.Count];
 
       for (var i = 0; i < objects.Count; i++)
-      {
-         if (objects[i] == null)
-         {
-            sexpArray[i] = _engine.NilValue;
-         }
-         else
-         {
-            var elementConverter = tryGetConverter(objects[i].GetType());
-            sexpArray[i] = elementConverter == null ? convertToSexp(objects[i]) : elementConverter(objects[i]);
-         }
-      }
+         sexpArray[i] = converter == null ? convertToSexp(objects[i]) : converter(objects[i]);
+
       return new GenericVector(_engine, sexpArray);
    }
 
@@ -584,10 +575,14 @@ internal class InternalRDotNetDataConverter : IDataConverter
    {
       if (array.Rank > 1)
          throw new NotSupportedException("Generic array converter is limited to uni-dimensional arrays");
-      
+
+      // CAUTION: The following, while efficient, means that more specialized converters
+      // will not be picked up.
+      var elementConverter = tryGetConverter(array.GetType().GetElementType());
+
       var tmp = new object[array.GetLength(0)];
       Array.Copy(array, tmp, tmp.Length);
-      return convertAll(tmp);
+      return convertAll(tmp, elementConverter);
    }
 
    private SymbolicExpression convertMatrixJaggedSingle(object obj)
