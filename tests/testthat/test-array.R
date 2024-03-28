@@ -39,7 +39,7 @@ test_that("Basic types of length zero are passed correctly from R to .NET", {
 })
 
 # Same for length 1!
-# Investigate after https://github.com/Open-Systems-Pharmacology/rSharp/issues/35
+# https://github.com/Open-Systems-Pharmacology/rSharp/issues/108
 # test_that("Basic types of length one are passed correctly from R to .NET", {
 #   expectArrayElementType(numeric(1), "System.Double")
 #   expectArrayElementType(integer(1), "System.Int32")
@@ -50,32 +50,19 @@ test_that("Basic types of length zero are passed correctly from R to .NET", {
 # })
 
 # Same for length >1!
-# Investigate after https://github.com/Open-Systems-Pharmacology/rSharp/issues/35
-# test_that("Basic types of length one are passed correctly from R to .NET", {
-#   expectArrayElementType(numeric(2), "System.Double")
-#   expectArrayElementType(integer(2), "System.Int32")
-#   expectArrayElementType(raw(2), "System.Byte")
-#   expectArrayElementType(logical(2), "System.Boolean")
-#   expectArrayElementType(character(2), "System.String")
-#   expectArrayElementType("aa", "System.String")
-# })
-
-# test_that("Array NULL is passed to .NET as null", {
-#   expect_true(callTestCase("IsNull", c(1, NULL, 3)))
-# })
-# test_that("Array NA is passed to .NET as NA", {
-#   expect_true(callTestCase("IsNull", c(1, NA, 3)))
-# })
-# test_that("Array NaN is passed to .NET as NaN", {
-#   expect_true(callTestCase("IsNull", c(1, NaN, 3)))
-# })
+test_that("Basic types of length >one are passed correctly from R to .NET", {
+  expectArrayElementType(numeric(2), "System.Double")
+  expectArrayElementType(integer(2), "System.Int32")
+  expectArrayElementType(raw(2), "System.Byte")
+  expectArrayElementType(logical(2), "System.Boolean")
+  expectArrayElementType(character(2), "System.String")
+})
 
 # https://github.com/Open-Systems-Pharmacology/rSharp/issues/58
 # test_that("Numerical bi-dimensional arrays are marshalled correctly from R to .NET", {
 #   numericMat <- matrix(as.numeric(1:15), nrow = 3, ncol = 5, byrow = TRUE)
 #   expect_that( callTestCase( "NumericMatrixEquals", numericMat), equals(numericMat))
 # })
-
 
 ########## .NET to R tests##########
 test_that("Basic types of length zero are returned correctly from .NET", {
@@ -140,17 +127,6 @@ test_that("non-empty arrays of non-basic .NET objects are created and passed fro
   actual <- callStatic(tn, "CreateArray_Type", 3L, aType)
   testListEqual(aType, 3L, actual)
 })
-
-# https://github.com/Open-Systems-Pharmacology/rSharp/issues/57
-# test_that("Array NULL is passed from .NET as null", {
-#   expect_equal(callTestCase("IsNull", NULL))
-# })
-# test_that("Array NA is passed from .NET as NA", {
-#   expect_equal(callTestCase("IsNull", NA))
-# })
-# test_that("Array NaN is passed from .NET as NaN", {
-#   expect_equal(callTestCase("IsNull", NA))
-# })
 
 test_that("String arrays are marshalled correctly", {
   ltrs <- paste(letters[1:5], letters[2:6], sep = "")

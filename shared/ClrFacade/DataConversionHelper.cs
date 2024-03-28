@@ -66,6 +66,7 @@ public class SymbolicExpressionWrapper
          //         return fromIntPtr.Target;
          //     }
          SymbolicExpressionType.List => convertVector(convertList(Sexp.AsList().ToArray())),
+         SymbolicExpressionType.Null => null,
          _ => Sexp
       };
    }

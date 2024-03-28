@@ -446,6 +446,7 @@ internal class InternalRDotNetDataConverter : IDataConverter
          return null;
 
       var value = (double)obj;
+      
       return _engine.CreateNumeric(value);
    }
 
@@ -578,6 +579,7 @@ internal class InternalRDotNetDataConverter : IDataConverter
       // CAUTION: The following, while efficient, means that more specialized converters
       // will not be picked up.
       var elementConverter = tryGetConverter(array.GetType().GetElementType());
+
       var tmp = new object[array.GetLength(0)];
       Array.Copy(array, tmp, tmp.Length);
       return convertAll(tmp, elementConverter);

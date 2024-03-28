@@ -689,6 +689,80 @@ public class TestCases
          result[i] = new ImplITestGenericInterface();
       return result;
    }
+   
+   public static object IsNull(object obj)
+   {
+      return obj == null; 
+   }
+
+   public static object IsNA(object obj)
+   {
+      return obj;
+   }
+
+   public static object IsNaN(object obj)
+   {
+      if (!(obj is double d))
+         return false;
+
+      return double.IsNaN(d);
+   }
+   
+   public static object IsNullInArray(object[] obj)
+   {
+      object[] validationObjectArray = new object[] { (double)1, null, (double)3 };
+      
+      if (validationObjectArray.Length != obj.Length)
+         return false;
+
+      for (int i = 0; i < validationObjectArray.Length; i++)
+      {
+         if ((double?)validationObjectArray[i] != (double?)obj[i])
+               return false;
+      }
+
+      return true;
+   }
+
+   public static object IsNaNInArray(double[] obj)
+   {
+      double[] validationObjectArray = new double[] { (double)1, double.NaN, (double)3 };
+      
+      if (validationObjectArray.Length != obj.Length)
+         return false;
+
+      for (int i = 0; i < validationObjectArray.Length; i++)
+      {
+         if (double.IsNaN(validationObjectArray[i]) && double.IsNaN(obj[i]))
+            continue;
+
+         if (validationObjectArray[i] != obj[i])
+            return false;
+      }
+
+      return true;
+   }
+
+   public static object GetNull()
+   {
+      return null;
+   }
+
+   public static object GetNaN()
+   {
+      return double.NaN;
+   }
+   
+   public static object[] GetNullArray()
+   {
+      return [(double)1, null, (double)3];
+   }
+
+   public static double[] GetNaNArray()
+   {
+      return [1, double.NaN, 3];
+   }
+
 }
 
 public class TestObjectWithEnum
@@ -839,6 +913,7 @@ public class TestObject
 
    public static int StaticPropertyIntegerOne { get; set; }
    public static int StaticPropertyIntegerTwo { get; set; }
+
 
    public string TestParams(string a, string b, params int[] c)
    {

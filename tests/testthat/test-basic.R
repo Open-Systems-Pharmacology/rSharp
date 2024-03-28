@@ -103,7 +103,7 @@ test_that("toStringNET works for primitive types", {
   expect_that(toStringNET(FALSE), equals("False"))
   # Check of correct behavior
   #  expect_that(toStringNET(NA), equals("null"))
-  #  expect_that(toStringNET(NULL), equals("null"))
+  expect_that(toStringNET(NULL), equals("null"))
   expect_that(toStringNET(NaN), equals("NaN"))
 })
 

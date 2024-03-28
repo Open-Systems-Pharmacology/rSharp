@@ -29,3 +29,8 @@ of length one. In the .NET, scalar values and arrays are different types.  In cu
 an R vector with length >1 will be translated to an array in the .NET, a length 
 of one becomes a scalar value. This might lead to problems when calling .NET methods
 expecting a an array when passing a vector of 1.
+- When trying to pass a vector containing a `NULL` from R to .NET, the `NULL` will be
+removed from the vector. This is how R treats `NULL` in vectors. E.g., trying 
+to call a .NET method with an argument that expects an array of doubles with a vector
+`c(0, NULL, 3)` will result in a call with `c(0, 3)`. In order to correctly pass 
+`NULL` to .NET, it should be passed as a list: `list(0, NULL, 3)`.
