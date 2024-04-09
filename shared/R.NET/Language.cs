@@ -1,38 +1,40 @@
-﻿using RDotNet.Internals;
-using System;
+﻿using System;
+using RDotNet.Internals;
 
 namespace RDotNet
 {
-    /// <summary>
-    /// A language object.
-    /// </summary>
-    public class Language : SymbolicExpression
-    {
-        /// <summary>
-        /// Creates a language object.
-        /// </summary>
-        /// <param name="engine">The engine</param>
-        /// <param name="pointer">The pointer.</param>
-        protected internal Language(REngine engine, IntPtr pointer)
-            : base(engine, pointer)
-        { }
+   /// <summary>
+   ///    A language object.
+   /// </summary>
+   public class Language : SymbolicExpression
+   {
+      /// <summary>
+      ///    Creates a language object.
+      /// </summary>
+      /// <param name="engine">The engine</param>
+      /// <param name="pointer">The pointer.</param>
+      protected internal Language(REngine engine, IntPtr pointer)
+         : base(engine, pointer)
+      {
+      }
 
-        /// <summary>
-        /// Gets function calls.
-        /// </summary>
-        public Pairlist FunctionCall
-        {
-            get
+      /// <summary>
+      ///    Gets function calls.
+      /// </summary>
+      public Pairlist FunctionCall
+      {
+         get
+         {
+            int count = this.GetFunction<Rf_length>()(handle);
+            // count == 1 for empty call.
+            if (count < 2)
             {
-                int count = this.GetFunction<Rf_length>()(handle);
-                // count == 1 for empty call.
-                if (count < 2)
-                {
-                    return null;
-                }
-                dynamic sexp = GetInternalStructure();
-                return new Pairlist(Engine, sexp.listsxp.cdrval);
+               return null;
             }
-        }
-    }
+
+            dynamic sexp = GetInternalStructure();
+            return new Pairlist(Engine, sexp.listsxp.cdrval);
+         }
+      }
+   }
 }
