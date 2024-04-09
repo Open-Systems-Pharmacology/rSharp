@@ -14,8 +14,8 @@ The **RSharp** R package provides access to .NET libraries from R. It
 allows to create .NET objects, access their fields, and call their
 methods.
 
-This package is based on the [rClr](https://github.com/rdotnet/rClr)
-package and utilizes some of its code base.
+This package is based on the [rClr](https://github.com/rdotnet/rClr), [rdotnet](https://github.com/rdotnet/rdotnet), and [dynamic-interop-dll](https://github.com/rdotnet/dynamic-interop-dll)
+packages and utilizing some of their code base.
 
 The package utilizes two code bases - the R code which is exposed to the
 user, and the C++/C# code that communicates with the .NET libraries. The
