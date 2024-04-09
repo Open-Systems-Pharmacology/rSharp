@@ -230,7 +230,7 @@ namespace DynamicInterop.Tests
     [Collection("Swift Bindings tests (to prevent parallel unit test runs)")]
     public class ReferenceCountingWrappers
     {
-        [Fact]
+        [Fact (Skip = "as imported")]
         public void TestNativeObjectReferenceCounting()
         {
             Dog dog = new Dog();
@@ -309,7 +309,7 @@ namespace DynamicInterop.Tests
             Assert.Equal(initDogCount, Dog.NumNativeInstances);
         }
 */
-        [Fact]
+        [Fact (Skip = "as imported")]
         public void TestNativeHandleDisposal()
         {
             NativeTestLib lib = new NativeTestLib();

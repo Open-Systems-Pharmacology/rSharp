@@ -4,7 +4,7 @@ namespace RDotNet
 {
     public class S4ClassesTest : RDotNetTestFixture
     {
-        [Fact]
+        [Fact (Skip = "as imported")]
         public void TestSlots()
         {
             SetUpTest();

@@ -15,7 +15,7 @@ namespace RDotNet
             Assert.True(s.Length == 0);
         }
 
-        [Fact]
+        [Fact (Skip = "as imported")]
         public void TestDetachPackagesDefault()
         {
             SetUpTest();

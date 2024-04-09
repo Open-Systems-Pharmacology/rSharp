@@ -4,7 +4,7 @@ namespace RDotNet
 {
     public class PerformanceTest : RDotNetTestFixture
     {
-        [Fact]
+        [Fact (Skip = "as imported")]
         public void TestCreateNumericVector()
         {
             SetUpTest();

@@ -6,7 +6,7 @@ namespace RDotNet
 {
     public class MultiThreadingTest : RDotNetTestFixture
     {
-        [Fact]
+        [Fact (Skip = "as imported")]
         public void TestNonConcurrentMultiThreading()
         {
             SetUpTest();

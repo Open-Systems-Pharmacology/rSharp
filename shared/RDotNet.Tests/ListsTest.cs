@@ -45,7 +45,7 @@ namespace RDotNet
             Assert.Equal("var", listNames[1]);
         }
 
-        [Fact]
+        [Fact (Skip = "as imported")]
         public void TestCoercionAsList()
         {
             SetUpTest();

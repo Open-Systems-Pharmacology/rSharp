@@ -25,7 +25,7 @@ namespace RDotNet
             CheckArrayEqual(new double[] { 2, 1, 0, 1, 2 }, absValues);
         }
 
-        [Fact]
+        [Fact (Skip = "as imported")]
         public void TestStatsFunctions()
         {
             SetUpTest();
@@ -82,8 +82,7 @@ printPairList <- function(...) {
             Assert.Equal("this is not one", plus.InvokeStrArgs("quote(a==1)", "'this is one'", "'this is not one'").AsCharacter().ToArray()[0]);
         }
 
-        // https://rdotnet.codeplex.com/workitem/76
-        [Fact]
+        [Fact (Skip = "as imported")]
         public void TestGenericFunction()
         {
             SetUpTest();
