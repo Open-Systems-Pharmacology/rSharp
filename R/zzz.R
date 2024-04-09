@@ -16,10 +16,10 @@
     }
   }
 
-  # if numeric, then we got a return code from system instead of the console output
-  if(system("dotnet --list-runtimes |grep 'Microsoft.NETCore.App 8'", intern=FALSE, wait=TRUE) != 0) {
+  # find installed dotnet runtimes for .NET 8
+  if(length(grep("Microsoft.NETCore.App 8", system("dotnet --list-runtimes", intern=TRUE))) == 0) {
     stop(" a suitable dotnet runtime was not found. Install dotnet 8 or newer")
-  } 
+  }
   # Load the C++ and .NET libraries
   .loadAndInit()
 }
