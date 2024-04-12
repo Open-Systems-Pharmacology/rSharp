@@ -90,7 +90,7 @@ SEXP rSharp_create_domain(SEXP args)
 		//Copies the libraryPath to a wchar_t with the size lengthInWideFormat
 		mbstowcs_s(nullptr, wideStringLibraryPath, lengthInWideFormat + 1, libraryPath, lengthInWideFormat);
 #else
-		char_t* wideStringLibraryPath = *libraryPath;
+		const char_t* wideStringLibraryPath = libraryPath;
 #endif
 
 		char_t* wideStringPath = MergeLibraryPath(wideStringLibraryPath, STR("/RSharp.runtimeconfig.json"));
@@ -98,9 +98,10 @@ SEXP rSharp_create_domain(SEXP args)
 
 		load_assembly_and_get_function_pointer = nullptr;
 		load_assembly_and_get_function_pointer = get_dotnet_load_assembly(wideStringPath);
-		
+
 		if(load_assembly_and_get_function_pointer == nullptr)
 		{
+			
 			assert("Failure: get_dotnet_load_assembly()");
 			throw std::runtime_error("Failure: get_dotnet_load_assembly()");
 			returnValue = 3;
