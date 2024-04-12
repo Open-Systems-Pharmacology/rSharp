@@ -821,6 +821,8 @@ public class TestObject
    {
    }
 
+   public static string StaticString = "A static string";
+
    public TestObject(int f1)
    {
       FieldIntegerOne = f1;

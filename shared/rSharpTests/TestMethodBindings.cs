@@ -280,6 +280,8 @@ namespace rSharpTests
             TestMethodBinding.MultipleMatchVarArgs(anObject, new LevelTwoClass(), anObject, anObject, anObject),
             CallStaticMethod(typeName, "MultipleMatchVarArgs", anObject, new LevelTwoClass(), anObject, anObject, anObject));
 
+         Assert.Equal(GetFieldOrProperty(new TestObject(), "StaticString"), TestObject.StaticString);
+
          Assert.Throws<AmbiguousMatchException>(
             () => { CallStaticMethod(typeName, "MultipleMatchVarArgs", anObject, new LevelThreeClass(), anObject, anObject, anObject); });
       }

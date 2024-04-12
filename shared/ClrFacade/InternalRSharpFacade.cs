@@ -263,7 +263,7 @@ public static class InternalRSharpFacade
    public static object GetFieldOrProperty(object obj, string name)
    {
       obj = convertSpecialObject(obj);
-      const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
+      const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
       var t = obj.GetType();
       return internalGetFieldOrProperty(t, name, bindingFlags, obj);
    }
