@@ -544,6 +544,7 @@ SEXP rSharp_load_assembly(char** filename) {
 SEXP r_create_clr_object(SEXP parameters)
 {
 	SEXP sExpressionParameterStack = parameters;
+	RSharpGenericValue** methodParameters;
 	SEXP sExpressionMethodParameter;
 	RSharpGenericValue return_value;
 	char* ns_qualified_typename = NULL;
@@ -552,7 +553,15 @@ SEXP r_create_clr_object(SEXP parameters)
 	sExpressionParameterStack = POP(sExpressionParameterStack);
 	sExpressionMethodParameter = sExpressionParameterStack;
 
-	RSharpGenericValue** methodParameters = sexp_to_parameters(sExpressionMethodParameter);
+	try
+	{
+		methodParameters = sexp_to_parameters(sExpressionMethodParameter);
+	}
+	catch (const std::exception& ex)
+	{
+		free(ns_qualified_typename);
+		error_return(ex.what())
+	}
 	R_len_t numberOfObjects = Rf_length(sExpressionMethodParameter);
 
 	try
@@ -741,7 +750,7 @@ SEXP r_call_method(SEXP parameters)
 {
 	SEXP sExpressionParameterStack = parameters, instance, sExpressionParameter;
 	const char* methodName = 0;
-
+	RSharpGenericValue** params;
 
 	sExpressionParameter = TOPOF(sExpressionParameterStack);
 	auto functionName = CHAR(STRING_ELT(sExpressionParameter, 0));	// should be "r_call_method"
@@ -753,9 +762,14 @@ SEXP r_call_method(SEXP parameters)
 	sExpressionParameter = TOPOF(sExpressionParameterStack);			// instance method name is the third SEXP
 	methodName = CHAR(STRING_ELT(sExpressionParameter, 0));
 	sExpressionParameterStack = POP(sExpressionParameterStack);
-
-	RSharpGenericValue** params = sexp_to_parameters(sExpressionParameterStack);
-
+	try
+	{
+		params = sexp_to_parameters(sExpressionParameterStack);
+	}
+	catch (const std::exception& ex)
+	{
+		error_return(ex.what())
+	}
 	const R_len_t numberOfObjects = Rf_length(sExpressionParameterStack);
 
 	try
@@ -777,6 +791,7 @@ SEXP r_call_static_method(SEXP parameters)
 	SEXP sExpressionMethodParameter;
 	const char* methodName;
 	char* ns_qualified_typename = NULL; // My.Namespace.MyClass,MyAssemblyName
+	RSharpGenericValue** methodParameters;
 
 	sExpressionParameterStack = POP(sExpressionParameterStack); /* skip the first parameter: function name*/
 	get_FullTypeName(sExpressionParameterStack, &ns_qualified_typename);
@@ -786,7 +801,15 @@ SEXP r_call_static_method(SEXP parameters)
 	sExpressionParameterStack = POP(sExpressionParameterStack); 
 	sExpressionMethodParameter = sExpressionParameterStack;
 
-	RSharpGenericValue** methodParameters = sexp_to_parameters(sExpressionMethodParameter);
+	try
+	{ 
+		methodParameters = sexp_to_parameters(sExpressionMethodParameter);
+	}
+	catch (const std::exception& ex)
+	{
+		free(ns_qualified_typename);
+		error_return(ex.what())
+	}
 	if (TYPEOF(sExpressionParameter) != STRSXP || LENGTH(sExpressionParameter) != 1)
 	{
 		free(ns_qualified_typename);
@@ -995,7 +1018,10 @@ RSHARP_BOOL r_has_class(SEXP s, const char* classname) {
 
 RSharpGenericValue* get_rSharp_generic_value_from_extptr(SEXP a)
 {
-	return GET_RSHARP_GENERIC_VALUE_FROM_EXTPTR(a);
+	auto extptr_ptr = EXTPTR_PTR(a);
+	if(extptr_ptr == nullptr)
+		error("External pointer to unallocated memory was found");
+	return ((RsharpObjectHandle*)extptr_ptr)->objptr;
 }
 
 RSharpGenericValue* get_rSharp_generic_value_from_s4(SEXP clrObj)
