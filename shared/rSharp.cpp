@@ -65,7 +65,7 @@ SEXP rSharp_create_domain(SEXP args)
 		const char* libraryPath = CHAR(STRING_ELT(element, 0));
 
 		// if already loaded in this process, do not load again
-		if (load_assembly_and_get_function_pointer != nullptr)
+		if (load_assembly_and_get_function_pointer != nullptr && dotnetlib_path != nullptr)
 		{
 			returnValue = 0;
 			return make_int_sexp(1, &returnValue);
