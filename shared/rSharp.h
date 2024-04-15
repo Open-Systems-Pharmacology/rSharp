@@ -133,7 +133,7 @@ extern "C" {
 	 * \return	a SEXP representing the object handled by the CLR conversion facade, if any.
 	 */
 	void get_FullTypeName( SEXP p, char ** tname);
-	SEXP rSharp_load_assembly(char ** filename);
+	SEXP rSharp_load_assembly(SEXP args);
 	SEXP rSharp_create_domain(SEXP libraryPath);
 	int use_rdotnet = 0;
 
