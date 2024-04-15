@@ -56,7 +56,6 @@ SEXP make_int_sexp(int n, int* values) {
 /////////////////////////////////////////
 SEXP rSharp_create_domain(SEXP args)
 {
-	int returnValue = 0;
 	try
 	{
 		args = CDR(args);
@@ -67,18 +66,15 @@ SEXP rSharp_create_domain(SEXP args)
 		// if already loaded in this process, do not load again
 		if (load_assembly_and_get_function_pointer != nullptr && dotnetlib_path != nullptr)
 		{
-			returnValue = 0;
+			int returnValue = 0;
 			return make_int_sexp(1, &returnValue);
 		}
 
 		// STEP 1: Load HostFxr and get exported hosting functions
 		if (!load_hostfxr())
 		{
-			assert(false && "Failure: load_hostfxr()");
-			{
-				returnValue = 2;
-				return make_int_sexp(1, &returnValue);
-			}
+			assert("Failure: load_hostfxr()");
+			throw std::runtime_error("Failure: load_hostfxr()");
 		}
 
 #ifdef WINDOWS
@@ -101,11 +97,8 @@ SEXP rSharp_create_domain(SEXP args)
 
 		if(load_assembly_and_get_function_pointer == nullptr)
 		{
-			
 			assert("Failure: get_dotnet_load_assembly()");
 			throw std::runtime_error("Failure: get_dotnet_load_assembly()");
-			returnValue = 3;
-			return make_int_sexp(1, &returnValue);
 		}
 
 		delete[] wideStringPath;
@@ -118,7 +111,7 @@ SEXP rSharp_create_domain(SEXP args)
 		error_return(ex.what())
 	}
 
-	returnValue = 0;
+	int returnValue = 0;
 	return make_int_sexp(1, &returnValue);
 
 }
@@ -557,13 +550,19 @@ SEXP r_get_sexp_type(SEXP par) {
 // Calling ClrFacade methods
 /////////////////////////////////////////
 
-SEXP rSharp_load_assembly(char** filename) {
+SEXP rSharp_load_assembly(SEXP args)
+{
+	args = CDR(args);
+
+	const SEXP element = CAR(args);
+	const char* filename = CHAR(STRING_ELT(element, 0));
+
 	if (load_from_fn_ptr == nullptr)
 		initializeLoadAssembly();
 
-	auto load_from = reinterpret_cast<LoadFromDelegate>(load_from_fn_ptr);
+	const auto load_from = reinterpret_cast<LoadFromDelegate>(load_from_fn_ptr);
 	RSharpGenericValue returnValue;
-	if (load_from(*filename, &returnValue) < 0)
+	if (load_from(filename, &returnValue) < 0)
 	{
 		error_return(reinterpret_cast<char*>(returnValue.value))
 	}

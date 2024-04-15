@@ -17,7 +17,7 @@
 #' loadAssembly(f)
 #' }
 loadAssembly <- function(name) {
-  result <- .C("rSharp_load_assembly", name, PACKAGE = rSharpEnv$nativePkgName)
+  result <- .External("rSharp_load_assembly", name, PACKAGE = rSharpEnv$nativePkgName)
   return(result)
 }
 
