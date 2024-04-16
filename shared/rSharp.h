@@ -107,9 +107,6 @@ typedef struct {
 	uint32_t handle;
 } RsharpObjectHandle;
 
-#define GET_RSHARP_GENERIC_VALUE_FROM_EXTPTR(extptrsexp) ((RsharpObjectHandle*)EXTPTR_PTR(extptrsexp))->objptr
-
-
 /////////////////////////////////////////
 // Exported methods (exported meaning on Windows platform)
 /////////////////////////////////////////
