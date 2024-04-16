@@ -1,16 +1,15 @@
 ##############
-# This file contains code used in a vignette. The code is not included directly in the vignette 
+# This file contains code used in a vignette. The code is not included directly in the vignette
 # as it is fairly advanced compared to the purpose of the vignette.
 ##############
 
 # library(utils)
 library(ggplot2)
-# Sys.setenv(RCLR='Mono')
 
 library(rSharp)
 
 profClassName <- 'ClrFacade.PerformanceProfiling'
-prof <- clrNew(profClassName)
+prof <- newObjectFromName(profClassName)
 nRepsColname <- 'numReps'
 arrayLenColname <- 'arrLen'
 
@@ -29,9 +28,9 @@ rToClrDataTransferFUNGEN <- function(numArray, arrLen) {
   rToClrDataTransfer
 }
 
-sw <- clrNew('System.Diagnostics.Stopwatch')
+sw <- newObjectFromName('System.Diagnostics.Stopwatch')
 startSw <- function () { clrCall(sw,'Stop'); clrCall(sw,'Reset'); clrCall(sw, 'Start') }
-stopSw <- function () { clrCall(sw,'Stop'); clrCallStatic('ClrFacade.PerformanceProfiling', 'GetElapsedSeconds', sw) }
+stopSw <- function () { clrCall(sw,'Stop'); callStatic('ClrFacade.PerformanceProfiling', 'GetElapsedSeconds', sw) }
 
 measure <- function(numReps, FUN, normalize=TRUE) {
   blah = numeric(0)
@@ -42,7 +41,7 @@ measure <- function(numReps, FUN, normalize=TRUE) {
     }
     e = stopSw()
     delta = e
-    # Fiendish: the for() construct is surprisingly expensive compared to rClr...
+    # Fiendish: the for() construct is surprisingly expensive compared to rSharp...
     startSw()
     for (i in 1:numReps) {
       blah <- 0
@@ -74,7 +73,7 @@ doMeasure <- function(trials, trow, FUNGEN, dataClass,direction,tag=NA) {
     # innerReps <- 50
   # # } else if (arrLen < 100000) {
     # # innerReps <- 10
-  # }  
+  # }
   FUN = FUNGEN(nReps, arrLen)
   deltas <- numeric(0)
   for (i in 1:nReps) {
@@ -84,7 +83,7 @@ doMeasure <- function(trials, trow, FUNGEN, dataClass,direction,tag=NA) {
 }
 
 doMeasureFun <- function(trials, FUNGEN, dataClass,direction,tag=NA) {
-  clrCallStatic('ClrFacade.TestCases', 'CallGC') # minimize the risk of cases such that we end up with negative runtimes...
+  callStatic(rSharpEnv$testCasesTypeName, 'CallGC') # minimize the risk of cases such that we end up with negative runtimes...
   res <- doMeasure(trials, 1, FUNGEN=FUNGEN, dataClass, direction, tag)
   for (trow in 2:nrow(trials)) {
     res <- rbind(res, doMeasure(trials, trow, FUNGEN=FUNGEN, dataClass, direction, tag))
@@ -97,8 +96,8 @@ doMeasureFun <- function(trials, FUNGEN, dataClass,direction,tag=NA) {
 }
 
 # We want to obtain plots of effective transfer rates: X axis is the length of the arrays, Y axis is the transfer rate in MB/s
-# we may want to measure with/without R.NET loaded, so there is at least one category. 
-# We may as well have a single data frame for 
+# we may want to measure with/without R.NET loaded, so there is at least one category.
+# We may as well have a single data frame for
 # So the high-level result from the measurement should be a data frame with columns:
 # dataClass,array_len,direction,tag
 # 'integer',5000,'CLR->R',no.r.net
@@ -107,7 +106,7 @@ doMeasureFun <- function(trials, FUNGEN, dataClass,direction,tag=NA) {
 
 createCases <- function(numReps=10, maxArrayLen=7.5e6) {
   # May want to tailor to whether this is 32 or 64 bits; use:
-  # clrGet('System.Environment', 'Is64BitProcess')
+  # getStatic('System.Environment', 'Is64BitProcess')
   cases <- c(2,5,7.5)
   trials <- expand.grid ( numReps = numReps, arrLen = as.integer(cases) )
   mult <- c(1,2,5,7.5)
@@ -118,14 +117,14 @@ createCases <- function(numReps=10, maxArrayLen=7.5e6) {
 }
 
 
-rclrNumericPerf <- function(trials, tag) {
+rSharpNumericPerf <- function(trials, tag) {
   fgen <- clrToRDataTransferFUNGEN
   bench <- doMeasureFun(trials, FUNGEN=fgen, dataClass='numeric', direction="CLR->R",tag=tag)
   bench <- rbind(bench, doMeasureFun(trials, FUNGEN=fgen, dataClass='numeric', direction="R->CLR",tag=tag))
   bench
 }
 
-rclrNumericPerfAll <- function(numReps=10, maxArrayLen=7.5e6) {
+rSharpNumericPerfAll <- function(numReps=10, maxArrayLen=7.5e6) {
   trials <- createCases(numReps=numReps, maxArrayLen=maxArrayLen)
   setRDotNet(FALSE)
   bench <- doMeasureFun(trials, FUNGEN=clrToRDataTransferFUNGEN, dataClass='numeric', direction="CLR->R",tag="no.r.net")
@@ -142,7 +141,7 @@ plotRate <- function(bench, case = 'R->CLR', dataType='numeric', logy=TRUE) {
   p <- qplot(x=bench$arrayLen, y=bench$rate) +
     ylab('Items/sec') + xlab('Array size') +
     ggtitle(paste(dataType, 'vector conversion rate', case))
-  p <- p + scale_x_log10() 
+  p <- p + scale_x_log10()
   if(logy) {
     p <- p + scale_y_log10() + annotation_logticks(sides='bl')
   } else {
@@ -155,7 +154,7 @@ plotRate <- function(bench, case = 'R->CLR', dataType='numeric', logy=TRUE) {
 
 # options(error=recover)
 # trials <- createCases(numReps=10, maxArrayLen=7.5e6)
-# bench <- rclrNumericPerf(trials, tag='no.r.net')
+# bench <- rSharpNumericPerf(trials, tag='no.r.net')
 
 ## REPRO: this crashes Rgui. All in R.dll, and likely related to R.NET; unclear where/why
 # behaves for a length of 100000; above, trouble start.
@@ -168,7 +167,7 @@ plotRate <- function(bench, case = 'R->CLR', dataType='numeric', logy=TRUE) {
 # plotRate(bench, case = 'CLR->R')
 #  + scale_y_log10() + annotation_logticks()
 # plotRate(bench, case = 'CLR->R') + annotation_logticks(sides='b')
-# 
+#
 # bench <- doMeasureFun(trials, FUNGEN=rToClrDataTransferFUNGEN, dataClass='numeric', direction="R->CLR",tag="no.r.net")
 # plotRate(bench, case = 'R->CLR') + scale_y_log10() + annotation_logticks()
 

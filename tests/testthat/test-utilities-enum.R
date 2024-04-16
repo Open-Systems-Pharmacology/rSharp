@@ -1,0 +1,21 @@
+test_that("enums get/set", {
+  # very basic support for the time being. Behavior to be defined for cases such as enums with binary operators ([FlagsAttribute])
+  eType <- "ClrFacade.TestEnum"
+  expect_that(getEnumNames(eType), equals(c("A", "B", "C")))
+  e <- callStatic(rSharpEnv$testCasesTypeName, "GetTestEnum", "B")
+  expect_false(is.null(e))
+  expect_that(e$call("ToString"), equals("B"))
+})
+
+test_that("instance enumerators are evaluated as int", {
+  tName <- "ClrFacade.TestObjectWithEnum"
+
+  obj <- newObjectFromName(tName)
+  value <- getStatic(obj, "EnumValue")
+  expect_that(value, equals(2))
+
+  setStatic(obj, "EnumValue", 0, asInteger = TRUE)
+
+  value <- getStatic(obj, "EnumValue")
+  expect_that(value, equals(0))
+})
