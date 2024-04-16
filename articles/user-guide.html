@@ -311,9 +311,9 @@ using the <code>getStatic...</code> functions:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">newInstance</span><span class="op">$</span><span class="fu">getStaticFields</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "StaticString"</span></span></code></pre></div>
-<p>Setting and getting (static and non-static) fields and properties of
-an object is done using the <code>set</code> and <code>get</code>
-methods, respectively:</p>
+<p>Setting and getting non-static fields and properties of an object is
+done using the <code>set</code> and <code>get</code> methods,
+respectively:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get the value of the static field:</span></span>
 <span><span class="va">newInstance</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"FieldDoubleOne"</span><span class="op">)</span></span>
@@ -323,6 +323,8 @@ methods, respectively:</p>
 <span><span class="co"># Get the value of the static field:</span></span>
 <span><span class="va">newInstance</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"FieldDoubleOne"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 23</span></span></code></pre></div>
+<p>To get or set static fields, use the functions <code>getStatic</code>
+and <code>setStatic</code>.</p>
 <p>Finally, we can call the methods of the object using the
 <code>call</code> method:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
