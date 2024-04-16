@@ -27,7 +27,7 @@ typedef intptr_t(CORECLR_DELEGATE_CALLTYPE* CallFullTypeNameDelegate)(RSharpGene
 typedef int (CORECLR_DELEGATE_CALLTYPE* GetObjectDirectDelegate)(RSharpGenericValue* returnValue);
 typedef int (CORECLR_DELEGATE_CALLTYPE* CreateSEXPWrapperDelegate)(intptr_t pointer, RSharpGenericValue* returnValue);
 typedef int (CORECLR_DELEGATE_CALLTYPE* CreateInstanceDelegate)(const char*, RSharpGenericValue** objects, int num_objects, RSharpGenericValue* returnValue);
-typedef int (CORECLR_DELEGATE_CALLTYPE* LoadFromDelegate)(const char*, RSharpGenericValue *returnValue);
+typedef int (CORECLR_DELEGATE_CALLTYPE* LoadFromDelegate)(const char*, RSharpGenericValue* returnValue);
 
 char_t* MergeLibraryPath(const char_t* libraryPath, const char_t* additionalPath);
 void freeObject(RSharpGenericValue* instance);
@@ -36,44 +36,84 @@ RSharpGenericValue createInstance(char* ns_qualified_typename, RSharpGenericValu
 RSharpGenericValue getCurrentObjectDirect();
 
 /////////////////////////////////////////
+// Functions with R specific constructs, namely SEXPs
+/////////////////////////////////////////
+SEXP make_int_sexp(int n, int* values) {
+	SEXP result;
+	long i = 0;
+	int* int_ptr;
+	PROTECT(result = NEW_INTEGER(n));
+	int_ptr = INTEGER_POINTER(result);
+	for (i = 0; i < n; i++) {
+		int_ptr[i] = values[i];
+	}
+	UNPROTECT(1);
+	return result;
+}
+
+/////////////////////////////////////////
 // Initialization and disposal of the CLR
 /////////////////////////////////////////
-void rSharp_create_domain(char ** libraryPath)
+SEXP rSharp_create_domain(SEXP args)
 {
-	// if already loaded in this process, do not load again
-	if (load_assembly_and_get_function_pointer != nullptr)
-		return;
-
-	// STEP 1: Load HostFxr and get exported hosting functions
-	if (!load_hostfxr())
+	try
 	{
-		assert(false && "Failure: load_hostfxr()");
-		return;
+		args = CDR(args);
+
+		const SEXP element = CAR(args);
+		const char* libraryPath = CHAR(STRING_ELT(element, 0));
+
+		// if already loaded in this process, do not load again
+		if (load_assembly_and_get_function_pointer != nullptr && dotnetlib_path != nullptr)
+		{
+			int returnValue = 0;
+			return make_int_sexp(1, &returnValue);
+		}
+
+		// STEP 1: Load HostFxr and get exported hosting functions
+		if (!load_hostfxr())
+		{
+			assert("Failure: load_hostfxr()");
+			throw std::runtime_error("Failure: load_hostfxr()");
+		}
+
+#ifdef WINDOWS
+		// STEP 2: Initialize and start the .NET Core runtime
+		size_t lengthInWideFormat = 0;
+		//Gets the length of libPath in terms of a wide string.
+		mbstowcs_s(&lengthInWideFormat, nullptr, 0, libraryPath, 0);
+		char_t* wideStringLibraryPath = new char_t[lengthInWideFormat + 1];
+		//Copies the libraryPath to a wchar_t with the size lengthInWideFormat
+		mbstowcs_s(nullptr, wideStringLibraryPath, lengthInWideFormat + 1, libraryPath, lengthInWideFormat);
+#else
+		const char_t* wideStringLibraryPath = libraryPath;
+#endif
+
+		char_t* wideStringPath = MergeLibraryPath(wideStringLibraryPath, STR("/RSharp.runtimeconfig.json"));
+		dotnetlib_path = MergeLibraryPath(wideStringLibraryPath, STR("/ClrFacade.dll"));
+
+		load_assembly_and_get_function_pointer = nullptr;
+		load_assembly_and_get_function_pointer = get_dotnet_load_assembly(wideStringPath);
+
+		if(load_assembly_and_get_function_pointer == nullptr)
+		{
+			assert("Failure: get_dotnet_load_assembly()");
+			throw std::runtime_error("Failure: get_dotnet_load_assembly()");
+		}
+
+		delete[] wideStringPath;
+#ifdef WINDOWS
+		delete[] wideStringLibraryPath;
+#endif
+	}
+	catch (const std::exception& ex)
+	{
+		error_return(ex.what())
 	}
 
-#ifdef WINDOWS
-	// STEP 2: Initialize and start the .NET Core runtime
-	size_t lengthInWideFormat = 0;
-	//Gets the length of libPath in terms of a wide string.
-	mbstowcs_s(&lengthInWideFormat, nullptr, 0, *libraryPath, 0);
-	char_t* wideStringLibraryPath = new char_t[lengthInWideFormat + 1];
-	//Copies the libraryPath to a wchar_t with the size lengthInWideFormat
-	mbstowcs_s(nullptr, wideStringLibraryPath, lengthInWideFormat + 1, *libraryPath, lengthInWideFormat);
-#else
-	char_t* wideStringLibraryPath = *libraryPath;
-#endif
+	int returnValue = 0;
+	return make_int_sexp(1, &returnValue);
 
-	char_t* wideStringPath = MergeLibraryPath(wideStringLibraryPath, STR("/RSharp.runtimeconfig.json"));
-	dotnetlib_path = MergeLibraryPath(wideStringLibraryPath, STR("/ClrFacade.dll"));
-
-	load_assembly_and_get_function_pointer = nullptr;
-	load_assembly_and_get_function_pointer = get_dotnet_load_assembly(wideStringPath);
-	assert(load_assembly_and_get_function_pointer != nullptr && "Failure: get_dotnet_load_assembly()");
-
-	delete[] wideStringPath;
-#ifdef WINDOWS
-	delete[] wideStringLibraryPath;
-#endif
 }
 
 #ifdef WINDOWS
@@ -93,7 +133,7 @@ wchar_t* MergeLibraryPath(const wchar_t* libraryPath, const wchar_t* additionalP
 #else
 char* MergeLibraryPath(const char* libraryPath, const char* additionalPath)
 {
-	
+
 	size_t libraryPathLength = strlen(libraryPath);
 	size_t additionalPathLength = strlen(additionalPath);
 	size_t totalLength = libraryPathLength + additionalPathLength + 1; // +1 for null terminator
@@ -141,29 +181,29 @@ namespace {
 	void* load_library(const char_t*);
 	void* get_export(void*, const char*);
 
-	#ifdef WINDOWS
-	void *load_library(const char_t *path)
+#ifdef WINDOWS
+	void* load_library(const char_t* path)
 	{
 		HMODULE h = ::LoadLibraryW(path);
 		assert(h != nullptr);
 		return (void*)h;
 	}
-	void *get_export(void *h, const char *name)
+	void* get_export(void* h, const char* name)
 	{
-		void *f = ::GetProcAddress((HMODULE)h, name);
+		void* f = ::GetProcAddress((HMODULE)h, name);
 		assert(f != nullptr);
 		return f;
 	}
 #else
-	void *load_library(const char_t *path)
+	void* load_library(const char_t* path)
 	{
-		void *h = dlopen(path, RTLD_LAZY | RTLD_LOCAL);
+		void* h = dlopen(path, RTLD_LAZY | RTLD_LOCAL);
 		assert(h != nullptr);
 		return h;
 	}
-	void *get_export(void *h, const char *name)
+	void* get_export(void* h, const char* name)
 	{
-		void *f = dlsym(h, name);
+		void* f = dlsym(h, name);
 		assert(f != nullptr);
 		return f;
 	}
@@ -354,23 +394,6 @@ void initializeCallStaticFunction()
 	assert(rc_1 == 0 && call_static_method_fn_ptr != nullptr && "Failure: CallStatic()");
 }
 
-
-/////////////////////////////////////////
-// Functions with R specific constructs, namely SEXPs
-/////////////////////////////////////////
-SEXP make_int_sexp(int n, int* values) {
-	SEXP result;
-	long i = 0;
-	int* int_ptr;
-	PROTECT(result = NEW_INTEGER(n));
-	int_ptr = INTEGER_POINTER(result);
-	for (i = 0; i < n; i++) {
-		int_ptr[i] = values[i];
-	}
-	UNPROTECT(1);
-	return result;
-}
-
 SEXP make_numeric_sexp(int n, double* values) {
 	SEXP result;
 	long i = 0;
@@ -453,7 +476,7 @@ void free_params_array(RSharpGenericValue** parameterArray, int size)
 	{
 		if (isObjectArray(parameterArray, i))
 			free_params_array(reinterpret_cast<RSharpGenericValue**>(parameterArray[i]->value), parameterArray[i]->size);
-		
+
 		free(parameterArray[i]);
 	}
 	delete[] parameterArray;
@@ -527,13 +550,19 @@ SEXP r_get_sexp_type(SEXP par) {
 // Calling ClrFacade methods
 /////////////////////////////////////////
 
-SEXP rSharp_load_assembly(char** filename) {
+SEXP rSharp_load_assembly(SEXP args)
+{
+	args = CDR(args);
+
+	const SEXP element = CAR(args);
+	const char* filename = CHAR(STRING_ELT(element, 0));
+
 	if (load_from_fn_ptr == nullptr)
 		initializeLoadAssembly();
 
-	auto load_from = reinterpret_cast<LoadFromDelegate>(load_from_fn_ptr);
+	const auto load_from = reinterpret_cast<LoadFromDelegate>(load_from_fn_ptr);
 	RSharpGenericValue returnValue;
-	if(load_from(*filename, &returnValue) < 0)
+	if (load_from(filename, &returnValue) < 0)
 	{
 		error_return(reinterpret_cast<char*>(returnValue.value))
 	}
@@ -562,7 +591,7 @@ SEXP r_create_clr_object(SEXP parameters)
 		free_params_array(methodParameters, numberOfObjects);
 		return ConvertToSEXP(return_value);
 	}
-	catch (const std::exception& ex) 
+	catch (const std::exception& ex)
 	{
 		free(ns_qualified_typename);
 		free_params_array(methodParameters, numberOfObjects);
@@ -649,7 +678,7 @@ RSharpGenericValue rclr_convert_element_rdotnet(SEXP p)
 
 	auto result = call_static(reinterpret_cast<intptr_t>(p), &return_value);
 
-	
+
 
 	if (result < 0)
 		throw std::runtime_error("Error calling get object direct");
@@ -664,7 +693,7 @@ SEXP r_get_object_direct()
 		auto return_value = getCurrentObjectDirect();
 		return ConvertToSEXP(return_value);
 	}
-	catch (const std::exception& ex) 
+	catch (const std::exception& ex)
 	{
 		error_return(ex.what())
 	}
@@ -764,7 +793,7 @@ SEXP r_call_method(SEXP parameters)
 		free_params_array(params, numberOfObjects);
 		return ConvertToSEXP(return_value);
 	}
-	catch (const std::exception& ex) 
+	catch (const std::exception& ex)
 	{
 		free_params_array(params, numberOfObjects);
 		error_return(ex.what())
@@ -783,7 +812,7 @@ SEXP r_call_static_method(SEXP parameters)
 	sExpressionParameterStack = POP(sExpressionParameterStack);
 	sExpressionParameter = TOPOF(sExpressionParameterStack);
 	methodName = CHAR(STRING_ELT(sExpressionParameter, 0));
-	sExpressionParameterStack = POP(sExpressionParameterStack); 
+	sExpressionParameterStack = POP(sExpressionParameterStack);
 	sExpressionMethodParameter = sExpressionParameterStack;
 
 	RSharpGenericValue** methodParameters = sexp_to_parameters(sExpressionMethodParameter);
@@ -794,14 +823,14 @@ SEXP r_call_static_method(SEXP parameters)
 	}
 
 	const R_len_t numberOfObjects = Rf_length(sExpressionMethodParameter);
-	try 
+	try
 	{
 		auto return_value = callStatic(methodName, ns_qualified_typename, methodParameters, numberOfObjects);
 		free(ns_qualified_typename);
 		free_params_array(methodParameters, numberOfObjects);
 		return ConvertToSEXP(return_value);
 	}
-	catch (const std::exception& ex) 
+	catch (const std::exception& ex)
 	{
 		free(ns_qualified_typename);
 		free_params_array(methodParameters, numberOfObjects);
@@ -1075,9 +1104,9 @@ RSharpGenericValue ConvertToRSharpGenericValue(SEXP s)
 	case VECSXP:
 		result.type = RSharpValueType::OBJECT_ARRAY;
 		result.size = LENGTH(s);
-		auto sharp_generic_value = new RSharpGenericValue* [result.size];
+		auto sharp_generic_value = new RSharpGenericValue * [result.size];
 		result.value = reinterpret_cast<intptr_t>(sharp_generic_value);
-		for(int i = 0 ; i < result.size; i++)
+		for (int i = 0; i < result.size; i++)
 		{
 			sharp_generic_value[i] = new RSharpGenericValue(ConvertToRSharpGenericValue(VECTOR_ELT(s, i)));
 		}
