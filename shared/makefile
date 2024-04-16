@@ -62,7 +62,8 @@ rSharpLib: rSharpLibComp
 	-cp -u -p ./$(RUNTIMECONFIG).json $(INSTDIR)/lib/
 
 rSharpNugetRestore:
-	-$(NUGET_CMD) restore
+	-$(NUGET_CMD) restore packages.config -PackagesDirectory packages
+	-$(DOTNET_CMD) restore
 
 rSharpLibComp: rSharpNugetRestore
 	"$(DOTNET_CMD)" build /t:$(MODE) $(SLNPROPERTIES)
