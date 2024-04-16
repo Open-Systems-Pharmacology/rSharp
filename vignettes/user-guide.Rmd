@@ -176,7 +176,7 @@ A non-static class can also have static members, which can be listed using the `
 newInstance$getStaticFields()
 ```
 
-Setting and getting (static and non-static) fields and properties of an object 
+Setting and getting non-static fields and properties of an object 
 is done using the `set` and `get` methods, respectively:
 
 ```{r}
@@ -187,6 +187,9 @@ newInstance$set("FieldDoubleOne", 23)
 # Get the value of the static field:
 newInstance$get("FieldDoubleOne")
 ```
+
+To get or set static fields, use the functions `getStatic` and `setStatic`.
+
 Finally, we can call the methods of the object using the `call` method:
 
 ```{r}
