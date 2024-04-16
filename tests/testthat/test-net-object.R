@@ -182,3 +182,24 @@ test_that("$set works as expected", {
   testObj$set(propName, as.integer(2))
   expect_equal(testObj$get(propName), 2)
 })
+
+test_that("$get works as expected for static fields", {
+  testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
+  fieldName <- "StaticString"
+
+  expect_equal(testObj$get(fieldName), "A static string")
+})
+
+test_that("$set works as expected for static fields", {
+  testObj1 <- newObjectFromName(rSharpEnv$testObjectTypeName)
+  testObj2 <- newObjectFromName(rSharpEnv$testObjectTypeName)
+  fieldName <- "StaticString"
+
+  testObj1$set(fieldName, "A new static string")
+
+  expect_equal(testObj1$get(fieldName), "A new static string")
+  expect_equal(testObj2$get(fieldName), "A new static string")
+
+  # Reset so the following tests do not fail
+  testObj1$set(fieldName, "A static string")
+})

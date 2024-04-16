@@ -187,6 +187,18 @@ newInstance$set("FieldDoubleOne", 23)
 # Get the value of the static field:
 newInstance$get("FieldDoubleOne")
 ```
+Keep in mind that the static field `StaticString` is shared among all instances of the class, so changing it in one instance will affect all other instances.
+
+```{r}
+# Get the value of the static field:
+newInstance$get("StaticString")
+newInstance2$get("StaticString")
+# Change the value of the static field using the first instance:
+newInstance$set("StaticString", "New value")
+# Get the value of the static field using the second instance:
+newInstance2$get("StaticString")
+```
+
 Finally, we can call the methods of the object using the `call` method:
 
 ```{r}

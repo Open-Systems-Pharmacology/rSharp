@@ -32,11 +32,10 @@
 
   # Load C++ library
   dyn.load(nativeLibrary, DLLpath = srcPkgLibPath)
-  # Load .NET library through C++
-  # The call to `.C` always returns the list of arguments that were passed.
-  # They are of no use for us, so enclose the call in `invisible()`.
-  invisible(.C("rSharp_create_domain", srcPkgLibPath, PACKAGE = rSharpEnv$nativePkgName))
 
+  # Load .NET library through C++
+  # The method returns 0 if successful. Otherwise, an error is thrown.
+  result <- .External("rSharp_create_domain", srcPkgLibPath, PACKAGE = rSharpEnv$nativePkgName)
   # Turn on the the conversion of advanced data types with R.NET.
   invisible(callStatic("ClrFacade.ClrFacade", "SetRDotNet", TRUE))
 } # nocov end
