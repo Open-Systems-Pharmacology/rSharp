@@ -8,10 +8,10 @@ rSharpEnv$packageName <- "rSharp"
 rSharpEnv$msvcrFileName <- "msvcp140.dll"
 # The name of the native (C++) library file depends on operating system
 if (.Platform$OS.type == "windows") {
-  rSharpEnv$nativePkgName <- "RsharpMs"
+  rSharpEnv$nativePkgName <- "rSharp"
 } else {
   # Assuming that everything non-windows is Linux (or will simply not work at all)
-  rSharpEnv$nativePkgName <- "rSharpUX"
+  rSharpEnv$nativePkgName <- "rSharp"
 }
 # Name of the .NET library
 rSharpEnv$dotnetPkgName <- "ClrFacade"
