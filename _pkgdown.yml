@@ -55,3 +55,10 @@ reference:
   - .getCurrentConvertedObject
   - .mkClrObjRef
 
+articles:
+  - title: Introduction to rSharp
+    desc: rSharp user guide
+    contents: user-guide
+  - title: Knowledge base
+    desc: rSharp knowledge base
+    contents: knowledge-base

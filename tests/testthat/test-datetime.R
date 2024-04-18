@@ -229,11 +229,11 @@ test_that("Date and Time objects are marshalled correctly", {
   # Check  that http://r2clr.codeplex.com/workitem/37 has been fixed The following will crash if not.
   x <- as.Date(testDateStr)
   clrType <- callStatic(rSharpEnv$clrFacadeTypeName, "GetObjectTypeName", x)
-  expect_that(x, equals(as.Date(testDateStr)))
+  expect_equal(x, as.Date(testDateStr))
   x <- as.Date(testDateStr) + 0:3
   clrType <- callStatic(rSharpEnv$clrFacadeTypeName, "GetObjectTypeName", x)
-  expect_that(x[1], equals(as.Date(testDateStr)))
-  expect_that(x[2], equals(as.Date(testDateStr) + 1))
+  expect_equal(x[1], as.Date(testDateStr))
+  expect_equal(x[2], as.Date(testDateStr) + 1)
   # End check http://r2clr.codeplex.com/workitem/37
 
   #### daily sequences

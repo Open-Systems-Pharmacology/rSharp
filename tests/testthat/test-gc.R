@@ -4,11 +4,11 @@ testGarbageCollection <- function(getObjCountMethodName = "GetMemTestObjCounter"
     callTestCase(callGcMethname)
   }
   checkPlusOne <- function() {
-    expect_that(callTestCase(getObjCountMethodName), equals(counter + 1))
+    expect_equal(callTestCase(getObjCountMethodName), counter + 1)
   }
 
   counter <- callTestCase(getObjCountMethodName)
-  expect_that(counter, equals(0)) # make sure none of these test objects instances are hanging in the CLR
+  expect_equal(counter, 0) # make sure none of these test objects instances are hanging in the CLR
   testObj <- callTestCase(createTestObjectMethodName)
   checkPlusOne()
   forceDotNetGc()
@@ -20,10 +20,10 @@ testGarbageCollection <- function(getObjCountMethodName = "GetMemTestObjCounter"
   rm(testObj)
   gc()
   forceDotNetGc()
-  expect_that(callTestCase(getObjCountMethodName), equals(counter))
+  expect_equal(callTestCase(getObjCountMethodName), counter)
 
   counter <- callTestCase(getObjCountMethodName)
-  expect_that(counter, equals(0))
+  expect_equal(counter, 0)
   testObj <- callTestCase(createTestObjectMethodName)
   testObj$set(name = "Text", value = "et nous alimentons nos aimables remords comme les mendiants nourissent leur vermine")
   forceDotNetGc()

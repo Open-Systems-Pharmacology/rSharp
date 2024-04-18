@@ -31,7 +31,7 @@ test_that("Basic NULL is passed from .NET as null", {
 })
 
 # No such concept in .NET
-#https://github.com/Open-Systems-Pharmacology/rSharp/issues/110
+# https://github.com/Open-Systems-Pharmacology/rSharp/issues/110
 # test_that("Basic NA is passed from .NET as NA", {
 #   expect_true(callTestCase("GetNA", NA))
 # })

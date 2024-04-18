@@ -96,15 +96,15 @@ test_that("Conversion of non-bijective types can be turned on/off", {
 })
 
 test_that("toStringNET works for primitive types", {
-  expect_that(toStringNET(1), equals("1"))
-  expect_that(toStringNET(1.0), equals("1"))
-  expect_that(toStringNET("a"), equals("a"))
-  expect_that(toStringNET(TRUE), equals("True"))
-  expect_that(toStringNET(FALSE), equals("False"))
+  expect_equal(toStringNET(1), "1")
+  expect_equal(toStringNET(1.0), "1")
+  expect_equal(toStringNET("a"), "a")
+  expect_equal(toStringNET(TRUE), "True")
+  expect_equal(toStringNET(FALSE), "False")
   # Check of correct behavior
-  #  expect_that(toStringNET(NA), equals("null"))
-  expect_that(toStringNET(NULL), equals("null"))
-  expect_that(toStringNET(NaN), equals("NaN"))
+  #  expect_equal(toStringNET(NA), "null")
+  expect_equal(toStringNET(NULL), "null")
+  expect_equal(toStringNET(NaN), "NaN")
 })
 
 test_that("Print traceback", {

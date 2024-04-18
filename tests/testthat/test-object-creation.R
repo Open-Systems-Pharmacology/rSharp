@@ -8,15 +8,15 @@ test_that("newObjectFromName calls constructors when a valid name is provided", 
   obj <- newObjectFromName(tName)
   # Constructor with one argument
   obj <- newObjectFromName(tName, i1)
-  expect_that(obj$get("FieldIntegerOne"), equals(i1))
+  expect_equal(obj$get("FieldIntegerOne"), i1)
   # Constructor with two arguments
   obj <- newObjectFromName(tName, i1, i2)
-  expect_that(obj$get("FieldIntegerOne"), equals(i1))
-  expect_that(obj$get("FieldIntegerTwo"), equals(i2))
+  expect_equal(obj$get("FieldIntegerOne"), i1)
+  expect_equal(obj$get("FieldIntegerTwo"), i2)
   # Constructor with two double arguments
   obj <- newObjectFromName(tName, d1, d2)
-  expect_that(obj$get("FieldDoubleOne"), equals(d1))
-  expect_that(obj$get("FieldDoubleTwo"), equals(d2))
+  expect_equal(obj$get("FieldDoubleOne"), d1)
+  expect_equal(obj$get("FieldDoubleTwo"), d2)
 })
 
 test_that("newObjectFromName returns an error when an invalid name is provided", {
@@ -32,6 +32,6 @@ test_that("Basic objects are created correctly", {
   # Call to a static method creates an S4 object
   testObj <- .External("r_call_static_method", rSharpEnv$testCasesTypeName, "CreateTestObject", PACKAGE = rSharpEnv$nativePkgName)
   expect_false(is.null(testObj))
-  expect_that(testObj@clrtype, equals(rSharpEnv$testObjectTypeName))
+  expect_equal(testObj@clrtype, rSharpEnv$testObjectTypeName)
   rm(testObj)
 })
