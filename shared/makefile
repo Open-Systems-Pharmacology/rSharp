@@ -28,7 +28,7 @@ RM = 		rm -f
 
 # .PHONY: 	all clean
 
-all:		printarch instdir rSharpLib $(OUT_DIR)/rSharpUX.so rSharpInstrSharpUX
+all:		printarch instdir rSharpLib $(OUT_DIR)/rSharp.so rSharpInstrSharpUX
 
 clean:
 	${RM} $(OUT_DIR)/* $(OBJ_DIR)/*
@@ -37,7 +37,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	-@mkdir -p $(OBJ_DIR) 2>/dev/null
 	$(CXX) -std=c++11 -Ipackages/Microsoft.NETCore.App.Host.linux-x64.8.0.2/runtimes/linux-x64/native $(ALL_CPPFLAGS) -I/usr/share/R/include/ $(ALL_CFLAGS) -fPIC -c $<  -o $@  -lsupc++
 
-$(OUT_DIR)/rSharpUX.so:  $(OBJ_FILES)
+$(OUT_DIR)/rSharp.so:  $(OBJ_FILES)
 	-@mkdir -p $(OUT_DIR) 2>/dev/null
 	$(CXX) -std=c++11 -shared -Wl,-z,relro -o $@  $^ $(ALL_LIBS) -L./packages/Microsoft.NETCore.App.Host.linux-x64.8.0.2/runtimes/linux-x64/native -l:libnethost.a
 
@@ -53,7 +53,7 @@ instdir:
 	-@mkdir -p $(INSTDIR) 2>/dev/null
 	-@mkdir -p $(INSTDIR)/lib$(R_ARCH) 2>/dev/null
 
-rSharpInstrSharpUX: $(OUT_DIR)/rSharpUX.so
+rSharpInstrSharpUX: $(OUT_DIR)/rSharp.so
 	cp -u -p $< $(INSTDIR)/lib$(R_ARCH)
 
 rSharpLib: rSharpLibComp
