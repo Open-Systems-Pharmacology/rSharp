@@ -141,24 +141,24 @@ test_that("String arrays are marshalled correctly", {
 test_that("Numerical bi-dimensional arrays are marshalled correctly from .NET to R", {
   numericMat <- matrix(as.numeric(1:15), nrow = 3, ncol = 5, byrow = TRUE)
   # A natural marshalling of jagged arrays is debatable. For the time being assuming that they are matrices, due to the concrete use case.
-  expect_that(callTestCase("CreateJaggedFloatArray"), equals(numericMat))
-  expect_that(callTestCase("CreateJaggedDoubleArray"), equals(numericMat))
-  expect_that(callTestCase("CreateRectFloatArray"), equals(numericMat))
-  expect_that(callTestCase("CreateRectDoubleArray"), equals(numericMat))
+  expect_equal(callTestCase("CreateJaggedFloatArray"), numericMat)
+  expect_equal(callTestCase("CreateJaggedDoubleArray"), numericMat)
+  expect_equal(callTestCase("CreateRectFloatArray"), numericMat)
+  expect_equal(callTestCase("CreateRectDoubleArray"), numericMat)
 })
 
 
 ########## Mixed tests##########
 test_that("Numeric arrays are marshalled correctly", {
   expectedNumArray <- 1:5 * 1.1
-  expect_that(callTestCase("CreateNumArray"), equals(expectedNumArray))
-  expect_equal(callTestCase("CreateFloatArray"), expected = expectedNumArray, tolerance = 5e-8, scale = 2)
+  expect_equal(callTestCase("CreateNumArray"), expectedNumArray)
+  expect_equal(callTestCase("CreateFloatArray"), expected = expectedNumArray, tolerance = 5e-8)
   expect_true(callTestCase("NumArrayEquals", expectedNumArray))
 
   numDays <- 5
   expect_equal(callTestCase("CreateIntArray", as.integer(numDays)), expected = 0:(numDays - 1))
 
   expectedNumArray[3] <- NA
-  expect_that(callTestCase("CreateNumArrayMissingVal"), equals(expectedNumArray))
+  expect_equal(callTestCase("CreateNumArrayMissingVal"), expectedNumArray)
   expect_true(callTestCase("NumArrayMissingValuesEquals", expectedNumArray))
 })

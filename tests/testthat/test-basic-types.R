@@ -11,9 +11,9 @@ test_that("Basic types of length one are marshalled correctly", {
   expect_true(callTestCase("IntEquals", as.integer(123)))
   expect_true(callTestCase("StringEquals", "ab"))
   # NET to R
-  expect_that(callTestCase("CreateDouble"), equals(123.0))
-  expect_that(callTestCase("CreateInt"), equals(as.integer(123)))
-  expect_that(callTestCase("CreateString"), equals("ab"))
+  expect_equal(callTestCase("CreateDouble"), 123.0)
+  expect_equal(callTestCase("CreateInt"), as.integer(123))
+  expect_equal(callTestCase("CreateString"), "ab")
 })
 
 # Requires https://github.com/Open-Systems-Pharmacology/rSharp/issues/40

@@ -61,9 +61,11 @@ rToDotNetType <- function(x) {
 #' @export
 #' @examples
 #' \dontrun{
-#' callStatic(getRSharpSetting("testCasesTypeName"), "
+#' callStatic(
+#'   getRSharpSetting("testCasesTypeName"), "
 #'            ThrowException",
-#'            10L) # will be truncated by the Rf_error API
+#'   10L
+#' ) # will be truncated by the Rf_error API
 #' printTraceback() # prints the full stack trace
 #' }
 printTraceback <- function() {

@@ -18,6 +18,13 @@ knitr::opts_chunk$set(
 This article is a knowledge base for the`{rSharp}` package. It is a collection of 
 useful information that may help troubleshooting and understanding the package.
 
+## Loading the workspace
+
+Saving the RStudio workspace (which is the default option on RStudio exit) will save 
+the R6 objects, but the pointers to .NET objects will be lost. Trying to access the 
+objects after loading a workspace will result in an error. There is currently no
+workaround for saving .NET objects.
+
 ## Data type conversion
 
 - `NA` is a concept of marking "missing values" in R which is not available in .NET.

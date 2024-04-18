@@ -8,8 +8,7 @@
         sep = "\n"
       ))
     }
-  }
-  else {
+  } else {
     strings <- strsplit(system("ldd --version | grep ldd", intern = TRUE), " +")[[1]]
     if (as.numeric(tail(strings, n = 1)) < 2.35) {
       stop("a suitable version of glibc was not found. Install glibc >= 2.35")
@@ -17,7 +16,7 @@
   }
 
   # find installed dotnet runtimes for .NET 8
-  if(length(grep("Microsoft.NETCore.App 8", system("dotnet --list-runtimes", intern=TRUE))) == 0) {
+  if (length(grep("Microsoft.NETCore.App 8", system("dotnet --list-runtimes", intern = TRUE))) == 0) {
     stop(" a suitable dotnet runtime was not found. Install dotnet 8 or newer")
   }
   # Load the C++ and .NET libraries
