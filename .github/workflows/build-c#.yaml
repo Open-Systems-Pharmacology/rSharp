@@ -9,7 +9,7 @@ on:
   #   types: [published]
   workflow_dispatch:
 
-name: build C#
+name: build-c#-binaries
 
 jobs:
   Windows-Build:
