@@ -1,0 +1,81 @@
+# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
+# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+on:
+  # push:
+  #   branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  # release:
+  #   types: [published]
+  workflow_dispatch:
+
+name: build C#
+
+jobs:
+  Windows-Build:
+    runs-on: windows-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+        # documentation: https://github.com/actions/setup-dotnet
+
+      - name: Install dependencies
+        run: dotnet restore
+
+      - name: Build C# binaries
+        run: dotnet build
+
+      - name: Test C# binaries
+        run: dotnet test
+
+      - uses: EndBug/add-and-commit@v9
+        with:
+          default_author: github_actions
+          add: '*.dll'
+
+
+
+jobs:
+  Linux-Build:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+        # documentation: https://github.com/actions/setup-dotnet
+
+      - name: Install dependencies
+        run: dotnet restore
+
+      - name: Build C# binaries
+        run: dotnet build
+
+      - name: Test C# binaries
+        run: dotnet test
+
+      - uses: EndBug/add-and-commit@v9
+        with:
+          default_author: github_actions
+          add: '*.so'
+
