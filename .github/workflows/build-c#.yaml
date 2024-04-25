@@ -20,9 +20,13 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+        if: ${{ github.event_name == 'pull_request' }}
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
+
+      - uses: actions/checkout@v4
+        if: ${{ github.event_name != 'pull_request' }}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
@@ -40,9 +44,11 @@ jobs:
         run: dotnet test
 
       - uses: EndBug/add-and-commit@v9
+        if: ${{ success() }}
         with:
           default_author: github_actions
           add: '*.dll'
+
   Linux-Build:
     needs: Windows-Build
     runs-on: ubuntu-latest
@@ -52,9 +58,13 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+        if: ${{ github.event_name == 'pull_request' }}
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
+
+      - uses: actions/checkout@v4
+        if: ${{ github.event_name != 'pull_request' }}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
@@ -72,6 +82,7 @@ jobs:
         run: dotnet test
 
       - uses: EndBug/add-and-commit@v9
+        if: ${{ success() }}
         with:
           default_author: github_actions
           add: '*.so'
