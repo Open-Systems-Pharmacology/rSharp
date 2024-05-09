@@ -34,17 +34,25 @@ jobs:
           dotnet-version: 8.0.x
         # documentation: https://github.com/actions/setup-dotnet
 
-      - name: Install packages.config
-        run: nuget restore ./shared/packages.config -PackagesDirectory ./shared/packages
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+          r-version: '4.3.3'
+          
 
       - name: Install dependencies
-        run: dotnet restore ./shared/rSharp.sln
+        run: |
+          nuget restore ./shared/packages.config -PackagesDirectory ./shared/packages
+          dotnet restore ./shared/rSharp.sln
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
 
       - name: Build C# binaries
-        run: msbuild ./shared/rSharp.sln -t:rebuild -property:Configuration=Release
+        run: |
+          $env:R_INSTALL_PATH="C:\Program Files\R\R-4.3.3"
+          msbuild ./shared/rSharp.sln -t:rebuild -property:Configuration=Release;Platform=x64
 
       - name: Test C# binaries
         run: dotnet test ./shared/rSharp.sln
