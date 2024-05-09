@@ -41,10 +41,10 @@ jobs:
         run: dotnet restore ./shared/rSharp.sln
 
       - name: Build C# binaries
-        run: dotnet build
+        run: dotnet build ./shared/rSharp.sln
 
       - name: Test C# binaries
-        run: dotnet test
+        run: dotnet test ./shared/rSharp.sln
 
       - uses: EndBug/add-and-commit@v9
         if: ${{ success() }}
@@ -72,14 +72,11 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 8.0.x
         # documentation: https://github.com/actions/setup-dotnet
 
-      - name: Install dependencies
-        run: dotnet restore
-
-      - name: Build C# binaries
-        run: dotnet build
+      - name: Make
+        run: make -f ./shared/makefile
 
       - name: Test C# binaries
         run: dotnet test
