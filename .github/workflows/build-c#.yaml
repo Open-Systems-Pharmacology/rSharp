@@ -56,9 +56,9 @@ jobs:
 
       - name: Test C# binaries
         run: |
-          dotnet test .\shared\DynamicInterop.Tests\ -d log.txt --no-build
-          dotnet test .\shared\RDotNet.Tests\ -d log.txt --no-build
-          dotnet test .\shared\rSharpTests\ -d log.txt --no-build
+          dotnet test .\shared\DynamicInterop.Tests\ -c Release -d log.txt --no-build
+          dotnet test .\shared\RDotNet.Tests\ -c Release -d log.txt --no-build
+          dotnet test .\shared\rSharpTests\ -c Release -d log.txt --no-build
           
 
       - uses: EndBug/add-and-commit@v9
