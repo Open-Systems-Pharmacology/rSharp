@@ -44,7 +44,7 @@ jobs:
         uses: microsoft/setup-msbuild@v2
 
       - name: Build C# binaries
-        run: msbuild ./shared/rSharp.sln -t:rebuild -verbosity:diag -property:Configuration=Release
+        run: msbuild ./shared/rSharp.sln -t:rebuild -property:Configuration=Release
 
       - name: Test C# binaries
         run: dotnet test ./shared/rSharp.sln
