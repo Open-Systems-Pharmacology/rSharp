@@ -35,7 +35,7 @@ jobs:
         # documentation: https://github.com/actions/setup-dotnet
 
       - name: Install dependencies
-        run: dotnet restore
+        run: nuget restore ./shared/packages.config
 
       - name: Build C# binaries
         run: dotnet build
