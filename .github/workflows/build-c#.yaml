@@ -55,7 +55,11 @@ jobs:
           msbuild ./shared/rSharp.sln -t:rebuild /p:Configuration=Release /p:Platform=x64
 
       - name: Test C# binaries
-        run: dotnet test ./shared/rSharp.sln -d log.txt --no-build
+        run: |
+          dotnet test .\shared\DynamicInterop.Tests\ -d log.txt --no-build
+          dotnet test .\shared\RDotNet.Tests\ -d log.txt --no-build
+          dotnet test .\shared\rSharpTests\ -d log.txt --no-build
+          
 
       - uses: EndBug/add-and-commit@v9
         if: ${{ success() }}
