@@ -52,12 +52,10 @@ jobs:
       - name: Build C# binaries
         run: |
           $env:R_INSTALL_PATH="C:\R"
-          $env:R_INSTALL_PATH
-          ls C:\R
           msbuild ./shared/rSharp.sln -t:rebuild /p:Configuration=Release /p:Platform=x64
 
       - name: Test C# binaries
-        run: dotnet test ./shared/rSharp.sln
+        run: dotnet test ./shared/rSharp.sln -d log.txt
 
       - uses: EndBug/add-and-commit@v9
         if: ${{ success() }}
