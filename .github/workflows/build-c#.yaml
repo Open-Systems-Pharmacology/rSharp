@@ -40,11 +40,11 @@ jobs:
       - name: Install dependencies
         run: dotnet restore ./shared/rSharp.sln
 
-      - name: Set Path
-        run: $env:PATH += ";D:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Microsoft\VC\v170"
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
 
       - name: Build C# binaries
-        run: dotnet build ./shared/rSharp.sln
+        run: msbuild ./shared/rSharp.sln -t:rebuild -verbosity:diag -property:Configuration=Release
 
       - name: Test C# binaries
         run: dotnet test ./shared/rSharp.sln
