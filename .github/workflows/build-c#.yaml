@@ -34,8 +34,11 @@ jobs:
           dotnet-version: 6.0.x
         # documentation: https://github.com/actions/setup-dotnet
 
+      - name: Install packages.config
+        run: nuget restore ./shared/packages.config -PackagesDirectory ./shared/packages
+
       - name: Install dependencies
-        run: nuget restore ./shared/packages.config
+        run: dotnet restore ./shared/rSharp.sln
 
       - name: Build C# binaries
         run: dotnet build
