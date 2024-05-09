@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Threading;
 using Xunit;
 
@@ -172,27 +173,34 @@ namespace RDotNet
          Assert.True(memoryAfterAlloc - memoryAfterGC > (expectedMinBytesDifference)); // x should be collected.
       }
 
-      [Fact]
+      [SkippableFact]
       public void TestParseCodeLine()
       {
+         Skip.IfNot(IsWindows());
          SetUpTest();
          var engine = this.Engine;
          engine.Evaluate("cat('hello')");
          Assert.Equal("hello", Device.GetString());
       }
-
-      [Fact]
+      private static bool IsWindows()
+      {
+         return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+      }
+      
+      [SkippableFact]
       public void TestParseCodeBlock()
       {
+         Skip.IfNot(IsWindows());
          SetUpTest();
          var engine = this.Engine;
          engine.Evaluate("for(i in 1:3){\ncat(i)\ncat(i)\n}");
          Assert.Equal("112233", Device.GetString());
       }
 
-      [Fact]
+      [SkippableFact]
       public void TestParseCodeBlockMultiLine()
       {
+         Skip.IfNot(IsWindows());
          SetUpTest();
          // Tests suggested by the following issue, but not dealing with it per se.
          // https://rdotnet.codeplex.com/workitem/165
@@ -210,9 +218,10 @@ cat(i); cat(i)
          Assert.Equal("112233", Device.GetString());
       }
 
-      [Fact]
+      [SkippableFact]
       public void TestParseComments()
       {
+         Skip.IfNot(IsWindows());
          SetUpTest();
          // See
          // https://rdotnet.codeplex.com/workitem/165
@@ -248,9 +257,10 @@ sep=''))
          Assert.Equal(Device.GetString(), ("function f ab"));
       }
 
-      [Fact]
+      [SkippableFact]
       public void TestParseLineWithStringWithHash()
       {
+         Skip.IfNot(IsWindows());
          SetUpTest();
          //https://github.com/jmp75/rdotnet/issues/14
          var engine = this.Engine;
@@ -330,9 +340,10 @@ string') # ; cat(' this # is removed')");
          //            blah = @"blah = 'blah\n\'blah\'\nblah";
       }
 
-      [Fact]
+      [SkippableFact]
       public void TestReadConsole()
       {
+         Skip.IfNot(IsWindows());
          SetUpTest();
          var engine = this.Engine;
          string additionalMsg = "https://rdotnet.codeplex.com/workitem/146";
@@ -341,9 +352,10 @@ string') # ; cat(' this # is removed')");
          Assert.Equal(engine.Evaluate("readline()").AsCharacter()[0], (Device.Input));
       }
 
-      [Fact]
+      [SkippableFact]
       public void TestWriteConsole()
       {
+         Skip.IfNot(IsWindows());
          SetUpTest();
          var engine = this.Engine;
          engine.Evaluate("print(NULL)");

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Runtime.InteropServices;
 using Xunit;
 
 namespace RDotNet
@@ -72,10 +73,15 @@ namespace RDotNet
          TestDataFrameInMemoryCreation();
          TestDataFrameInMemoryCreation();
       }
-
-      [Fact]
+      private static bool IsWindows()
+      {
+         return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+      }
+      
+      [SkippableFact]
       public void TestDataFrameInMemoryCreation()
       {
+         Skip.IfNot(IsWindows());
          SetUpTest();
          var engine = this.Engine;
          IEnumerable[] columns;

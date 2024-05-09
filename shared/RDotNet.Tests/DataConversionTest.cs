@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using Xunit;
 
 namespace RDotNet
@@ -128,10 +129,15 @@ namespace RDotNet
          CheckBothArrayConversions(vec, expected);
          // NA members is already tested in another test class
       }
-
-      [Fact]
+      private static bool IsWindows()
+      {
+         return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+      }
+      
+      [SkippableFact]
       public void TestCreateComplexVectorValid()
       {
+         Skip.IfNot(IsWindows());
          SetUpTest();
          var engine = this.Engine;
          engine.Evaluate("x <- 1:100 + 1i*(101:200)");
