@@ -48,9 +48,9 @@ jobs:
       - name: Test C# binaries
         run: |
           export R_HOME=/usr/lib/R
-          dotnet test ./shared/RDotNet.Tests/ -c Release -d log.txt
-          dotnet test ./shared/rSharpTests/ -c Release -d log.txt
-          dotnet test ./shared/DynamicInterop.Tests/ -c Release -d log.txt
+          dotnet test ./shared/RDotNet.Tests/ -c Release -d log.txt --no-build
+          dotnet test ./shared/rSharpTests/ -c Release -d log.txt --no-build
+          dotnet test ./shared/DynamicInterop.Tests/ -c Release -d log.txt --no-build
 
       - uses: EndBug/add-and-commit@v9
         if: ${{ success() }}
