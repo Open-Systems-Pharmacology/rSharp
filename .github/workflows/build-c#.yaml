@@ -39,6 +39,12 @@ jobs:
         working-directory: ./shared
         run: make
 
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+          r-version: '4.3.3'
+
       - name: Test C# binaries
         run: |
           dotnet test ./shared/RDotNet.Tests/ -c Release -d log.txt --no-build
