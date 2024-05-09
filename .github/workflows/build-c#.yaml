@@ -51,8 +51,10 @@ jobs:
 
       - name: Build C# binaries
         run: |
-          $env:R_INSTALL_PATH="C:\R\R-4.3.3"
-          msbuild ./shared/rSharp.sln -t:rebuild -property:Configuration=Release;Platform=x64
+          $env:R_INSTALL_PATH="C:\R"
+          $env:R_INSTALL_PATH
+          ls C:\R
+          msbuild ./shared/rSharp.sln -t:rebuild /p:Configuration=Release /p:Platform=x64
 
       - name: Test C# binaries
         run: dotnet test ./shared/rSharp.sln
