@@ -1,4 +1,4 @@
-BUILDTYPE ?= Debug
+BUILDTYPE ?= Release
 TGTPLATFORM=x64
 RUNTIMECONFIG=RSharp.runtimeconfig
 OBJ_DIR := obj
