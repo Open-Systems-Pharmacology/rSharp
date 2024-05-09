@@ -41,7 +41,7 @@ jobs:
         run: dotnet restore ./shared/rSharp.sln
 
       - name: Set Path
-        run: $env:PATH += ";D:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170"
+        run: $env:PATH += ";D:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Microsoft\VC\v170"
 
       - name: Build C# binaries
         run: dotnet build ./shared/rSharp.sln
