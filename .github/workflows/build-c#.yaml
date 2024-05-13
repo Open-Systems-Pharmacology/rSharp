@@ -1,12 +1,6 @@
-# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
-# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 on:
-  # push:
-  #   branches: [main, master]
   pull_request:
     branches: [main, master]
-  # release:
-  #   types: [published]
   workflow_dispatch:
 
 name: build-c#-binaries
@@ -86,7 +80,7 @@ jobs:
         with:
           use-public-rspm: true
           r-version: '4.3.3'
-          
+
 
       - name: Install dependencies
         run: |
@@ -106,7 +100,7 @@ jobs:
           dotnet test .\shared\RDotNet.Tests\ -c Release -d log.txt --no-build
           dotnet test .\shared\rSharpTests\ -c Release -d log.txt --no-build
           dotnet test .\shared\DynamicInterop.Tests\ -c Release -d log.txt --no-build
-          
+
 
       - uses: EndBug/add-and-commit@v9
         if: ${{ success() }}
