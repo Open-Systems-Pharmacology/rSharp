@@ -2,7 +2,7 @@
 % Please edit documentation in R/rSharp-env.R
 \name{getRSharpSetting}
 \alias{getRSharpSetting}
-\title{Get the value of a global `{rShapr}` setting.}
+\title{Get the value of a global `{rSharp}` setting.}
 \usage{
 getRSharpSetting(settingName)
 }
@@ -13,7 +13,7 @@ getRSharpSetting(settingName)
 Value of the setting stored in rSharpEnv. If the setting does not exist, an error is thrown.
 }
 \description{
-Get the value of a global `{rShapr}` setting.
+Get the value of a global `{rSharp}` setting.
 }
 \examples{
 getRSharpSetting("nativePkgName")

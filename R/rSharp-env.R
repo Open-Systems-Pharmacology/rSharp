@@ -24,7 +24,7 @@ rSharpEnv$testMethodBindingTypeName <- "ClrFacade.TestMethodBinding"
 #' @export
 rSharpSettingNames <- names(rSharpEnv)
 
-#' Get the value of a global `{rShapr}` setting.
+#' Get the value of a global `{rSharp}` setting.
 #'
 #' @param settingName String name of the setting
 #'
