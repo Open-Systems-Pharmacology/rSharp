@@ -154,7 +154,7 @@ void rSharp_shutdown_clr()
 
 void ms_rSharp_cleanup()
 {
-	close_fptr(cxt);
+	// close_fptr(cxt);
 }
 
 /////////////////////////////////////////
