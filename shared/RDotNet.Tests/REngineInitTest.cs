@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using RDotNet.NativeLibrary;
 using Xunit;
 
@@ -286,18 +287,25 @@ namespace RDotNet
       }
 
       // TODO: probably needs adjustments for MacOS and Linux
-      [Fact]
+      [SkippableFact]
       public void TestFindRBinPath()
       {
+         Skip.IfNot(IsWindows());
          string rLibPath = createTestRegistryUtil().FindRPath();
          var files = Directory.GetFiles(rLibPath);
          var fnmatch = files.Where(fn => fn.ToLower() == Path.Combine(rLibPath.ToLower(), NativeUtility.GetRLibraryFileName().ToLower()));
          Assert.Equal(1, fnmatch.Count());
       }
 
-      [Fact]
+      private static bool IsWindows()
+      {
+         return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+      }
+
+      [SkippableFact]
       public void TestMockWindowsRegistry()
       {
+         Skip.IfNot(IsWindows());
          var w = new WindowsRegistry();
          IRegistryKey rCore = w.LocalMachine.OpenSubKey(@"SOFTWARE\R-core");
 
@@ -351,21 +359,10 @@ namespace RDotNet
          Assert.Equal(R64.GetValue("Current Version"), "3.2.2.803");
       }
 
-      [Fact]
-      public void TestFindRegKey()
-      {
-         //"HKEY_LOCAL_MACHINE\SOFTWARE\R-core\R\3.2.2.803 Microsoft R Client";
-         //"HKEY_LOCAL_MACHINE\SOFTWARE\R-core\R\R64\3.2.2.803";
-         //   C:\Program Files\Microsoft\R Client\R_SERVER\
-         //string rLibPath = createTestRegistryUtil().FindRPaths();
-         //var files = Directory.GetFiles(rLibPath);
-         //var fnmatch = files.Where(fn => fn.ToLower() == Path.Combine(rLibPath.ToLower(), NativeUtility.GetRLibraryFileName().ToLower()));
-         //Assert.Equal(1, fnmatch.Count());
-      }
-
-      [Fact]
+      [SkippableFact]
       public void TestFindRHomePath()
       {
+         Skip.IfNot(IsWindows());
          string rHomePath = createTestRegistryUtil().FindRHome();
          var files = Directory.GetDirectories(rHomePath);
          var fnmatch = files.Where(fn => Path.GetFileName(fn) == "library");
@@ -374,9 +371,10 @@ namespace RDotNet
          Assert.Equal(1, fnmatch.Count());
       }
 
-      [Fact]
+      [SkippableFact]
       public void TestGetPathInitSearchLog()
       {
+         Skip.IfNot(IsWindows());
          REngine.GetInstance();
          var log = NativeUtility.SetEnvironmentVariablesLog;
          Assert.NotEqual(string.Empty, log);

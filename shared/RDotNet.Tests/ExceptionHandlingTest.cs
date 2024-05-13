@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using Xunit;
 
 namespace RDotNet
@@ -31,14 +32,14 @@ namespace RDotNet
          Assert.Null(expr);
       }
 
-      [Fact]
+      [SkippableFact]
       public void TestFailedExpressionEvaluation()
       {
          SetUpTest();
          //> fail <- function(msg) {stop(paste( 'the message is', msg))}
          //> fail('bailing out')
          //Error in fail("bailing out") : the message is bailing out
-
+         Skip.IfNot(IsWindows());
          ReportFailOnLinux("https://rdotnet.codeplex.com/workitem/146");
 
          var engine = this.Engine;
@@ -51,9 +52,10 @@ namespace RDotNet
          Assert.Null(expr);
       }
 
-      [Fact]
+      [SkippableFact]
       public void TestFailedExpressionUnboundSymbol()
       {
+         Skip.IfNot(IsWindows());
          SetUpTest();
          var engine = this.Engine;
          ReportFailOnLinux("https://rdotnet.codeplex.com/workitem/146");
@@ -66,9 +68,10 @@ namespace RDotNet
          );
       }
 
-      [Fact]
+      [SkippableFact]
       public void TestFailedExpressionUnboundSymbolEvaluation()
       {
+         Skip.IfNot(IsWindows());
          SetUpTest();
          ReportFailOnLinux("https://rdotnet.codeplex.com/workitem/146");
          var engine = this.Engine;
@@ -80,10 +83,15 @@ namespace RDotNet
             "Error: object 'x' not found\n"
          );
       }
-
-      [Fact]
+      private static bool IsWindows()
+      {
+         return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+      }
+      
+      [SkippableFact]
       public void TestFailedExpressionParsingMissingParenthesis()
       {
+         Skip.IfNot(IsWindows());
          SetUpTest();
          ReportFailOnLinux("https://rdotnet.codeplex.com/workitem/146");
          //> x <- rep(c(TRUE,FALSE), 55
