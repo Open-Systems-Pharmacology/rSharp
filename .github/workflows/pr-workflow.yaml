@@ -21,7 +21,6 @@ jobs:
       with:
         filters: |
           Csharp:
-            - 'inst/lib/*.json'
             - 'shared/**'
 
   build-Csharp-binaries:
