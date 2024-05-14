@@ -11,6 +11,8 @@ jobs:
   R-CMD-Check:
     uses: ./.github/workflows/R-CMD-check.yaml
   test-coverage:
+    needs: [R-CMD-Check]
     uses:  ./.github/workflows/test-coverage.yaml
   pkgdown:
+    needs: [R-CMD-Check]
     uses:  ./.github/workflows/pkgdown.yaml
