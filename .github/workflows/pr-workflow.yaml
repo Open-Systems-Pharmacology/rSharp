@@ -8,7 +8,25 @@ on:
 
 
 jobs:
+  # Detect changes done in C# code base. If no change were done, skim "build-Csharp-binaries" workflow.
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      Csharp: ${{ steps.filter.outputs.Csharp }}
+    steps:
+    - uses: dorny/paths-filter@v3
+      id: filter
+      with:
+        filters: |
+          Csharp:
+            - 'inst/lib/**'
+            - 'shared/**'
+
   build-Csharp-binaries:
+    needs: changes
+    if: ${{ needs.changes.outputs.Csharp == 'true' }}
     uses: ./.github/workflows/build-c#.yaml
   R-CMD-Check:
     needs: build-Csharp-binaries
