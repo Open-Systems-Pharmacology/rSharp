@@ -10,7 +10,7 @@
     }
   } else {
     strings <- strsplit(system("ldd --version | grep ldd", intern = TRUE), " +")[[1]]
-    if (as.numeric(tail(strings, n = 1)) < 2.35) {
+    if (as.numeric(utils::tail(strings, n = 1)) < 2.35) {
       stop("a suitable version of glibc was not found. Install glibc >= 2.35")
     }
   }

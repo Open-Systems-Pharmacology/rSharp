@@ -2,7 +2,7 @@
 % Please edit documentation in R/rSharp-env.R
 \name{getRSharpSetting}
 \alias{getRSharpSetting}
-\title{Get the value of a global `{rSharp}` setting.}
+\title{getRSharpSetting}
 \usage{
 getRSharpSetting(settingName)
 }
