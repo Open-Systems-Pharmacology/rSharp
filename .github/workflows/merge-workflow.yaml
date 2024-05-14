@@ -1,4 +1,4 @@
-name: full-workflow
+name: Merge Workflow
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: Call a reusable workflow
+name: PR-Workflow
 
 on:
   pull_request:
@@ -6,8 +6,6 @@ on:
       - main
   workflow_dispatch:
 
-
-name: full-workflow
 
 jobs:
   build-C#:
