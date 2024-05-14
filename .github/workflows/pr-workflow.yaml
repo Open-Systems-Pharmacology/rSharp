@@ -8,7 +8,7 @@ on:
 
 
 jobs:
-  build-C#:
+  build-Csharp-binaries:
     uses: ./.github/workflows/build-c#.yaml
   R-CMD-Check:
     uses: ./.github/workflows/R-CMD-check.yaml
