@@ -1,13 +1,7 @@
-on:
-  push:
-    branches: [main]
-  workflow_run:
-    workflows: ["build-c#-binaries"]
-    types:
-      - completed
-  workflow_dispatch:
-
 name: test-coverage
+
+on:
+ workflow_call:
 
 jobs:
   test-coverage:
@@ -43,17 +37,3 @@ jobs:
             install_path = file.path(normalizePath(Sys.getenv("RUNNER_TEMP"), winslash = "/"), "package")
           )
         shell: Rscript {0}
-
-      - name: Show testthat output
-        if: always()
-        run: |
-          ## --------------------------------------------------------------------
-          find '${{ runner.temp }}/package' -name 'testthat.Rout*' -exec cat '{}' \; || true
-        shell: bash
-
-      - name: Upload test results
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-test-failures
-          path: ${{ runner.temp }}/package
