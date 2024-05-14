@@ -19,6 +19,7 @@ jobs:
     - uses: dorny/paths-filter@v3
       id: filter
       with:
+        base: ${{ github.ref }} # Compare change to latest commit
         filters: |
           Csharp:
             - 'inst/lib/*.json'
