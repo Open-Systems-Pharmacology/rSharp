@@ -1,9 +1,8 @@
-on:
-  pull_request:
-    branches: [main, master]
-  workflow_dispatch:
-
 name: build-c#-binaries
+
+on:
+  workflow_call:
+
 
 jobs:
   Linux-Build:

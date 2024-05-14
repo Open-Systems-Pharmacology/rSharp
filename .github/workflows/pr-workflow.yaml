@@ -1,0 +1,20 @@
+name: Call a reusable workflow
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+
+name: full-workflow
+
+jobs:
+  build-C#:
+    uses: ./.github/workflows/build-c#.yaml
+  R-CMD-Check:
+    uses: ./.github/workflows/R-CMD-check.yaml
+  test-coverage:
+    uses:  ./.github/workflows/test-coverage.yaml
+  pkgdown:
+    uses:  ./.github/workflows/pkgdown.yaml

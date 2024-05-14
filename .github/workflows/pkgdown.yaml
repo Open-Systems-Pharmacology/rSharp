@@ -1,13 +1,7 @@
-on:
-  push:
-    branches: [main]
-  workflow_run:
-    workflows: ["build-c#-binaries"]
-    types:
-      - completed
-  workflow_dispatch:
-
 name: pkgdown
+
+on:
+ workflow_call:
 
 jobs:
   pkgdown:
