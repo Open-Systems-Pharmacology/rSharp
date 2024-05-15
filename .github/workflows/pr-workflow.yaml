@@ -30,8 +30,10 @@ jobs:
     needs: build-Csharp-binaries
     uses: ./.github/workflows/R-CMD-check.yaml
   test-coverage:
+    if: ${{ always() }}
     needs: [R-CMD-Check]
     uses:  ./.github/workflows/test-coverage.yaml
   pkgdown:
+    if: ${{ always() }}
     needs: [R-CMD-Check]
     uses:  ./.github/workflows/pkgdown.yaml
