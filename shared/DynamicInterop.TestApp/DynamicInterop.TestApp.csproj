@@ -3,9 +3,9 @@
     <ProjectGuid>{46208A0E-F95F-4B1E-A396-0F715BA6B87A}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.8.2</Version>
+    <Version>1.0.0</Version>
     <Description>DynamicInterop unit tests</Description>
-    <Authors>Jean-Michel Perraud</Authors>
+	<Authors>Open-Systems-Pharmacology</Authors>
     <PackageReleaseNotes>Migration to .NET Standard 2.0</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
