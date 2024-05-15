@@ -12,7 +12,7 @@
 #' otherwise returned unchanged. If `recursive` is TRUE and `obj` is a list, the function is applied
 #' recursively to the list elements.
 #' @export
-#' @example
+#' @examples
 #' castToRObject(1)
 #' castToRObject("a")
 #' castToRObject(TRUE)
