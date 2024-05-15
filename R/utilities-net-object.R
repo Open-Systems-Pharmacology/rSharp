@@ -8,12 +8,20 @@
 #'
 #' @param obj the presumed external pointer.
 #' @param recursive logical; if TRUE, the function is applied recursively to the list elements.
-#'
-#' @export
-#'
 #' @return A `NetObject` R6 object if the argument is indeed an external pointer,
 #' otherwise returned unchanged. If `recursive` is TRUE and `obj` is a list, the function is applied
 #' recursively to the list elements.
+#' @export
+#' @examples
+#' castToRObject(1)
+#' castToRObject("a")
+#' castToRObject(TRUE)
+#' castToRObject(FALSE)
+#' castToRObject(1L)
+#' castToRObject(1.1)
+#' castToRObject(1.1 + 1i)
+#' castToRObject(list(1, 2, 3))
+#' castToRObject(data.frame(a = 1:3, b = c("a", "b", "c")))
 castToRObject <- function(obj, recursive = TRUE) {
   # if object is not a list or recursive is FALSE, process is as is
   # special case for data frames, which are recognized as lists

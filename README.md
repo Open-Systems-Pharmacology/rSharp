@@ -10,12 +10,19 @@ coverage](https://codecov.io/gh/Open-Systems-Pharmacology/rSharp/branch/develop/
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-The **RSharp** R package provides access to .NET libraries from R. It
-allows to create .NET objects, access their fields, and call their
+The `{rSharp}` R package provides access to `.NET` libraries from R. It
+allows to create `.NET` objects, access their fields, and call their
 methods.
 
-This package is based on the [rClr](https://github.com/rdotnet/rClr), [rdotnet](https://github.com/rdotnet/rdotnet), and [dynamic-interop-dll](https://github.com/rdotnet/dynamic-interop-dll)
-packages and utilizing some of their code base.
+This package is based on the [rClr](https://github.com/rdotnet/rClr)
+package and utilizes some of its code base.
+
+## Important notes
+
+As `{rSharp}` is provided with precompiled binary files, it is currently
+a
+[binary](https://cran.r-project.org/doc/manuals/R-exts.html#Building-binary-packages-1)
+package.
 
 The package utilizes two code bases - the R code which is exposed to the
 user, and the C++/C# code that communicates with the .NET libraries. The
@@ -46,14 +53,14 @@ You can install the package from GitHub with pre-build binaries by
 running:
 
 ``` r
-install.packages("remotes")
-remotes::install_github("Open-Systems-Pharmacology/rSharp@*release")
+install.packages("pak")
+pak::pak("Open-Systems-Pharmacology/rSharp@*release")
 ```
 
 Get the latest development version with:
 
 ``` r
-remotes::install_github("Open-Systems-Pharmacology/rSharp")
+pak::pak("Open-Systems-Pharmacology/rSharp")
 ```
 
 #### Install from Binary
@@ -82,13 +89,13 @@ Install the package from GitHub with pre-build binaries by running:
 
 ``` r
 install.packages("remotes")
-remotes::install_github("Open-Systems-Pharmacology/rSharp@*release")
+pak::pak("Open-Systems-Pharmacology/rSharp@*release")
 ```
 
 Get the latest development version with:
 
 ``` r
-remotes::install_github("Open-Systems-Pharmacology/rSharp")
+pak::pak("Open-Systems-Pharmacology/rSharp")
 ```
 
 ## Build
@@ -148,12 +155,12 @@ conduct](https://github.com/Open-Systems-Pharmacology/Suite/blob/master/CODE_OF_
 
 We encourage contribution to the Open Systems Pharmacology community.
 Before getting started please read the [contribution
-guidelines](https://github.com/Open-Systems-Pharmacology/Suite/blob/master/CONTRIBUTING.md).
+guidelines](https://dev.open-systems-pharmacology.org/r-development-resources/collaboration_guide).
 If you are contributing code, please be familiar with the [coding
-standards](https://github.com/Open-Systems-Pharmacology/Suite/blob/master/CODING_STANDARDS_R.md).
+standards](https://dev.open-systems-pharmacology.org/r-development-resources/coding_standards_r).
 
 ## License
 
-The `{RSharp}` package is released under the [GPLv2 License](LICENSE).
+The `{rSharp}` package is released under the [GPLv2 License](LICENSE).
 
 All trademarks within this document belong to their legitimate owners.

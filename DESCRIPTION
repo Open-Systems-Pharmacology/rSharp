@@ -1,7 +1,7 @@
 Package: rSharp
 Type: Package
 Title: Accessing .NET from R
-Version: 0.0.0.9000
+Version: 1.0.0
 Authors@R: c(person(given = "Open-Systems-Pharmacology Community",
              role = "cph"),
       person("esqLABS GmbH", role = "fnd"),
@@ -25,10 +25,7 @@ Authors@R: c(person(given = "Open-Systems-Pharmacology Community",
              role = c("aut")),
      person("Jean-Michel", "Perraud", email =
     "jean-michel.perraud@csiro.au", role = "aut"))
-Maintainer: Ian Peter Du <ian_peter.du@esqlabs.com>
-Description: rSharp is a package for low-level access from R .NET runtime. It
-    provides a set of functions to create and manipulate .NET objects, call
-    methods, and access properties and fields.
+Description: Enable low-level access to .NET runtime from R. Provides a set of functions to create and manipulate .NET objects, call methods, and access properties and fields.
 URL: https://github.com/Open-Systems-Pharmacology/rsharp/, http://www.open-systems-pharmacology.org/rSharp/
 Encoding: UTF-8
 Depends:
