@@ -28,11 +28,12 @@ jobs:
     if: ${{ needs.changes.outputs.Csharp == 'true' }}
     uses: ./.github/workflows/build-c#.yaml
   R-CMD-Check:
+    if: ${{ always() }}
     needs: build-Csharp-binaries
     uses: ./.github/workflows/R-CMD-check.yaml
   test-coverage:
-    needs: [build-Csharp-binaries, R-CMD-Check]
+    needs: [R-CMD-Check]
     uses:  ./.github/workflows/test-coverage.yaml
   pkgdown:
-    needs: [build-Csharp-binaries, R-CMD-Check]
+    needs: [R-CMD-Check]
     uses:  ./.github/workflows/pkgdown.yaml
