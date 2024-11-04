@@ -45,7 +45,7 @@ from source. For this, follow the instructions in section
   2017 and 2019 available
   [here](https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads)
 - .NET 8 runtime available
-  [here](https://dotnet.microsoft.com/download/dotnet/8.0/runtime).
+  [here](https://dotnet.microsoft.com/download/dotnet/8.0/runtime) (pick the **console version**).
 
 #### Install from Github
 
