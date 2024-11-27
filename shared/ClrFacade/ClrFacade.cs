@@ -48,6 +48,8 @@ public static class ClrFacade
 
    public static object GetFieldOrProperty(object obj, string name) => InternalRSharpFacade.GetFieldOrProperty(obj, name);
 
+   public static object ConvertDataTableToDataFrame(object dataTable) => InternalRSharpFacade.ConvertDataTableToDataFrame(dataTable);
+
    public static Type GetType(string typename) => InternalRSharpFacade.GetType(typename);
 
    public delegate void FreeObjectDelegate(IntPtr obj);

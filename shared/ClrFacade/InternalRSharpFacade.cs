@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using RDotNet;
 
 namespace ClrFacade;
 
@@ -694,5 +697,52 @@ public static class InternalRSharpFacade
          Marshal.FreeBSTR(genericValue.Value);
       else if (genericValue.Type == RSharpValueType.Object)
          ((GCHandle)genericValue.Value).Free();
+   }
+
+   public static object ConvertDataTableToDataFrame(object obj)
+   {
+      var dataTable = obj as DataTable;
+      if (dataTable == null)
+         throw new ArgumentException($"Expected a DataTable but got {obj.GetType()}");
+
+      return convertDataTableToDataFrame(dataTable);
+   }
+
+   private static DataFrame convertDataTableToDataFrame(DataTable dataTable)
+   {
+      var e = REngine.GetInstance();
+      var df = e.CreateDataFrame(columnsFrom(dataTable), columnNamesFrom(dataTable));
+      return df;
+   }
+
+   private static string[] rowNamesFrom(DataTable dataTable)
+   {
+      var column = dataTable.Columns[0];
+
+         var values = new List<string>();
+         dataTable.Rows.Cast<DataRow>().ToList().ForEach(row => values.Add(row[column].ToString()));
+
+         return values.ToArray();
+   }
+
+   private static string[] columnNamesFrom(DataTable dataTable)
+   {
+      var dataColumns = dataTable.Columns.Cast<DataColumn>().ToList();
+      return dataColumns.Except([dataColumns.First()]).Select(column => column.ColumnName).ToArray();
+   }
+
+   private static IEnumerable[] columnsFrom(DataTable dataTable)
+   {
+      var list = new List<IEnumerable>();
+
+      var dataColumns = dataTable.Columns.Cast<DataColumn>().ToList();
+      dataColumns.Except([dataColumns.First()]).ToList().ForEach(column =>
+      {
+         var values = new List<string>();
+         dataTable.Rows.Cast<DataRow>().ToList().ForEach(row => values.Add(row[column].ToString()));
+         list.Add(values);
+      });
+
+      return list.ToArray();
    }
 }
