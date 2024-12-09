@@ -79,12 +79,8 @@ SEXP rSharp_create_domain(SEXP args)
 
 #ifdef WINDOWS
 		// STEP 2: Initialize and start the .NET Core runtime
-		size_t lengthInWideFormat = 0;
-		//Gets the length of libPath in terms of a wide string.
-		mbstowcs_s(&lengthInWideFormat, nullptr, 0, libraryPath, 0);
-		char_t* wideStringLibraryPath = new char_t[lengthInWideFormat + 1];
-		//Copies the libraryPath to a wchar_t with the size lengthInWideFormat
-		mbstowcs_s(nullptr, wideStringLibraryPath, lengthInWideFormat + 1, libraryPath, lengthInWideFormat);
+		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+		const char_t* wideStringLibraryPath = converter.from_bytes(libraryPath).c_str();
 #else
 		const char_t* wideStringLibraryPath = libraryPath;
 #endif
@@ -103,7 +99,7 @@ SEXP rSharp_create_domain(SEXP args)
 
 		delete[] wideStringPath;
 #ifdef WINDOWS
-		delete[] wideStringLibraryPath;
+		delete wideStringLibraryPath;
 #endif
 	}
 	catch (const std::exception& ex)
