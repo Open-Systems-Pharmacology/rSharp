@@ -98,9 +98,6 @@ SEXP rSharp_create_domain(SEXP args)
 		}
 
 		delete[] wideStringPath;
-#ifdef WINDOWS
-		delete wideStringLibraryPath;
-#endif
 	}
 	catch (const std::exception& ex)
 	{
