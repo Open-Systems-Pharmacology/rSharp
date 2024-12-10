@@ -27,7 +27,7 @@ typedef bool RSHARP_BOOL;
 #define FALSE_BOOL false;
 
 #ifdef WINDOWS
-
+#include <codecvt>
 #include <Windows.h>
 
 #include <metahost.h>
