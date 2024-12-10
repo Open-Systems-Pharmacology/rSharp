@@ -1,120 +1,42 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/404.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/articles/knowledge-base.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/articles/user-guide.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/authors.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/index.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/news/index.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/NetObject.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/callStatic.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/castToRObject.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/dot-clrTypeNameExtPtr.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/dot-getCurrentConvertedObject.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/dot-mkClrObjRef.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/getConstructors.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/getEnumNames.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/getLoadedAssemblies.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/getRSharpSetting.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/getSexpType.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/getStatic.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/getStaticFields.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/getStaticMemberSignature.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/getStaticMembers.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/getStaticMethods.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/getStaticProperties.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/getType.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/getTypesInAssembly.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/inspectArgs.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/isAssemblyLoaded.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/loadAssembly.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/newObjectFromName.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/newPointerFromName.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/printTraceback.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/rSharpSettingNames.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/rToDotNetType.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/setConvertAdvancedTypes.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/setStatic.html</loc>
-  </url>
-  <url>
-    <loc>http://www.open-systems-pharmacology.org/rSharp/reference/toStringNET.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/404.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/LICENSE-text.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/articles/index.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/articles/knowledge-base.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/articles/user-guide.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/authors.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/index.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/news/index.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/NetObject.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/callStatic.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/castToRObject.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/dot-clrTypeNameExtPtr.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/dot-getCurrentConvertedObject.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/dot-mkClrObjRef.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/getConstructors.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/getEnumNames.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/getLoadedAssemblies.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/getRSharpSetting.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/getSexpType.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/getStatic.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/getStaticFields.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/getStaticMemberSignature.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/getStaticMembers.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/getStaticMethods.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/getStaticProperties.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/getType.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/getTypesInAssembly.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/index.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/inspectArgs.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/isAssemblyLoaded.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/loadAssembly.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/newObjectFromName.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/newPointerFromName.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/printTraceback.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/rSharpSettingNames.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/rToDotNetType.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/setConvertAdvancedTypes.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/setStatic.html</loc></url>
+<url><loc>http://www.open-systems-pharmacology.org/rSharp/reference/toStringNET.html</loc></url>
 </urlset>
+
