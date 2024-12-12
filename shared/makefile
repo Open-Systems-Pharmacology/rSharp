@@ -6,7 +6,7 @@ OUT_DIR := out
 SRC_DIR := .
 SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
-SHLIB_EXT := .so
+SHLIB_EXT := .dylib
 INSTDIR= ../inst
 
 # only nuget supports packages.config
@@ -35,11 +35,11 @@ clean:
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	-@mkdir -p $(OBJ_DIR) 2>/dev/null
-	$(CXX) -std=c++11 -Ipackages/Microsoft.NETCore.App.Host.linux-x64.8.0.2/runtimes/linux-x64/native $(ALL_CPPFLAGS) -I/usr/share/R/include/ $(ALL_CFLAGS) -fPIC -c $<  -o $@  -lsupc++
+	$(CXX) -std=c++11 -Ipackages/Microsoft.NETCore.App.Host.osx-arm64.8.0.2/runtimes/osx-arm64/native $(ALL_CPPFLAGS) -I/Library/Frameworks/R.framework/Resources/include -I/usr/share/R/include/ $(ALL_CFLAGS) -fPIC -c $<  -o $@  -lsupc++
 
 $(OUT_DIR)/rSharp.so:  $(OBJ_FILES)
 	-@mkdir -p $(OUT_DIR) 2>/dev/null
-	$(CXX) -std=c++11 -shared -Wl,-z,relro -o $@  $^ $(ALL_LIBS) -L./packages/Microsoft.NETCore.App.Host.linux-x64.8.0.2/runtimes/linux-x64/native -l:libnethost.a
+	$(CXX) -std=c++11 -shared -Wl, -o $@  $^ $(ALL_LIBS) ./packages/Microsoft.NETCore.App.Host.osx-arm64.8.0.2/runtimes/osx-arm64/native/libnethost.a -L/Library/Frameworks/R.framework/Resources/lib -lR
 
 printarch:
 	-@echo **Variable information only for diagnosis purposes**
@@ -54,12 +54,12 @@ instdir:
 	-@mkdir -p $(INSTDIR)/lib$(R_ARCH) 2>/dev/null
 
 rSharpInstrSharpUX: $(OUT_DIR)/rSharp.so
-	cp -u -p $< $(INSTDIR)/lib$(R_ARCH)
+	cp -p $< $(INSTDIR)/lib$(R_ARCH)
 
 rSharpLib: rSharpLibComp
-	if [ -e symbols.rds ] ; then cp -u -p symbols.rds $(INSTDIR)/lib$(R_ARCH) ; fi
+	if [ -e symbols.rds ] ; then cp -p symbols.rds $(INSTDIR)/lib$(R_ARCH) ; fi
 
-	-cp -u -p ./$(RUNTIMECONFIG).json $(INSTDIR)/lib/
+	-cp -p ./$(RUNTIMECONFIG).json $(INSTDIR)/lib/
 
 rSharpNugetRestore:
 	-$(NUGET_CMD) restore packages.config -PackagesDirectory packages

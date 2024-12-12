@@ -95,13 +95,13 @@ namespace DynamicInterop
 
       private static int _so;
 
-      [DllImport("libdl.so", EntryPoint = "dlopen")]
+      [DllImport("libdl", EntryPoint = "dlopen")]
       private static extern IntPtr dlopen1([MarshalAs(UnmanagedType.LPStr)] string filename, int flag);
 
       [DllImport("libdl.so.2", EntryPoint = "dlopen")]
       private static extern IntPtr dlopen2([MarshalAs(UnmanagedType.LPStr)] string filename, int flag);
 
-      [DllImport("libdl.so", EntryPoint = "dlerror")]
+      [DllImport("libdl", EntryPoint = "dlerror")]
       [return: MarshalAs(UnmanagedType.LPStr)]
       private static extern string dlerror1();
 
@@ -109,7 +109,7 @@ namespace DynamicInterop
       [return: MarshalAs(UnmanagedType.LPStr)]
       private static extern string dlerror2();
 
-      [DllImport("libdl.so", EntryPoint = "dlclose")]
+      [DllImport("libdl", EntryPoint = "dlclose")]
       [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
       private static extern int dlclose1(IntPtr hModule);
 
@@ -117,7 +117,7 @@ namespace DynamicInterop
       [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
       private static extern int dlclose2(IntPtr hModule);
 
-      [DllImport("libdl.so", EntryPoint = "dlsym")]
+      [DllImport("libdl", EntryPoint = "dlsym")]
       private static extern IntPtr dlsym1(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string lpProcName);
 
       [DllImport("libdl.so.2", EntryPoint = "dlsym")]

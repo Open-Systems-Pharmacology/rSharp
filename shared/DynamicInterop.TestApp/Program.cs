@@ -20,7 +20,7 @@ namespace DynamicInterop.TestApp
 
       static void lowLevelTest(IReadOnlyList<string> args)
       {
-         var nat = new UnmanagedDll("libdl.so");
+         var nat = new UnmanagedDll("libdl");
          var open = nat.GetFunction<dlopen>("dlopen");
          var error = nat.GetFunction<dlerror>("dlerror");
          var handle = open(args[0], 0x01);
