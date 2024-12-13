@@ -27,7 +27,6 @@
 .loadAndInit <- function() {
   # Path to the folder where the libraries are located
   srcPkgLibPath <- system.file("lib", package = rSharpEnv$packageName)
-
   nativeLibraryPath <- file.path(srcPkgLibPath, rSharpEnv$nativeLibrary)
 
   # Load C++ library

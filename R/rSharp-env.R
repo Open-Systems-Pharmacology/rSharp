@@ -12,7 +12,7 @@ rSharpEnv$nativePkgName <- "rSharp"
 rSharpEnv$nativeLibrary <-
   switch(Sys.info()[['sysname']],
          Windows= {paste0(rSharpEnv$nativePkgName, .Platform$dynlib.ext)},
-         Linux  = {paste0(rSharpEnv$nativePkgName, .Platform$dynlib.ext)},
+         Linux  = {paste0(rSharpEnv$nativePkgName, ".linux", .Platform$dynlib.ext)},
          Darwin = {paste0(rSharpEnv$nativePkgName,".mac", .Platform$dynlib.ext)})
 
 # Name of the .NET library
