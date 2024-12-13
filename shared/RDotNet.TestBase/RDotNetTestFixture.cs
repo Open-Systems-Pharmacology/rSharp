@@ -29,7 +29,7 @@ namespace RDotNet
 
       protected static void ReportFailOnLinux(string additionalMsg)
       {
-         if (NativeUtility.IsUnix)
+         if (NativeUtility.IsLinux || NativeUtility.IsMac)
             throw new NotSupportedException("This unit test is problematic to run from NUnit on Linux " + additionalMsg);
       }
 
