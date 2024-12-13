@@ -12,10 +12,15 @@
 
   }
 
-  # find installed dotnet runtimes for .NET 8
-  if (length(grep("Microsoft.NETCore.App 8", system("dotnet --list-runtimes", intern = TRUE))) == 0) {
-    stop(" a suitable dotnet runtime was not found. Install dotnet 8 or newer")
+  # find installed dotnet runtimes for .NET 8 or higher
+  runtimes <- system("dotnet --list-runtimes", intern = TRUE)
+  if (!as.numeric(gsub("\\D", "", runtimes[grepl("Microsoft.NETCore.App", runtimes)])) >= 800) {
+    stop(paste("No suitable dotnet runtime found. Install dotnet 8 or newer.",
+               "Go to https://learn.microsoft.com/en-us/dotnet/core/install/ and follow installation instructions.",
+               sep = "\n")
+    )
   }
+
   # Load the C++ and .NET libraries
   .loadAndInit()
 }
