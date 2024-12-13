@@ -28,8 +28,10 @@
   # Path to the folder where the libraries are located
   srcPkgLibPath <- system.file("lib", package = rSharpEnv$packageName)
 
+  nativeLibraryPath <- file.path(srcPkgLibPath, rSharpEnv$nativeLibrary)
+
   # Load C++ library
-  dyn.load(rSharpEnv$nativeLibrary, DLLpath = srcPkgLibPath)
+  dyn.load(nativeLibraryPath, DLLpath = srcPkgLibPath)
 
   # Load .NET library through C++
   # The method returns 0 if successful. Otherwise, an error is thrown.
