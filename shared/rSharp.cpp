@@ -99,7 +99,7 @@ SEXP rSharp_create_domain(SEXP args)
 
 		delete[] wideStringPath;
 	}
-	catch (const std::exception& ex)
+	catch (const std::runtime_error& ex)
 	{
 		error_return(ex.what())
 	}
@@ -579,7 +579,7 @@ SEXP r_create_clr_object(SEXP parameters)
 	{
 		methodParameters = sexp_to_parameters(sExpressionMethodParameter);
 	}
-	catch (const std::exception& ex)
+	catch (const std::runtime_error& ex)
 	{
 		free(ns_qualified_typename);
 		error_return(ex.what())
@@ -593,7 +593,7 @@ SEXP r_create_clr_object(SEXP parameters)
 		free_params_array(methodParameters, numberOfObjects);
 		return ConvertToSEXP(return_value);
 	}
-	catch (const std::exception& ex)
+	catch (const std::runtime_error& ex)
 	{
 		free(ns_qualified_typename);
 		free_params_array(methodParameters, numberOfObjects);
@@ -695,7 +695,7 @@ SEXP r_get_object_direct()
 		auto return_value = getCurrentObjectDirect();
 		return ConvertToSEXP(return_value);
 	}
-	catch (const std::exception& ex)
+	catch (const std::runtime_error& ex)
 	{
 		error_return(ex.what())
 	}
@@ -746,7 +746,7 @@ SEXP r_get_typename_externalptr(SEXP parameters)
 		auto return_value = get_type_full_name(reinterpret_cast<RSharpGenericValue**>(sExpressionNameParameter));
 		return mkString(return_value);
 	}
-	catch (const std::exception& ex)
+	catch (const std::runtime_error& ex)
 	{
 		error_return(ex.what())
 	}
@@ -788,7 +788,7 @@ SEXP r_call_method(SEXP parameters)
 	{
 		params = sexp_to_parameters(sExpressionParameterStack);
 	}
-	catch (const std::exception& ex)
+	catch (const std::runtime_error& ex)
 	{
 		error_return(ex.what())
 	}
@@ -800,7 +800,7 @@ SEXP r_call_method(SEXP parameters)
 		free_params_array(params, numberOfObjects);
 		return ConvertToSEXP(return_value);
 	}
-	catch (const std::exception& ex)
+	catch (const std::runtime_error& ex)
 	{
 		free_params_array(params, numberOfObjects);
 		error_return(ex.what())
@@ -827,7 +827,7 @@ SEXP r_call_static_method(SEXP parameters)
 	{ 
 		methodParameters = sexp_to_parameters(sExpressionMethodParameter);
 	}
-	catch (const std::exception& ex)
+	catch (const std::runtime_error& ex)
 	{
 		free(ns_qualified_typename);
 		error_return(ex.what())
@@ -846,7 +846,7 @@ SEXP r_call_static_method(SEXP parameters)
 		free_params_array(methodParameters, numberOfObjects);
 		return ConvertToSEXP(return_value);
 	}
-	catch (const std::exception& ex)
+	catch (const std::runtime_error& ex)
 	{
 		free(ns_qualified_typename);
 		free_params_array(methodParameters, numberOfObjects);
