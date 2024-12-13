@@ -51,6 +51,7 @@ jobs:
           add: '*.so'
 
   macOS-Build:
+    needs: Linux-Build
     runs-on: macos-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
