@@ -13,12 +13,11 @@
   }
 
   # find installed dotnet runtimes for .NET 8 or higher
-  runtimes <- system("dotnet --list-runtimes", intern = TRUE)
-  if (!as.numeric(gsub("\\D", "", runtimes[grepl("Microsoft.NETCore.App", runtimes)])) >= 800) {
-    stop(paste("No suitable dotnet runtime found. Install dotnet 8 or newer.",
-               "Go to https://learn.microsoft.com/en-us/dotnet/core/install/ and follow installation instructions.",
-               sep = "\n")
-    )
+  if (length(grep("Microsoft.NETCore.App 8", system("dotnet --list-runtimes", intern = TRUE))) == 0) {
+    stop(paste("No suitable dotnet 8 runtime found. ",
+      "Please install dotnet 8: go to  https://learn.microsoft.com/en-us/dotnet/core/install/ and follow installation instructions.",
+      sep = "\n"
+    ))
   }
 
   # Load the C++ and .NET libraries
@@ -37,6 +36,7 @@
   # Load .NET library through C++
   # The method returns 0 if successful. Otherwise, an error is thrown.
   result <- .External("rSharp_create_domain", srcPkgLibPath, PACKAGE = rSharpEnv$nativePkgName)
+
   # Turn on the the conversion of advanced data types with R.NET.
   invisible(callStatic("ClrFacade.ClrFacade", "SetRDotNet", TRUE))
 } # nocov end
