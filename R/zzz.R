@@ -27,7 +27,7 @@
 .loadAndInit <- function() {
   # Path to the folder where the libraries are located
   srcPkgLibPath <- system.file("lib", package = rSharpEnv$packageName)
-  nativeLibraryPath <- file.path(srcPkgLibPath, rSharpEnv$nativeLibrary)
+  nativeLibraryPath <- file.path(srcPkgLibPath, paste0(rSharpEnv$nativePkgName, .Platform$dynlib.ext))
 
   # Load C++ library
   dyn.load(nativeLibraryPath, DLLpath = srcPkgLibPath)
