@@ -14,12 +14,21 @@ namespace DynamicInterop
       /// <summary>
       ///    Is the platform unix-like (Unix or MacOX)
       /// </summary>
-      public static bool IsUnix
+      public static bool IsLinux
       {
          get
          {
             var p = GetPlatform();
-            return p == PlatformID.MacOSX || p == PlatformID.Unix;
+            return p == PlatformID.Unix;
+         }
+      }
+
+      public static bool IsMacOSX
+      {
+         get
+         {
+            var p = GetPlatform();
+            return p == PlatformID.MacOSX;
          }
       }
 

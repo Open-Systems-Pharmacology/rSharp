@@ -566,7 +566,7 @@ namespace RDotNet.NativeLibrary
                return "R.dll";
 
             case PlatformID.MacOSX:
-               return "libR.dylib";
+               return "/Library/Frameworks/R.framework/Resources/lib/libR.dylib";
 
             case PlatformID.Unix:
                return "libR.so";

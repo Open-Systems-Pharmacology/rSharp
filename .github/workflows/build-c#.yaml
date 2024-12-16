@@ -84,7 +84,7 @@ jobs:
 
       - name: Test C# binaries
         run: |
-          export R_HOME=/usr/lib/R
+          export R_HOME=/Library/Frameworks/R.framework/Resources
           dotnet test ./shared/RDotNet.Tests/ -c Release -d log.txt --no-build
           dotnet test ./shared/rSharpTests/ -c Release -d log.txt --no-build
           dotnet test ./shared/DynamicInterop.Tests/ -c Release -d log.txt --no-build

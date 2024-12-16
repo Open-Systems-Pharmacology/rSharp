@@ -56,33 +56,12 @@ namespace DynamicInterop
       private void ReportLoadLibError(string dllName, string nativeError)
       {
          ThrowFailedLibraryLoad(dllName, nativeError);
-/*
- * string dllFullName = dllName;
-            if (File.Exists(dllFullName))
-                ThrowFailedLibraryLoad(dllFullName);
-            else
-            {
-                // This below assumes that the PATH environment variable is what is relied on
-                // TODO: check whether there is more to it: http://msdn.microsoft.com/en-us/library/ms682586.aspx
-
-                // Also some pointers to relevant information if we want to check whether the attempt to load
-                // was made on a 32 or 64 bit library
-                // For Windows:
-                // http://stackoverflow.com/questions/1345632/determine-if-an-executable-or-library-is-32-or-64-bits-on-windows
-                // http://www.neowin.net/forum/topic/732648-check-if-exe-is-x64/?p=590544108#entry590544108
-                // Linux, and perhaps MacOS; the 'file' command seems the way to go.
-                // http://stackoverflow.com/questions/5665228/in-linux-determine-if-a-a-library-archive-32-bit-or-64-bit
-
-                dllFullName = FindFullPath(dllName, throwIfNotFound: true);
-                ThrowFailedLibraryLoad(dllFullName);
-            }
-            */
       }
 
       [Obsolete("This message is likely to be too distribution specific", true)]
       private string createLdLibPathMsg()
       {
-         if (!PlatformUtility.IsUnix)
+         if (!PlatformUtility.IsLinux || PlatformUtility.IsMacOSX)
             return null;
          //var sampleldLibPaths = "/usr/local/lib/R/lib:/usr/local/lib:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/server";
          var ldLibPathEnv = Environment.GetEnvironmentVariable("LD_LIBRARY_PATH");
