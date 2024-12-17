@@ -1,4 +1,4 @@
-# rSharp (development version)
+# rSharp 1.1.0
 
 ## Major changes
 
