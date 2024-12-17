@@ -45,7 +45,7 @@ from source. For this, follow the instructions in section
   2017 and 2019 available
   [here](https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads)
 - .NET 8 runtime available
-  [here](https://dotnet.microsoft.com/download/dotnet/8.0/runtime) (pick the **console version**).
+  [here](https://dotnet.microsoft.com/download/dotnet/8.0/runtime).
 
 #### Install from Github
 
@@ -65,7 +65,7 @@ pak::pak("Open-Systems-Pharmacology/rSharp")
 
 #### Install from Binary
 
-Alternatively, download the attached binary file from [latest
+Alternatively, download the attached binary file (`.zip`) from [latest
 release](https://github.com/Open-Systems-Pharmacology/rSharp/releases),
 and install it locally using:
 
@@ -73,22 +73,21 @@ and install it locally using:
 install.packages("path/to/rSharp_X.zip",  type = "win.binary")
 ```
 
-### Ubuntu
+### MacOS
 
-Run the following commands to install the required dependencies:
+#### Prerequisites
 
-    sudo apt-get install dotnet-runtime-8.0 libcurl4-openssl-dev libssl-dev libxml2-dev 
-    sudo apt-get install libfontconfig1-dev libharfbuzz-dev libfribidi-dev
-    sudo apt-get install libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
+- .NET 8 runtime available
+  [here](https://dotnet.microsoft.com/download/dotnet/8.0/runtime)
+  (click on the macOS tab).
 
-Symlink libdl.so.2 to libdl.so
+#### Install from Github
 
-    sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
-
-Install the package from GitHub with pre-build binaries by running:
+You can install the package from GitHub with pre-build binaries by
+running:
 
 ``` r
-install.packages("remotes")
+install.packages("pak")
 pak::pak("Open-Systems-Pharmacology/rSharp@*release")
 ```
 
@@ -96,6 +95,53 @@ Get the latest development version with:
 
 ``` r
 pak::pak("Open-Systems-Pharmacology/rSharp")
+```
+
+#### Install from Binary
+
+Alternatively, download the attached binary file (`.tgz`) from [latest
+release](https://github.com/Open-Systems-Pharmacology/rSharp/releases),
+and install it locally using:
+
+``` r
+install.packages("path/to/rSharp_X.tgz")
+```
+
+### Ubuntu
+
+#### Prerequisites
+
+Run the following commands to install the required dependencies:
+
+    sudo apt-get install dotnet-runtime-8.0 libcurl4-openssl-dev libssl-dev libxml2-dev 
+    sudo apt-get install libfontconfig1-dev libharfbuzz-dev libfribidi-dev
+    sudo apt-get install libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
+
+#### Install from Github
+
+You can install the package from GitHub with pre-build binaries by
+running:
+
+``` r
+install.packages("pak")
+pak::pak("Open-Systems-Pharmacology/rSharp@*release")
+```
+
+Get the latest development version with:
+
+``` r
+pak::pak("Open-Systems-Pharmacology/rSharp")
+```
+
+#### Install from Binary
+
+Alternatively, download the attached binary file (`.tar.gz`) from
+[latest
+release](https://github.com/Open-Systems-Pharmacology/rSharp/releases),
+and install it locally using:
+
+``` r
+install.packages("path/to/rSharp_X.tar.gz")
 ```
 
 ## Build
@@ -128,6 +174,26 @@ Optionally set up to build the binaries
 
     sudo apt-get install dotnet-sdk-8.0
     sudo apt-get install nuget
+
+Navigate to the `rSharp\shared` directory and run
+
+    make
+
+Then change back to the `rSharp` directory start your preferred R
+environment and run the following R commands
+
+    devtools::install()
+
+### MacOS
+
+Download and install [.NET SDK
+8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+
+Install Homebrew and use it to install build tools
+
+    brew install nuget
+    brew install cmake
+    brew install gcc
 
 Navigate to the `rSharp\shared` directory and run
 
