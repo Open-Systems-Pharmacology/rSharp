@@ -59,27 +59,57 @@ For this, follow the instructions in section [Build](#build).
 
 You can install the package from GitHub with pre-build binaries by running:
 
-```{r, eval=FALSE}
+```r
 install.packages("pak")
 pak::pak("Open-Systems-Pharmacology/rSharp@*release")
 ```
 
 Get the latest development version with:
 
-```{r, eval=FALSE}
+```r
 pak::pak("Open-Systems-Pharmacology/rSharp")
 ```
 
 #### Install from Binary
 
-Alternatively, download the attached binary file from [latest release](https://github.com/Open-Systems-Pharmacology/rSharp/releases), and install it locally using:
+Alternatively, download the attached binary file (`.zip`) from [latest release](https://github.com/Open-Systems-Pharmacology/rSharp/releases), and install it locally using:
 
 ```r
 install.packages("path/to/rSharp_X.zip",  type = "win.binary")
 ```
 
+### MacOS
+
+#### Prerequisites
+
+- .NET 8 runtime available [here](https://dotnet.microsoft.com/download/dotnet/8.0/runtime) (click on the macOS tab).
+
+#### Install from Github
+
+You can install the package from GitHub with pre-build binaries by running:
+
+```r
+install.packages("pak")
+pak::pak("Open-Systems-Pharmacology/rSharp@*release")
+```
+
+Get the latest development version with:
+
+```r
+pak::pak("Open-Systems-Pharmacology/rSharp")
+```
+
+#### Install from Binary
+
+Alternatively, download the attached binary file (`.tgz`) from [latest release](https://github.com/Open-Systems-Pharmacology/rSharp/releases), and install it locally using:
+
+```r
+install.packages("path/to/rSharp_X.tgz")
+```
 
 ### Ubuntu
+
+#### Prerequisites
 
 Run the following commands to install the required dependencies:
 
@@ -94,17 +124,27 @@ Symlink libdl.so.2 to libdl.so
 sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
 ```
 
-Install the package from GitHub with pre-build binaries by running:
+#### Install from Github
 
-```{r, eval=FALSE}
-install.packages("remotes")
+You can install the package from GitHub with pre-build binaries by running:
+
+```r
+install.packages("pak")
 pak::pak("Open-Systems-Pharmacology/rSharp@*release")
 ```
 
 Get the latest development version with:
 
-```{r, eval=FALSE}
+```r
 pak::pak("Open-Systems-Pharmacology/rSharp")
+```
+
+#### Install from Binary
+
+Alternatively, download the attached binary file (`.tar.gz`) from [latest release](https://github.com/Open-Systems-Pharmacology/rSharp/releases), and install it locally using:
+
+```r
+install.packages("path/to/rSharp_X.tar.gz")
 ```
 
 ## Build
