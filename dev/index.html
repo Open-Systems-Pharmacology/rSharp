@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="index.html">rSharp</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">1.0.1.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">1.1.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,7 +75,7 @@
 <ul>
 <li>Latest Microsoft Visual C++ Redistributable for Visual Studio 2015, 2017 and 2019 available <a href="https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads" class="external-link">here</a>
 </li>
-<li>.NET 8 runtime available <a href="https://dotnet.microsoft.com/download/dotnet/8.0/runtime" class="external-link">here</a> (pick the <strong>console version</strong>).</li>
+<li>.NET 8 runtime available <a href="https://dotnet.microsoft.com/download/dotnet/8.0/runtime" class="external-link">here</a>.</li>
 </ul>
 </div>
 <div class="section level4">
@@ -92,27 +92,69 @@
 <div class="section level4">
 <h4 id="install-from-binary">Install from Binary<a class="anchor" aria-label="anchor" href="#install-from-binary"></a>
 </h4>
-<p>Alternatively, download the attached binary file from <a href="https://github.com/Open-Systems-Pharmacology/rSharp/releases" class="external-link">latest release</a>, and install it locally using:</p>
+<p>Alternatively, download the attached binary file (<code>.zip</code>) from <a href="https://github.com/Open-Systems-Pharmacology/rSharp/releases" class="external-link">latest release</a>, and install it locally using:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"path/to/rSharp_X.zip"</span>,  type <span class="op">=</span> <span class="st">"win.binary"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level3">
-<h3 id="ubuntu">Ubuntu<a class="anchor" aria-label="anchor" href="#ubuntu"></a>
+<h3 id="macos">MacOS<a class="anchor" aria-label="anchor" href="#macos"></a>
 </h3>
-<p>Run the following commands to install the required dependencies:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>sudo apt<span class="sc">-</span>get install dotnet<span class="sc">-</span>runtime<span class="fl">-8.0</span> libcurl4<span class="sc">-</span>openssl<span class="sc">-</span>dev libssl<span class="sc">-</span>dev libxml2<span class="sc">-</span>dev </span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>sudo apt<span class="sc">-</span>get install libfontconfig1<span class="sc">-</span>dev libharfbuzz<span class="sc">-</span>dev libfribidi<span class="sc">-</span>dev</span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>sudo apt<span class="sc">-</span>get install libfreetype6<span class="sc">-</span>dev libpng<span class="sc">-</span>dev libtiff5<span class="sc">-</span>dev libjpeg<span class="sc">-</span>dev</span></code></pre></div>
-<p>Symlink libdl.so.2 to libdl.so</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>sudo ln <span class="sc">-</span>s <span class="sc">/</span>usr<span class="sc">/</span>lib<span class="sc">/</span>x86_64<span class="sc">-</span>linux<span class="sc">-</span>gnu<span class="sc">/</span>libdl.so<span class="fl">.2</span> <span class="sc">/</span>usr<span class="sc">/</span>lib<span class="sc">/</span>x86_64<span class="sc">-</span>linux<span class="sc">-</span>gnu<span class="sc">/</span>libdl.so</span></code></pre></div>
-<p>Install the package from GitHub with pre-build binaries by running:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
+<div class="section level4">
+<h4 id="prerequisites-1">Prerequisites<a class="anchor" aria-label="anchor" href="#prerequisites-1"></a>
+</h4>
+<ul>
+<li>.NET 8 runtime available <a href="https://dotnet.microsoft.com/download/dotnet/8.0/runtime" class="external-link">here</a> (click on the macOS tab).</li>
+</ul>
+</div>
+<div class="section level4">
+<h4 id="install-from-github-1">Install from Github<a class="anchor" aria-label="anchor" href="#install-from-github-1"></a>
+</h4>
+<p>You can install the package from GitHub with pre-build binaries by running:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"pak"</span><span class="op">)</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Open-Systems-Pharmacology/rSharp@*release"</span><span class="op">)</span></span></code></pre></div>
 <p>Get the latest development version with:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Open-Systems-Pharmacology/rSharp"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="install-from-binary-1">Install from Binary<a class="anchor" aria-label="anchor" href="#install-from-binary-1"></a>
+</h4>
+<p>Alternatively, download the attached binary file (<code>.tgz</code>) from <a href="https://github.com/Open-Systems-Pharmacology/rSharp/releases" class="external-link">latest release</a>, and install it locally using:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"path/to/rSharp_X.tgz"</span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level3">
+<h3 id="ubuntu">Ubuntu<a class="anchor" aria-label="anchor" href="#ubuntu"></a>
+</h3>
+<div class="section level4">
+<h4 id="prerequisites-2">Prerequisites<a class="anchor" aria-label="anchor" href="#prerequisites-2"></a>
+</h4>
+<p>Run the following commands to install the required dependencies:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>sudo apt<span class="sc">-</span>get install dotnet<span class="sc">-</span>runtime<span class="fl">-8.0</span> libcurl4<span class="sc">-</span>openssl<span class="sc">-</span>dev libssl<span class="sc">-</span>dev libxml2<span class="sc">-</span>dev </span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>sudo apt<span class="sc">-</span>get install libfontconfig1<span class="sc">-</span>dev libharfbuzz<span class="sc">-</span>dev libfribidi<span class="sc">-</span>dev</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>sudo apt<span class="sc">-</span>get install libfreetype6<span class="sc">-</span>dev libpng<span class="sc">-</span>dev libtiff5<span class="sc">-</span>dev libjpeg<span class="sc">-</span>dev</span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="install-from-github-2">Install from Github<a class="anchor" aria-label="anchor" href="#install-from-github-2"></a>
+</h4>
+<p>You can install the package from GitHub with pre-build binaries by running:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"pak"</span><span class="op">)</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Open-Systems-Pharmacology/rSharp@*release"</span><span class="op">)</span></span></code></pre></div>
+<p>Get the latest development version with:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Open-Systems-Pharmacology/rSharp"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="install-from-binary-2">Install from Binary<a class="anchor" aria-label="anchor" href="#install-from-binary-2"></a>
+</h4>
+<p>Alternatively, download the attached binary file (<code>.tar.gz</code>) from <a href="https://github.com/Open-Systems-Pharmacology/rSharp/releases" class="external-link">latest release</a>, and install it locally using:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"path/to/rSharp_X.tar.gz"</span><span class="op">)</span></span></code></pre></div>
+</div>
 </div>
 </div>
 <div class="section level2">
@@ -123,22 +165,35 @@
 </h3>
 <p>To build the C++/C# libraries from source, make sure the <code>Desktop development with C++</code> workload is installed in Visual Studio.</p>
 <p>Create an environment variable <code>R_INSTALL_PATH</code> and set the value to the path where R is installed</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>set R_INSTALL_PATH <span class="ot">=</span> <span class="st">"C:\Program Files\R\R-4.3.3"</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>set R_INSTALL_PATH <span class="ot">=</span> <span class="st">"C:\Program Files\R\R-4.3.3"</span></span></code></pre></div>
 <p>Start Visual Studio and open the <code>rSharp.sln</code> solution file and build the solution. The build process will automatically copy the required files to the <code>rSharp/inst/lib</code> folder.</p>
 <p>Then start your preferred R environment and run the following R commands from within the <code>rSharp</code> folder</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install</span>()</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="ubuntu-1">Ubuntu<a class="anchor" aria-label="anchor" href="#ubuntu-1"></a>
 </h3>
 <p>Set up .NET SDK and <code>nuget</code> (the latter to get the required dependencies)</p>
 <p>Optionally set up to build the binaries</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>sudo apt<span class="sc">-</span>get install dotnet<span class="sc">-</span>sdk<span class="fl">-8.0</span></span>
-<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>sudo apt<span class="sc">-</span>get install nuget</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>sudo apt<span class="sc">-</span>get install dotnet<span class="sc">-</span>sdk<span class="fl">-8.0</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>sudo apt<span class="sc">-</span>get install nuget</span></code></pre></div>
 <p>Navigate to the <code>rSharp\shared</code> directory and run</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>make</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>make</span></code></pre></div>
 <p>Then change back to the <code>rSharp</code> directory start your preferred R environment and run the following R commands</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install</span>()</span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="macos-1">MacOS<a class="anchor" aria-label="anchor" href="#macos-1"></a>
+</h3>
+<p>Download and install <a href="https://dotnet.microsoft.com/en-us/download/dotnet/8.0" class="external-link">.NET SDK 8</a></p>
+<p>Install Homebrew and use it to install build tools</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>brew install nuget</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>brew install cmake</span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>brew install gcc</span></code></pre></div>
+<p>Navigate to the <code>rSharp\shared</code> directory and run</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>make</span></code></pre></div>
+<p>Then change back to the <code>rSharp</code> directory start your preferred R environment and run the following R commands</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install</span>()</span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
