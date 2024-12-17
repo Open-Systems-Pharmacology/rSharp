@@ -117,10 +117,6 @@ Run the following commands to install the required dependencies:
     sudo apt-get install libfontconfig1-dev libharfbuzz-dev libfribidi-dev
     sudo apt-get install libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
 
-Symlink libdl.so.2 to libdl.so
-
-    sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
-
 #### Install from Github
 
 You can install the package from GitHub with pre-build binaries by
@@ -178,6 +174,26 @@ Optionally set up to build the binaries
 
     sudo apt-get install dotnet-sdk-8.0
     sudo apt-get install nuget
+
+Navigate to the `rSharp\shared` directory and run
+
+    make
+
+Then change back to the `rSharp` directory start your preferred R
+environment and run the following R commands
+
+    devtools::install()
+
+### MacOS
+
+Download and install [.NET SDK
+8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+
+Install Homebrew and use it to install build tools
+
+    brew install nuget
+    brew install cmake
+    brew install gcc
 
 Navigate to the `rSharp\shared` directory and run
 
