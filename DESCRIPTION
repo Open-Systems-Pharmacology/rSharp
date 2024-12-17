@@ -1,7 +1,7 @@
 Package: rSharp
 Type: Package
 Title: Accessing .NET from R
-Version: 1.1.0
+Version: 1.1.0.9000
 Authors@R: c(
       person(given = "Open-Systems-Pharmacology Community",
              role = "cph"),
