@@ -566,7 +566,7 @@ namespace RDotNet.NativeLibrary
                return "R.dll";
 
             case PlatformID.MacOSX:
-               return "libR.dylib";
+               return "/Library/Frameworks/R.framework/Resources/lib/libR.dylib";
 
             case PlatformID.Unix:
                return "libR.so";
@@ -577,14 +577,23 @@ namespace RDotNet.NativeLibrary
       }
 
       /// <summary>
-      ///    Is the platform a unix like (Unix or MacOX)
+      ///    Is the platform a linux
       /// </summary>
-      public static bool IsUnix
+      public static bool IsLinux
       {
          get
          {
             var p = GetPlatform();
-            return p == PlatformID.MacOSX || p == PlatformID.Unix;
+            return p == PlatformID.Unix;
+         }
+      }
+
+      public static bool IsMac
+      {
+         get
+         {
+            var p = GetPlatform();
+            return p == PlatformID.MacOSX;
          }
       }
    }

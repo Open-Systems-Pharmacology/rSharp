@@ -6,8 +6,16 @@ rSharpEnv <- new.env(parent = emptyenv())
 rSharpEnv$packageName <- "rSharp"
 # Name of the C++ redistributable library
 rSharpEnv$msvcrFileName <- "msvcp140.dll"
+# The name of the package
+rSharpEnv$pkgName <- "rSharp"
+
 # The name of the native (C++) library
-rSharpEnv$nativePkgName <- "rSharp"
+rSharpEnv$nativePkgName <-
+  switch(Sys.info()[['sysname']],
+          Windows = rSharpEnv$pkgName,
+          Linux   = {paste0(rSharpEnv$pkgName, ".linux")},
+          Darwin  = {paste0(rSharpEnv$pkgName,".mac")})
+
 # Name of the .NET library
 rSharpEnv$dotnetPkgName <- "ClrFacade"
 

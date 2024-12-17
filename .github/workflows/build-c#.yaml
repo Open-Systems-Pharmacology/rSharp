@@ -6,35 +6,30 @@ on:
 
 jobs:
   Linux-Build:
-
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
-        if: ${{ github.event_name == 'pull_request' }}
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
-
-      - uses: actions/checkout@v4
-        if: ${{ github.event_name != 'pull_request' }}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 8.0.x
 
-      - name: Make
-        working-directory: ./shared
-        run: make
-
       - name: Setup R
         uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
+
+      - name: Make
+        working-directory: ./shared
+        run: make
 
       - name: Test C# binaries
         run: |
@@ -46,26 +41,23 @@ jobs:
       - uses: EndBug/add-and-commit@v9
         if: ${{ success() }}
         with:
+          pull: '--verbose'
           message: 'Update Linux C# binaries (Commit from Github Actions).'
           default_author: github_actions
-          add: '*.so'
+          add: '*linux.so'
 
-  Windows-Build:
-    needs: Linux-Build
-    runs-on: windows-latest
+
+  macOS-Build:
+    runs-on: macos-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
-        if: ${{ github.event_name == 'pull_request' }}
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
-
-      - uses: actions/checkout@v4
-        if: ${{ github.event_name != 'pull_request' }}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
@@ -77,6 +69,47 @@ jobs:
         with:
           use-public-rspm: true
 
+      - name: Make
+        working-directory: ./shared
+        run: make
+
+      - name: Test C# binaries
+        run: |
+          export R_HOME=/Library/Frameworks/R.framework/Resources
+          dotnet test ./shared/RDotNet.Tests/ -c Release -d log.txt --no-build
+          dotnet test ./shared/rSharpTests/ -c Release -d log.txt --no-build
+          dotnet test ./shared/DynamicInterop.Tests/ -c Release -d log.txt --no-build
+
+      - uses: EndBug/add-and-commit@v9
+        if: ${{ success() }}
+        with:
+          pull: '--verbose'
+          message: 'Update macOS C# binaries (Commit from Github Actions).'
+          default_author: github_actions
+          add: '*mac.so'
+
+
+  Windows-Build:
+    runs-on: windows-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
 
       - name: Install dependencies
         run: |
@@ -97,10 +130,10 @@ jobs:
           dotnet test .\shared\rSharpTests\ -c Release -d log.txt --no-build
           dotnet test .\shared\DynamicInterop.Tests\ -c Release -d log.txt --no-build
 
-
       - uses: EndBug/add-and-commit@v9
         if: ${{ success() }}
         with:
+          pull: '--verbose'
           message: 'Update Windows C# binaries (Commit from Github Actions).'
           default_author: github_actions
           add: '*.dll'

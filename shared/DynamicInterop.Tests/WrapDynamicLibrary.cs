@@ -35,19 +35,27 @@ namespace DynamicInterop.Tests
       [Fact]
       public void WellKnownSystemDll()
       {
-         if (PlatformUtility.IsUnix)
+         if (PlatformUtility.IsLinux)
             TestLoadLibc();
+         else if (PlatformUtility.IsMacOSX)
+            TestLoadSystem();
          else if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             TestLoadKernel32();
          else
             throw new NotSupportedException(PlatformUtility.GetPlatformNotSupportedMsg());
       }
+      
+      private void TestLoadSystem()
+      {
+         using (var dll = new UnmanagedDll("/usr/lib/libSystem.dylib"))
+         {
+            var m = dll.GetFunction<malloc>();
+            Assert.NotNull(m);
+         }
+      }
 
       private void TestLoadLibc()
       {
-         // TODO: obviously need to generalize this. 
-
-         //nm -D --defined-only /lib/x86_64-linux-gnu/libc.so.6 | less
          using (var dll = new UnmanagedDll("/lib/x86_64-linux-gnu/libc.so.6"))
          {
             var m = dll.GetFunction<malloc>();

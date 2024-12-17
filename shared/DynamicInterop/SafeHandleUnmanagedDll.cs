@@ -10,7 +10,7 @@ namespace DynamicInterop
       public SafeHandleUnmanagedDll(string dllName) : base(true)
       {
          IDynamicLibraryLoader libraryLoader = null;
-         if (PlatformUtility.IsUnix)
+         if (PlatformUtility.IsLinux || PlatformUtility.IsMacOSX)
             libraryLoader = new UnixLibraryLoader();
          else if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             libraryLoader = new WindowsLibraryLoader();

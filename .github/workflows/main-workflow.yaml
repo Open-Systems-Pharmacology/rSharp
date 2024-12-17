@@ -1,0 +1,57 @@
+name: PR-Workflow
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+
+
+  # Detect changes done in C# code base. If no change were done, skim "build-Csharp-binaries" workflow.
+  detect-changes:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      Csharp: ${{ steps.filter.outputs.Csharp }}
+    steps:
+    - uses: dorny/paths-filter@v3
+      id: filter
+      with:
+        base: ${{ github.ref }}
+        filters: |
+          Csharp:
+            - 'shared/**'
+
+  build-Csharp-binaries:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.Csharp == 'true' && github.event_name == 'pull_request'}}
+    uses: ./.github/workflows/build-c#.yaml
+
+  # Automatically bump dev version when a it is a push to main branch
+  bump-dev-version:
+    needs: build-Csharp-binaries
+    if: github.event_name != 'pull_request' # only when merging in main/develop branch
+    uses: Open-Systems-Pharmacology/Workflows/.github/workflows/bump_dev_version_tag_branch.yaml@main
+    with:
+      app-id: ${{ vars.VERSION_BUMPER_APPID }}
+    secrets:
+      private-key: ${{ secrets.VERSION_BUMPER_SECRET }}
+
+  R-CMD-Check:
+    if: ${{ !cancelled() }}
+    needs: bump-dev-version
+    uses: ./.github/workflows/R-CMD-check.yaml
+
+  test-coverage:
+    if: ${{ !cancelled() }}
+    needs: [R-CMD-Check]
+    uses:  ./.github/workflows/test-coverage.yaml
+
+  pkgdown:
+    if: ${{ !cancelled() }}
+    needs: [R-CMD-Check]
+    uses:  ./.github/workflows/pkgdown.yaml

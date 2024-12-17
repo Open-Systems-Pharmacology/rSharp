@@ -26,8 +26,14 @@ internal class InternalRDotNetDataConverter : IDataConverter
          CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
          CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
          CultureInfo.CurrentUICulture = new CultureInfo("en-US");
-
-         dllName = Path.Combine(libDir, NativeUtility.IsUnix ? "rSharp.so" : "rSharp.dll");
+         
+         if(NativeUtility.IsLinux)
+            dllName = Path.Combine(libDir, "rSharp.linux.so");
+         else if(NativeUtility.IsMac)
+            dllName = Path.Combine(libDir, "rSharp.mac.so");
+         else
+            dllName = Path.Combine(libDir, "rSharp.dll");
+         
       }
 
       DataConversionHelper.rSharpNativeDll = new RSharpUnmanagedDll(dllName);
