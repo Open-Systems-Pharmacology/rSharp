@@ -80,7 +80,8 @@ SEXP rSharp_create_domain(SEXP args)
 #ifdef WINDOWS
 		// STEP 2: Initialize and start the .NET Core runtime
 		std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-		const char_t* wideStringLibraryPath = converter.from_bytes(libraryPath).c_str();
+		auto basic_string = converter.from_bytes(libraryPath);
+		const char_t* wideStringLibraryPath = basic_string.c_str();
 #else
 		const char_t* wideStringLibraryPath = libraryPath;
 #endif
