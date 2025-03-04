@@ -88,8 +88,8 @@ jobs:
           default_author: github_actions
           add: '*mac*.so'
 
-  macOS-Build-Sonoma:
-    runs-on: macos-sonoma
+  macOS-Build-x64:
+    runs-on: macos-13
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     permissions:
