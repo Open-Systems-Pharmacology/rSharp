@@ -9,12 +9,13 @@ rSharpEnv$msvcrFileName <- "msvcp140.dll"
 # The name of the package
 rSharpEnv$pkgName <- "rSharp"
 
+info <- Sys.info()
 # The name of the native (C++) library
 rSharpEnv$nativePkgName <-
-  switch(Sys.info()[['sysname']],
+  switch(info[['sysname']],
           Windows = rSharpEnv$pkgName,
           Linux   = {paste0(rSharpEnv$pkgName, ".linux")},
-          Darwin  = {paste0(rSharpEnv$pkgName,".mac")})
+          Darwin  = {paste0(rSharpEnv$pkgName, ".mac.", if(info[['machine']] == 'arm64') 'arm64' else 'x64')})
 
 # Name of the .NET library
 rSharpEnv$dotnetPkgName <- "ClrFacade"
