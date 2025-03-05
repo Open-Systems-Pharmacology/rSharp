@@ -3,14 +3,15 @@ name: build-c#-binaries
 on:
   workflow_call:
 
+permissions:
+  contents: write
 
 jobs:
   Linux-Build:
     runs-on: ubuntu-22.04
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-    permissions:
-      contents: write
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -51,8 +52,7 @@ jobs:
     runs-on: macos-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-    permissions:
-      contents: write
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -92,8 +92,7 @@ jobs:
     runs-on: macos-13
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-    permissions:
-      contents: write
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -134,8 +133,7 @@ jobs:
     runs-on: windows-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-    permissions:
-      contents: write
+
     steps:
       - uses: actions/checkout@v4
         with:
