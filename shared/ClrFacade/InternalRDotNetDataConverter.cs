@@ -29,8 +29,10 @@ internal class InternalRDotNetDataConverter : IDataConverter
          
          if(NativeUtility.IsLinux)
             dllName = Path.Combine(libDir, "rSharp.linux.so");
-         else if(NativeUtility.IsMac)
-            dllName = Path.Combine(libDir, "rSharp.mac.so");
+         else if(NativeUtility.IsMac && NativeUtility.Architecture == Architecture.X64)
+            dllName = Path.Combine(libDir, "rSharp.mac.x64.so");
+         else if(NativeUtility.IsMac && NativeUtility.Architecture == Architecture.Arm64)
+            dllName = Path.Combine(libDir, "rSharp.mac.arm64.so");
          else
             dllName = Path.Combine(libDir, "rSharp.dll");
          

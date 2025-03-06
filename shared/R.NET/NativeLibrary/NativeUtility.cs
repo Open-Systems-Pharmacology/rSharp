@@ -43,6 +43,8 @@ namespace RDotNet.NativeLibrary
          return PlatformUtility.GetPlatform();
       }
 
+      public static Architecture Architecture => System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture;
+      
       /// <summary>
       ///    Execute a command in a new process
       /// </summary>

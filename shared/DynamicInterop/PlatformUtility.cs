@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace DynamicInterop
 {
@@ -45,6 +46,7 @@ namespace DynamicInterop
       /// <returns>The current platform.</returns>
       public static PlatformID GetPlatform()
       {
+
          if (!curPlatform.HasValue)
          {
             var platform = Environment.OSVersion.Platform;

@@ -8,9 +8,16 @@ SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
 INSTDIR= ../inst
 UNAME := $(shell uname)
+UNAME_ARCH := $(shell uname -m)
+
+ifeq ($(UNAME_ARCH), x86_64)
+  ARCH=x64
+else
+  ARCH=arm64
+endif
 
 ifeq ($(UNAME), Darwin)
-	OUTPUT := rSharp.mac.so
+	OUTPUT := rSharp.mac.$(ARCH).so
 	RUNTIME := osx
 else
 	OUTPUT := rSharp.linux.so
@@ -43,7 +50,7 @@ clean:
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	-@mkdir -p $(OBJ_DIR) 2>/dev/null
 ifeq ($(UNAME), Darwin)
-	$(CXX) -std=c++11 -Ipackages/Microsoft.NETCore.App.Host.osx-arm64.8.0.2/runtimes/osx-arm64/native $(ALL_CPPFLAGS) -I/Library/Frameworks/R.framework/Resources/include -I/usr/share/R/include/ $(ALL_CFLAGS) -fPIC -c $<  -o $@  -lsupc++
+	$(CXX) -std=c++11 -Ipackages/Microsoft.NETCore.App.Host.osx-$(ARCH).8.0.2/runtimes/osx-$(ARCH)/native $(ALL_CPPFLAGS) -I/Library/Frameworks/R.framework/Resources/include -I/usr/share/R/include/ $(ALL_CFLAGS) -fPIC -c $<  -o $@  -lsupc++
 else
 	$(CXX) -std=c++11 -Ipackages/Microsoft.NETCore.App.Host.linux-x64.8.0.2/runtimes/linux-x64/native $(ALL_CPPFLAGS) -I/usr/share/R/include/ $(ALL_CFLAGS) -fPIC -c $< -o $@ -lsupc++
 endif
@@ -51,13 +58,15 @@ endif
 $(OUT_DIR)/$(OUTPUT):  $(OBJ_FILES)
 	-@mkdir -p $(OUT_DIR) 2>/dev/null
 ifeq ($(UNAME), Darwin)
-	$(CXX) -std=c++11 -shared -Wl, -o $@  $^ $(ALL_LIBS) ./packages/Microsoft.NETCore.App.Host.osx-arm64.8.0.2/runtimes/osx-arm64/native/libnethost.a -L/Library/Frameworks/R.framework/Resources/lib -lR
+	$(CXX) -std=c++11 -shared -Wl, -o $@  $^ $(ALL_LIBS) ./packages/Microsoft.NETCore.App.Host.osx-$(ARCH).8.0.2/runtimes/osx-$(ARCH)/native/libnethost.a -L/Library/Frameworks/R.framework/Resources/lib -lR
 else
 	$(CXX) -std=c++11 -shared -Wl,-z,relro -o $@ $^ $(ALL_LIBS) -L./packages/Microsoft.NETCore.App.Host.linux-x64.8.0.2/runtimes/linux-x64/native -l:libnethost.a
 endif
 
 printarch:
 	-@echo **Variable information only for diagnosis purposes**
+	-@echo $(UNAME)
+	-@echo $(UNAME_ARCH)
 	-@echo $(OUTPUT)
 	-@echo CC=$(CC)
 	-@echo CXX=$(CXX)
