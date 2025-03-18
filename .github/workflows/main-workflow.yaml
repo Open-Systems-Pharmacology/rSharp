@@ -6,9 +6,10 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
-
-
   # Detect changes done in C# code base. If no change were done, skim "build-Csharp-binaries" workflow.
   detect-changes:
     if: github.event_name == 'pull_request'
