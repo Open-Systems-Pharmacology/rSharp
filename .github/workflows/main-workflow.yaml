@@ -6,9 +6,6 @@ on:
   pull_request:
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
   # Detect changes done in C# code base. If no change were done, skim "build-Csharp-binaries" workflow.
   detect-changes:
@@ -30,6 +27,8 @@ jobs:
   build-Csharp-binaries:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.Csharp == 'true' && github.event_name == 'pull_request'}}
+    permissions:
+      contents: write
     uses: ./.github/workflows/build-c#.yaml
 
   # Automatically bump dev version when a it is a push to main branch
