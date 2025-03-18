@@ -35,6 +35,8 @@ jobs:
   bump-dev-version:
     needs: build-Csharp-binaries
     if: github.event_name != 'pull_request' # only when merging in main/develop branch
+    permissions:
+      contents: write
     uses: Open-Systems-Pharmacology/Workflows/.github/workflows/bump_dev_version_tag_branch.yaml@main
     with:
       app-id: ${{ vars.VERSION_BUMPER_APPID }}
