@@ -1,5 +1,10 @@
 # rSharp (development version)
 
+## Minor improvements and bug fixes
+
+- Enhanced object printing with the {cli} package for more readable output.
+- Added {cli} package as a dependency for improved formatting capabilities.
+
 # rSharp 1.1.1
 
 ## Minor improvements and bug fixes
