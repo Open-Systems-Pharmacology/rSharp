@@ -56,4 +56,6 @@ jobs:
   pkgdown:
     if: ${{ !cancelled() }}
     needs: [R-CMD-Check]
+    permissions:
+      contents: write
     uses:  ./.github/workflows/pkgdown.yaml
