@@ -40,7 +40,8 @@ Depends:
 Imports:
     R6,
     methods,
-    cli
+    cli,
+    lifecycle
 Suggests:
     devtools,
     covr,

@@ -271,8 +271,33 @@ NetObject <- R6::R6Class(
       invisible(setStatic(self$pointer, name, value, asInteger))
     },
 
- #' @description Prints a summary of the object.
- print = function() {
+    #' @description DEPRECATED: Internal method for printing a line
+    #' @param entry The entry text
+    #' @param value The value to print
+    #' @param addTab Whether to add a tab before the entry
+    .printLine = function(entry, value = NULL, addTab = TRUE) {
+      lifecycle::deprecate_warn("1.1.2", "NetObject$.printLine()", "NetObject$print()")
+      entries <- paste0(entry, ":", sep = "")
+
+      # helps to visually distinguish class name from its entries
+      if (addTab) {
+        entries <- c("  ", entries)
+      }
+
+      value <- format(value)
+      entries <- c(entries, value, "\n")
+      cat(entries, sep = " ")
+      invisible(self)
+    },
+
+    #' @description DEPRECATED: Internal method for printing class name
+    .printClass = function() {
+      lifecycle::deprecate_warn("1.1.2", "NetObject$.printClass()", "NetObject$print()")
+      cat(class(self)[1], ": \n", sep = "")
+    },
+
+    #' @description Prints a summary of the object.
+    print = function() {
       # Print class name as a heading
       cli::cli_h2("{.cls {class(self)[1]}}")
       # Print type information

@@ -129,6 +129,8 @@ testObj$set("FieldIntegerOne", as.integer(42))
 \item \href{#method-NetObject-call}{\code{NetObject$call()}}
 \item \href{#method-NetObject-get}{\code{NetObject$get()}}
 \item \href{#method-NetObject-set}{\code{NetObject$set()}}
+\item \href{#method-NetObject-.printLine}{\code{NetObject$.printLine()}}
+\item \href{#method-NetObject-.printClass}{\code{NetObject$.printClass()}}
 \item \href{#method-NetObject-print}{\code{NetObject$print()}}
 }
 }
@@ -473,6 +475,37 @@ testObj$set("FieldIntegerOne", as.integer(42))
 }
 \if{html}{\out{</div>}}
 
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-NetObject-.printLine"></a>}}
+\if{latex}{\out{\hypertarget{method-NetObject-.printLine}{}}}
+\subsection{Method \code{.printLine()}}{
+DEPRECATED: Internal method for printing a line
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{NetObject$.printLine(entry, value = NULL, addTab = TRUE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{entry}}{The entry text}
+
+\item{\code{value}}{The value to print}
+
+\item{\code{addTab}}{Whether to add a tab before the entry}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-NetObject-.printClass"></a>}}
+\if{latex}{\out{\hypertarget{method-NetObject-.printClass}{}}}
+\subsection{Method \code{.printClass()}}{
+DEPRECATED: Internal method for printing class name
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{NetObject$.printClass()}\if{html}{\out{</div>}}
 }
 
 }

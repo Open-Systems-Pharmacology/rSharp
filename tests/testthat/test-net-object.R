@@ -183,3 +183,32 @@ test_that("$set works as expected", {
   testObj$set(propName, as.integer(2))
   expect_equal(testObj$get(propName), 2)
 })
+
+test_that("Deprecated printing methods show appropriate warnings", {
+  testClassName <- "ClrFacade.Tests.RefClasses.LevelOneClass"
+  o <- .External("r_create_clr_object", testClassName, PACKAGE = rSharpEnv$nativePkgName)
+  netObj <- NetObject$new(o)
+
+  # Test .printLine deprecation warning with correct message format
+  expect_warning(
+    netObj$.printLine("test"),
+    "`NetObject\\$.printLine\\(\\)` was deprecated in rSharp 1\\.1\\.2\\."
+  )
+
+  # Test .printClass deprecation warning with correct message format
+  expect_warning(
+    netObj$.printClass(),
+    "`NetObject\\$.printClass\\(\\)` was deprecated in rSharp 1\\.1\\.2\\."
+  )
+
+  # Also verify that the warning has the correct class
+  expect_warning(
+    netObj$.printLine("test"),
+    class = "lifecycle_warning_deprecated"
+  )
+
+  expect_warning(
+    netObj$.printClass(),
+    class = "lifecycle_warning_deprecated"
+  )
+})
