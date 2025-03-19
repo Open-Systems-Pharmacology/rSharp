@@ -69,22 +69,6 @@ NetObject <- R6::R6Class(
         private$.throwPropertyIsReadonly(name)
       }
     },
-    .printLine = function(entry, value = NULL, addTab = TRUE) {
-      entries <- paste0(entry, ":", sep = "")
-
-      # helps to visually distinguish class name from its entries
-      if (addTab) {
-        entries <- c("  ", entries)
-      }
-
-      value <- format(value)
-      entries <- c(entries, value, "\n")
-      cat(entries, sep = " ")
-      invisible(self)
-    },
-    .printClass = function() {
-      cat(class(self)[1], ": \n", sep = "")
-    },
     .throwPropertyIsReadonly = function(propertyName) {
       stop(messages$errorPropertyReadOnly(propertyName))
     },
@@ -287,13 +271,70 @@ NetObject <- R6::R6Class(
       invisible(setStatic(self$pointer, name, value, asInteger))
     },
 
+    #' @description DEPRECATED: Internal method for printing a line
+    #' @param entry The entry text
+    #' @param value The value to print
+    #' @param addTab Whether to add a tab before the entry
+    .printLine = function(entry, value = NULL, addTab = TRUE) {
+      lifecycle::deprecate_warn("1.1.2", "NetObject$.printLine()", "NetObject$print()")
+      entries <- paste0(entry, ":", sep = "")
+
+      # helps to visually distinguish class name from its entries
+      if (addTab) {
+        entries <- c("  ", entries)
+      }
+
+      value <- format(value)
+      entries <- c(entries, value, "\n")
+      cat(entries, sep = " ")
+      invisible(self)
+    },
+
+    #' @description DEPRECATED: Internal method for printing class name
+    .printClass = function() {
+      lifecycle::deprecate_warn("1.1.2", "NetObject$.printClass()", "NetObject$print()")
+      cat(class(self)[1], ": \n", sep = "")
+    },
+
     #' @description Prints a summary of the object.
     print = function() {
-      private$.printClass()
-      private$.printLine("Type", private$.type)
-      private$.printLine("Methods:", self$getMethods())
-      private$.printLine("Fields", self$getFields())
-      private$.printLine("Properties", self$getProperties())
+      # Print class name as a heading
+      cli::cli_h2("{.cls {class(self)[1]}}")
+      # Print type information
+      cli::cli_text("Type: {.field {private$.type}}")
+
+      # Get methods, fields and properties
+      methods <- self$getMethods()
+      fields <- self$getFields()
+      properties <- self$getProperties()
+
+      # Print methods in an organized section
+      if (length(methods) > 0) {
+        cli::cli_h3("Available Methods")
+        method_items <- sprintf("{.fun %s}", methods)
+        cli::cli_ul(id = "methods")
+        cli::cli_ul(method_items)
+        cli::cli_end(id = "methods")
+      }
+
+      # Print fields in an organized section
+      if (length(fields) > 0) {
+        cli::cli_h3("Available Fields")
+        field_items <- sprintf("{.field %s}", fields)
+        cli::cli_ul(id = "fields")
+        cli::cli_ul(field_items)
+        cli::cli_end(id = "fields")
+      }
+
+      # Print properties in an organized section
+      if (length(properties) > 0) {
+        cli::cli_h3("Available Properties")
+        property_items <- sprintf("{.field %s}", properties)
+        cli::cli_ul(id = "properties")
+        cli::cli_ul(property_items)
+        cli::cli_end(id = "properties")
+      }
+
       invisible(self)
     }
   )

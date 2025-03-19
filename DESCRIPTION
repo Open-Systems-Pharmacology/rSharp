@@ -39,7 +39,9 @@ Depends:
     R (>= 4.1)
 Imports:
     R6,
-    methods
+    methods,
+    cli,
+    lifecycle
 Suggests:
     devtools,
     covr,

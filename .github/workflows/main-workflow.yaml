@@ -7,8 +7,6 @@ on:
   workflow_dispatch:
 
 jobs:
-
-
   # Detect changes done in C# code base. If no change were done, skim "build-Csharp-binaries" workflow.
   detect-changes:
     if: github.event_name == 'pull_request'
@@ -29,12 +27,16 @@ jobs:
   build-Csharp-binaries:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.Csharp == 'true' && github.event_name == 'pull_request'}}
+    permissions:
+      contents: write
     uses: ./.github/workflows/build-c#.yaml
 
   # Automatically bump dev version when a it is a push to main branch
   bump-dev-version:
     needs: build-Csharp-binaries
     if: github.event_name != 'pull_request' # only when merging in main/develop branch
+    permissions:
+      contents: write
     uses: Open-Systems-Pharmacology/Workflows/.github/workflows/bump_dev_version_tag_branch.yaml@main
     with:
       app-id: ${{ vars.VERSION_BUMPER_APPID }}
@@ -54,4 +56,6 @@ jobs:
   pkgdown:
     if: ${{ !cancelled() }}
     needs: [R-CMD-Check]
+    permissions:
+      contents: write
     uses:  ./.github/workflows/pkgdown.yaml
