@@ -43,7 +43,7 @@ from source. For this, follow the instructions in section
 
 - Latest Microsoft Visual C++ Redistributable for Visual Studio 2015,
   2017 and 2019 available
-  [here](https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads)
+  [here](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-microsoft-visual-c-redistributable-version)
 - .NET 8 runtime available
   [here](https://dotnet.microsoft.com/download/dotnet/8.0/runtime).
 
