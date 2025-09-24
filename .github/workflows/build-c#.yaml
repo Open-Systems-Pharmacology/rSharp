@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   Linux-Build:
-    runs-on: ubuntu-22.04
+    runs-on: ${{ vars.GHA_DEFAULT_RUNNER_UBUNTU }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
@@ -49,7 +49,7 @@ jobs:
 
 
   macOS-Build:
-    runs-on: macos-14
+    runs-on: ${{ vars.GHA_DEFAULT_RUNNER_MACOS }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
@@ -130,7 +130,7 @@ jobs:
 
 
   Windows-Build:
-    runs-on: windows-2022
+    runs-on: ${{ vars.GHA_DEFAULT_RUNNER_WINDOWS }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
