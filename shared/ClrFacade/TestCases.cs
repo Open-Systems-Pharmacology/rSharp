@@ -19,7 +19,7 @@ public class TestCases
       return arg != null && arg.GetType() == typeof(TestObject);
    }
 
-   public static bool ArrayOfObjectsArgument(TestObject[] arg)
+   public static bool ArrayOfObjectsArgument(Object[] arg)
    {
       if (arg == null)
          return false;
