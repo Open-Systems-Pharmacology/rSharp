@@ -1,4 +1,7 @@
-testGarbageCollection <- function(getObjCountMethodName = "GetMemTestObjCounter", createTestObjectMethodName = "CreateMemTestObj") {
+testGarbageCollection <- function(
+  getObjCountMethodName = "GetMemTestObjCounter",
+  createTestObjectMethodName = "CreateMemTestObj"
+) {
   callGcMethname <- "CallGC"
   forceDotNetGc <- function() {
     callTestCase(callGcMethname)
@@ -25,7 +28,10 @@ testGarbageCollection <- function(getObjCountMethodName = "GetMemTestObjCounter"
   counter <- callTestCase(getObjCountMethodName)
   expect_equal(counter, 0)
   testObj <- callTestCase(createTestObjectMethodName)
-  testObj$set(name = "Text", value = "et nous alimentons nos aimables remords comme les mendiants nourissent leur vermine")
+  testObj$set(
+    name = "Text",
+    value = "et nous alimentons nos aimables remords comme les mendiants nourissent leur vermine"
+  )
   forceDotNetGc()
   checkPlusOne()
   testObj$set(name = "Text", value = "Sur l'oreiller du mal...")
@@ -36,7 +42,10 @@ testGarbageCollection <- function(getObjCountMethodName = "GetMemTestObjCounter"
 }
 
 test_that("Garbage collection in R and the .NET behaves as expected", {
-  testGarbageCollection(getObjCountMethodName = "GetMemTestObjCounter", createTestObjectMethodName = "CreateMemTestObj")
+  testGarbageCollection(
+    getObjCountMethodName = "GetMemTestObjCounter",
+    createTestObjectMethodName = "CreateMemTestObj"
+  )
 })
 
 # https://github.com/Open-Systems-Pharmacology/rSharp/issues/59

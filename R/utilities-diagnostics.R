@@ -13,7 +13,11 @@
 #' getSexpType("a")
 #' getSexpType(1:10)
 getSexpType <- function(sexp) {
-  extPtr <- .External("r_get_sexp_type", sexp, PACKAGE = rSharpEnv$nativePkgName)
+  extPtr <- .External(
+    "r_get_sexp_type",
+    sexp,
+    PACKAGE = rSharpEnv$nativePkgName
+  )
   return(castToRObject(extPtr))
 }
 

@@ -13,7 +13,10 @@ test_that("Object constructor discovery behaves as expected", {
 })
 
 test_that("getType returns a `NetObject` with a pointer for an assembly name", {
-  expect_equal(toStringNET(getType(rSharpEnv$testObjectTypeName)), rSharpEnv$testObjectTypeName)
+  expect_equal(
+    toStringNET(getType(rSharpEnv$testObjectTypeName)),
+    rSharpEnv$testObjectTypeName
+  )
 })
 
 
@@ -25,5 +28,8 @@ test_that("getType returns a `NetObject` with a pointer for a `NetObject` object
 test_that("getType returns a `NetObject` with a pointer for a `NetObject` object
           created for a generic instance", {
   testObj <- callTestCase("CreateTestObjectGenericInstance")
-  expect_equal(toStringNET(getType(testObj)), "ClrFacade.TestObjectGeneric`1[System.String]")
+  expect_equal(
+    toStringNET(getType(testObj)),
+    "ClrFacade.TestObjectGeneric`1[System.String]"
+  )
 })

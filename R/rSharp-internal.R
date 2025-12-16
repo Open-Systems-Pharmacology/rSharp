@@ -15,9 +15,8 @@
       clrtype <- .clrTypeNameExtPtr(obj)
     }
     return(new("cobjRef", clrobj = obj, clrtype = clrtype))
-  }
-  # Otherwise return unchanged
-  else {
+  } else {
+    # Otherwise return unchanged
     return(obj)
   }
 }
@@ -47,7 +46,11 @@
 #' }
 .clrTypeNameExtPtr <- function(extPtr) {
   .validateIsExtPtr(extPtr)
-  .External("r_get_typename_externalptr", extPtr, PACKAGE = rSharpEnv$nativePkgName)
+  .External(
+    "r_get_typename_externalptr",
+    extPtr,
+    PACKAGE = rSharpEnv$nativePkgName
+  )
 }
 
 #' Extract the pointers from the arguments

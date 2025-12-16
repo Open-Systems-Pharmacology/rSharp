@@ -12,7 +12,11 @@
 #' setConvertAdvancedTypes(FALSE)
 #' callStatic(cTypename, "CreateStringDictionary")
 setConvertAdvancedTypes <- function(enable = TRUE) {
-  invisible(callStatic("ClrFacade.ClrFacade", "SetConvertAdvancedTypes", enable))
+  invisible(callStatic(
+    "ClrFacade.ClrFacade",
+    "SetConvertAdvancedTypes",
+    enable
+  ))
 }
 
 #' Calls the ToString method of an object

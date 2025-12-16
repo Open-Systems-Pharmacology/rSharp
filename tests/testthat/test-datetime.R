@@ -95,7 +95,6 @@ test_that("Date and Time objects are marshalled correctly", {
   # dtun = DateTime.Parse('2007-01-01 02:00')
   # dtUtc = TimeZoneInfo.ConvertTimeToUtc(dtun, tz)
 
-
   ########################
   # End of IronPython test code:
   ########################
@@ -119,7 +118,6 @@ test_that("Date and Time objects are marshalled correctly", {
   ########################
   # End of R test code:
   ########################
-
 
   ##########
   # .NET to R
@@ -195,11 +193,25 @@ test_that("Date and Time objects are marshalled correctly", {
   # TimeSpan were not handled gracefully. Following tests also check that https://r2clr.codeplex.com/workitem/52 is dealt with
   # TODO broader, relating to that: default unknown value types are handled gracefully
   threePfive_sec <- as.difftime(3.5, units = "secs")
-  expect_equal(callStatic("System.TimeSpan", "FromSeconds", 3.5), expected = threePfive_sec)
+  expect_equal(
+    callStatic("System.TimeSpan", "FromSeconds", 3.5),
+    expected = threePfive_sec
+  )
   threePfive_min <- as.difftime(3.5, units = "mins")
-  expect_equal(callStatic("System.TimeSpan", "FromMinutes", 3.5), expected = as.difftime(180 + 30, units = "secs"))
+  expect_equal(
+    callStatic("System.TimeSpan", "FromMinutes", 3.5),
+    expected = as.difftime(180 + 30, units = "secs")
+  )
   # arrays of timespan
-  expect_equal(callStatic(rSharpEnv$testCasesTypeName, "CreateTimeSpanArray", 3.5, as.integer(5)), expected = threePfive_sec + 5 * (0:4))
+  expect_equal(
+    callStatic(
+      rSharpEnv$testCasesTypeName,
+      "CreateTimeSpanArray",
+      3.5,
+      as.integer(5)
+    ),
+    expected = threePfive_sec + 5 * (0:4)
+  )
 
   ##########
   # R to .NET conversions
@@ -243,14 +255,19 @@ test_that("Date and Time objects are marshalled correctly", {
   # Note that there no point looking below daily period wuth Date objects. consider:
   # z <- ISOdate(2010, 04, 13, c(0,12))
   # str(unclass(as.Date(z)))
-  expect_true(callStatic(rSharpEnv$testCasesTypeName, "CheckIsDailySequence", as.Date(testDateStr) + 0:(numDays - 1), testDateStr, as.integer(numDays)))
+  expect_true(callStatic(
+    rSharpEnv$testCasesTypeName,
+    "CheckIsDailySequence",
+    as.Date(testDateStr) + 0:(numDays - 1),
+    testDateStr,
+    as.integer(numDays)
+  ))
 
   # Time spans: R to .NET
   # This seems trickier, at least with the MS CLR hosting API.
   # TODO
   # Basically, I don't know how I can create a TimeSpan from the C layer, since the hosting API will fail to find a suitable COM type for it.
   # expect_true( callStatic(rSharpEnv$testCasesTypeName, "TimeSpanEquals", threePfive_min, '00:03:30.00'))
-
 
   # further notes, summary, thoughts to elaborate:
   # in .NET DateTime objects of the same Kind (what if different Kind?) are such that one day is always 86400 seconds.
@@ -276,7 +293,6 @@ test_that("Date and Time objects are marshalled correctly", {
 
   # | POSIXct with specific tzone = e.g. 'Australia/Sydney' | DateTimeOffset? |  |
   # | POSIXlt with specific tzone = e.g. 'Australia/Sydney' |  |  |
-
 
   ###########################
   # Notes on leap seconds (.leap.seconds)

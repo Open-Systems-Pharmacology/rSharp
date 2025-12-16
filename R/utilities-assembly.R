@@ -17,7 +17,11 @@
 #' loadAssembly(f)
 #' }
 loadAssembly <- function(name) {
-  result <- .External("rSharp_load_assembly", name, PACKAGE = rSharpEnv$nativePkgName)
+  result <- .External(
+    "rSharp_load_assembly",
+    name,
+    PACKAGE = rSharpEnv$nativePkgName
+  )
   return(result)
 }
 
@@ -30,9 +34,20 @@ loadAssembly <- function(name) {
 #' @examples
 #' getLoadedAssemblies()
 getLoadedAssemblies <- function(fullname = FALSE, filenames = FALSE) {
-  assNames <- callStatic(rSharpEnv$clrFacadeTypeName, "GetLoadedAssemblyNames", fullname)
+  assNames <- callStatic(
+    rSharpEnv$clrFacadeTypeName,
+    "GetLoadedAssemblyNames",
+    fullname
+  )
   if (filenames) {
-    data.frame(AssemblyName = assNames, URI = callStatic(rSharpEnv$clrFacadeTypeName, "GetLoadedAssemblyURI", assNames))
+    data.frame(
+      AssemblyName = assNames,
+      URI = callStatic(
+        rSharpEnv$clrFacadeTypeName,
+        "GetLoadedAssemblyURI",
+        assNames
+      )
+    )
   } else {
     assNames
   }

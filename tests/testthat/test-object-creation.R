@@ -30,7 +30,12 @@ test_that("Basic objects are created correctly", {
   rm(testObj)
 
   # Call to a static method creates an S4 object
-  testObj <- .External("r_call_static_method", rSharpEnv$testCasesTypeName, "CreateTestObject", PACKAGE = rSharpEnv$nativePkgName)
+  testObj <- .External(
+    "r_call_static_method",
+    rSharpEnv$testCasesTypeName,
+    "CreateTestObject",
+    PACKAGE = rSharpEnv$nativePkgName
+  )
   expect_false(is.null(testObj))
   expect_equal(testObj@clrtype, rSharpEnv$testObjectTypeName)
   rm(testObj)
