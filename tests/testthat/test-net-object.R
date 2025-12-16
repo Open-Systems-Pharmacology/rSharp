@@ -252,3 +252,23 @@ test_that("Deprecated printing methods show appropriate warnings", {
     class = "lifecycle_warning_deprecated"
   )
 })
+
+test_that("A NetObject can be passed as argument to callStatic", {
+  testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
+
+  expect_true(callTestCase(
+    "SingleObjectArgument",
+    testObj
+  ))
+})
+
+test_that("An array of NetObjects can be passed as argument to callStatic", {
+  testObj1 <- newObjectFromName(rSharpEnv$testObjectTypeName)
+  testObj2 <- newObjectFromName(rSharpEnv$testObjectTypeName)
+  testArray <- array(c(testObj1, testObj2), dim = c(2))
+
+  expect_true(callTestCase(
+    "ArrayOfObjectsArgument",
+    testArray
+  ))
+})

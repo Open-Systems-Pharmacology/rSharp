@@ -1,5 +1,7 @@
 # rSharp (development version)
 
+- Arrays of .NET objects are now supported as arguments to methods.
+
 # rSharp 1.1.2
 
 ## Minor improvements and bug fixes
