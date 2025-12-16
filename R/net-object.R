@@ -41,7 +41,12 @@ NetObject <- R6::R6Class(
     # @param asInteger Boolean whether to convert the value to an integer.
     # Used for cases where .NET signature requires an integer. Ignored if `value` is not numeric.
     # @return `self$set(name, value)` if `value` is passed, `self$get(name)` if no `value` is passed.
-    .wrapProperty = function(name, value, shouldSetNull = TRUE, asInteger = FALSE) {
+    .wrapProperty = function(
+      name,
+      value,
+      shouldSetNull = TRUE,
+      asInteger = FALSE
+    ) {
       if (missing(value)) {
         return(self$get(name))
       } else {
@@ -112,7 +117,12 @@ NetObject <- R6::R6Class(
     #' testObj$getFields("ieldInt")
     getFields = function(contains = "") {
       # Validate contains is string
-      callStatic(rSharpEnv$clrFacadeTypeName, "GetInstanceFields", self$pointer, contains)
+      callStatic(
+        rSharpEnv$clrFacadeTypeName,
+        "GetInstanceFields",
+        self$pointer,
+        contains
+      )
     },
 
     #' @description
@@ -128,7 +138,12 @@ NetObject <- R6::R6Class(
     #' testObj$getStaticFields("ieldInt")
     getStaticFields = function(contains = "") {
       # Validate contains is string
-      callStatic(rSharpEnv$clrFacadeTypeName, "GetStaticFields", self$pointer, contains)
+      callStatic(
+        rSharpEnv$clrFacadeTypeName,
+        "GetStaticFields",
+        self$pointer,
+        contains
+      )
     },
 
     #' @description
@@ -144,7 +159,12 @@ NetObject <- R6::R6Class(
     #' testObj$getProperties("One")
     getProperties = function(contains = "") {
       # Validate contains is string
-      callStatic(rSharpEnv$clrFacadeTypeName, "GetInstanceProperties", self$pointer, contains)
+      callStatic(
+        rSharpEnv$clrFacadeTypeName,
+        "GetInstanceProperties",
+        self$pointer,
+        contains
+      )
     },
 
     #' @description
@@ -160,7 +180,12 @@ NetObject <- R6::R6Class(
     #' testObj$getStaticProperties("One")
     getStaticProperties = function(contains = "") {
       # Validate contains is string
-      callStatic(rSharpEnv$clrFacadeTypeName, "GetStaticProperties", self$pointer, contains)
+      callStatic(
+        rSharpEnv$clrFacadeTypeName,
+        "GetStaticProperties",
+        self$pointer,
+        contains
+      )
     },
 
     #' @description
@@ -176,7 +201,12 @@ NetObject <- R6::R6Class(
     #' testObj$getMethods("Get")
     getMethods = function(contains = "") {
       # Validate contains is string
-      callStatic(rSharpEnv$clrFacadeTypeName, "GetInstanceMethods", self$pointer, contains)
+      callStatic(
+        rSharpEnv$clrFacadeTypeName,
+        "GetInstanceMethods",
+        self$pointer,
+        contains
+      )
     },
 
     #' @description
@@ -192,7 +222,12 @@ NetObject <- R6::R6Class(
     #' testObj$getStaticMethods("Get")
     getStaticMethods = function(contains = "") {
       # Validate contains is string
-      callStatic(rSharpEnv$clrFacadeTypeName, "GetStaticMethods", self$pointer, contains)
+      callStatic(
+        rSharpEnv$clrFacadeTypeName,
+        "GetStaticMethods",
+        self$pointer,
+        contains
+      )
     },
 
     #' @description
@@ -209,7 +244,12 @@ NetObject <- R6::R6Class(
     #' testObj$getMemberSignature("FieldIntegerOne")
     #' testObj$getMemberSignature("PropertyIntegerTwo")
     getMemberSignature = function(memberName) {
-      callStatic(rSharpEnv$clrFacadeTypeName, "GetSignature", self$pointer, memberName)
+      callStatic(
+        rSharpEnv$clrFacadeTypeName,
+        "GetSignature",
+        self$pointer,
+        memberName
+      )
     },
 
     #' @description
@@ -235,7 +275,14 @@ NetObject <- R6::R6Class(
       # Extract the pointer for R6 objects
       args <- .extractPointersFromArgs(list(...))
       # Calling via `do.call` to pass the arguments
-      result <- do.call(".External", c(list("r_call_method", self$pointer, methodName), args, PACKAGE = rSharpEnv$nativePkgName))
+      result <- do.call(
+        ".External",
+        c(
+          list("r_call_method", self$pointer, methodName),
+          args,
+          PACKAGE = rSharpEnv$nativePkgName
+        )
+      )
       return(castToRObject(result))
     },
 
@@ -276,7 +323,11 @@ NetObject <- R6::R6Class(
     #' @param value The value to print
     #' @param addTab Whether to add a tab before the entry
     .printLine = function(entry, value = NULL, addTab = TRUE) {
-      lifecycle::deprecate_warn("1.1.2", "NetObject$.printLine()", "NetObject$print()")
+      lifecycle::deprecate_warn(
+        "1.1.2",
+        "NetObject$.printLine()",
+        "NetObject$print()"
+      )
       entries <- paste0(entry, ":", sep = "")
 
       # helps to visually distinguish class name from its entries
@@ -292,7 +343,11 @@ NetObject <- R6::R6Class(
 
     #' @description DEPRECATED: Internal method for printing class name
     .printClass = function() {
-      lifecycle::deprecate_warn("1.1.2", "NetObject$.printClass()", "NetObject$print()")
+      lifecycle::deprecate_warn(
+        "1.1.2",
+        "NetObject$.printClass()",
+        "NetObject$print()"
+      )
       cat(class(self)[1], ": \n", sep = "")
     },
 

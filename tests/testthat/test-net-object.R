@@ -1,6 +1,10 @@
 test_that("It creates a `NetObject` from a valid pointer is provided", {
   testClassName <- "ClrFacade.Tests.RefClasses.LevelOneClass"
-  o <- .External("r_create_clr_object", testClassName, PACKAGE = rSharpEnv$nativePkgName)
+  o <- .External(
+    "r_create_clr_object",
+    testClassName,
+    PACKAGE = rSharpEnv$nativePkgName
+  )
   netObj <- NetObject$new(o)
 
   # Check if the object is a NetObject
@@ -27,10 +31,20 @@ test_that("It creates a `NetObject` from a valid pointer is provided", {
 
 test_that("$getMethods lists all methods of an object", {
   expectedMethods <- c(
-    "Equals", "get_PropertyIntegerOne", "get_PropertyIntegerTwo", "GetFieldIntegerOne",
-    "GetFieldIntegerTwo", "GetHashCode", "GetMethodWithParameters",
-    "GetPublicInt", "GetType", "set_PropertyIntegerOne",
-    "set_PropertyIntegerTwo", "TestDefaultValues", "TestParams", "ToString"
+    "Equals",
+    "get_PropertyIntegerOne",
+    "get_PropertyIntegerTwo",
+    "GetFieldIntegerOne",
+    "GetFieldIntegerTwo",
+    "GetHashCode",
+    "GetMethodWithParameters",
+    "GetPublicInt",
+    "GetType",
+    "set_PropertyIntegerOne",
+    "set_PropertyIntegerTwo",
+    "TestDefaultValues",
+    "TestParams",
+    "ToString"
   )
 
   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
@@ -38,15 +52,27 @@ test_that("$getMethods lists all methods of an object", {
 })
 
 test_that("$getMethods lists all methods of an object that include a given string", {
-  expectedMethods <- c("get_PropertyIntegerOne", "GetFieldIntegerOne", "set_PropertyIntegerOne")
+  expectedMethods <- c(
+    "get_PropertyIntegerOne",
+    "GetFieldIntegerOne",
+    "set_PropertyIntegerOne"
+  )
 
   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
-  expect_true(all(testObj$getMethods(contains = "IntegerOne") %in% expectedMethods))
+  expect_true(all(
+    testObj$getMethods(contains = "IntegerOne") %in% expectedMethods
+  ))
 })
 
 
 test_that("$getFields lists all fields of an object", {
-  expectedFields <- c("FieldDoubleOne", "FieldDoubleTwo", "FieldIntegerOne", "FieldIntegerTwo", "PublicInt")
+  expectedFields <- c(
+    "FieldDoubleOne",
+    "FieldDoubleTwo",
+    "FieldIntegerOne",
+    "FieldIntegerTwo",
+    "PublicInt"
+  )
 
   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
   expect_true(all(testObj$getFields() %in% expectedFields))
@@ -56,7 +82,9 @@ test_that("$getFields lists all fields of an object that include a given string"
   expectedFields <- c("FieldIntegerOne")
 
   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
-  expect_true(all(testObj$getFields(contains = "IntegerOne") %in% expectedFields))
+  expect_true(all(
+    testObj$getFields(contains = "IntegerOne") %in% expectedFields
+  ))
 })
 
 test_that("$getProperties lists all properties of an object", {
@@ -70,7 +98,9 @@ test_that("$getProperties lists all properties of an object that include a given
   expectedProperties <- c("PropertyIntegerOne")
 
   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
-  expect_true(all(testObj$getProperties(contains = "IntegerOne") %in% expectedProperties))
+  expect_true(all(
+    testObj$getProperties(contains = "IntegerOne") %in% expectedProperties
+  ))
 })
 
 test_that("$getStaticMethods lists all methods of an object", {
@@ -97,7 +127,9 @@ test_that("$getStaticMethods lists all methods of an object that include a given
   )
 
   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
-  expect_true(all(testObj$getStaticMethods(contains = "IntegerOne") %in% expectedMethods))
+  expect_true(all(
+    testObj$getStaticMethods(contains = "IntegerOne") %in% expectedMethods
+  ))
 })
 
 
@@ -116,7 +148,9 @@ test_that("$getStaticFields lists all fields of an object that include a given s
   expectedFields <- c("StaticFieldIntegerOne")
 
   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
-  expect_true(all(testObj$getStaticFields(contains = "IntegerOne") %in% expectedFields))
+  expect_true(all(
+    testObj$getStaticFields(contains = "IntegerOne") %in% expectedFields
+  ))
 })
 
 test_that("$getProperties lists all properties of an object", {
@@ -130,7 +164,9 @@ test_that("$getProperties lists all properties of an object that include a given
   expectedProperties <- c("PropertyIntegerOne")
 
   testObj <- newObjectFromName(rSharpEnv$testObjectTypeName)
-  expect_true(all(testObj$getProperties(contains = "IntegerOne") %in% expectedProperties))
+  expect_true(all(
+    testObj$getProperties(contains = "IntegerOne") %in% expectedProperties
+  ))
 })
 
 
@@ -186,7 +222,11 @@ test_that("$set works as expected", {
 
 test_that("Deprecated printing methods show appropriate warnings", {
   testClassName <- "ClrFacade.Tests.RefClasses.LevelOneClass"
-  o <- .External("r_create_clr_object", testClassName, PACKAGE = rSharpEnv$nativePkgName)
+  o <- .External(
+    "r_create_clr_object",
+    testClassName,
+    PACKAGE = rSharpEnv$nativePkgName
+  )
   netObj <- NetObject$new(o)
 
   # Test .printLine deprecation warning with correct message format

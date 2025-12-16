@@ -13,12 +13,19 @@ test_that("It returns base R types as is", {
   expect_equal(castToRObject(1:3), 1:3)
   expect_equal(castToRObject(c(1, 2, 3)), c(1, 2, 3))
   expect_equal(castToRObject(list(1, 2, 3)), list(1, 2, 3))
-  expect_equal(castToRObject(data.frame(a = 1:3, b = c("a", "b", "c"))), data.frame(a = 1:3, b = c("a", "b", "c")))
+  expect_equal(
+    castToRObject(data.frame(a = 1:3, b = c("a", "b", "c"))),
+    data.frame(a = 1:3, b = c("a", "b", "c"))
+  )
 })
 
 test_that("It returns a `NetObject` when a valid pointer is provided", {
   testClassName <- "ClrFacade.Tests.RefClasses.LevelOneClass"
-  o <- .External("r_create_clr_object", testClassName, PACKAGE = rSharpEnv$nativePkgName)
+  o <- .External(
+    "r_create_clr_object",
+    testClassName,
+    PACKAGE = rSharpEnv$nativePkgName
+  )
   netObj <- castToRObject(o)
   # Check if the object is a NetObject
   expect_true(inherits(netObj, "NetObject"))
@@ -26,8 +33,16 @@ test_that("It returns a `NetObject` when a valid pointer is provided", {
 
 test_that("It returns a list of `NetObject` when a list with valid pointers is provided", {
   testClassName <- "ClrFacade.Tests.RefClasses.LevelOneClass"
-  o <- .External("r_create_clr_object", testClassName, PACKAGE = rSharpEnv$nativePkgName)
-  o2 <- .External("r_create_clr_object", testClassName, PACKAGE = rSharpEnv$nativePkgName)
+  o <- .External(
+    "r_create_clr_object",
+    testClassName,
+    PACKAGE = rSharpEnv$nativePkgName
+  )
+  o2 <- .External(
+    "r_create_clr_object",
+    testClassName,
+    PACKAGE = rSharpEnv$nativePkgName
+  )
   netObj <- castToRObject(list(o, o2))
   # Check if the object is a NetObject
   expect_true(inherits(netObj[[1]], "NetObject"))
@@ -35,7 +50,11 @@ test_that("It returns a list of `NetObject` when a list with valid pointers is p
 
 test_that("It returns a list of `NetObject` and integer when a list is provided", {
   testClassName <- "ClrFacade.Tests.RefClasses.LevelOneClass"
-  o <- .External("r_create_clr_object", testClassName, PACKAGE = rSharpEnv$nativePkgName)
+  o <- .External(
+    "r_create_clr_object",
+    testClassName,
+    PACKAGE = rSharpEnv$nativePkgName
+  )
   netObj <- castToRObject(list(o, 2))
   # Check if the object is a NetObject
   expect_true(inherits(netObj[[1]], "NetObject"))

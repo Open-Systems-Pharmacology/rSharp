@@ -87,7 +87,14 @@ newPointerFromName <- function(typename, ...) {
   # Extract the pointer for R6 objects
   args <- .extractPointersFromArgs(list(...))
   # Calling via `do.call` to pass the arguments
-  o <- do.call(".External", c(list("r_create_clr_object", typename), args, PACKAGE = rSharpEnv$nativePkgName))
+  o <- do.call(
+    ".External",
+    c(
+      list("r_create_clr_object", typename),
+      args,
+      PACKAGE = rSharpEnv$nativePkgName
+    )
+  )
   if (is.null(o)) {
     stop("Failed to create instance of type '", typename, "'")
   }

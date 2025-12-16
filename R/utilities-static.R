@@ -6,7 +6,11 @@
 #' cTypename <- getRSharpSetting("testCasesTypeName")
 #' getStaticMembers(cTypename)
 getStaticMembers <- function(objOrType) {
-  list(Methods = getStaticMethods(objOrType), Fields = getStaticFields(objOrType), Properties = getStaticProperties(objOrType))
+  list(
+    Methods = getStaticMethods(objOrType),
+    Fields = getStaticFields(objOrType),
+    Properties = getStaticProperties(objOrType)
+  )
 }
 
 #' Gets the signature of a static member of a type
@@ -24,7 +28,12 @@ getStaticMemberSignature <- function(typename, memberName) {
 #' @param contains a string that the property names returned must contain
 #' @export
 getStaticFields <- function(objOrType, contains = "") {
-  callStatic(rSharpEnv$clrFacadeTypeName, "GetStaticFields", objOrType, contains)
+  callStatic(
+    rSharpEnv$clrFacadeTypeName,
+    "GetStaticFields",
+    objOrType,
+    contains
+  )
 }
 
 #' Gets the static properties for a type
@@ -32,7 +41,12 @@ getStaticFields <- function(objOrType, contains = "") {
 #' @inheritParams getStaticFields
 #' @export
 getStaticProperties <- function(objOrType, contains = "") {
-  callStatic(rSharpEnv$clrFacadeTypeName, "GetStaticProperties", objOrType, contains)
+  callStatic(
+    rSharpEnv$clrFacadeTypeName,
+    "GetStaticProperties",
+    objOrType,
+    contains
+  )
 }
 
 #' Gets the static methods for a type
@@ -40,7 +54,12 @@ getStaticProperties <- function(objOrType, contains = "") {
 #' @inheritParams getStaticFields
 #' @export
 getStaticMethods <- function(objOrType, contains = "") {
-  callStatic(rSharpEnv$clrFacadeTypeName, "GetStaticMethods", objOrType, contains)
+  callStatic(
+    rSharpEnv$clrFacadeTypeName,
+    "GetStaticMethods",
+    objOrType,
+    contains
+  )
 }
 
 #' Call a static method on a .NET type
@@ -57,7 +76,14 @@ callStatic <- function(typename, methodName, ...) {
   # Extract the pointer for R6 objects
   args <- .extractPointersFromArgs(list(...))
   # Calling via `do.call` to pass the arguments
-  extPtr <- do.call(".External", c(list("r_call_static_method", typename, methodName), args, PACKAGE = rSharpEnv$nativePkgName))
+  extPtr <- do.call(
+    ".External",
+    c(
+      list("r_call_static_method", typename, methodName),
+      args,
+      PACKAGE = rSharpEnv$nativePkgName
+    )
+  )
   return(castToRObject(extPtr))
 }
 
@@ -71,7 +97,12 @@ callStatic <- function(typename, methodName, ...) {
 #' testClassName <- getRSharpSetting("testObjectTypeName")
 #' getStatic(testClassName, "StaticPropertyIntegerOne")
 getStatic <- function(type, name) {
-  return(callStatic(rSharpEnv$clrFacadeTypeName, "GetFieldOrProperty", type, name))
+  return(callStatic(
+    rSharpEnv$clrFacadeTypeName,
+    "GetFieldOrProperty",
+    type,
+    name
+  ))
 }
 
 #' Sets the value of a field or property of an object or class
@@ -96,5 +127,11 @@ setStatic <- function(type, name, value, asInteger = FALSE) {
     value <- as.integer(value)
   }
 
-  invisible(callStatic(rSharpEnv$clrFacadeTypeName, "SetFieldOrProperty", type, name, value))
+  invisible(callStatic(
+    rSharpEnv$clrFacadeTypeName,
+    "SetFieldOrProperty",
+    type,
+    name,
+    value
+  ))
 }

@@ -3,23 +3,34 @@
 ########################
 
 clrDateEquals <- function(d, isoDateTimeStr, tzIdClr) {
-  callStatic(getRSharpSetting("testCasesTypeName"), "UtcDateEquals", d, isoDateTimeStr, tzIdClr)
+  callStatic(
+    getRSharpSetting("testCasesTypeName"),
+    "UtcDateEquals",
+    d,
+    isoDateTimeStr,
+    tzIdClr
+  )
 }
 createDotNetDate <- function(...) {
   callStatic(getRSharpSetting("testCasesTypeName"), "CreateDate", ...)
 }
 createUtcDate <- function(isoDateTimeStr, tzIdClr) {
-  callStatic(getRSharpSetting("testCasesTypeName"), "UtcDateForTimeZone", isoDateTimeStr, tzIdClr)
+  callStatic(
+    getRSharpSetting("testCasesTypeName"),
+    "UtcDateForTimeZone",
+    isoDateTimeStr,
+    tzIdClr
+  )
 }
 # convertClrTime <- function(isoDateTimeStr, tzIdClr_from, tzIdClr_to ) { callStatic(cTypename, "ConvertTime", isoDateTimeStr, tzIdClr_from, tzIdClr_to) }
-
 
 # ?Sys.timezone, See the examples
 tzIdR_AUest <- "Australia/Sydney"
 
 # IronPython: tz = [x for x in TimeZoneInfo.GetSystemTimeZones()]
 tzId_AUest <-
-  ifelse(tolower(Sys.info()["sysname"]) == "windows",
+  ifelse(
+    tolower(Sys.info()["sysname"]) == "windows",
     "AUS Eastern Standard Time",
     tzIdR_AUest # on Linux, use the Olson DB.
   )
@@ -42,22 +53,50 @@ pctToUtc <- function(dtPosixct) {
 
 # Given a date ISO 8601 string formatted, check that the marshalling is as expected.
 # Equality tests are done in the CLR, not in R, for this function, so this function tests the R POSIXt to CLR conversion
-testRtoClr <- function(dateStr, pfun = as.POSIXct, tzIdR = tzIdR_AUest, tzId = tzId_AUest) {
+testRtoClr <- function(
+  dateStr,
+  pfun = as.POSIXct,
+  tzIdR = tzIdR_AUest,
+  tzId = tzId_AUest
+) {
   #### First, a whole day. Test that Date object, then POSIXt objects are converted to the right .NET value
   # Date objects: from R to .NET:
   rdate <- as.Date(dateStr)
   dayComponent <- format(rdate, "%Y-%m-%d")
   # when converting an R Date to a POSIXct it becomes encoded as the date plus 00:00:00 UTC.
   # Let's check this is the equivalent seen from the CLR
-  expect_true(clrDateEquals(rdate, dayComponent, tzIdClr = "UTC"), label = paste("R Date", rdate, "becomes UTC DateTime", dayComponent))
+  expect_true(
+    clrDateEquals(rdate, dayComponent, tzIdClr = "UTC"),
+    label = paste("R Date", rdate, "becomes UTC DateTime", dayComponent)
+  )
 
   # if an R POSIXct date is created for a timezone, it is equal to a DateTime time zone
   dr <- pfun(dateStr, tz = tzIdR)
-  expect_true(clrDateEquals(dr, dateStr, tzIdClr = tzId), label = paste("R POSIXct", pctToString(dr), "becomes", tzId, "DateTime", dateStr))
+  expect_true(
+    clrDateEquals(dr, dateStr, tzIdClr = tzId),
+    label = paste(
+      "R POSIXct",
+      pctToString(dr),
+      "becomes",
+      tzId,
+      "DateTime",
+      dateStr
+    )
+  )
 }
 
-expect_posixct_equal <- function(actual, expected, mAct = "Actual", mExp = "Expected") {
-  expect_equal(actual, expected, label = paste(mAct, ":", pctToString(actual)), expected.label = paste(mExp, ":", pctToString(expected)))
+expect_posixct_equal <- function(
+  actual,
+  expected,
+  mAct = "Actual",
+  mExp = "Expected"
+) {
+  expect_equal(
+    actual,
+    expected,
+    label = paste(mAct, ":", pctToString(actual)),
+    expected.label = paste(mExp, ":", pctToString(expected))
+  )
 }
 
 testDotNetToR <- function(testDateStr) {
@@ -162,7 +201,10 @@ problem_DateStr <- c(
 testDatesStr <- c(post1971_DateStr, pre1971_DateStr)
 
 testSameInteger <- function(datestr) {
-  expect_equal(as.integer(createUtcDate(datestr, "UTC")), as.integer((as.POSIXct(datestr, tz = "UTC"))))
+  expect_equal(
+    as.integer(createUtcDate(datestr, "UTC")),
+    as.integer((as.POSIXct(datestr, tz = "UTC")))
+  )
 }
 
 # See issue #45; I do not think this could be passing but by chance

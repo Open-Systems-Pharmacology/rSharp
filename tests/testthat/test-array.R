@@ -10,7 +10,11 @@ expectArrayTypeConv <- function(type, arrayLength, expectedRObj, ...) {
 
 # Test that R passes correct type of array to .NET
 expectArrayElementType <- function(rObj, expectedTypeName) {
-  netType <- callStatic(rSharpEnv$clrFacadeTypeName, "GetType", expectedTypeName)
+  netType <- callStatic(
+    rSharpEnv$clrFacadeTypeName,
+    "GetType",
+    expectedTypeName
+  )
   expect_true(callStatic(cTypename, "CheckElementType", rObj, netType))
 }
 
@@ -152,11 +156,18 @@ test_that("Numerical bi-dimensional arrays are marshalled correctly from .NET to
 test_that("Numeric arrays are marshalled correctly", {
   expectedNumArray <- 1:5 * 1.1
   expect_equal(callTestCase("CreateNumArray"), expectedNumArray)
-  expect_equal(callTestCase("CreateFloatArray"), expected = expectedNumArray, tolerance = 5e-8)
+  expect_equal(
+    callTestCase("CreateFloatArray"),
+    expected = expectedNumArray,
+    tolerance = 5e-8
+  )
   expect_true(callTestCase("NumArrayEquals", expectedNumArray))
 
   numDays <- 5
-  expect_equal(callTestCase("CreateIntArray", as.integer(numDays)), expected = 0:(numDays - 1))
+  expect_equal(
+    callTestCase("CreateIntArray", as.integer(numDays)),
+    expected = 0:(numDays - 1)
+  )
 
   expectedNumArray[3] <- NA
   expect_equal(callTestCase("CreateNumArrayMissingVal"), expectedNumArray)

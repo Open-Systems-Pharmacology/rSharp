@@ -13,7 +13,10 @@ messages$errorNoExternalPointer <- function() {
   "Trying to create an object, but external pointer to .NET is invalid!"
 }
 
-messages$errorPropertyReadOnly <- function(propertyName, optionalMessage = NULL) {
+messages$errorPropertyReadOnly <- function(
+  propertyName,
+  optionalMessage = NULL
+) {
   paste0(
     "Property '",
     propertyName,
