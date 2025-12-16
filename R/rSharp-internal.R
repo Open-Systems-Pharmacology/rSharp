@@ -71,7 +71,9 @@
     # and extract the pointers for all elements
     if (is.list(args[[i]]) && length(args[[i]]) > 0) {
       if (inherits(args[[i]][[1]], "NetObject")) {
-        args[[i]] <- lapply(args[[i]], function(x) x$pointer)
+        args[[i]] <- lapply(args[[i]], function(x) {
+          if (inherits(x, "NetObject")) x$pointer else x
+        })
       }
     }
   }
