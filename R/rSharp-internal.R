@@ -67,6 +67,15 @@
     if (inherits(args[[i]], "NetObject")) {
       args[[i]] <- args[[i]]$pointer
     }
+    # Check if the entry is a list. If so, check if the first element is a NetObject
+    # and extract the pointers for all elements
+    if (is.list(args[[i]]) && length(args[[i]]) > 0) {
+      if (inherits(args[[i]][[1]], "NetObject")) {
+        args[[i]] <- lapply(args[[i]], function(x) {
+          if (inherits(x, "NetObject")) x$pointer else x
+        })
+      }
+    }
   }
   return(args)
 }

@@ -14,6 +14,25 @@ namespace ClrFacade;
 // Do not change the names or signatures without also updating usages in R
 public class TestCases
 {
+   public static bool SingleObjectArgument(TestObject arg)
+   {
+      return arg != null && arg.GetType() == typeof(TestObject);
+   }
+
+   public static bool ArrayOfObjectsArgument(Object[] arg)
+   {
+      if (arg == null)
+         return false;
+
+      for (var i = 0; i < arg.Length; i++)
+      {
+         if (arg[i] == null || arg[i].GetType() != typeof(TestObject))
+            return false;
+      }
+
+      return true;
+   }
+
    public static bool GetTrue()
    {
       return true;
