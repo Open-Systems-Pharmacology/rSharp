@@ -46,11 +46,15 @@ jobs:
   R-CMD-Check:
     if: ${{ !cancelled() }}
     needs: bump-dev-version
+    permissions:
+      contents: read
     uses: ./.github/workflows/R-CMD-check.yaml
 
   test-coverage:
     if: ${{ !cancelled() }}
     needs: [R-CMD-Check]
+    permissions:
+      contents: read
     uses:  ./.github/workflows/test-coverage.yaml
 
   pkgdown:
