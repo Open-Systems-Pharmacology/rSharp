@@ -41,7 +41,11 @@ through the `NetObject`. If, for any reason, the user needs to access
 the raw pointer, it can be done by accessing the field `$pointer` of the
 R6 object.
 
-`NetObject` instances can be passed to .NET methods as arguments.
+`NetObject` instances can be passed to .NET methods as arguments. If a
+method expects an array of .NET objects, all objects within the R list
+must be instances of `NetObject`. Mixed lists of native R types and
+`NetObject` instances are not supported. Furthermore, the type of the
+array will be interpreted as `Object[]`.
 
 ## Loading an assembly
 

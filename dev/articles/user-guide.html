@@ -54,7 +54,7 @@
 
       <h1>User guide</h1>
             
-            <h4 data-toc-skip class="date">2025-12-16</h4>
+            <h4 data-toc-skip class="date">2026-02-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/Open-Systems-Pharmacology/rsharp/blob/main/vignettes/user-guide.Rmd" class="external-link"><code>vignettes/user-guide.Rmd</code></a></small>
       <div class="d-none name"><code>user-guide.Rmd</code></div>
@@ -100,7 +100,11 @@ interact with these objects through the <code>NetObject</code>. If, for
 any reason, the user needs to access the raw pointer, it can be done by
 accessing the field <code>$pointer</code> of the R6 object.</p>
 <p><code>NetObject</code> instances can be passed to .NET methods as
-arguments.</p>
+arguments. If a method expects an array of .NET objects, all objects
+within the R list must be instances of <code>NetObject</code>. Mixed
+lists of native R types and <code>NetObject</code> instances are not
+supported. Furthermore, the type of the array will be interpreted as
+<code>Object[]</code>.</p>
 </div>
 </div>
 <div class="section level2">
