@@ -1041,7 +1041,7 @@ RSHARP_BOOL r_has_class(SEXP s, const char* classname) {
 
 RSharpGenericValue* get_rSharp_generic_value_from_extptr(SEXP a)
 {
-	auto extptr_ptr = EXTPTR_PTR(a);
+	auto extptr_ptr = R_ExternalPtrAddr(a);
 	if(extptr_ptr == nullptr)
 		error("External pointer to unallocated memory was found");
 	return ((RsharpObjectHandle*)extptr_ptr)->objptr;
