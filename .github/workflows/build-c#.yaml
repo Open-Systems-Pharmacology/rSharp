@@ -39,6 +39,10 @@ jobs:
           dotnet test ./shared/rSharpTests/ -c Release -d log.txt --no-build
           dotnet test ./shared/DynamicInterop.Tests/ -c Release -d log.txt --no-build
 
+      - name: Discard unrelated build artifacts
+        if: ${{ success() }}
+        run: git checkout -- '*.dll' '*mac.*.so' || true
+
       - uses: EndBug/add-and-commit@v10
         if: ${{ success() }}
         with:
@@ -79,6 +83,10 @@ jobs:
           dotnet test ./shared/RDotNet.Tests/ -c Release -d log.txt --no-build
           dotnet test ./shared/rSharpTests/ -c Release -d log.txt --no-build
           dotnet test ./shared/DynamicInterop.Tests/ -c Release -d log.txt --no-build
+
+      - name: Discard unrelated build artifacts
+        if: ${{ success() }}
+        run: git checkout -- '*.dll' '*linux.so' '*mac.x64.so' || true
 
       - uses: EndBug/add-and-commit@v10
         if: ${{ success() }}
@@ -125,6 +133,10 @@ jobs:
           dotnet test ./shared/RDotNet.Tests/ -c Release -d log.txt --no-build
           dotnet test ./shared/rSharpTests/ -c Release -d log.txt --no-build
           dotnet test ./shared/DynamicInterop.Tests/ -c Release -d log.txt --no-build
+
+      - name: Discard unrelated build artifacts
+        if: ${{ success() }}
+        run: git checkout -- '*.dll' '*linux.so' '*mac.arm64.so' || true
 
       - uses: EndBug/add-and-commit@v10
         if: ${{ success() }}
@@ -174,6 +186,11 @@ jobs:
           dotnet test .\shared\RDotNet.Tests\ -c Release -d log.txt --no-build
           dotnet test .\shared\rSharpTests\ -c Release -d log.txt --no-build
           dotnet test .\shared\DynamicInterop.Tests\ -c Release -d log.txt --no-build
+
+      - name: Discard unrelated build artifacts
+        if: ${{ success() }}
+        run: git checkout -- '*linux.so' '*mac.arm64.so' '*mac.x64.so'
+        continue-on-error: true
 
       - uses: EndBug/add-and-commit@v10
         if: ${{ success() }}
