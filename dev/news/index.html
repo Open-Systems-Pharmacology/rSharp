@@ -35,7 +35,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="rsharp-development-version">rSharp (development version)<a class="anchor" aria-label="anchor" href="#rsharp-development-version"></a></h2>
-<ul><li>Fixed package failing to load on R 4.6 with <code>undefined symbol: EXTPTR_PTR</code> by switching the C++ shim to the stable <code>R_ExternalPtrAddr()</code> API.</li>
+<ul><li>Declared <code>.NET (&gt;= 8.0)</code> in the <code>SystemRequirements</code> field of <code>DESCRIPTION</code> (<a href="https://github.com/Open-Systems-Pharmacology/rsharp/issues/177" class="external-link">#177</a>).</li>
+<li>Fixed package failing to load on R 4.6 with <code>undefined symbol: EXTPTR_PTR</code> by switching the C++ shim to the stable <code>R_ExternalPtrAddr()</code> API.</li>
 <li>Fixed macOS install-time segfault for users with multiple R versions installed in parallel by removing the versioned <code>R.framework</code> path baked into the shipped <code>.so</code>. The macOS link line now uses <code>-undefined dynamic_lookup</code> instead of <code>-lR</code>, matching the convention used by other R packages with C++ code.</li>
 <li>Arrays of .NET objects are now supported as arguments to methods. However, the signature of the .NET method must accept <code>Object[]</code> as parameter type.</li>
 </ul></div>
