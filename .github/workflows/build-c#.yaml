@@ -13,7 +13,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
@@ -39,7 +39,7 @@ jobs:
           dotnet test ./shared/rSharpTests/ -c Release -d log.txt --no-build
           dotnet test ./shared/DynamicInterop.Tests/ -c Release -d log.txt --no-build
 
-      - uses: EndBug/add-and-commit@v9
+      - uses: EndBug/add-and-commit@v10
         if: ${{ success() }}
         with:
           pull: '--verbose'
@@ -54,7 +54,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
@@ -80,7 +80,7 @@ jobs:
           dotnet test ./shared/rSharpTests/ -c Release -d log.txt --no-build
           dotnet test ./shared/DynamicInterop.Tests/ -c Release -d log.txt --no-build
 
-      - uses: EndBug/add-and-commit@v9
+      - uses: EndBug/add-and-commit@v10
         if: ${{ success() }}
         with:
           pull: '--verbose'
@@ -94,7 +94,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
@@ -120,7 +120,7 @@ jobs:
           dotnet test ./shared/rSharpTests/ -c Release -d log.txt --no-build
           dotnet test ./shared/DynamicInterop.Tests/ -c Release -d log.txt --no-build
 
-      - uses: EndBug/add-and-commit@v9
+      - uses: EndBug/add-and-commit@v10
         if: ${{ success() }}
         with:
           pull: '--verbose'
@@ -135,7 +135,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
@@ -169,7 +169,7 @@ jobs:
           dotnet test .\shared\rSharpTests\ -c Release -d log.txt --no-build
           dotnet test .\shared\DynamicInterop.Tests\ -c Release -d log.txt --no-build
 
-      - uses: EndBug/add-and-commit@v9
+      - uses: EndBug/add-and-commit@v10
         if: ${{ success() }}
         with:
           pull: '--verbose'
