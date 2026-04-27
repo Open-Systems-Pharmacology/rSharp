@@ -89,7 +89,7 @@ jobs:
           add: '*mac.arm64.so'
 
   macOS-Build-x64:
-    runs-on: macos-13
+    runs-on: macos-15-intel
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
