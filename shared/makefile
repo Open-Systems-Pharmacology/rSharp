@@ -58,7 +58,7 @@ endif
 $(OUT_DIR)/$(OUTPUT):  $(OBJ_FILES)
 	-@mkdir -p $(OUT_DIR) 2>/dev/null
 ifeq ($(UNAME), Darwin)
-	$(CXX) -std=c++11 -shared -Wl, -o $@  $^ $(ALL_LIBS) ./packages/Microsoft.NETCore.App.Host.osx-$(ARCH).8.0.2/runtimes/osx-$(ARCH)/native/libnethost.a -L/Library/Frameworks/R.framework/Resources/lib -lR
+	$(CXX) -std=c++11 -shared -Wl,-undefined,dynamic_lookup -o $@  $^ $(ALL_LIBS) ./packages/Microsoft.NETCore.App.Host.osx-$(ARCH).8.0.2/runtimes/osx-$(ARCH)/native/libnethost.a
 else
 	$(CXX) -std=c++11 -shared -Wl,-z,relro -o $@ $^ $(ALL_LIBS) -L./packages/Microsoft.NETCore.App.Host.linux-x64.8.0.2/runtimes/linux-x64/native -l:libnethost.a
 endif
