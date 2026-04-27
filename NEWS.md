@@ -1,6 +1,7 @@
 # rSharp (development version)
 
 - Fixed package failing to load on R 4.6 with `undefined symbol: EXTPTR_PTR` by switching the C++ shim to the stable `R_ExternalPtrAddr()` API.
+- Fixed macOS install-time segfault for users with multiple R versions installed in parallel by removing the versioned `R.framework` path baked into the shipped `.so`. The macOS link line now uses `-undefined dynamic_lookup` instead of `-lR`, matching the convention used by other R packages with C++ code.
 - Arrays of .NET objects are now supported as arguments to methods. However, the signature of the .NET method must accept `Object[]` as parameter type.
 
 # rSharp 1.1.2
