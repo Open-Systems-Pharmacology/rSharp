@@ -104,6 +104,9 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      - name: Install Mono (needed by nuget CLI)
+        run: brew install mono
+
       - name: Setup NuGet
         uses: nuget/setup-nuget@v4
 
