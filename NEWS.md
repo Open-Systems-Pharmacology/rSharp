@@ -1,5 +1,6 @@
 # rSharp (development version)
 
+- Declared `.NET (>= 8.0)` in the `SystemRequirements` field of `DESCRIPTION` (#177).
 - Arrays of .NET objects are now supported as arguments to methods. However, the signature of the .NET method must accept `Object[]` as parameter type.
 
 # rSharp 1.1.2
