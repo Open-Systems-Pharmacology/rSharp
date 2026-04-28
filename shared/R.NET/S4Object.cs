@@ -34,7 +34,7 @@ namespace RDotNet
          : base(engine, pointer)
       {
          if (dotSlotNamesFunc == null)
-            dotSlotNamesFunc = Engine.Evaluate("invisible(.slotNames)").AsFunction();
+            dotSlotNamesFunc = Engine.Evaluate("invisible(methods::.slotNames)").AsFunction();
       }
 
       /// <summary>
