@@ -16,6 +16,10 @@
 - Arrays of .NET objects are now supported as arguments to methods.
   However, the signature of the .NET method must accept `Object[]` as
   parameter type.
+- Fixed `object '.slotNames' not found` error when constructing S4
+  objects on runners where the `methods` package is not attached to the
+  search path, by qualifying the lookup as
+  [`methods::.slotNames`](https://rdrr.io/r/methods/slot.html).
 
 ## rSharp 1.1.2
 
