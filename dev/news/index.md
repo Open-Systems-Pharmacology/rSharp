@@ -2,8 +2,7 @@
 
 ## rSharp (development version)
 
-- Declared `.NET (>= 8.0)` in the `SystemRequirements` field of
-  `DESCRIPTION`
+- Declared `dotnet8` in the `SystemRequirements` field of `DESCRIPTION`
   ([\#177](https://github.com/Open-Systems-Pharmacology/rsharp/issues/177)).
 - Fixed package failing to load on R 4.6 with
   `undefined symbol: EXTPTR_PTR` by switching the C++ shim to the stable
