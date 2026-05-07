@@ -48,18 +48,22 @@ jobs:
     needs: bump-dev-version
     permissions:
       contents: read
-    uses: ./.github/workflows/R-CMD-check.yaml
+    uses: Open-Systems-Pharmacology/Workflows/.github/workflows/R-CMD-check-build.yaml@main
+    with:
+      os-matrix: '[{"os": "macos-latest", "r": "release"}, {"os": "macos-15-intel", "r": "release"}, {"os": "windows-latest", "r": "release"}, {"os": "ubuntu-latest", "r": "release"}]'
 
   test-coverage:
     if: ${{ !cancelled() }}
     needs: [R-CMD-Check]
     permissions:
       contents: read
-    uses:  ./.github/workflows/test-coverage.yaml
+    uses: Open-Systems-Pharmacology/Workflows/.github/workflows/test-coverage.yaml@main
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   pkgdown:
     if: ${{ !cancelled() }}
     needs: [R-CMD-Check]
     permissions:
       contents: write
-    uses:  ./.github/workflows/pkgdown.yaml
+    uses: Open-Systems-Pharmacology/Workflows/.github/workflows/pkgdown.yaml@main
