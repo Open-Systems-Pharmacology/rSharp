@@ -6,13 +6,13 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions: write-all
+
 jobs:
   # Detect changes done in C# code base. If no change were done, skim "build-Csharp-binaries" workflow.
   detect-changes:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: read
     outputs:
       Csharp: ${{ steps.filter.outputs.Csharp }}
     steps:
@@ -27,16 +27,12 @@ jobs:
   build-Csharp-binaries:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.Csharp == 'true' && github.event_name == 'pull_request'}}
-    permissions:
-      contents: write
     uses: ./.github/workflows/build-c#.yaml
 
   # Automatically bump dev version when a it is a push to main branch
   bump-dev-version:
     needs: build-Csharp-binaries
     if: github.event_name != 'pull_request' # only when merging in main/develop branch
-    permissions:
-      contents: write
     uses: Open-Systems-Pharmacology/Workflows/.github/workflows/bump_dev_version_tag_branch.yaml@main
     with:
       app-id: ${{ vars.VERSION_BUMPER_APPID }}
@@ -46,8 +42,6 @@ jobs:
   R-CMD-Check:
     if: ${{ !cancelled() }}
     needs: bump-dev-version
-    permissions:
-      contents: read
     uses: Open-Systems-Pharmacology/Workflows/.github/workflows/R-CMD-check-build.yaml@main
     with:
       os-matrix: '[{"os": "macos-latest", "r": "release"}, {"os": "macos-15-intel", "r": "release"}, {"os": "windows-latest", "r": "release"}, {"os": "ubuntu-latest", "r": "release"}]'
@@ -55,8 +49,6 @@ jobs:
   test-coverage:
     if: ${{ !cancelled() }}
     needs: [R-CMD-Check]
-    permissions:
-      contents: read
     uses: Open-Systems-Pharmacology/Workflows/.github/workflows/test-coverage.yaml@main
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -64,6 +56,4 @@ jobs:
   pkgdown:
     if: ${{ !cancelled() }}
     needs: [R-CMD-Check]
-    permissions:
-      contents: write
     uses: Open-Systems-Pharmacology/Workflows/.github/workflows/pkgdown.yaml@main
