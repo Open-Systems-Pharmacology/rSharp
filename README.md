@@ -3,9 +3,9 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/Open-Systems-Pharmacology/rSharp/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Open-Systems-Pharmacology/rSharp/actions/workflows/R-CMD-check.yaml)
+[![Build](https://img.shields.io/github/actions/workflow/status/Open-Systems-Pharmacology/rSharp/main-workflow.yaml?branch=main&label=Build)](https://github.com/Open-Systems-Pharmacology/rSharp/actions/workflows/main-workflow.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/Open-Systems-Pharmacology/rSharp/branch/develop/graph/badge.svg)](https://app.codecov.io/gh/Open-Systems-Pharmacology/rSharp?branch=develop)
+coverage](https://codecov.io/gh/Open-Systems-Pharmacology/rSharp/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Open-Systems-Pharmacology/rSharp?branch=main)
 <!-- badges: end -->
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -43,7 +43,7 @@ from source. For this, follow the instructions in section
 
 - Latest Microsoft Visual C++ Redistributable for Visual Studio 2015,
   2017 and 2019 available
-  [here](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-microsoft-visual-c-redistributable-version)
+  [here](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-supported-redistributable-version)
 - .NET 8 runtime available
   [here](https://dotnet.microsoft.com/download/dotnet/8.0/runtime).
 
@@ -113,7 +113,7 @@ install.packages("path/to/rSharp_X.tgz")
 
 Run the following commands to install the required dependencies:
 
-    sudo apt-get install dotnet-runtime-8.0 libcurl4-openssl-dev libssl-dev libxml2-dev 
+    sudo apt-get install dotnet-runtime-8.0 libcurl4-openssl-dev libssl-dev libxml2-dev
     sudo apt-get install libfontconfig1-dev libharfbuzz-dev libfribidi-dev
     sudo apt-get install libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
 
