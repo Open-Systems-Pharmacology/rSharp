@@ -2,6 +2,8 @@
 
 ## rSharp (development version)
 
+## rSharp 1.2.0
+
 - Declared `dotnet8` in the `SystemRequirements` field of `DESCRIPTION`
   ([\#177](https://github.com/Open-Systems-Pharmacology/rsharp/issues/177)).
 - Fixed package failing to load on R 4.6 with
