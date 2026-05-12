@@ -56,6 +56,7 @@ function. In this example, we will use the library `rSharp.Examples.dll`
 provided with this package.
 
 ``` r
+
 library(rSharp)
 assembly <- loadAssembly(system.file("extdata", "rSharp.Examples.dll", package = "rSharp"))
 ```
@@ -64,6 +65,7 @@ We can get the list of all loaded assemblies using the
 `getLoadedAssemblies` function:
 
 ``` r
+
 getLoadedAssemblies()
 #>  [1] "System.Private.CoreLib"                    
 #>  [2] "ClrFacade"                                 
@@ -110,6 +112,7 @@ with different static members. To get an overview of the available
 static members of a class, you can use the `getStaticMembers` function:
 
 ``` r
+
 getStaticMembers("rSharp.Examples.SampleStaticClass")
 #> $Methods
 #> [1] "Add"               "GetAString"        "GetInstanceObject"
@@ -132,6 +135,7 @@ method, you can use the `getStaticMemberSignature` function to get the
 method’s signature:
 
 ``` r
+
 # Get the signature of the GetAString method
 getStaticMemberSignature("rSharp.Examples.SampleStaticClass", "GetAString")
 #> [1] "Static, Method: String GetAString"
@@ -144,6 +148,7 @@ The method `GetAString` returns a string and does not have any
 arguments, so we can call it using the `callStatic` function:
 
 ``` r
+
 rSharp::callStatic("rSharp.Examples.SampleStaticClass", "GetAString")
 #> [1] "A string from static class"
 ```
@@ -153,6 +158,7 @@ to the `callStatic` function, as in this case of calling the static
 function `Add()` that requires two integers as arguments:
 
 ``` r
+
 rSharp::callStatic("rSharp.Examples.SampleStaticClass", "Add", as.integer(1), as.integer(2))
 #> [1] 3
 ```
@@ -164,6 +170,7 @@ We can also access static fields of a class using the `getStatic` and
 `setStatic` functions:
 
 ``` r
+
 # Get the value of the static field
 getStatic("rSharp.Examples.SampleStaticClass", "StaticString")
 #> [1] "A string from static class"
@@ -174,6 +181,7 @@ earlier. We can set the value of the static field and would expect it to
 be returned by the `GetAString` method:
 
 ``` r
+
 # Set the value of the static field
 setStatic("rSharp.Examples.SampleStaticClass", "StaticString", "New value")
 # Get the value of the static field
@@ -193,6 +201,7 @@ returns an instance of the `SampleInstanceClass` class. `rSharp` wraps
 such objects in the `NetObject` class:
 
 ``` r
+
 # Call the SampleInstanceClass method
 instance <- callStatic("rSharp.Examples.SampleStaticClass", "GetInstanceObject")
 
@@ -214,6 +223,7 @@ additional arguments to the `newPointerFromName` function. We can
 examine the constructors of a class with the `getConstructors` function:
 
 ``` r
+
 getConstructors("rSharp.Examples.SampleInstanceClass")
 #> [1] "Constructor: .ctor"                              
 #> [2] "Constructor: .ctor, Double"                      
@@ -229,6 +239,7 @@ constructor with two double arguments and create a `NetObject` using the
 pointer:
 
 ``` r
+
 # Create a pointer to a .NET object
 pointer <- newPointerFromName("rSharp.Examples.SampleInstanceClass", as.double(1), as.double(2))
 # Wrap the pointer in a new NetObject
@@ -239,6 +250,7 @@ The more conventient way of creating a `NetObject` for a new object is
 by calling the `newObjectFromName` function:
 
 ``` r
+
 # Create a new instance of the SampleInstanceClass
 newInstance2 <- newObjectFromName("rSharp.Examples.SampleInstanceClass", as.integer(1))
 ```
@@ -248,6 +260,7 @@ properties of an object using the `getMethods`, `getFields`, and
 `getProperties` methods called on the object, respectively.
 
 ``` r
+
 # Get the methods of the object
 newInstance$getMethods()
 #> [1] "Equals"      "GetAString"  "GetHashCode" "GetType"     "ToString"
@@ -263,6 +276,7 @@ A non-static class can also have static members, which can be listed
 using the `getStatic...` functions:
 
 ``` r
+
 newInstance$getStaticFields()
 #> [1] "StaticString"
 ```
@@ -271,6 +285,7 @@ Setting and getting non-static fields and properties of an object is
 done using the `set` and `get` methods, respectively:
 
 ``` r
+
 # Get the value of the static field:
 newInstance$get("FieldDoubleOne")
 #> [1] 1
@@ -287,6 +302,7 @@ To get or set static fields, use the functions `getStatic` and
 Finally, we can call the methods of the object using the `call` method:
 
 ``` r
+
 # Call the Add method
 newInstance$call("GetAString")
 #> [1] "A string from instance class"

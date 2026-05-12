@@ -33,7 +33,7 @@ from source. For this, follow the instructions in section
 
 - Latest Microsoft Visual C++ Redistributable for Visual Studio 2015,
   2017 and 2019 available
-  [here](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-microsoft-visual-c-redistributable-version)
+  [here](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-supported-redistributable-version)
 - .NET 8 runtime available
   [here](https://dotnet.microsoft.com/download/dotnet/8.0/runtime).
 
@@ -43,6 +43,7 @@ You can install the package from GitHub with pre-build binaries by
 running:
 
 ``` r
+
 install.packages("pak")
 pak::pak("Open-Systems-Pharmacology/rSharp@*release")
 ```
@@ -50,6 +51,7 @@ pak::pak("Open-Systems-Pharmacology/rSharp@*release")
 Get the latest development version with:
 
 ``` r
+
 pak::pak("Open-Systems-Pharmacology/rSharp")
 ```
 
@@ -60,6 +62,7 @@ release](https://github.com/Open-Systems-Pharmacology/rSharp/releases),
 and install it locally using:
 
 ``` r
+
 install.packages("path/to/rSharp_X.zip",  type = "win.binary")
 ```
 
@@ -77,6 +80,7 @@ You can install the package from GitHub with pre-build binaries by
 running:
 
 ``` r
+
 install.packages("pak")
 pak::pak("Open-Systems-Pharmacology/rSharp@*release")
 ```
@@ -84,6 +88,7 @@ pak::pak("Open-Systems-Pharmacology/rSharp@*release")
 Get the latest development version with:
 
 ``` r
+
 pak::pak("Open-Systems-Pharmacology/rSharp")
 ```
 
@@ -94,6 +99,7 @@ release](https://github.com/Open-Systems-Pharmacology/rSharp/releases),
 and install it locally using:
 
 ``` r
+
 install.packages("path/to/rSharp_X.tgz")
 ```
 
@@ -104,7 +110,7 @@ install.packages("path/to/rSharp_X.tgz")
 Run the following commands to install the required dependencies:
 
 ``` R
-sudo apt-get install dotnet-runtime-8.0 libcurl4-openssl-dev libssl-dev libxml2-dev 
+sudo apt-get install dotnet-runtime-8.0 libcurl4-openssl-dev libssl-dev libxml2-dev
 sudo apt-get install libfontconfig1-dev libharfbuzz-dev libfribidi-dev
 sudo apt-get install libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
 ```
@@ -115,6 +121,7 @@ You can install the package from GitHub with pre-build binaries by
 running:
 
 ``` r
+
 install.packages("pak")
 pak::pak("Open-Systems-Pharmacology/rSharp@*release")
 ```
@@ -122,6 +129,7 @@ pak::pak("Open-Systems-Pharmacology/rSharp@*release")
 Get the latest development version with:
 
 ``` r
+
 pak::pak("Open-Systems-Pharmacology/rSharp")
 ```
 
@@ -133,6 +141,7 @@ release](https://github.com/Open-Systems-Pharmacology/rSharp/releases),
 and install it locally using:
 
 ``` r
+
 install.packages("path/to/rSharp_X.tar.gz")
 ```
 

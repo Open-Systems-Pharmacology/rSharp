@@ -27,5 +27,5 @@ The string representation of the object in .NET
 library(rSharp)
 dt <- as.POSIXct("2001-01-01 02:03:04", tz = "UTC")
 toStringNET(dt)
-#> [1] "1/1/2001 2:03:04 AM"
+#> [1] "1/1/2001 2:03:04 AM"
 ```
