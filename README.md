@@ -187,7 +187,7 @@ environment and run the following R commands
 ### MacOS
 
 Download and install [.NET SDK
-8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+10](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
 
 Install Homebrew and use it to install build tools
 
