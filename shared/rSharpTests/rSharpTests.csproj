@@ -16,7 +16,7 @@
     <RepositoryUrl>https://github.com/Open-Systems-Pharmacology/rsharp</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Open-Systems-Pharmacology/rsharp</PackageProjectUrl>
     <PackageReleaseNotes></PackageReleaseNotes>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="TestApp\**" />

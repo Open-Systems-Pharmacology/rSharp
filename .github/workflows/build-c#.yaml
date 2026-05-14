@@ -21,7 +21,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
 
       - name: Setup R
         uses: r-lib/actions/setup-r@v2
@@ -66,7 +66,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
 
       - name: Setup R
         uses: r-lib/actions/setup-r@v2
@@ -86,7 +86,7 @@ jobs:
 
       - name: Discard unrelated build artifacts
         if: ${{ success() }}
-        run: git checkout -- '*.dll' '*linux.so' '*mac.x64.so' || true
+        run: git checkout -- '*.dll' '*linux.so' || true
 
       - uses: EndBug/add-and-commit@v10
         if: ${{ success() }}
@@ -95,56 +95,6 @@ jobs:
           message: 'Update macOS C# binaries (Commit from Github Actions).'
           default_author: github_actions
           add: '*mac.arm64.so'
-
-  macOS-Build-x64:
-    runs-on: macos-15-intel
-    env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: 8.0.x
-
-      - name: Install Mono (needed by nuget CLI)
-        run: brew install mono
-
-      - name: Setup NuGet
-        uses: nuget/setup-nuget@v4
-
-      - name: Setup R
-        uses: r-lib/actions/setup-r@v2
-        with:
-          use-public-rspm: true
-
-      - name: Make
-        working-directory: ./shared
-        run: make
-
-      - name: Test C# binaries
-        run: |
-          export R_HOME=/Library/Frameworks/R.framework/Resources
-          dotnet test ./shared/RDotNet.Tests/ -c Release -d log.txt --no-build
-          dotnet test ./shared/rSharpTests/ -c Release -d log.txt --no-build
-          dotnet test ./shared/DynamicInterop.Tests/ -c Release -d log.txt --no-build
-
-      - name: Discard unrelated build artifacts
-        if: ${{ success() }}
-        run: git checkout -- '*.dll' '*linux.so' '*mac.arm64.so' || true
-
-      - uses: EndBug/add-and-commit@v10
-        if: ${{ success() }}
-        with:
-          pull: '--verbose'
-          message: 'Update macOS C# binaries (Commit from Github Actions).'
-          default_author: github_actions
-          add: '*mac.x64.so'
 
 
   Windows-Build:
@@ -161,25 +111,30 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
 
       - name: Setup R
         uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
 
-      - name: Install dependencies
-        run: |
-          nuget restore ./shared/packages.config -PackagesDirectory ./shared/packages
-          dotnet restore ./shared/rSharp.sln
+      - name: Restore native host package (for rSharp.vcxproj)
+        run: nuget restore ./shared/packages.config -PackagesDirectory ./shared/packages
 
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v2
+      - name: Add msbuild to PATH (vcxproj build only)
+        uses: microsoft/setup-msbuild@v3
 
-      - name: Build C# binaries
+      - name: Build C++ rSharp native extension via msbuild
         run: |
           $env:R_INSTALL_PATH="C:\R"
-          msbuild ./shared/rSharp.sln -t:rebuild /p:Configuration=Release /p:Platform=x64
+          msbuild ./shared/rSharp.vcxproj -t:rebuild /p:Configuration=Release /p:Platform=x64 "/p:SolutionDir=${{ github.workspace }}\shared\\"
+
+      - name: Build managed projects via dotnet (NetOnly sln view)
+        run: |
+          cp ./shared/rSharp.sln ./shared/rSharp.NetOnly.sln
+          dotnet sln ./shared/rSharp.NetOnly.sln remove ./shared/rSharp.vcxproj
+          dotnet restore ./shared/rSharp.NetOnly.sln
+          dotnet build ./shared/rSharp.NetOnly.sln -c Release --no-restore
 
       - name: Test C# binaries
         run: |
@@ -189,7 +144,7 @@ jobs:
 
       - name: Discard unrelated build artifacts
         if: ${{ success() }}
-        run: git checkout -- '*linux.so' '*mac.arm64.so' '*mac.x64.so'
+        run: git checkout -- '*linux.so' '*mac.arm64.so'
         continue-on-error: true
 
       - uses: EndBug/add-and-commit@v10

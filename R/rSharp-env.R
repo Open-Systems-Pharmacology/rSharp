@@ -19,11 +19,14 @@ rSharpEnv$nativePkgName <-
       paste0(rSharpEnv$pkgName, ".linux")
     },
     Darwin = {
-      paste0(
-        rSharpEnv$pkgName,
-        ".mac.",
-        if (info[['machine']] == 'arm64') 'arm64' else 'x64'
-      )
+      if (info[['machine']] != 'arm64') {
+        stop(
+          "Unsupported architecture for macOS: ",
+          info[['machine']],
+          ". Only arm64 (Apple Silicon) is supported."
+        )
+      }
+      paste0(rSharpEnv$pkgName, ".mac.arm64")
     }
   )
 

@@ -16,7 +16,7 @@ jobs:
     outputs:
       Csharp: ${{ steps.filter.outputs.Csharp }}
     steps:
-    - uses: dorny/paths-filter@v3
+    - uses: dorny/paths-filter@v4
       id: filter
       with:
         base: ${{ github.ref }}
@@ -48,8 +48,6 @@ jobs:
     if: ${{ !cancelled() }}
     needs: description-manager
     uses: Open-Systems-Pharmacology/Workflows/.github/workflows/R-CMD-check-build.yaml@main
-    with:
-      os-matrix: '[{"os": "macos-latest", "r": "release"}, {"os": "macos-15-intel", "r": "release"}, {"os": "windows-latest", "r": "release"}, {"os": "ubuntu-latest", "r": "release"}]'
 
   test-coverage:
     if: ${{ !cancelled() }}
