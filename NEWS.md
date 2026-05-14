@@ -1,5 +1,13 @@
 # rSharp (development version)
 
+- Bumped the .NET target from net8.0 to net10.0 so consumers can host
+  net10.0 assemblies. The shipped `RSharp.runtimeconfig.json`, the native
+  host packages (now 10.0.8), the Windows CI vcxproj/managed split, and
+  the runtime check in `.onLoad` all moved together. The published apt
+  SDK package and download links in the README are now `dotnet-sdk-10.0`
+  and the .NET 10 runtime page. macOS x86_64 support has been dropped;
+  only arm64 macOS continues to ship a native binary (#201).
+
 # rSharp 1.2.0
 
 - Declared `dotnet8` in the `SystemRequirements` field of `DESCRIPTION` (#177).

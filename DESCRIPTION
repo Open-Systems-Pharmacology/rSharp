@@ -49,7 +49,7 @@ Suggests:
     knitr,
     rmarkdown
 License: file LICENSE
-SystemRequirements: dotnet8
+SystemRequirements: dotnet10
 RoxygenNote: 7.3.3
 VignetteBuilder: knitr
 Config/testthat/edition: 3

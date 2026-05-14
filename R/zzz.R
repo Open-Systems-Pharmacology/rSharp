@@ -13,17 +13,17 @@
     }
   } else {}
 
-  # find installed dotnet runtimes for .NET 8 or higher
+  # find installed dotnet runtimes for .NET 10 or higher
   if (
     length(grep(
-      "Microsoft.NETCore.App 8",
+      "Microsoft.NETCore.App 10",
       system("dotnet --list-runtimes", intern = TRUE)
     )) ==
       0
   ) {
     stop(paste(
-      "No suitable dotnet 8 runtime found. ",
-      "Please install dotnet 8: go to  https://learn.microsoft.com/en-us/dotnet/core/install/ and follow installation instructions.",
+      "No suitable dotnet 10 runtime found. ",
+      "Please install dotnet 10: go to  https://learn.microsoft.com/en-us/dotnet/core/install/ and follow installation instructions.",
       sep = "\n"
     ))
   }

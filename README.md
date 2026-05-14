@@ -44,8 +44,8 @@ from source. For this, follow the instructions in section
 - Latest Microsoft Visual C++ Redistributable for Visual Studio 2015,
   2017 and 2019 available
   [here](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-supported-redistributable-version)
-- .NET 8 runtime available
-  [here](https://dotnet.microsoft.com/download/dotnet/8.0/runtime).
+- .NET 10 runtime available
+  [here](https://dotnet.microsoft.com/download/dotnet/10.0/runtime).
 
 #### Install from Github
 
@@ -77,8 +77,8 @@ install.packages("path/to/rSharp_X.zip",  type = "win.binary")
 
 #### Prerequisites
 
-- .NET 8 runtime available
-  [here](https://dotnet.microsoft.com/download/dotnet/8.0/runtime)
+- .NET 10 runtime available
+  [here](https://dotnet.microsoft.com/download/dotnet/10.0/runtime)
   (click on the macOS tab).
 
 #### Install from Github
@@ -172,7 +172,7 @@ dependencies)
 
 Optionally set up to build the binaries
 
-    sudo apt-get install dotnet-sdk-8.0
+    sudo apt-get install dotnet-sdk-10.0
     sudo apt-get install nuget
 
 Navigate to the `rSharp\shared` directory and run
