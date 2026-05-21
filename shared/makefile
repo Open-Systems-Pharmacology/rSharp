@@ -23,8 +23,6 @@ else
 	OUTPUT := rSharp.linux.so
 endif
 
-# only nuget supports packages.config
-NUGET_CMD=nuget
 DOTNET_CMD=dotnet
 
 ifeq "$(BUILDTYPE)" "Release"
@@ -50,17 +48,17 @@ clean:
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	-@mkdir -p $(OBJ_DIR) 2>/dev/null
 ifeq ($(UNAME), Darwin)
-	$(CXX) -std=c++11 -Ipackages/Microsoft.NETCore.App.Host.osx-$(ARCH).10.0.8/runtimes/osx-$(ARCH)/native $(ALL_CPPFLAGS) -I/Library/Frameworks/R.framework/Resources/include -I/usr/share/R/include/ $(ALL_CFLAGS) -fPIC -c $<  -o $@  -lsupc++
+	$(CXX) -std=c++11 -Ipackages/microsoft.netcore.app.host.osx-$(ARCH)/10.0.8/runtimes/osx-$(ARCH)/native $(ALL_CPPFLAGS) -I/Library/Frameworks/R.framework/Resources/include -I/usr/share/R/include/ $(ALL_CFLAGS) -fPIC -c $<  -o $@  -lsupc++
 else
-	$(CXX) -std=c++11 -Ipackages/Microsoft.NETCore.App.Host.linux-x64.10.0.8/runtimes/linux-x64/native $(ALL_CPPFLAGS) -I/usr/share/R/include/ $(ALL_CFLAGS) -fPIC -c $< -o $@ -lsupc++
+	$(CXX) -std=c++11 -Ipackages/microsoft.netcore.app.host.linux-x64/10.0.8/runtimes/linux-x64/native $(ALL_CPPFLAGS) -I/usr/share/R/include/ $(ALL_CFLAGS) -fPIC -c $< -o $@ -lsupc++
 endif
 
 $(OUT_DIR)/$(OUTPUT):  $(OBJ_FILES)
 	-@mkdir -p $(OUT_DIR) 2>/dev/null
 ifeq ($(UNAME), Darwin)
-	$(CXX) -std=c++11 -shared -Wl,-undefined,dynamic_lookup -o $@  $^ $(ALL_LIBS) ./packages/Microsoft.NETCore.App.Host.osx-$(ARCH).10.0.8/runtimes/osx-$(ARCH)/native/libnethost.a
+	$(CXX) -std=c++11 -shared -Wl,-undefined,dynamic_lookup -o $@  $^ $(ALL_LIBS) ./packages/microsoft.netcore.app.host.osx-$(ARCH)/10.0.8/runtimes/osx-$(ARCH)/native/libnethost.a
 else
-	$(CXX) -std=c++11 -shared -Wl,-z,relro -o $@ $^ $(ALL_LIBS) -L./packages/Microsoft.NETCore.App.Host.linux-x64.10.0.8/runtimes/linux-x64/native -l:libnethost.a
+	$(CXX) -std=c++11 -shared -Wl,-z,relro -o $@ $^ $(ALL_LIBS) -L./packages/microsoft.netcore.app.host.linux-x64/10.0.8/runtimes/linux-x64/native -l:libnethost.a
 endif
 
 printarch:
@@ -94,8 +92,8 @@ else
 endif
 
 rSharpNugetRestore:
-	-$(NUGET_CMD) restore packages.config -PackagesDirectory packages
-	-$(DOTNET_CMD) restore
+	$(DOTNET_CMD) restore native-deps.csproj --packages packages
+	$(DOTNET_CMD) restore
 
 rSharpLibComp: rSharpNugetRestore
 	"$(DOTNET_CMD)" build /t:$(MODE) $(SLNPROPERTIES)
