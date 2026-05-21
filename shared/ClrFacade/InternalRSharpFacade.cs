@@ -134,6 +134,8 @@ public static class InternalRSharpFacade
          foreach (var item in loadedAssemblies)
          {
             Type[] types;
+
+            // Tolerate when not all types are present. We can search the types that are present
             try
             {
                types = item.GetTypes();
