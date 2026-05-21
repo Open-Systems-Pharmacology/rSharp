@@ -96,4 +96,4 @@ rSharpNugetRestore:
 	$(DOTNET_CMD) restore rSharp.sln
 
 rSharpLibComp: rSharpNugetRestore
-	"$(DOTNET_CMD)" build /t:$(MODE) $(SLNPROPERTIES)
+	"$(DOTNET_CMD)" build rSharp.sln /t:$(MODE) $(SLNPROPERTIES)
