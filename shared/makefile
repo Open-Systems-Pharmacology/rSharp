@@ -93,7 +93,7 @@ endif
 
 rSharpNugetRestore:
 	$(DOTNET_CMD) restore native-deps.csproj --packages packages
-	$(DOTNET_CMD) restore
+	$(DOTNET_CMD) restore rSharp.sln
 
 rSharpLibComp: rSharpNugetRestore
 	"$(DOTNET_CMD)" build /t:$(MODE) $(SLNPROPERTIES)
