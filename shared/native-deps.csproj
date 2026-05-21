@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <!--
+    Lists the .NET host packages needed by the native rSharp shared
+    library for hostfxr + nethost.h. Restored into a project-local
+    packages directory by both the makefile (Linux/macOS) and the
+    Windows-Build CI step so each platform's C++ build finds the
+    headers and libs at the same path.
+
+    `PackageDownload` (not `PackageReference`) is used so the SDK does
+    not try to link these into the managed build. We only need the
+    package contents on disk for the C++ build to consume.
+  -->
+  <ItemGroup>
+    <PackageDownload Include="Microsoft.NETCore.App.Host.win-x64" Version="[10.0.8]" />
+    <PackageDownload Include="Microsoft.NETCore.App.Host.linux-x64" Version="[10.0.8]" />
+    <PackageDownload Include="Microsoft.NETCore.App.Host.osx-arm64" Version="[10.0.8]" />
+  </ItemGroup>
+</Project>
