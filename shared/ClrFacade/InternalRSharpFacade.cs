@@ -133,10 +133,6 @@ public static class InternalRSharpFacade
          var tName = typeComponents[0];
          foreach (var item in loadedAssemblies)
          {
-            // Tolerate assemblies whose metadata references unresolvable types
-            // (e.g. NPOI's optional SkiaSharp surface when SkiaSharp.dll is not
-            // shipped). Such types cannot be the one we're looking for anyway,
-            // so register only the types that did load.
             Type[] types;
             try
             {
