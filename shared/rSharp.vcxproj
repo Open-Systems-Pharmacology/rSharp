@@ -50,14 +50,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath);packages\Microsoft.NETCore.App.Host.win-x64.10.0.8\runtimes\win-x64\native;$(VCInstallDir)atlmfc\include;$(R_INSTALL_PATH)\include;$(SolutionDir)\inc</IncludePath>
+    <IncludePath>$(IncludePath);packages\microsoft.netcore.app.host.win-x64\10.0.8\runtimes\win-x64\native;$(VCInstallDir)atlmfc\include;$(R_INSTALL_PATH)\include;$(SolutionDir)\inc</IncludePath>
     <LibraryPath>$(LibraryPath);$(VSInstallDir);$(VSInstallDir)lib;.\libfiles\x64;$(RInstallPath)\bin\x64</LibraryPath>
     <ReferencePath>.\libfiles\x64;$(RInstallPath)\bin\x64</ReferencePath>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(IncludePath);packages\Microsoft.NETCore.App.Host.win-x64.10.0.8\runtimes\win-x64\native;$(VCInstallDir)atlmfc\include;$(R_INSTALL_PATH)\include;</IncludePath>
+    <IncludePath>$(IncludePath);packages\microsoft.netcore.app.host.win-x64\10.0.8\runtimes\win-x64\native;$(VCInstallDir)atlmfc\include;$(R_INSTALL_PATH)\include;</IncludePath>
     <LibraryPath>$(LibraryPath);$(VSInstallDir);$(VSInstallDir)lib;.\libfiles\x64;$(RInstallPath)\bin\x64</LibraryPath>
     <ReferencePath>.\libfiles\x64;$(RInstallPath)\bin\x64</ReferencePath>
     <TargetName>$(ProjectName)</TargetName>
@@ -78,7 +78,7 @@
     <Link>
       <SubSystem>NotSet</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Rdll.lib;packages\Microsoft.NETCore.App.Host.win-x64.10.0.8\runtimes\win-x64\native\libnethost.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Rdll.lib;packages\microsoft.netcore.app.host.win-x64\10.0.8\runtimes\win-x64\native\libnethost.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
       <ModuleDefinitionFile>rSharp-win.def</ModuleDefinitionFile>
@@ -101,7 +101,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>packages\Microsoft.NETCore.App.Host.win-x64.10.0.8\runtimes\win-x64\native\libnethost.lib;Rdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>packages\microsoft.netcore.app.host.win-x64\10.0.8\runtimes\win-x64\native\libnethost.lib;Rdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>rSharp-win.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>

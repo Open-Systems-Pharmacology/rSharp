@@ -119,7 +119,7 @@ jobs:
           use-public-rspm: true
 
       - name: Restore native host package (for rSharp.vcxproj)
-        run: nuget restore ./shared/packages.config -PackagesDirectory ./shared/packages
+        run: dotnet restore ./shared/native-deps.csproj --packages ./shared/packages
 
       - name: Add msbuild to PATH (vcxproj build only)
         uses: microsoft/setup-msbuild@v3

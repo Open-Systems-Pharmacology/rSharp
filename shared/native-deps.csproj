@@ -5,8 +5,12 @@
   </PropertyGroup>
 
   <!--
-    Mirrors shared/packages.config. Lists the .NET host packages needed
-    by the native rSharp shared library for hostfxr + nethost.h.
+    Lists the .NET host packages needed by the native rSharp shared
+    library for hostfxr + nethost.h. Restored via
+    `dotnet restore native-deps.csproj --packages ./packages` from the
+    makefile (Linux/macOS) and the Windows-Build CI step so both paths
+    locate the headers and libs at a predictable directory layout.
+
     `PackageDownload` (not `PackageReference`) is used so the SDK does
     not try to link these into the managed build - we only need the
     package contents on disk for the C++ build to consume.
