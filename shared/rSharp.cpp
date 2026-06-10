@@ -464,19 +464,25 @@ bool isObjectArray(RSharpGenericValue** parameterArray, int i)
 	return parameterArray[i]->type == RSharpValueType::OBJECT_ARRAY;
 }
 
-void free_params_array(RSharpGenericValue** parameterArray, int size)
+void free_params_array(RSharpGenericValue** parameterArray, int size, bool* should_free = nullptr)
 {
 	for (int i = 0; i < size; i++)
 	{
 		if (isObjectArray(parameterArray, i))
 			free_params_array(reinterpret_cast<RSharpGenericValue**>(parameterArray[i]->value), parameterArray[i]->size);
+		else if (should_free != nullptr && should_free[i])
+			// Release the .NET-side allocation that was created when this argument was
+			// marshalled R -> .NET via the rdotnet wrapper path. Args derived from extptr/s4
+			// share their GCHandle with an R-side extptr finalizer and must NOT be freed here.
+			freeObject(parameterArray[i]);
 
 		free(parameterArray[i]);
 	}
 	delete[] parameterArray;
+	delete[] should_free;
 }
 
-RSharpGenericValue** sexp_to_parameters(SEXP args)
+RSharpGenericValue** sexp_to_parameters(SEXP args, bool*& should_free)
 {
 	int i;
 	int nargs = Rf_length(args);
@@ -484,17 +490,29 @@ RSharpGenericValue** sexp_to_parameters(SEXP args)
 	SEXP el;
 	const char* name;
 
+	should_free = nullptr;
 	if (nargs == 0) {
 		return NULL;
 	}
 
 	auto mparams = new RSharpGenericValue * [nargs];
+	should_free = new bool[nargs];
 
 	for (i = 0; args != R_NilValue; i++, args = CDR(args)) {
 		name = isNull(TAG(args)) ? "" : CHAR(PRINTNAME(TAG(args)));
 		el = CAR(args);
 
+		int sexpType = TYPEOF(el);
 		mparams[i] = new RSharpGenericValue(ConvertToRSharpGenericValue(el));
+		// This call must free the arg iff its RSharpGenericValue holds a freshly-allocated
+		// .NET GCHandle (the rdotnet wrapper path). EXTPTR/S4 args share a GCHandle with
+		// an R-side extptr finalizer and must NOT be freed here. The scalar/array fallback
+		// (use_rdotnet=0) stores raw R-side data pointers, also not freeable as GCHandles.
+		// VECSXP (OBJECT_ARRAY) is recursed into separately by free_params_array.
+		should_free[i] = (use_rdotnet
+		              && sexpType != EXTPTRSXP
+		              && sexpType != S4SXP
+		              && sexpType != VECSXP);
 	}
 	return mparams;
 }
@@ -568,6 +586,7 @@ SEXP r_create_clr_object(SEXP parameters)
 {
 	SEXP sExpressionParameterStack = parameters;
 	RSharpGenericValue** methodParameters;
+	bool* paramShouldFree = nullptr;
 	SEXP sExpressionMethodParameter;
 	RSharpGenericValue return_value;
 	char* ns_qualified_typename = NULL;
@@ -578,7 +597,7 @@ SEXP r_create_clr_object(SEXP parameters)
 
 	try
 	{
-		methodParameters = sexp_to_parameters(sExpressionMethodParameter);
+		methodParameters = sexp_to_parameters(sExpressionMethodParameter, paramShouldFree);
 	}
 	catch (const std::runtime_error& ex)
 	{
@@ -591,13 +610,13 @@ SEXP r_create_clr_object(SEXP parameters)
 	{
 		auto return_value = createInstance(ns_qualified_typename, methodParameters, numberOfObjects);
 		free(ns_qualified_typename);
-		free_params_array(methodParameters, numberOfObjects);
+		free_params_array(methodParameters, numberOfObjects, paramShouldFree);
 		return ConvertToSEXP(return_value);
 	}
 	catch (const std::runtime_error& ex)
 	{
 		free(ns_qualified_typename);
-		free_params_array(methodParameters, numberOfObjects);
+		free_params_array(methodParameters, numberOfObjects, paramShouldFree);
 		error_return(ex.what())
 	}
 }
@@ -774,6 +793,7 @@ SEXP r_call_method(SEXP parameters)
 	SEXP sExpressionParameterStack = parameters, instance, sExpressionParameter;
 	const char* methodName = 0;
 	RSharpGenericValue** params;
+	bool* paramShouldFree = nullptr;
 
 	sExpressionParameter = TOPOF(sExpressionParameterStack);
 	auto functionName = CHAR(STRING_ELT(sExpressionParameter, 0));	// should be "r_call_method"
@@ -787,7 +807,7 @@ SEXP r_call_method(SEXP parameters)
 	sExpressionParameterStack = POP(sExpressionParameterStack);
 	try
 	{
-		params = sexp_to_parameters(sExpressionParameterStack);
+		params = sexp_to_parameters(sExpressionParameterStack, paramShouldFree);
 	}
 	catch (const std::runtime_error& ex)
 	{
@@ -798,12 +818,12 @@ SEXP r_call_method(SEXP parameters)
 	try
 	{
 		auto return_value = callInstance(reinterpret_cast<RSharpGenericValue**>(instance), methodName, "ClrFacade.ClrFacade,ClrFacade", params, numberOfObjects);
-		free_params_array(params, numberOfObjects);
+		free_params_array(params, numberOfObjects, paramShouldFree);
 		return ConvertToSEXP(return_value);
 	}
 	catch (const std::runtime_error& ex)
 	{
-		free_params_array(params, numberOfObjects);
+		free_params_array(params, numberOfObjects, paramShouldFree);
 		error_return(ex.what())
 	}
 }
@@ -815,6 +835,7 @@ SEXP r_call_static_method(SEXP parameters)
 	const char* methodName;
 	char* ns_qualified_typename = NULL; // My.Namespace.MyClass,MyAssemblyName
 	RSharpGenericValue** methodParameters;
+	bool* paramShouldFree = nullptr;
 
 	sExpressionParameterStack = POP(sExpressionParameterStack); /* skip the first parameter: function name*/
 	get_FullTypeName(sExpressionParameterStack, &ns_qualified_typename);
@@ -825,8 +846,8 @@ SEXP r_call_static_method(SEXP parameters)
 	sExpressionMethodParameter = sExpressionParameterStack;
 
 	try
-	{ 
-		methodParameters = sexp_to_parameters(sExpressionMethodParameter);
+	{
+		methodParameters = sexp_to_parameters(sExpressionMethodParameter, paramShouldFree);
 	}
 	catch (const std::runtime_error& ex)
 	{
@@ -844,13 +865,13 @@ SEXP r_call_static_method(SEXP parameters)
 	{
 		auto return_value = callStatic(methodName, ns_qualified_typename, methodParameters, numberOfObjects);
 		free(ns_qualified_typename);
-		free_params_array(methodParameters, numberOfObjects);
+		free_params_array(methodParameters, numberOfObjects, paramShouldFree);
 		return ConvertToSEXP(return_value);
 	}
 	catch (const std::runtime_error& ex)
 	{
 		free(ns_qualified_typename);
-		free_params_array(methodParameters, numberOfObjects);
+		free_params_array(methodParameters, numberOfObjects, paramShouldFree);
 		error_return(ex.what())
 	}
 }

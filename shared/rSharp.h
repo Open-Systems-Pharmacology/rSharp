@@ -141,7 +141,7 @@ extern "C" {
 
 
 RSharpGenericValue ConvertToRSharpGenericValue(SEXP s);
-RSharpGenericValue** sexp_to_parameters(SEXP args);
+RSharpGenericValue** sexp_to_parameters(SEXP args, bool*& should_free);
 SEXP ConvertToSEXP(RSharpGenericValue& value);
 
 
