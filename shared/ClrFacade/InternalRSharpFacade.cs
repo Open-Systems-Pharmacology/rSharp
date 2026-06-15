@@ -700,9 +700,20 @@ public static class InternalRSharpFacade
    public static void FreeObject(IntPtr instPtr)
    {
       var genericValue = Marshal.PtrToStructure<RSharpGenericValue>(instPtr);
-      if (genericValue.Type == RSharpValueType.String)
-         Marshal.FreeBSTR(genericValue.Value);
-      else if (genericValue.Type == RSharpValueType.Object)
-         ((GCHandle)genericValue.Value).Free();
+      switch (genericValue.Type)
+      {
+         case RSharpValueType.Null:
+         case RSharpValueType.Intptr:
+            // Null carries IntPtr.Zero; Intptr carries a caller-owned pointer. Nothing to free.
+            break;
+         case RSharpValueType.String:
+            // FromObject allocates via Marshal.StringToHGlobalAnsi, so pair with FreeHGlobal.
+            Marshal.FreeHGlobal(genericValue.Value);
+            break;
+         default:
+            // Every other case in FromObject (primitives, arrays, Object) ends in GCHandle.Alloc.
+            ((GCHandle)genericValue.Value).Free();
+            break;
+      }
    }
 }
