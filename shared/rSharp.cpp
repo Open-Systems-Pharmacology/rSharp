@@ -479,7 +479,9 @@ void free_params_array(RSharpGenericValue** parameterArray, int size, bool* shou
 		free(parameterArray[i]);
 	}
 	delete[] parameterArray;
+	parameterArray = nullptr;
 	delete[] should_free;
+	should_free = nullptr;
 }
 
 RSharpGenericValue** sexp_to_parameters(SEXP args, bool*& should_free)
