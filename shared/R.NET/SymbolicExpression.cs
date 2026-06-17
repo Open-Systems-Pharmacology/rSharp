@@ -27,6 +27,14 @@ namespace RDotNet
       private static readonly Object lockObject = new Object();
 
       /// <summary>
+      ///    rSharp #210: managed id of the R main thread. R's memory manager is single
+      ///    threaded, so R_PreserveObject/R_ReleaseObject must only run on this thread.
+      ///    Captured on the first Preserve() (always called on the R main thread) so that
+      ///    Unpreserve() can refuse to call into R from the GC finalizer thread.
+      /// </summary>
+      private static int _rThreadId;
+
+      /// <summary>
       ///    Creates new instance of SymbolicExpression.
       /// </summary>
       /// <param name="engine">The engine.</param>
@@ -235,6 +243,7 @@ namespace RDotNet
       {
          if (!IsInvalid && !IsProtected)
          {
+            if (_rThreadId == 0) _rThreadId = Environment.CurrentManagedThreadId;
             if (Engine.EnableLock)
             {
                lock (lockObject)
@@ -257,6 +266,14 @@ namespace RDotNet
       {
          if (!IsInvalid && IsProtected)
          {
+            // rSharp #210: never call R_ReleaseObject off the R main thread. SafeHandle
+            // finalization runs on the CLR finalizer thread; calling into R's (single
+            // threaded, non-reentrant) memory manager there corrupts R's heap — a Windows
+            // access violation (0xC0000005) or a Linux hang. If we are not on the R thread
+            // (i.e. this is a finalizer), leave the object preserved rather than crash.
+            if (_rThreadId != 0 && Environment.CurrentManagedThreadId != _rThreadId)
+               return;
+
             if (Engine.EnableLock)
             {
                lock (lockObject)

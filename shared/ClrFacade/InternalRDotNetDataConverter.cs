@@ -193,6 +193,15 @@ internal class InternalRDotNetDataConverter : IDataConverter
 
    private static void clearSexpHandles()
    {
+      // rSharp #210: dispose the previous batch of return-value SEXPs here, on the R
+      // main thread (this runs during a marshalling call), instead of merely dropping
+      // the references and letting the GC finalizer thread call R_ReleaseObject — which
+      // corrupts R's heap. By this point R has already consumed the prior return handles.
+      foreach (var sexp in _handles)
+      {
+         try { sexp?.Dispose(); }
+         catch { /* never let cleanup throw across the native boundary */ }
+      }
       _handles.Clear();
    }
 
@@ -731,6 +740,16 @@ internal class InternalRDotNetDataConverter : IDataConverter
 
    private object convertSymbolicExpression(SymbolicExpressionWrapper sexpWrap)
    {
-      return sexpWrap.ToClrEquivalent();
+      var result = sexpWrap.ToClrEquivalent();
+      // rSharp #210: once the argument SEXP's value has been marshalled to a CLR object,
+      // release it here on the R main thread so its SafeHandle never finalizes (and calls
+      // R_ReleaseObject) on the GC finalizer thread. Skip when the wrapper hands back the
+      // SEXP itself (unconverted types still need it alive).
+      if (!ReferenceEquals(result, sexpWrap.Sexp))
+      {
+         try { sexpWrap.Sexp?.Dispose(); }
+         catch { /* never let cleanup throw across the native boundary */ }
+      }
+      return result;
    }
 }
