@@ -29,14 +29,16 @@ jobs:
     if: ${{ needs.detect-changes.outputs.Csharp == 'true' && github.event_name == 'pull_request'}}
     uses: ./.github/workflows/build-c#.yaml
 
-  # Automatically manage DESCRIPTION on push to main (dev version bump,
-  # toggle @*release in Remotes, tag on release versions).
+  # Manage DESCRIPTION on push to main (dev version bump, tag on release versions).
   description-manager:
     needs: build-Csharp-binaries
     # `needs` only declares ordering; `!cancelled()` lets this job run even when
     # build-Csharp-binaries is skipped (which is the normal case on push to main).
     if: ${{ !cancelled() && github.event_name != 'pull_request' }}
-    uses: Open-Systems-Pharmacology/Workflows/.github/workflows/description_manager.yaml@main
+    # description_manager.yaml was removed upstream (Workflows#232) and split into
+    # focused workflows; this shim preserves the bump+tag behavior. Migrate to
+    # bump-dev-version.yaml + publish-release.yaml when adopting the split model.
+    uses: Open-Systems-Pharmacology/Workflows/.github/workflows/bump_dev_version_tag_branch.yaml@main
     # `main` is protected; pass GitHub App credentials so the workflow can push
     # the DESCRIPTION update and release tags via a bypass-listed app token.
     with:
