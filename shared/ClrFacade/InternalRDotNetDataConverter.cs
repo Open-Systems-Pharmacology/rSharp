@@ -193,6 +193,12 @@ internal class InternalRDotNetDataConverter : IDataConverter
 
    private static void clearSexpHandles()
    {
+      // rSharp #210: release, on the R main thread, any SEXP handles whose SafeHandle
+      // finalized on the CLR finalizer thread — that release was deferred (queued) there to
+      // avoid corrupting R's heap. Without this, those preservations leak and the R objects
+      // (and any CLR objects they pin) are never collected.
+      DeferredRelease.Drain();
+
       // rSharp #210: dispose the previous batch of return-value SEXPs here, on the R
       // main thread (this runs during a marshalling call), instead of merely dropping
       // the references and letting the GC finalizer thread call R_ReleaseObject — which

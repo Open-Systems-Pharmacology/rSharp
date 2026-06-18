@@ -243,7 +243,22 @@ namespace RDotNet
       {
          if (!IsInvalid && !IsProtected)
          {
-            if (_rThreadId == 0) _rThreadId = Environment.CurrentManagedThreadId;
+            if (_rThreadId == 0)
+            {
+               _rThreadId = Environment.CurrentManagedThreadId;
+               // rSharp #210: hand DeferredRelease the release mechanism, captured here on the
+               // R main thread, so it can release (on this thread) handles that off-thread
+               // SafeHandle finalizers queue. See Unpreserve and DeferredRelease.
+               var engine = Engine;
+               var releaseObject = this.GetFunction<R_ReleaseObject>();
+               DeferredRelease.Configure(pendingHandle =>
+               {
+                  if (engine.EnableLock)
+                     lock (lockObject) { releaseObject(pendingHandle); }
+                  else
+                     releaseObject(pendingHandle);
+               });
+            }
             if (Engine.EnableLock)
             {
                lock (lockObject)
@@ -270,9 +285,15 @@ namespace RDotNet
             // finalization runs on the CLR finalizer thread; calling into R's (single
             // threaded, non-reentrant) memory manager there corrupts R's heap — a Windows
             // access violation (0xC0000005) or a Linux hang. If we are not on the R thread
-            // (i.e. this is a finalizer), leave the object preserved rather than crash.
+            // (i.e. this is a finalizer), hand the handle to the R main thread to release
+            // later (DeferredRelease) rather than either crashing (releasing here) or
+            // leaking the preservation (skipping the release entirely).
             if (_rThreadId != 0 && Environment.CurrentManagedThreadId != _rThreadId)
+            {
+               DeferredRelease.Enqueue(handle);
+               IsProtected = false;
                return;
+            }
 
             if (Engine.EnableLock)
             {
