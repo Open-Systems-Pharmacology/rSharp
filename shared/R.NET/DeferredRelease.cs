@@ -4,7 +4,7 @@ using System.Collections.Concurrent;
 namespace RDotNet
 {
    /// <summary>
-   ///    rSharp #210: deferred, R-main-thread release of preserved SEXP handles.
+   ///    Deferred, R-main-thread release of preserved SEXP handles.
    ///    <para>
    ///    When a <see cref="SymbolicExpression" /> SafeHandle finalizes on the CLR finalizer
    ///    thread it cannot call R_ReleaseObject there: R's memory manager is single threaded

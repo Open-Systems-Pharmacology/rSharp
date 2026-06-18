@@ -27,10 +27,10 @@ namespace RDotNet
       private static readonly Object lockObject = new Object();
 
       /// <summary>
-      ///    rSharp #210: managed id of the R main thread. R's memory manager is single
-      ///    threaded, so R_PreserveObject/R_ReleaseObject must only run on this thread.
-      ///    Captured on the first Preserve() (always called on the R main thread) so that
-      ///    Unpreserve() can refuse to call into R from the GC finalizer thread.
+      ///    Managed id of the R main thread. R's memory manager is single threaded, so
+      ///    R_PreserveObject / R_ReleaseObject must only run on this thread. Captured on the
+      ///    first Preserve() (always called on the R main thread) so Unpreserve() can detect
+      ///    when it is on the GC finalizer thread and avoid calling into R from there.
       /// </summary>
       private static int _rThreadId;
 
@@ -246,9 +246,9 @@ namespace RDotNet
             if (_rThreadId == 0)
             {
                _rThreadId = Environment.CurrentManagedThreadId;
-               // rSharp #210: hand DeferredRelease the release mechanism, captured here on the
-               // R main thread, so it can release (on this thread) handles that off-thread
-               // SafeHandle finalizers queue. See Unpreserve and DeferredRelease.
+               // Hand DeferredRelease the release mechanism, captured here on the R main
+               // thread, so it can release (on this thread) handles that off-thread SafeHandle
+               // finalizers queue. See Unpreserve and DeferredRelease.
                var engine = Engine;
                var releaseObject = this.GetFunction<R_ReleaseObject>();
                DeferredRelease.Configure(pendingHandle =>
@@ -281,13 +281,12 @@ namespace RDotNet
       {
          if (!IsInvalid && IsProtected)
          {
-            // rSharp #210: never call R_ReleaseObject off the R main thread. SafeHandle
-            // finalization runs on the CLR finalizer thread; calling into R's (single
-            // threaded, non-reentrant) memory manager there corrupts R's heap — a Windows
-            // access violation (0xC0000005) or a Linux hang. If we are not on the R thread
-            // (i.e. this is a finalizer), hand the handle to the R main thread to release
-            // later (DeferredRelease) rather than either crashing (releasing here) or
-            // leaking the preservation (skipping the release entirely).
+            // Never call R_ReleaseObject off the R main thread. SafeHandle finalization runs
+            // on the CLR finalizer thread; calling into R's single-threaded, non-reentrant
+            // memory manager from there corrupts R's heap (a Windows access violation or a
+            // Linux hang). When not on the R main thread (i.e. this is a finalizer), hand the
+            // handle to DeferredRelease for the R main thread to release later, rather than
+            // either crashing (releasing here) or leaking the preservation (skipping it).
             if (_rThreadId != 0 && Environment.CurrentManagedThreadId != _rThreadId)
             {
                DeferredRelease.Enqueue(handle);

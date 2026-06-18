@@ -193,16 +193,16 @@ internal class InternalRDotNetDataConverter : IDataConverter
 
    private static void clearSexpHandles()
    {
-      // rSharp #210: release, on the R main thread, any SEXP handles whose SafeHandle
-      // finalized on the CLR finalizer thread — that release was deferred (queued) there to
-      // avoid corrupting R's heap. Without this, those preservations leak and the R objects
-      // (and any CLR objects they pin) are never collected.
+      // Release, on the R main thread, any SEXP handles whose SafeHandle finalized on the
+      // CLR finalizer thread — that release was deferred (queued) there to avoid corrupting
+      // R's heap. Without this, those preservations leak and the R objects (and any CLR
+      // objects they pin) are never collected.
       DeferredRelease.Drain();
 
-      // rSharp #210: dispose the previous batch of return-value SEXPs here, on the R
-      // main thread (this runs during a marshalling call), instead of merely dropping
-      // the references and letting the GC finalizer thread call R_ReleaseObject — which
-      // corrupts R's heap. By this point R has already consumed the prior return handles.
+      // Dispose the previous batch of return-value SEXPs here, on the R main thread (this
+      // runs during a marshalling call), instead of merely dropping the references and
+      // letting the GC finalizer thread call R_ReleaseObject — which corrupts R's heap. By
+      // this point R has already consumed the prior return handles.
       foreach (var sexp in _handles)
       {
          try { sexp?.Dispose(); }
@@ -747,10 +747,10 @@ internal class InternalRDotNetDataConverter : IDataConverter
    private object convertSymbolicExpression(SymbolicExpressionWrapper sexpWrap)
    {
       var result = sexpWrap.ToClrEquivalent();
-      // rSharp #210: once the argument SEXP's value has been marshalled to a CLR object,
-      // release it here on the R main thread so its SafeHandle never finalizes (and calls
-      // R_ReleaseObject) on the GC finalizer thread. Skip when the wrapper hands back the
-      // SEXP itself (unconverted types still need it alive).
+      // Once the argument SEXP's value has been marshalled to a CLR object, release it here
+      // on the R main thread so its SafeHandle never finalizes (and calls R_ReleaseObject)
+      // on the GC finalizer thread. Skip when the wrapper hands back the SEXP itself
+      // (unconverted types still need it alive).
       if (!ReferenceEquals(result, sexpWrap.Sexp))
       {
          try { sexpWrap.Sexp?.Dispose(); }
