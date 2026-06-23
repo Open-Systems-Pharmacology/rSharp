@@ -39,17 +39,12 @@ jobs:
           dotnet test ./shared/rSharpTests/ -c Release -d log.txt --no-build
           dotnet test ./shared/DynamicInterop.Tests/ -c Release -d log.txt --no-build
 
-      - name: Discard unrelated build artifacts
+      - name: Upload Linux binaries
         if: ${{ success() }}
-        run: git checkout -- '*.dll' '*mac.*.so' || true
-
-      - uses: EndBug/add-and-commit@v10
-        if: ${{ success() }}
+        uses: actions/upload-artifact@v7
         with:
-          pull: '--verbose'
-          message: 'Update Linux C# binaries (Commit from Github Actions). [skip ci]'
-          default_author: github_actions
-          add: '*linux.so'
+          name: linux-binaries
+          path: inst/lib/rSharp.linux.so
 
 
   macOS-Build:
@@ -90,17 +85,12 @@ jobs:
           dotnet test ./shared/rSharpTests/ -c Release -d log.txt --no-build
           dotnet test ./shared/DynamicInterop.Tests/ -c Release -d log.txt --no-build
 
-      - name: Discard unrelated build artifacts
+      - name: Upload macOS arm64 binaries
         if: ${{ success() }}
-        run: git checkout -- '*.dll' '*linux.so' '*mac.x64.so' || true
-
-      - uses: EndBug/add-and-commit@v10
-        if: ${{ success() }}
+        uses: actions/upload-artifact@v7
         with:
-          pull: '--verbose'
-          message: 'Update macOS C# binaries (Commit from Github Actions). [skip ci]'
-          default_author: github_actions
-          add: '*mac.arm64.so'
+          name: macos-arm64-binaries
+          path: inst/lib/rSharp.mac.arm64.so
 
   macOS-Build-x64:
     runs-on: macos-15-intel
@@ -140,17 +130,12 @@ jobs:
           dotnet test ./shared/rSharpTests/ -c Release -d log.txt --no-build
           dotnet test ./shared/DynamicInterop.Tests/ -c Release -d log.txt --no-build
 
-      - name: Discard unrelated build artifacts
+      - name: Upload macOS x64 binaries
         if: ${{ success() }}
-        run: git checkout -- '*.dll' '*linux.so' '*mac.arm64.so' || true
-
-      - uses: EndBug/add-and-commit@v10
-        if: ${{ success() }}
+        uses: actions/upload-artifact@v7
         with:
-          pull: '--verbose'
-          message: 'Update macOS C# binaries (Commit from Github Actions). [skip ci]'
-          default_author: github_actions
-          add: '*mac.x64.so'
+          name: macos-x64-binaries
+          path: inst/lib/rSharp.mac.x64.so
 
 
   Windows-Build:
@@ -193,15 +178,63 @@ jobs:
           dotnet test .\shared\rSharpTests\ -c Release -d log.txt --no-build
           dotnet test .\shared\DynamicInterop.Tests\ -c Release -d log.txt --no-build
 
-      - name: Discard unrelated build artifacts
+      - name: Upload Windows binaries
         if: ${{ success() }}
-        run: git checkout -- '*linux.so' '*mac.arm64.so' '*mac.x64.so'
-        continue-on-error: true
+        uses: actions/upload-artifact@v7
+        with:
+          name: windows-binaries
+          path: |
+            inst/extdata/rSharp.Examples.dll
+            inst/lib/ClrFacade.dll
+            inst/lib/DynamicInterop.dll
+            inst/lib/RDotNet.dll
+            inst/lib/rSharp.dll
+
+
+  commit-binaries:
+    needs: [Linux-Build, macOS-Build, macOS-Build-x64, Windows-Build]
+    runs-on: ${{ vars.GHA_DEFAULT_RUNNER_UBUNTU || 'ubuntu-latest' }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Download Linux binaries
+        uses: actions/download-artifact@v7
+        with:
+          name: linux-binaries
+          path: inst/lib/
+
+      - name: Download macOS arm64 binaries
+        uses: actions/download-artifact@v7
+        with:
+          name: macos-arm64-binaries
+          path: inst/lib/
+
+      - name: Download macOS x64 binaries
+        uses: actions/download-artifact@v7
+        with:
+          name: macos-x64-binaries
+          path: inst/lib/
+
+      - name: Download Windows binaries
+        uses: actions/download-artifact@v7
+        with:
+          name: windows-binaries
+          path: inst/
 
       - uses: EndBug/add-and-commit@v10
-        if: ${{ success() }}
         with:
           pull: '--verbose'
-          message: 'Update Windows C# binaries (Commit from Github Actions). [skip ci]'
+          message: 'Update C# binaries (Commit from Github Actions).'
           default_author: github_actions
-          add: '*.dll'
+          add: |
+            inst/lib/rSharp.linux.so
+            inst/lib/rSharp.mac.arm64.so
+            inst/lib/rSharp.mac.x64.so
+            inst/extdata/rSharp.Examples.dll
+            inst/lib/ClrFacade.dll
+            inst/lib/DynamicInterop.dll
+            inst/lib/RDotNet.dll
+            inst/lib/rSharp.dll
