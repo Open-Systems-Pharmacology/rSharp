@@ -1,0 +1,69 @@
+name: Pull Request Workflow
+
+# Runs on every pull request. sync-remotes pins/unpins `Remotes:` in DESCRIPTION
+# to match the package Version and commits the fix to the PR branch; the checks
+# then run on that synced tree so what gets validated is what will be merged.
+#
+# rSharp-specific: when C# sources under shared/** change, build-Csharp-binaries
+# rebuilds the per-OS native binaries and commits them back to the PR branch.
+
+on:
+  pull_request:
+
+permissions: read-all
+
+jobs:
+  sync-remotes:
+    permissions:
+      contents: write # commits the synced Remotes back to the PR branch
+    uses: Open-Systems-Pharmacology/Workflows/.github/workflows/sync-remotes.yaml@main
+    secrets: inherit
+
+  # Detect changes in the C# code base. When nothing under shared/** changed,
+  # build-Csharp-binaries is skipped.
+  detect-changes:
+    runs-on: ${{ vars.GHA_DEFAULT_RUNNER_UBUNTU || 'ubuntu-latest' }}
+    outputs:
+      Csharp: ${{ steps.filter.outputs.Csharp }}
+    steps:
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          base: ${{ github.ref }}
+          filters: |
+            Csharp:
+              - 'shared/**'
+
+  build-Csharp-binaries:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.Csharp == 'true' }}
+    permissions:
+      contents: write # commits the rebuilt binaries back to the PR branch
+    uses: ./.github/workflows/build-c#.yaml
+
+  # `needs: build-Csharp-binaries` is load-bearing, not just ordering: it makes
+  # this job start only after the rebuilt binaries are committed to the PR
+  # branch, so the merge ref (refs/pull/N/merge) that checkout fetches live has
+  # been recomputed to include them. Dropping this edge would let R CMD check
+  # load the previous binaries.
+  R-CMD-Check:
+    needs: [sync-remotes, build-Csharp-binaries]
+    if: ${{ !cancelled() }} # a skipped sync (fork PR) or C# build must not block the check
+    uses: Open-Systems-Pharmacology/Workflows/.github/workflows/R-CMD-check-build.yaml@main
+    with:
+      os-matrix: '[{"os": "macos-latest", "r": "release"}, {"os": "macos-15-intel", "r": "release"}, {"os": "windows-latest", "r": "release"}, {"os": "ubuntu-latest", "r": "release"}]'
+
+  test-coverage:
+    needs: [sync-remotes]
+    if: ${{ !cancelled() }}
+    uses: Open-Systems-Pharmacology/Workflows/.github/workflows/test-coverage.yaml@main
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  pkgdown:
+    needs: [sync-remotes]
+    if: ${{ !cancelled() }}
+    permissions:
+      contents: write # required by the pkgdown reusable workflow (no deploy on PRs)
+      pull-requests: read # the workflow's check-changes job reads PR file changes
+    uses: Open-Systems-Pharmacology/Workflows/.github/workflows/pkgdown.yaml@main

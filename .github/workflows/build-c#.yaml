@@ -13,7 +13,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
@@ -47,7 +47,7 @@ jobs:
         if: ${{ success() }}
         with:
           pull: '--verbose'
-          message: 'Update Linux C# binaries (Commit from Github Actions).'
+          message: 'Update Linux C# binaries (Commit from Github Actions). [skip ci]'
           default_author: github_actions
           add: '*linux.so'
 
@@ -58,7 +58,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
@@ -98,7 +98,7 @@ jobs:
         if: ${{ success() }}
         with:
           pull: '--verbose'
-          message: 'Update macOS C# binaries (Commit from Github Actions).'
+          message: 'Update macOS C# binaries (Commit from Github Actions). [skip ci]'
           default_author: github_actions
           add: '*mac.arm64.so'
 
@@ -108,7 +108,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
@@ -148,7 +148,7 @@ jobs:
         if: ${{ success() }}
         with:
           pull: '--verbose'
-          message: 'Update macOS C# binaries (Commit from Github Actions).'
+          message: 'Update macOS C# binaries (Commit from Github Actions). [skip ci]'
           default_author: github_actions
           add: '*mac.x64.so'
 
@@ -159,7 +159,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
@@ -202,6 +202,6 @@ jobs:
         if: ${{ success() }}
         with:
           pull: '--verbose'
-          message: 'Update Windows C# binaries (Commit from Github Actions).'
+          message: 'Update Windows C# binaries (Commit from Github Actions). [skip ci]'
           default_author: github_actions
           add: '*.dll'
