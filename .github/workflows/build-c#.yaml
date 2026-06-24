@@ -6,14 +6,19 @@ on:
     paths: ['shared/**']
   workflow_call:
 
-# Prevent the bot's binary commit from retriggering this workflow.
-if: github.actor != 'github-actions[bot]'
-
 permissions:
   contents: write
 
 jobs:
+  # Prevent the bot's binary commit from retriggering the build.
+  guard:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ${{ vars.GHA_DEFAULT_RUNNER_UBUNTU || 'ubuntu-latest' }}
+    steps:
+      - run: echo "Actor is ${{ github.actor }}, proceeding."
+
   Linux-Build:
+    needs: guard
     runs-on: ${{ vars.GHA_DEFAULT_RUNNER_UBUNTU }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -54,6 +59,7 @@ jobs:
 
 
   macOS-Build:
+    needs: guard
     runs-on: ${{ vars.GHA_DEFAULT_RUNNER_MACOS }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -99,6 +105,7 @@ jobs:
           path: inst/lib/rSharp.mac.arm64.so
 
   macOS-Build-x64:
+    needs: guard
     runs-on: macos-15-intel
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -145,6 +152,7 @@ jobs:
 
 
   Windows-Build:
+    needs: guard
     runs-on: ${{ vars.GHA_DEFAULT_RUNNER_WINDOWS }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
