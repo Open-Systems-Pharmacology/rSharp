@@ -174,8 +174,8 @@ jobs:
 
       - name: Build C# binaries
         run: |
-          dotnet build ./shared/ClrFacade/ClrFacade.csproj -c Release --no-restore
-          dotnet build ./shared/rSharp.Examples/rSharp.Examples.csproj -c Release --no-restore
+          dotnet build ./shared/ClrFacade/ClrFacade.csproj -c Release --no-restore -p:Deterministic=true -p:ContinuousIntegrationBuild=true
+          dotnet build ./shared/rSharp.Examples/rSharp.Examples.csproj -c Release --no-restore -p:Deterministic=true -p:ContinuousIntegrationBuild=true
 
       - name: Test C# binaries
         run: |
