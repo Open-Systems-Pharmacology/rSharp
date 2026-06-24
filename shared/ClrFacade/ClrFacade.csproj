@@ -27,8 +27,7 @@
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <ItemGroup>
       <AssemblyFiles Include="$(TargetDir)*.dll" />
-      <ConfigFiles Include="$(SolutionDir)*.runtimeconfig.json" />
     </ItemGroup>
-    <Copy SourceFiles="@(AssemblyFiles); @(ConfigFiles)" DestinationFolder="$(SolutionDir)..\inst\lib\" />
+    <Copy SourceFiles="@(AssemblyFiles)" DestinationFolder="$(MSBuildProjectDirectory)\..\..\inst\lib\" />
   </Target>
 </Project>

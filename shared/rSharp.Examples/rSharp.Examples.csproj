@@ -11,7 +11,7 @@
 		</ItemGroup>
 		<Copy
 			SourceFiles="@(AssemblyFiles)"
-			DestinationFolder="$(SolutionDir)..\inst\extdata\"
+			DestinationFolder="$(MSBuildProjectDirectory)\..\..\inst\extdata\"
 		/>
 	</Target>
 </Project>
