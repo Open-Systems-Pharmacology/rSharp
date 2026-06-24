@@ -99,3 +99,4 @@ rSharpNugetRestore:
 
 rSharpLibComp: rSharpNugetRestore
 	"$(DOTNET_CMD)" build /t:$(MODE) $(SLNPROPERTIES)
+
