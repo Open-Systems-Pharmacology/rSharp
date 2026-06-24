@@ -174,8 +174,12 @@ jobs:
 
       - name: Build C# binaries
         run: |
-          dotnet build ./shared/ClrFacade/ClrFacade.csproj -c Release --no-restore -p:SolutionDir="$((Resolve-Path ./shared).Path + [IO.Path]::DirectorySeparatorChar)"
-          dotnet build ./shared/rSharp.Examples/rSharp.Examples.csproj -c Release --no-restore -p:SolutionDir="$((Resolve-Path ./shared).Path + [IO.Path]::DirectorySeparatorChar)"
+          $solutionDir = (Resolve-Path ./shared).Path + [IO.Path]::DirectorySeparatorChar
+          dotnet build ./shared/ClrFacade/ClrFacade.csproj -c Release --no-restore -p:SolutionDir="$solutionDir"
+          dotnet build ./shared/rSharp.Examples/rSharp.Examples.csproj -c Release --no-restore -p:SolutionDir="$solutionDir"
+          dotnet build ./shared/RDotNet.Tests/RDotNet.Tests.csproj -c Release --no-restore
+          dotnet build ./shared/rSharpTests/rSharpTests.csproj -c Release --no-restore
+          dotnet build ./shared/DynamicInterop.Tests/DynamicInterop.Tests.csproj -c Release --no-restore
 
       - name: Test C# binaries
         run: |
