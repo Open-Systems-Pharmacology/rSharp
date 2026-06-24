@@ -1,0 +1,65 @@
+name: PR Checks
+
+# Two triggers converge here:
+#
+# 1. workflow_run (build-c#-binaries completed): fires after the binary build
+#    commits rebuilt binaries back to the branch. Runs all checks against the
+#    tip that already has fresh binaries.
+#
+# 2. pull_request: fires for R-only pushes (no shared/** change, so the build
+#    workflow never ran) and for fork PRs (where the build workflow cannot push
+#    back). Runs checks against the existing committed binaries.
+#
+# sync-remotes always runs on pull_request (it needs PR context to pin/unpin
+# Remotes: in DESCRIPTION and commit back to the branch).
+
+on:
+  workflow_run:
+    workflows: ['build-c#-binaries']
+    types: [completed]
+    branches-ignore: [main]
+  pull_request:
+
+# Cancel any in-progress run for the same branch when a new one arrives.
+# head_ref is set on pull_request; head_branch is set on workflow_run.
+concurrency:
+  group: pr-checks-${{ github.event.workflow_run.head_branch || github.head_ref }}
+  cancel-in-progress: true
+
+permissions: read-all
+
+jobs:
+  sync-remotes:
+    # Only meaningful on pull_request: needs PR context to commit back.
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: write # commits the synced Remotes back to the PR branch
+    uses: Open-Systems-Pharmacology/Workflows/.github/workflows/sync-remotes.yaml@main
+    secrets: inherit
+
+  R-CMD-Check:
+    # On workflow_run: only run when the build succeeded.
+    # On pull_request: always run (R-only push or fork PR).
+    if: >-
+      github.event_name == 'pull_request' ||
+      github.event.workflow_run.conclusion == 'success'
+    uses: Open-Systems-Pharmacology/Workflows/.github/workflows/R-CMD-check-build.yaml@main
+    with:
+      os-matrix: '[{"os": "macos-latest", "r": "release"}, {"os": "macos-15-intel", "r": "release"}, {"os": "windows-latest", "r": "release"}, {"os": "ubuntu-latest", "r": "release"}]'
+
+  test-coverage:
+    if: >-
+      github.event_name == 'pull_request' ||
+      github.event.workflow_run.conclusion == 'success'
+    uses: Open-Systems-Pharmacology/Workflows/.github/workflows/test-coverage.yaml@main
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  pkgdown:
+    if: >-
+      github.event_name == 'pull_request' ||
+      github.event.workflow_run.conclusion == 'success'
+    permissions:
+      contents: write # required by the pkgdown reusable workflow (no deploy on PRs)
+      pull-requests: read # the workflow's check-changes job reads PR file changes
+    uses: Open-Systems-Pharmacology/Workflows/.github/workflows/pkgdown.yaml@main

@@ -1,7 +1,13 @@
 name: build-c#-binaries
 
 on:
+  push:
+    branches-ignore: [main]
+    paths: ['shared/**']
   workflow_call:
+
+# Prevent the bot's binary commit from retriggering this workflow.
+if: github.actor != 'github-actions[bot]'
 
 permissions:
   contents: write
@@ -15,8 +21,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.repository }}
+          ref: ${{ github.ref_name }}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
@@ -55,8 +61,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.repository }}
+          ref: ${{ github.ref_name }}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
@@ -100,8 +106,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.repository }}
+          ref: ${{ github.ref_name }}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
@@ -146,8 +152,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.repository }}
+          ref: ${{ github.ref_name }}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
@@ -197,8 +203,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.repository }}
+          ref: ${{ github.ref_name }}
 
       - name: Download Linux binaries
         uses: actions/download-artifact@v7
