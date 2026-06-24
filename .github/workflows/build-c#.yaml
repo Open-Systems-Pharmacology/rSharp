@@ -181,6 +181,7 @@ jobs:
           dotnet build ./shared/DynamicInterop.Tests/DynamicInterop.Tests.csproj -c Release --no-restore -p:Deterministic=true -p:ContinuousIntegrationBuild=true
 
       - name: Test C# binaries
+        timeout-minutes: 10
         run: |
           dotnet test .\shared\RDotNet.Tests\ -c Release -d log.txt --no-build
           dotnet test .\shared\rSharpTests\ -c Release -d log.txt --no-build
