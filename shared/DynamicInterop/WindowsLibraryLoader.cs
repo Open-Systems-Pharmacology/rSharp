@@ -1,4 +1,4 @@
-﻿// Windows-specific dynamic library loader.
+﻿// Windows-specific dynamic library loader implementation.
 using System;
 using System.ComponentModel;
 using System.Runtime.ConstrainedExecution;
