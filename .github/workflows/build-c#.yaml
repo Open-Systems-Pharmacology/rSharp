@@ -164,14 +164,6 @@ jobs:
           nuget restore ./shared/packages.config -PackagesDirectory ./shared/packages
           dotnet restore ./shared/rSharp.sln
 
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v2
-
-      - name: Build native C++ binary
-        run: |
-          $env:R_INSTALL_PATH="C:\R"
-          msbuild ./shared/rSharp.vcxproj -t:rebuild /p:Configuration=Release /p:Platform=x64
-
       - name: Build C# binaries
         run: |
           dotnet build ./shared/ClrFacade/ClrFacade.csproj -c Release --no-restore -p:Deterministic=true -p:ContinuousIntegrationBuild=true
@@ -179,6 +171,14 @@ jobs:
           dotnet build ./shared/RDotNet.Tests/RDotNet.Tests.csproj -c Release --no-restore -p:Deterministic=true -p:ContinuousIntegrationBuild=true
           dotnet build ./shared/rSharpTests/rSharpTests.csproj -c Release --no-restore -p:Deterministic=true -p:ContinuousIntegrationBuild=true
           dotnet build ./shared/DynamicInterop.Tests/DynamicInterop.Tests.csproj -c Release --no-restore -p:Deterministic=true -p:ContinuousIntegrationBuild=true
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build native C++ binary
+        run: |
+          $env:R_INSTALL_PATH="C:\R"
+          msbuild ./shared/rSharp.vcxproj -t:rebuild /p:Configuration=Release /p:Platform=x64
 
       - name: Test C# binaries
         timeout-minutes: 10
