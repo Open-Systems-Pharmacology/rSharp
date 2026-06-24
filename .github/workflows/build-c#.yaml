@@ -3,7 +3,6 @@ name: build-c#-binaries
 on:
   push:
     branches-ignore: [main]
-    paths: ['shared/**']
   workflow_call:
 
 permissions:
@@ -17,8 +16,26 @@ jobs:
     steps:
       - run: echo "Actor is ${{ github.actor }}, proceeding."
 
-  Linux-Build:
+  # Detect whether shared/** changed in this push. Build jobs are skipped when
+  # it didn't, but the workflow still completes so workflow_run always fires.
+  detect-changes:
     needs: guard
+    runs-on: ${{ vars.GHA_DEFAULT_RUNNER_UBUNTU || 'ubuntu-latest' }}
+    outputs:
+      build: ${{ steps.check.outputs.build }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+          repository: ${{ github.repository }}
+          ref: ${{ github.ref_name }}
+      - id: check
+        run: |
+          git diff --quiet HEAD~1 HEAD -- shared/ && echo "build=false" >> "$GITHUB_OUTPUT" || echo "build=true" >> "$GITHUB_OUTPUT"
+
+  Linux-Build:
+    needs: [guard, detect-changes]
+    if: needs.detect-changes.outputs.build == 'true'
     runs-on: ${{ vars.GHA_DEFAULT_RUNNER_UBUNTU }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -59,7 +76,8 @@ jobs:
 
 
   macOS-Build:
-    needs: guard
+    needs: [guard, detect-changes]
+    if: needs.detect-changes.outputs.build == 'true'
     runs-on: ${{ vars.GHA_DEFAULT_RUNNER_MACOS }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -105,7 +123,8 @@ jobs:
           path: inst/lib/rSharp.mac.arm64.so
 
   macOS-Build-x64:
-    needs: guard
+    needs: [guard, detect-changes]
+    if: needs.detect-changes.outputs.build == 'true'
     runs-on: macos-15-intel
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -152,7 +171,8 @@ jobs:
 
 
   Windows-Build:
-    needs: guard
+    needs: [guard, detect-changes]
+    if: needs.detect-changes.outputs.build == 'true'
     runs-on: ${{ vars.GHA_DEFAULT_RUNNER_WINDOWS }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
