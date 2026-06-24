@@ -28,6 +28,6 @@
     <ItemGroup>
       <AssemblyFiles Include="$(TargetDir)*.dll" />
     </ItemGroup>
-    <Copy SourceFiles="@(AssemblyFiles)" DestinationFolder="$(MSBuildProjectDirectory)\..\..\inst\lib\" />
+    <Copy SourceFiles="@(AssemblyFiles)" DestinationFolder="$(MSBuildProjectDirectory)\..\..\inst\lib\" SkipUnchangedFiles="true" />
   </Target>
 </Project>

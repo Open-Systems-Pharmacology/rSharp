@@ -12,6 +12,7 @@
 		<Copy
 			SourceFiles="@(AssemblyFiles)"
 			DestinationFolder="$(MSBuildProjectDirectory)\..\..\inst\extdata\"
+			SkipUnchangedFiles="true"
 		/>
 	</Target>
 </Project>
