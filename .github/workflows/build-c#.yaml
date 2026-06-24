@@ -167,10 +167,15 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
 
-      - name: Build C# binaries
+      - name: Build native C++ binary
         run: |
           $env:R_INSTALL_PATH="C:\R"
-          msbuild ./shared/rSharp.sln -t:rebuild /p:Configuration=Release /p:Platform=x64
+          msbuild ./shared/rSharp.vcxproj -t:rebuild /p:Configuration=Release /p:Platform=x64
+
+      - name: Build C# binaries
+        run: |
+          dotnet build ./shared/ClrFacade/ClrFacade.csproj -c Release --no-restore
+          dotnet build ./shared/rSharp.Examples/rSharp.Examples.csproj -c Release --no-restore
 
       - name: Test C# binaries
         run: |
