@@ -28,6 +28,6 @@ jobs:
     uses: Open-Systems-Pharmacology/Workflows/.github/workflows/release-pr.yaml@main
     with:
       which: ${{ inputs.which }}
-      client-id: ${{ vars.VERSION_BUMPER_APPID }}
+      app-id: ${{ vars.VERSION_BUMPER_APPID }}
     secrets:
       private-key: ${{ secrets.VERSION_BUMPER_SECRET }}
