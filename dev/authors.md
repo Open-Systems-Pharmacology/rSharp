@@ -26,7 +26,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/Open-Systems-Pharmacology/rsharp/blob/ci-skip-binary-commits/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/Open-Systems-Pharmacology/rsharp/blob/main/DESCRIPTION)
 
 Balazki P, Solodenko J, Sevestre M, McIntosh R, Mil F, Perraud J (2026).
 *rSharp: Accessing .NET from R*. R package version 1.2.0.9000,
