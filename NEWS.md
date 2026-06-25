@@ -1,9 +1,13 @@
 # rSharp 1.2.1
 
+## Minor improvements and bug fixes
+
 - Fixed a crash and hang in parallel test suites caused by `R_ReleaseObject` being called from the .NET finalizer thread (#212).
 - Fixed a `GCHandle` leak in the R to .NET argument-marshalling path that caused both the R and .NET heaps to grow with each call (#206).
 
 # rSharp 1.2.0
+
+## Minor improvements and bug fixes
 
 - Declared `dotnet8` in the `SystemRequirements` field of `DESCRIPTION` (#177).
 - Fixed package failing to load on R 4.6 with `undefined symbol: EXTPTR_PTR` by switching the C++ shim to the stable `R_ExternalPtrAddr()` API.
@@ -50,11 +54,10 @@ path containing special characters.
 
 <!-- Section Template
 
-## Minor improvements and bug fixes
-
 ## Breaking Changes
 
 ## Major changes
 
--->
+## Minor improvements and bug fixes
 
+-->
