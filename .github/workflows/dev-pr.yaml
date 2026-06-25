@@ -16,6 +16,6 @@ jobs:
   dev-pr:
     uses: Open-Systems-Pharmacology/Workflows/.github/workflows/dev-pr.yaml@main
     with:
-      app-id: ${{ vars.VERSION_BUMPER_APPID }}
+      client-id: ${{ vars.VERSION_BUMPER_APPID }}
     secrets:
       private-key: ${{ secrets.VERSION_BUMPER_SECRET }}
