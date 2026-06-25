@@ -3,7 +3,7 @@
 
 <!-- badges: start -->
 
-[![Build](https://img.shields.io/github/actions/workflow/status/Open-Systems-Pharmacology/rSharp/main-workflow.yaml?branch=main&label=Build)](https://github.com/Open-Systems-Pharmacology/rSharp/actions/workflows/main-workflow.yaml)
+[![Build](https://img.shields.io/github/actions/workflow/status/Open-Systems-Pharmacology/rSharp/merge-to-main.yaml?branch=main&label=Build)](https://github.com/Open-Systems-Pharmacology/rSharp/actions/workflows/merge-to-main.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/Open-Systems-Pharmacology/rSharp/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Open-Systems-Pharmacology/rSharp?branch=main)
 <!-- badges: end -->

@@ -27,6 +27,14 @@ namespace RDotNet
       private static readonly Object lockObject = new Object();
 
       /// <summary>
+      ///    Managed id of the R main thread. R's memory manager is single threaded, so
+      ///    R_PreserveObject / R_ReleaseObject must only run on this thread. Captured on the
+      ///    first Preserve() (always called on the R main thread) so Unpreserve() can detect
+      ///    when it is on the GC finalizer thread and avoid calling into R from there.
+      /// </summary>
+      private static int _rThreadId;
+
+      /// <summary>
       ///    Creates new instance of SymbolicExpression.
       /// </summary>
       /// <param name="engine">The engine.</param>
@@ -235,6 +243,22 @@ namespace RDotNet
       {
          if (!IsInvalid && !IsProtected)
          {
+            if (_rThreadId == 0)
+            {
+               _rThreadId = Environment.CurrentManagedThreadId;
+               // Hand DeferredRelease the release mechanism, captured here on the R main
+               // thread, so it can release (on this thread) handles that off-thread SafeHandle
+               // finalizers queue. See Unpreserve and DeferredRelease.
+               var engine = Engine;
+               var releaseObject = this.GetFunction<R_ReleaseObject>();
+               DeferredRelease.Configure(pendingHandle =>
+               {
+                  if (engine.EnableLock)
+                     lock (lockObject) { releaseObject(pendingHandle); }
+                  else
+                     releaseObject(pendingHandle);
+               });
+            }
             if (Engine.EnableLock)
             {
                lock (lockObject)
@@ -257,6 +281,19 @@ namespace RDotNet
       {
          if (!IsInvalid && IsProtected)
          {
+            // Never call R_ReleaseObject off the R main thread. SafeHandle finalization runs
+            // on the CLR finalizer thread; calling into R's single-threaded, non-reentrant
+            // memory manager from there corrupts R's heap (a Windows access violation or a
+            // Linux hang). When not on the R main thread (i.e. this is a finalizer), hand the
+            // handle to DeferredRelease for the R main thread to release later, rather than
+            // either crashing (releasing here) or leaking the preservation (skipping it).
+            if (_rThreadId != 0 && Environment.CurrentManagedThreadId != _rThreadId)
+            {
+               DeferredRelease.Enqueue(handle);
+               IsProtected = false;
+               return;
+            }
+
             if (Engine.EnableLock)
             {
                lock (lockObject)
