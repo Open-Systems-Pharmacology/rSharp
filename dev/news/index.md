@@ -2,7 +2,20 @@
 
 ## rSharp (development version)
 
+## rSharp 1.2.1
+
+### Minor improvements and bug fixes
+
+- Fixed a crash and hang in parallel test suites caused by
+  `R_ReleaseObject` being called from the .NET finalizer thread
+  ([\#212](https://github.com/Open-Systems-Pharmacology/rsharp/issues/212)).
+- Fixed a `GCHandle` leak in the R to .NET argument-marshalling path
+  that caused both the R and .NET heaps to grow with each call
+  ([\#206](https://github.com/Open-Systems-Pharmacology/rsharp/issues/206)).
+
 ## rSharp 1.2.0
+
+### Minor improvements and bug fixes
 
 - Declared `dotnet8` in the `SystemRequirements` field of `DESCRIPTION`
   ([\#177](https://github.com/Open-Systems-Pharmacology/rsharp/issues/177)).
