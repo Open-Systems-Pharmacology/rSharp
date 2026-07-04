@@ -257,6 +257,17 @@ namespace RDotNet
       {
          if (!IsInvalid && IsProtected)
          {
+            // R_ReleaseObject may only run on the R thread. This method is reached from the
+            // .NET finalizer thread whenever the GC collects a SymbolicExpression (SafeHandle
+            // finalization -> ReleaseHandle), so off-thread releases are deferred and drained
+            // on the R thread by REngine.ProcessPendingReleases().
+            if (!Engine.IsOnRThread)
+            {
+               Engine.DeferRelease(handle);
+               this.IsProtected = false;
+               return;
+            }
+
             if (Engine.EnableLock)
             {
                lock (lockObject)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -88,6 +89,46 @@ namespace RDotNet
       /// </summary>
       /// <remarks>Thanks to gchapman for proposing the fix. See https://rdotnet.codeplex.com/workitem/67 for details</remarks>
       public bool EnableLock { get; set; }
+
+      // R's memory manager is single-threaded: R API functions must only ever be called
+      // from the thread R runs on. SymbolicExpression is a SafeHandle, so the .NET GC
+      // finalizer thread triggers ReleaseHandle -> R_ReleaseObject at arbitrary times,
+      // racing the R main thread and corrupting R's heap (intermittent access violations).
+      // Instead of releasing directly, off-thread releases are parked here and drained by
+      // ProcessPendingReleases(), which the interop layer calls on entry from R.
+      private static readonly ConcurrentQueue<IntPtr> _pendingReleases = new ConcurrentQueue<IntPtr>();
+
+      private int _rThreadId = -1;
+
+      /// <summary>
+      ///    Whether the calling thread is the thread R runs on (captured during Initialize).
+      /// </summary>
+      internal bool IsOnRThread => Environment.CurrentManagedThreadId == _rThreadId;
+
+      /// <summary>
+      ///    Queue a preserved SEXP for release on the R thread. Safe to call from any thread,
+      ///    including the .NET finalizer thread.
+      /// </summary>
+      internal void DeferRelease(IntPtr sexp)
+      {
+         if (sexp != IntPtr.Zero)
+            _pendingReleases.Enqueue(sexp);
+      }
+
+      /// <summary>
+      ///    Release SEXPs queued by off-thread finalization. Must be called from the R thread;
+      ///    calls from any other thread are ignored. Invoked by the interop entry points, so
+      ///    pending releases are processed at the start of every call from R.
+      /// </summary>
+      public static void ProcessPendingReleases()
+      {
+         var e = engine;
+         if (e == null || e.Disposed || !e.IsRunning || !e.IsOnRThread)
+            return;
+
+         while (_pendingReleases.TryDequeue(out var sexp))
+            e.GetFunction<R_ReleaseObject>()(sexp);
+      }
 
       /// <summary>
       ///    Gets whether this instance is running.
@@ -455,6 +496,10 @@ namespace RDotNet
          if (this.IsRunning)
             return;
          //         Console.WriteLine("REngine.Initialize, after isRunning checked as false");
+         // Initialize is called from the thread R runs on (in the rSharp hosting scenario,
+         // the thread on which R called into the CLR). Remember it so deferred SEXP
+         // releases can be restricted to this thread.
+         _rThreadId = Environment.CurrentManagedThreadId;
          this.parameter = parameter ?? new StartupParameter();
          this.adapter = new CharacterDeviceAdapter(device ?? DefaultDevice);
          // Disabling the stack checking here, to try to avoid the issue on Linux.

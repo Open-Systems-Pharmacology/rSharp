@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using RDotNet;
 
 namespace ClrFacade;
 
@@ -12,6 +13,7 @@ public static class InternalRSharpFacade
 {
    public static int CallInstanceMethod(IntPtr obj, string methodName, IntPtr arguments, int numObjects, IntPtr returnValue)
    {
+      REngine.ProcessPendingReleases();
       try
       {
          var objectArguments = convertToObjectArguments(arguments, numObjects);
@@ -48,6 +50,7 @@ public static class InternalRSharpFacade
 
    internal static int CreateSexpWrapper(IntPtr sexp, IntPtr returnValue)
    {
+      REngine.ProcessPendingReleases();
       if (sexp == IntPtr.Zero)
          return -1;
       var result = new SymbolicExpressionWrapper(DataConverter.CreateSymbolicExpression(sexp));
@@ -60,6 +63,7 @@ public static class InternalRSharpFacade
 
    public static int CallStaticMethod(string typename, string methodName, IntPtr arguments, int numObjects, IntPtr returnValue)
    {
+      REngine.ProcessPendingReleases();
       var objectArguments = convertToObjectArguments(arguments, numObjects);
 
       LastCallException = string.Empty;
@@ -160,6 +164,7 @@ public static class InternalRSharpFacade
 
    public static int CurrentObject(IntPtr returnValue)
    {
+      REngine.ProcessPendingReleases();
       try
       {
          var result = DataConverter?.CurrentObject;
@@ -175,6 +180,7 @@ public static class InternalRSharpFacade
 
    public static int CreateInstance(string typename, IntPtr arguments, int numObjects, IntPtr returnValue)
    {
+      REngine.ProcessPendingReleases();
       try
       {
          object result = null;
@@ -207,6 +213,7 @@ public static class InternalRSharpFacade
 
    public static IntPtr GetObjectTypeName(IntPtr obj)
    {
+      REngine.ProcessPendingReleases();
       var instPtr = Marshal.ReadIntPtr(obj, 0);
       var t = Marshal.PtrToStructure<RSharpGenericValue>(instPtr);
       var instance = convertRSharpParameters([t])[0];
@@ -216,6 +223,7 @@ public static class InternalRSharpFacade
 
    public static int LoadFrom(string pathOrAssemblyName, IntPtr returnValue)
    {
+      REngine.ProcessPendingReleases();
       Assembly result;
       try
       {
@@ -699,6 +707,7 @@ public static class InternalRSharpFacade
 
    public static void FreeObject(IntPtr instPtr)
    {
+      REngine.ProcessPendingReleases();
       var genericValue = Marshal.PtrToStructure<RSharpGenericValue>(instPtr);
       switch (genericValue.Type)
       {
