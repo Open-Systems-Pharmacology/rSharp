@@ -1,5 +1,11 @@
 #include "rSharp.h"
 
+// Rebuild trigger: forces CI to recompile the net10 C# binaries so the shipped
+// assemblies pick up the #210 deferred-release fix (DeferredRelease.cs) that
+// came into V13 via the main merge, after which source and binaries had drifted.
+// The build workflow was also switched to the artifact + single-commit pattern
+// so the per-OS binary commits no longer race the caller's cancel-in-progress.
+
 //for logging
 #include <fstream>
 
