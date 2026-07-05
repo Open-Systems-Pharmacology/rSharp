@@ -1,38 +1,97 @@
 .onLoad <- function(...) {
   # nocov start
-  # Check for C++ distrib availability
+  # Detect the runtime prerequisites and initialise the .NET domain. Loading the
+  # package must never fail when the runtime is missing: rSharp still has to
+  # install and load on machines and build environments (CRAN check machines,
+  # R-universe builders) that do not have the .NET runtime. When a prerequisite
+  # is missing we record the reason in `rSharpEnv$loadError` and return quietly.
+  # The reason is surfaced to the user in `.onAttach()` and on the first call
+  # into .NET (see `.ensureRuntime()`).
+  rSharpEnv$loadError <- .checkDotnetPrerequisites()
+  if (is.null(rSharpEnv$loadError)) {
+    .loadAndInit()
+  }
+  invisible()
+}
+
+.onAttach <- function(...) {
+  # Surface a missing runtime only when the user explicitly attaches the package
+  # (`library(rSharp)`), using packageStartupMessage() so it can be suppressed.
+  # `.onLoad()` stays silent, as required for a bare namespace load.
+  if (!is.null(rSharpEnv$loadError)) {
+    packageStartupMessage(rSharpEnv$loadError)
+  }
+  invisible()
+} # nocov end
+
+# Checks the runtime prerequisites without side effects. Returns `NULL` when the
+# runtime can be initialised, or a message string describing the missing
+# prerequisite otherwise. Safe to call from both `.onLoad()` and
+# `.ensureRuntime()`.
+.checkDotnetPrerequisites <- function() {
+  # On Windows, the .NET runtime needs the Visual C++ redistributable.
   if (.Platform$OS.type == "windows") {
     if (Sys.which(rSharpEnv$msvcrFileName) == "") {
-      stop(paste(
-        rSharpEnv$msvcrFileName,
-        "was not found on this Windows system.",
-        "You are probably missing the Visual C++ Redistributable.",
-        "Go to https://learn.microsoft.com/en-US/cpp/windows/latest-supported-vc-redist?view=msvc-170 and download the latest 'Microsoft Visual C++ Redistributable'",
-        sep = "\n"
-      ))
+      return(messages$errorMsvcrNotFound())
     }
-  } else {}
-
-  # find installed dotnet runtimes for .NET 8 or higher
-  if (
-    length(grep(
-      "Microsoft.NETCore.App 8",
-      system("dotnet --list-runtimes", intern = TRUE)
-    )) ==
-      0
-  ) {
-    stop(paste(
-      "No suitable dotnet 8 runtime found. ",
-      "Please install dotnet 8: go to  https://learn.microsoft.com/en-us/dotnet/core/install/ and follow installation instructions.",
-      sep = "\n"
-    ))
   }
 
-  # Load the C++ and .NET libraries
+  # Require a runtime whose major version matches the bundled assemblies. A
+  # higher major (for example .NET 10) is not accepted: the assemblies target
+  # `net8.0` and do not roll forward across major versions, so a newer runtime
+  # would pass a naive check and then fail when .NET is actually called.
+  # `dotnet` may be absent entirely, in which case `system()` signals an error
+  # rather than returning output, so guard the call and treat any failure as
+  # "no runtime".
+  runtimes <- tryCatch(
+    suppressWarnings(system("dotnet --list-runtimes", intern = TRUE)),
+    error = function(e) character()
+  )
+  majors <- .dotnetMajorVersions(runtimes)
+  if (!(rSharpEnv$requiredDotnetVersion %in% majors)) {
+    return(messages$errorDotnetRuntimeNotFound())
+  }
+
+  NULL
+}
+
+# Extracts the major versions of the installed `Microsoft.NETCore.App` runtimes
+# from the lines returned by `dotnet --list-runtimes`. Kept pure so it can be
+# unit tested without a .NET runtime present. Each relevant line looks like:
+#   "Microsoft.NETCore.App 8.0.11 [/usr/share/dotnet/shared/...]"
+.dotnetMajorVersions <- function(lines) {
+  if (length(lines) == 0) {
+    return(integer())
+  }
+  appLines <- grep("Microsoft.NETCore.App", lines, value = TRUE)
+  majors <- sub(
+    "^Microsoft\\.NETCore\\.App\\s+([0-9]+)\\..*$",
+    "\\1",
+    appLines
+  )
+  majors <- suppressWarnings(as.integer(majors))
+  majors[!is.na(majors)]
+}
+
+# Ensures the .NET runtime is initialised before a call into .NET. Re-attempts
+# initialisation once (the runtime may have been installed after the package was
+# loaded) and otherwise aborts with the recorded reason, so callers get an
+# actionable error instead of a low-level "PACKAGE not loaded" failure from
+# `.External()`.
+.ensureRuntime <- function() {
+  if (isTRUE(rSharpEnv$runtimeLoaded)) {
+    return(invisible())
+  }
+  rSharpEnv$loadError <- .checkDotnetPrerequisites()
+  if (!is.null(rSharpEnv$loadError)) {
+    stop(rSharpEnv$loadError, call. = FALSE)
+  }
   .loadAndInit()
+  invisible()
 }
 
 .loadAndInit <- function() {
+  # nocov start
   # Path to the folder where the libraries are located
   srcPkgLibPath <- system.file("lib", package = rSharpEnv$packageName)
   nativeLibraryPath <- file.path(
@@ -50,6 +109,12 @@
     enc2native(srcPkgLibPath),
     PACKAGE = rSharpEnv$nativePkgName
   )
+
+  # The native library is loaded and the domain created, so calls into .NET are
+  # possible. Mark the runtime as loaded before the callStatic() below, which
+  # itself routes through `.ensureRuntime()`; setting the flag first avoids
+  # re-entering initialisation.
+  rSharpEnv$runtimeLoaded <- TRUE
 
   # Turn on the the conversion of advanced data types with R.NET.
   invisible(callStatic("ClrFacade.ClrFacade", "SetRDotNet", TRUE))

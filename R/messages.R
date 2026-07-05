@@ -1,5 +1,31 @@
 messages <- list()
 
+messages$errorMsvcrNotFound <- function() {
+  paste(
+    paste(rSharpEnv$msvcrFileName, "was not found on this Windows system."),
+    "You are probably missing the Visual C++ Redistributable.",
+    "Go to https://learn.microsoft.com/en-US/cpp/windows/latest-supported-vc-redist?view=msvc-170 and download the latest 'Microsoft Visual C++ Redistributable'.",
+    sep = "\n"
+  )
+}
+
+messages$errorDotnetRuntimeNotFound <- function() {
+  paste(
+    paste0(
+      "No .NET ",
+      rSharpEnv$requiredDotnetVersion,
+      " runtime was found."
+    ),
+    "rSharp is installed, but calls into .NET will fail until the runtime is available.",
+    paste0(
+      "Install .NET ",
+      rSharpEnv$requiredDotnetVersion,
+      ": go to https://learn.microsoft.com/en-us/dotnet/core/install/ and follow the installation instructions."
+    ),
+    sep = "\n"
+  )
+}
+
 messages$errorPackageSettingNotFound <- function(settingName, globalEnv) {
   paste0(
     "No global setting with the name '",

@@ -17,6 +17,7 @@
 #' loadAssembly(f)
 #' }
 loadAssembly <- function(name) {
+  .ensureRuntime()
   result <- .External(
     "rSharp_load_assembly",
     name,
