@@ -44,7 +44,11 @@
   # rather than returning output, so guard the call and treat any failure as
   # "no runtime".
   runtimes <- tryCatch(
-    suppressWarnings(system("dotnet --list-runtimes", intern = TRUE)),
+    suppressWarnings(system(
+      "dotnet --list-runtimes",
+      intern = TRUE,
+      ignore.stderr = TRUE
+    )),
     error = function(e) character()
   )
   majors <- .dotnetMajorVersions(runtimes)
