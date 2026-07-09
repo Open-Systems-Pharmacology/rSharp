@@ -73,6 +73,7 @@ getStaticMethods <- function(objOrType, contains = "") {
 #' cTypename <- getRSharpSetting("testCasesTypeName")
 #' callStatic(cTypename, "IsTrue", TRUE)
 callStatic <- function(typename, methodName, ...) {
+  .ensureRuntime()
   # Extract the pointer for R6 objects
   args <- .extractPointersFromArgs(list(...))
   # Calling via `do.call` to pass the arguments

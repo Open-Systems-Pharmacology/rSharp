@@ -84,6 +84,7 @@ newObjectFromName <- function(typename, ..., R6objectClass = NetObject) {
 #' # Now we can create a NetObject from the pointer
 #' testObj <- NetObject$new(testPtr)
 newPointerFromName <- function(typename, ...) {
+  .ensureRuntime()
   # Extract the pointer for R6 objects
   args <- .extractPointersFromArgs(list(...))
   # Calling via `do.call` to pass the arguments
