@@ -6,6 +6,11 @@ rSharpEnv <- new.env(parent = emptyenv())
 rSharpEnv$packageName <- "rSharp"
 # Name of the C++ redistributable library
 rSharpEnv$msvcrFileName <- "msvcp140.dll"
+# Major version of the .NET runtime the bundled assemblies target. The runtime
+# check requires this exact major version: the assemblies are built for
+# `net8.0` and their runtimeconfig does not roll forward across major versions,
+# so a higher major (for example .NET 10) is not a valid substitute.
+rSharpEnv$requiredDotnetVersion <- 8L
 # The name of the package
 rSharpEnv$pkgName <- "rSharp"
 
