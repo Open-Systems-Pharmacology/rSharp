@@ -2,6 +2,8 @@
 
 ## rSharp (development version)
 
+## rSharp 1.2.2
+
 - rSharp now installs and loads even when a suitable .NET runtime is
   absent, instead of failing at load time. A missing runtime is reported
   when the package is attached and raised with an actionable message on
