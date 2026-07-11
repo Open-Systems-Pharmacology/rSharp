@@ -50,6 +50,8 @@
 
 ## Diagnostics
 
+- [`dotnetAvailable()`](http://www.open-systems-pharmacology.org/rSharp/dev/reference/dotnetAvailable.md)
+  : Check whether the .NET runtime is available
 - [`toStringNET()`](http://www.open-systems-pharmacology.org/rSharp/dev/reference/toStringNET.md)
   : Calls the ToString method of an object
 - [`getSexpType()`](http://www.open-systems-pharmacology.org/rSharp/dev/reference/getSexpType.md)
