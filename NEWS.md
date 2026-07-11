@@ -1,6 +1,8 @@
 # rSharp (development version)
 
-- rSharp now installs and loads even when a suitable .NET runtime is absent, instead of failing at load time. A missing runtime is reported when the package is attached and raised with an actionable message on the first call into .NET, which allows the package (and packages depending on it) to be built and checked in environments without .NET.
+- `dotnetAvailable()` is a new exported function that reports whether the .NET runtime is available, so code, examples, and vignettes can run .NET only when a runtime is present.
+- rSharp now installs and loads even when a suitable .NET runtime is absent or cannot be initialised, instead of failing at load time. This covers both a missing runtime and an environment where a `dotnet` command is present but the native runtime host cannot be loaded (for example some build machines that ship the .NET SDK). The reason is reported when the package is attached and raised with an actionable message on the first call into .NET, which allows the package (and packages depending on it) to be built and checked in environments without a working .NET.
+- The user guide vignette now renders on machines without a .NET runtime, showing its .NET examples without executing them, so the package builds where no runtime is available.
 
 # rSharp 1.2.1
 

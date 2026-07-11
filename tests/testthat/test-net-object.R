@@ -1,3 +1,7 @@
+# All tests in this file call into .NET; skip the whole file when the
+# runtime is unavailable (see helper-for-tests.R).
+skip_if_no_dotnet()
+
 test_that("It creates a `NetObject` from a valid pointer is provided", {
   testClassName <- "ClrFacade.Tests.RefClasses.LevelOneClass"
   o <- .External(

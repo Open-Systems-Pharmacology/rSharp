@@ -1,3 +1,33 @@
+#' Check whether the .NET runtime is available
+#'
+#' Reports whether rSharp can currently call into .NET. The runtime is
+#' initialised when the package loads, but loading never fails when the runtime
+#' is missing or cannot be initialised (see the package startup message).
+#' `dotnetAvailable()` lets you branch on that state, for example to conditionally
+#' run code, examples, or vignette chunks that require .NET.
+#'
+#' If the runtime was not initialised at load time (for instance because .NET was
+#' installed afterwards), a single initialisation attempt is made. The attempt
+#' never raises an error; it only reports success or failure.
+#'
+#' @return A single logical: `TRUE` if the .NET runtime is available and
+#'   initialised, `FALSE` otherwise.
+#' @export
+#'
+#' @examples
+#' if (dotnetAvailable()) {
+#'   callStatic("System.Environment", "get_Version")
+#' }
+dotnetAvailable <- function() {
+  tryCatch(
+    {
+      .ensureRuntime()
+      isTRUE(rSharpEnv$runtimeLoaded)
+    },
+    error = function(e) FALSE
+  )
+}
+
 .onLoad <- function(...) {
   # nocov start
   # Detect the runtime prerequisites and initialise the .NET domain. Loading the
@@ -90,7 +120,14 @@
   if (!is.null(rSharpEnv$loadError)) {
     stop(rSharpEnv$loadError, call. = FALSE)
   }
+  # Prerequisites passed, but native initialisation can still fail (see
+  # `.loadAndInit()`), in which case it records the reason without throwing.
+  # Surface that recorded reason instead of letting the caller proceed against
+  # an uninitialised runtime.
   .loadAndInit()
+  if (!isTRUE(rSharpEnv$runtimeLoaded)) {
+    stop(rSharpEnv$loadError, call. = FALSE)
+  }
   invisible()
 }
 
@@ -103,23 +140,43 @@
     paste0(rSharpEnv$nativePkgName, .Platform$dynlib.ext)
   )
 
-  # Load C++ library
-  dyn.load(nativeLibraryPath, DLLpath = srcPkgLibPath)
+  # Initialising the native host can fail even when `.checkDotnetPrerequisites()`
+  # passed: that check only inspects the `dotnet` CLI output, whereas the native
+  # loader locates the runtime host (`hostfxr`) itself and can disagree, for
+  # example on a machine that ships the `dotnet` SDK but no host the loader can
+  # resolve. A native failure here must not propagate out of `.onLoad()` and
+  # abort `loadNamespace()`, so record the reason in `rSharpEnv$loadError` and
+  # return quietly, exactly as for a missing prerequisite. `rSharpEnv$runtimeLoaded`
+  # stays unset, so `.ensureRuntime()` surfaces the recorded reason on the first
+  # call into .NET.
+  tryCatch(
+    {
+      # Load C++ library
+      dyn.load(nativeLibraryPath, DLLpath = srcPkgLibPath)
 
-  # Load .NET library through C++
-  # The method returns 0 if successful. Otherwise, an error is thrown.
-  result <- .External(
-    "rSharp_create_domain",
-    enc2native(srcPkgLibPath),
-    PACKAGE = rSharpEnv$nativePkgName
+      # Load .NET library through C++
+      # The method returns 0 if successful. Otherwise, an error is thrown.
+      result <- .External(
+        "rSharp_create_domain",
+        enc2native(srcPkgLibPath),
+        PACKAGE = rSharpEnv$nativePkgName
+      )
+
+      # The native library is loaded and the domain created, so calls into .NET
+      # are possible. Mark the runtime as loaded before the callStatic() below,
+      # which itself routes through `.ensureRuntime()`; setting the flag first
+      # avoids re-entering initialisation.
+      rSharpEnv$runtimeLoaded <- TRUE
+
+      # Turn on the the conversion of advanced data types with R.NET.
+      callStatic("ClrFacade.ClrFacade", "SetRDotNet", TRUE)
+    },
+    error = function(e) {
+      rSharpEnv$runtimeLoaded <- FALSE
+      rSharpEnv$loadError <- messages$errorRuntimeInitFailed(conditionMessage(
+        e
+      ))
+    }
   )
-
-  # The native library is loaded and the domain created, so calls into .NET are
-  # possible. Mark the runtime as loaded before the callStatic() below, which
-  # itself routes through `.ensureRuntime()`; setting the flag first avoids
-  # re-entering initialisation.
-  rSharpEnv$runtimeLoaded <- TRUE
-
-  # Turn on the the conversion of advanced data types with R.NET.
-  invisible(callStatic("ClrFacade.ClrFacade", "SetRDotNet", TRUE))
+  invisible()
 } # nocov end
