@@ -304,6 +304,8 @@ All trademarks within this document belong to their legitimate owners.
 
 ## Diagnostics
 
+- [`dotnetAvailable()`](http://www.open-systems-pharmacology.org/rSharp/reference/dotnetAvailable.md)
+  : Check whether the .NET runtime is available
 - [`toStringNET()`](http://www.open-systems-pharmacology.org/rSharp/reference/toStringNET.md)
   : Calls the ToString method of an object
 - [`getSexpType()`](http://www.open-systems-pharmacology.org/rSharp/reference/getSexpType.md)
