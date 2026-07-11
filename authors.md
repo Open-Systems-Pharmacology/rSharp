@@ -29,13 +29,13 @@ Source:
 [`DESCRIPTION`](https://github.com/Open-Systems-Pharmacology/rsharp/blob/main/DESCRIPTION)
 
 Balazki P, Solodenko J, Sevestre M, McIntosh R, Mil F, Perraud J (2026).
-*rSharp: Accessing .NET from R*. R package version 1.2.3,
+*rSharp: Accessing .NET from R*. R package version 1.2.2,
 <https://github.com/Open-Systems-Pharmacology/rsharp/>.
 
     @Manual{,
       title = {rSharp: Accessing .NET from R},
       author = {Pavel Balazki and Juri Solodenko and Michael Sevestre and Robert McIntosh and Felix Mil and Jean-Michel Perraud},
       year = {2026},
-      note = {R package version 1.2.3},
+      note = {R package version 1.2.2},
       url = {https://github.com/Open-Systems-Pharmacology/rsharp/},
     }

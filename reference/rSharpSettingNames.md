@@ -8,7 +8,3 @@ Names of the settings stored in rSharpEnv Can be used with
 ``` r
 rSharpSettingNames
 ```
-
-## Format
-
-An object of class `character` of length 9.

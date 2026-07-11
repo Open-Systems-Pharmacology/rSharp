@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rSharp</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.2.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.2.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,7 +45,7 @@
 <dd><p>String representation of the type of the .NET object. Read-only</p></dd>
 
 
-<dt><code>pointer</code></dt>
+    <dt><code>pointer</code></dt>
 <dd><p>The external pointer to the .NET object. Read-only</p></dd>
 
 
@@ -56,8 +56,7 @@
 
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
-
-<ul><li><p><a href="#method-NetObject-new"><code>NetObject$new()</code></a></p></li>
+<p></p><ul><li><p><a href="#method-NetObject-initialize"><code>NetObject$new()</code></a></p></li>
 <li><p><a href="#method-NetObject-getFields"><code>NetObject$getFields()</code></a></p></li>
 <li><p><a href="#method-NetObject-getStaticFields"><code>NetObject$getStaticFields()</code></a></p></li>
 <li><p><a href="#method-NetObject-getProperties"><code>NetObject$getProperties()</code></a></p></li>
@@ -71,374 +70,269 @@
 <li><p><a href="#method-NetObject-.printLine"><code>NetObject$.printLine()</code></a></p></li>
 <li><p><a href="#method-NetObject-.printClass"><code>NetObject$.printClass()</code></a></p></li>
 <li><p><a href="#method-NetObject-print"><code>NetObject$print()</code></a></p></li>
-</ul></div><p></p><hr><a id="method-NetObject-new"></a><div class="section">
-<h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
+</ul></div><p></p><hr><a id="method-NetObject-initialize"></a><div class="section">
+<h3 id="netobject-new-"><code>NetObject$new()</code><a class="anchor" aria-label="anchor" href="#netobject-new-"></a></h3>
 <p>Initializes the object.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/NetObject.html">NetObject</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">pointer</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>pointer</code></dt>
 <dd><p>The external pointer to the .NET object</p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
 <p>The initialized object</p>
 </div>
-<div class="section">
-<h4 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a></h4>
-<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="st">"ClrFacade.Tests.RefClasses.LevelOneClass"</span></span>
-<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/CallExternal.html" class="external-link">.External</a></span><span class="op">(</span><span class="st">"r_create_clr_object"</span>, <span class="va">testClassName</span>, PACKAGE <span class="op">=</span> <span class="fu"><a href="../reference/getRSharpSetting.html">getRSharpSetting</a></span><span class="op">(</span><span class="st">"nativePkgName"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/newObjectFromName.html">newObjectFromName</a></span><span class="op">(</span><span class="va">testClassName</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div><p></p></div>
+
 </div>
 
-
-</div><p></p><hr><a id="method-NetObject-getFields"></a><div class="section">
-<h3 id="method-getfields-">Method <code>getFields()</code><a class="anchor" aria-label="anchor" href="#method-getfields-"></a></h3>
+<p></p><hr><a id="method-NetObject-getFields"></a><div class="section">
+<h3 id="netobject-getfields-"><code>NetObject$getFields()</code><a class="anchor" aria-label="anchor" href="#netobject-getfields-"></a></h3>
 <p>List the fields of the object</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">NetObject</span><span class="op">$</span><span class="fu">getFields</span><span class="op">(</span>contains <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>contains</code></dt>
 <dd><p>a string that the field names returned must contain</p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
 <p>a list of names of the fields of the object</p>
 </div>
-<div class="section">
-<h4 id="examples-1">Examples<a class="anchor" aria-label="anchor" href="#examples-1"></a></h4>
-<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getRSharpSetting.html">getRSharpSetting</a></span><span class="op">(</span><span class="st">"testObjectTypeName"</span><span class="op">)</span></span>
-<span><span class="va">testObj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/newObjectFromName.html">newObjectFromName</a></span><span class="op">(</span><span class="va">testClassName</span><span class="op">)</span></span>
-<span><span class="va">testObj</span><span class="op">$</span><span class="fu">getFields</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">testObj</span><span class="op">$</span><span class="fu">getFields</span><span class="op">(</span><span class="st">"ieldInt"</span><span class="op">)</span></span></code></pre></div><p></p></div>
+
 </div>
 
-
-</div><p></p><hr><a id="method-NetObject-getStaticFields"></a><div class="section">
-<h3 id="method-getstaticfields-">Method <code><a href="getStaticFields.html">getStaticFields()</a></code><a class="anchor" aria-label="anchor" href="#method-getstaticfields-"></a></h3>
+<p></p><hr><a id="method-NetObject-getStaticFields"></a><div class="section">
+<h3 id="netobject-getstaticfields-"><code>NetObject$getStaticFields()</code><a class="anchor" aria-label="anchor" href="#netobject-getstaticfields-"></a></h3>
 <p>List the static fields of the object</p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">NetObject</span><span class="op">$</span><span class="fu">getStaticFields</span><span class="op">(</span>contains <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>contains</code></dt>
 <dd><p>a string that the field names returned must contain</p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
 <p>a list of names of the static fields of the object</p>
 </div>
-<div class="section">
-<h4 id="examples-2">Examples<a class="anchor" aria-label="anchor" href="#examples-2"></a></h4>
-<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getRSharpSetting.html">getRSharpSetting</a></span><span class="op">(</span><span class="st">"testObjectTypeName"</span><span class="op">)</span></span>
-<span><span class="va">testObj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/newObjectFromName.html">newObjectFromName</a></span><span class="op">(</span><span class="va">testClassName</span><span class="op">)</span></span>
-<span><span class="va">testObj</span><span class="op">$</span><span class="fu">getStaticFields</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">testObj</span><span class="op">$</span><span class="fu">getStaticFields</span><span class="op">(</span><span class="st">"ieldInt"</span><span class="op">)</span></span></code></pre></div><p></p></div>
+
 </div>
 
-
-</div><p></p><hr><a id="method-NetObject-getProperties"></a><div class="section">
-<h3 id="method-getproperties-">Method <code>getProperties()</code><a class="anchor" aria-label="anchor" href="#method-getproperties-"></a></h3>
+<p></p><hr><a id="method-NetObject-getProperties"></a><div class="section">
+<h3 id="netobject-getproperties-"><code>NetObject$getProperties()</code><a class="anchor" aria-label="anchor" href="#netobject-getproperties-"></a></h3>
 <p>List the properties of the object</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">NetObject</span><span class="op">$</span><span class="fu">getProperties</span><span class="op">(</span>contains <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>contains</code></dt>
 <dd><p>a string that the property names returned must contain</p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
 <p>a list of names of the properties of the object</p>
 </div>
-<div class="section">
-<h4 id="examples-3">Examples<a class="anchor" aria-label="anchor" href="#examples-3"></a></h4>
-<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getRSharpSetting.html">getRSharpSetting</a></span><span class="op">(</span><span class="st">"testObjectTypeName"</span><span class="op">)</span></span>
-<span><span class="va">testObj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/newObjectFromName.html">newObjectFromName</a></span><span class="op">(</span><span class="va">testClassName</span><span class="op">)</span></span>
-<span><span class="va">testObj</span><span class="op">$</span><span class="fu">getProperties</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">testObj</span><span class="op">$</span><span class="fu">getProperties</span><span class="op">(</span><span class="st">"One"</span><span class="op">)</span></span></code></pre></div><p></p></div>
+
 </div>
 
-
-</div><p></p><hr><a id="method-NetObject-getStaticProperties"></a><div class="section">
-<h3 id="method-getstaticproperties-">Method <code><a href="getStaticProperties.html">getStaticProperties()</a></code><a class="anchor" aria-label="anchor" href="#method-getstaticproperties-"></a></h3>
+<p></p><hr><a id="method-NetObject-getStaticProperties"></a><div class="section">
+<h3 id="netobject-getstaticproperties-"><code>NetObject$getStaticProperties()</code><a class="anchor" aria-label="anchor" href="#netobject-getstaticproperties-"></a></h3>
 <p>List the static properties of the object</p><div class="section">
 <h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">NetObject</span><span class="op">$</span><span class="fu">getStaticProperties</span><span class="op">(</span>contains <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>contains</code></dt>
 <dd><p>a string that the property names returned must contain</p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a></h4>
 <p>a list of names of the static properties of the object</p>
 </div>
-<div class="section">
-<h4 id="examples-4">Examples<a class="anchor" aria-label="anchor" href="#examples-4"></a></h4>
-<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getRSharpSetting.html">getRSharpSetting</a></span><span class="op">(</span><span class="st">"testObjectTypeName"</span><span class="op">)</span></span>
-<span><span class="va">testObj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/newObjectFromName.html">newObjectFromName</a></span><span class="op">(</span><span class="va">testClassName</span><span class="op">)</span></span>
-<span><span class="va">testObj</span><span class="op">$</span><span class="fu">getStaticProperties</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">testObj</span><span class="op">$</span><span class="fu">getStaticProperties</span><span class="op">(</span><span class="st">"One"</span><span class="op">)</span></span></code></pre></div><p></p></div>
+
 </div>
 
-
-</div><p></p><hr><a id="method-NetObject-getMethods"></a><div class="section">
-<h3 id="method-getmethods-">Method <code>getMethods()</code><a class="anchor" aria-label="anchor" href="#method-getmethods-"></a></h3>
+<p></p><hr><a id="method-NetObject-getMethods"></a><div class="section">
+<h3 id="netobject-getmethods-"><code>NetObject$getMethods()</code><a class="anchor" aria-label="anchor" href="#netobject-getmethods-"></a></h3>
 <p>List the methods the object</p><div class="section">
 <h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">NetObject</span><span class="op">$</span><span class="fu">getMethods</span><span class="op">(</span>contains <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>contains</code></dt>
 <dd><p>a string that the methods names returned must contain</p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-5">Returns<a class="anchor" aria-label="anchor" href="#returns-5"></a></h4>
 <p>a list of names of the methods of the object</p>
 </div>
-<div class="section">
-<h4 id="examples-5">Examples<a class="anchor" aria-label="anchor" href="#examples-5"></a></h4>
-<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getRSharpSetting.html">getRSharpSetting</a></span><span class="op">(</span><span class="st">"testObjectTypeName"</span><span class="op">)</span></span>
-<span><span class="va">testObj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/newObjectFromName.html">newObjectFromName</a></span><span class="op">(</span><span class="va">testClassName</span><span class="op">)</span></span>
-<span><span class="va">testObj</span><span class="op">$</span><span class="fu">getMethods</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">testObj</span><span class="op">$</span><span class="fu">getMethods</span><span class="op">(</span><span class="st">"Get"</span><span class="op">)</span></span></code></pre></div><p></p></div>
+
 </div>
 
-
-</div><p></p><hr><a id="method-NetObject-getStaticMethods"></a><div class="section">
-<h3 id="method-getstaticmethods-">Method <code><a href="getStaticMethods.html">getStaticMethods()</a></code><a class="anchor" aria-label="anchor" href="#method-getstaticmethods-"></a></h3>
+<p></p><hr><a id="method-NetObject-getStaticMethods"></a><div class="section">
+<h3 id="netobject-getstaticmethods-"><code>NetObject$getStaticMethods()</code><a class="anchor" aria-label="anchor" href="#netobject-getstaticmethods-"></a></h3>
 <p>List the static methods the object</p><div class="section">
 <h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">NetObject</span><span class="op">$</span><span class="fu">getStaticMethods</span><span class="op">(</span>contains <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>contains</code></dt>
 <dd><p>a string that the methods names returned must contain</p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-6">Returns<a class="anchor" aria-label="anchor" href="#returns-6"></a></h4>
 <p>a list of names of the static methods of the object</p>
 </div>
-<div class="section">
-<h4 id="examples-6">Examples<a class="anchor" aria-label="anchor" href="#examples-6"></a></h4>
-<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getRSharpSetting.html">getRSharpSetting</a></span><span class="op">(</span><span class="st">"testObjectTypeName"</span><span class="op">)</span></span>
-<span><span class="va">testObj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/newObjectFromName.html">newObjectFromName</a></span><span class="op">(</span><span class="va">testClassName</span><span class="op">)</span></span>
-<span><span class="va">testObj</span><span class="op">$</span><span class="fu">getStaticMethods</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">testObj</span><span class="op">$</span><span class="fu">getStaticMethods</span><span class="op">(</span><span class="st">"Get"</span><span class="op">)</span></span></code></pre></div><p></p></div>
+
 </div>
 
-
-</div><p></p><hr><a id="method-NetObject-getMemberSignature"></a><div class="section">
-<h3 id="method-getmembersignature-">Method <code>getMemberSignature()</code><a class="anchor" aria-label="anchor" href="#method-getmembersignature-"></a></h3>
+<p></p><hr><a id="method-NetObject-getMemberSignature"></a><div class="section">
+<h3 id="netobject-getmembersignature-"><code>NetObject$getMemberSignature()</code><a class="anchor" aria-label="anchor" href="#netobject-getmembersignature-"></a></h3>
 <p>Gets a string representation of the signature of a member (i.e. field, property, method).
 Mostly used to interactively search for what arguments to pass to a method.</p><div class="section">
 <h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">NetObject</span><span class="op">$</span><span class="fu">getMemberSignature</span><span class="op">(</span><span class="va">memberName</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>memberName</code></dt>
 <dd><p>The exact name of the member (i.e. field, property, method) to search for</p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-7">Returns<a class="anchor" aria-label="anchor" href="#returns-7"></a></h4>
 <p>a character vector with summary information on the method/member signatures</p>
 </div>
-<div class="section">
-<h4 id="examples-7">Examples<a class="anchor" aria-label="anchor" href="#examples-7"></a></h4>
-<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getRSharpSetting.html">getRSharpSetting</a></span><span class="op">(</span><span class="st">"testObjectTypeName"</span><span class="op">)</span></span>
-<span><span class="va">testObj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/newObjectFromName.html">newObjectFromName</a></span><span class="op">(</span><span class="va">testClassName</span><span class="op">)</span></span>
-<span><span class="va">testObj</span><span class="op">$</span><span class="fu">getMemberSignature</span><span class="op">(</span><span class="st">"set_PropertyIntegerOne"</span><span class="op">)</span></span>
-<span><span class="va">testObj</span><span class="op">$</span><span class="fu">getMemberSignature</span><span class="op">(</span><span class="st">"FieldIntegerOne"</span><span class="op">)</span></span>
-<span><span class="va">testObj</span><span class="op">$</span><span class="fu">getMemberSignature</span><span class="op">(</span><span class="st">"PropertyIntegerTwo"</span><span class="op">)</span></span></code></pre></div><p></p></div>
+
 </div>
 
-
-</div><p></p><hr><a id="method-NetObject-call"></a><div class="section">
-<h3 id="method-call-">Method <code><a href="https://rdrr.io/r/base/call.html" class="external-link">call()</a></code><a class="anchor" aria-label="anchor" href="#method-call-"></a></h3>
+<p></p><hr><a id="method-NetObject-call"></a><div class="section">
+<h3 id="netobject-call-"><code>NetObject$call()</code><a class="anchor" aria-label="anchor" href="#netobject-call-"></a></h3>
 <p>Call a method of the object</p><div class="section">
 <h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">NetObject</span><span class="op">$</span><span class="fu">call</span><span class="op">(</span><span class="va">methodName</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>methodName</code></dt>
 <dd><p>the name of a method of the object</p></dd>
 
-
-<dt><code>...</code></dt>
+      <dt><code>...</code></dt>
 <dd><p>additional method arguments</p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-8">Returns<a class="anchor" aria-label="anchor" href="#returns-8"></a></h4>
 <p>An object resulting from the call. May be a `NetObject` object, or a native R object for common types. Can be NULL.</p>
 </div>
-<div class="section">
-<h4 id="examples-8">Examples<a class="anchor" aria-label="anchor" href="#examples-8"></a></h4>
-<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getRSharpSetting.html">getRSharpSetting</a></span><span class="op">(</span><span class="st">"testObjectTypeName"</span><span class="op">)</span></span>
-<span><span class="va">testObj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/newObjectFromName.html">newObjectFromName</a></span><span class="op">(</span><span class="va">testClassName</span><span class="op">)</span></span>
-<span><span class="va">testObj</span><span class="op">$</span><span class="fu">call</span><span class="op">(</span><span class="st">"GetFieldIntegerOne"</span><span class="op">)</span></span></code></pre></div><p></p></div>
+
 </div>
 
-
-</div><p></p><hr><a id="method-NetObject-get"></a><div class="section">
-<h3 id="method-get-">Method <code><a href="https://rdrr.io/r/base/get.html" class="external-link">get()</a></code><a class="anchor" aria-label="anchor" href="#method-get-"></a></h3>
+<p></p><hr><a id="method-NetObject-get"></a><div class="section">
+<h3 id="netobject-get-"><code>NetObject$get()</code><a class="anchor" aria-label="anchor" href="#netobject-get-"></a></h3>
 <p>Gets the value of a field or property of the object</p><div class="section">
 <h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">NetObject</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="va">name</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>name</code></dt>
 <dd><p>the name of a field/property  of the object</p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-9">Returns<a class="anchor" aria-label="anchor" href="#returns-9"></a></h4>
 <p>An object resulting from the call. May be a `NetObject` object, or a native R object for common types. Can be NULL.</p>
 </div>
-<div class="section">
-<h4 id="examples-9">Examples<a class="anchor" aria-label="anchor" href="#examples-9"></a></h4>
-<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getRSharpSetting.html">getRSharpSetting</a></span><span class="op">(</span><span class="st">"testObjectTypeName"</span><span class="op">)</span></span>
-<span><span class="va">testObj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/newObjectFromName.html">newObjectFromName</a></span><span class="op">(</span><span class="va">testClassName</span><span class="op">)</span></span>
-<span><span class="va">testObj</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"FieldIntegerOne"</span><span class="op">)</span></span></code></pre></div><p></p></div>
+
 </div>
 
-
-</div><p></p><hr><a id="method-NetObject-set"></a><div class="section">
-<h3 id="method-set-">Method <code>set()</code><a class="anchor" aria-label="anchor" href="#method-set-"></a></h3>
+<p></p><hr><a id="method-NetObject-set"></a><div class="section">
+<h3 id="netobject-set-"><code>NetObject$set()</code><a class="anchor" aria-label="anchor" href="#netobject-set-"></a></h3>
 <p>Sets the value of a field or property of the object.</p><div class="section">
 <h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">NetObject</span><span class="op">$</span><span class="fu">set</span><span class="op">(</span><span class="va">name</span>, <span class="va">value</span>, asInteger <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>name</code></dt>
 <dd><p>the name of a field/property of the object</p></dd>
 
-
-<dt><code>value</code></dt>
+      <dt><code>value</code></dt>
 <dd><p>the value to set the field with</p></dd>
 
-
-<dt><code>asInteger</code></dt>
+      <dt><code>asInteger</code></dt>
 <dd><p>Boolean whether to convert the value to an integer.
 Used for cases where .NET signature requires an integer. Ignored if `value` is not numeric.</p></dd>
 
 
 </dl><p></p></div>
 </div>
-<div class="section">
-<h4 id="examples-10">Examples<a class="anchor" aria-label="anchor" href="#examples-10"></a></h4>
-<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getRSharpSetting.html">getRSharpSetting</a></span><span class="op">(</span><span class="st">"testObjectTypeName"</span><span class="op">)</span></span>
-<span><span class="va">testObj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/newObjectFromName.html">newObjectFromName</a></span><span class="op">(</span><span class="va">testClassName</span><span class="op">)</span></span>
-<span><span class="va">testObj</span><span class="op">$</span><span class="fu">set</span><span class="op">(</span><span class="st">"FieldIntegerOne"</span>, <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
+
 </div>
 
-
-</div><p></p><hr><a id="method-NetObject-.printLine"></a><div class="section">
-<h3 id="method-printline-">Method <code>.printLine()</code><a class="anchor" aria-label="anchor" href="#method-printline-"></a></h3>
+<p></p><hr><a id="method-NetObject-.printLine"></a><div class="section">
+<h3 id="netobject-printline-"><code>NetObject$.printLine()</code><a class="anchor" aria-label="anchor" href="#netobject-printline-"></a></h3>
 <p>DEPRECATED: Internal method for printing a line</p><div class="section">
 <h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">NetObject</span><span class="op">$</span><span class="fu">.printLine</span><span class="op">(</span><span class="va">entry</span>, value <span class="op">=</span> <span class="cn">NULL</span>, addTab <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-11">Arguments<a class="anchor" aria-label="anchor" href="#arguments-11"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>entry</code></dt>
 <dd><p>The entry text</p></dd>
 
-
-<dt><code>value</code></dt>
+      <dt><code>value</code></dt>
 <dd><p>The value to print</p></dd>
 
-
-<dt><code>addTab</code></dt>
+      <dt><code>addTab</code></dt>
 <dd><p>Whether to add a tab before the entry</p></dd>
 
 
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-NetObject-.printClass"></a><div class="section">
-<h3 id="method-printclass-">Method <code>.printClass()</code><a class="anchor" aria-label="anchor" href="#method-printclass-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-NetObject-.printClass"></a><div class="section">
+<h3 id="netobject-printclass-"><code>NetObject$.printClass()</code><a class="anchor" aria-label="anchor" href="#netobject-printclass-"></a></h3>
 <p>DEPRECATED: Internal method for printing class name</p><div class="section">
 <h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">NetObject</span><span class="op">$</span><span class="fu">.printClass</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
+</div>
 
-</div><p></p><hr><a id="method-NetObject-print"></a><div class="section">
-<h3 id="method-print-">Method <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code><a class="anchor" aria-label="anchor" href="#method-print-"></a></h3>
+<p></p><hr><a id="method-NetObject-print"></a><div class="section">
+<h3 id="netobject-print-"><code>NetObject$print()</code><a class="anchor" aria-label="anchor" href="#netobject-print-"></a></h3>
 <p>Prints a summary of the object.</p><div class="section">
 <h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">NetObject</span><span class="op">$</span><span class="fu">print</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
-
 </div>
+
 
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span><span class="co">## Method `NetObject$new`</span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="st">"ClrFacade.Tests.RefClasses.LevelOneClass"</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="st">"ClrFacade.Tests.RefClasses.LevelOneClass"</span></span></span>
 <span class="r-in"><span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/CallExternal.html" class="external-link">.External</a></span><span class="op">(</span><span class="st">"r_create_clr_object"</span>, <span class="va">testClassName</span>, PACKAGE <span class="op">=</span> <span class="fu"><a href="getRSharpSetting.html">getRSharpSetting</a></span><span class="op">(</span><span class="st">"nativePkgName"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="newObjectFromName.html">newObjectFromName</a></span><span class="op">(</span><span class="va">testClassName</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
@@ -459,11 +353,6 @@ Used for cases where .NET signature requires an integer. Ignored if `value` is n
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── Available Properties </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   • <span style="color: #00BB00;">SomeInt</span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span><span class="co">## Method `NetObject$getFields`</span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="fu"><a href="getRSharpSetting.html">getRSharpSetting</a></span><span class="op">(</span><span class="st">"testObjectTypeName"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">testObj</span> <span class="op">&lt;-</span> <span class="fu"><a href="newObjectFromName.html">newObjectFromName</a></span><span class="op">(</span><span class="va">testClassName</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">testObj</span><span class="op">$</span><span class="fu">getFields</span><span class="op">(</span><span class="op">)</span></span></span>
@@ -471,44 +360,24 @@ Used for cases where .NET signature requires an integer. Ignored if `value` is n
 <span class="r-out co"><span class="r-pr">#&gt;</span> [5] "PublicInt"      </span>
 <span class="r-in"><span><span class="va">testObj</span><span class="op">$</span><span class="fu">getFields</span><span class="op">(</span><span class="st">"ieldInt"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "FieldIntegerOne" "FieldIntegerTwo"</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span><span class="co">## Method `NetObject$getStaticFields`</span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="fu"><a href="getRSharpSetting.html">getRSharpSetting</a></span><span class="op">(</span><span class="st">"testObjectTypeName"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">testObj</span> <span class="op">&lt;-</span> <span class="fu"><a href="newObjectFromName.html">newObjectFromName</a></span><span class="op">(</span><span class="va">testClassName</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">testObj</span><span class="op">$</span><span class="fu">getStaticFields</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "StaticFieldIntegerOne" "StaticFieldIntegerTwo" "StaticPublicInt"      </span>
 <span class="r-in"><span><span class="va">testObj</span><span class="op">$</span><span class="fu">getStaticFields</span><span class="op">(</span><span class="st">"ieldInt"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "StaticFieldIntegerOne" "StaticFieldIntegerTwo"</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span><span class="co">## Method `NetObject$getProperties`</span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="fu"><a href="getRSharpSetting.html">getRSharpSetting</a></span><span class="op">(</span><span class="st">"testObjectTypeName"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">testObj</span> <span class="op">&lt;-</span> <span class="fu"><a href="newObjectFromName.html">newObjectFromName</a></span><span class="op">(</span><span class="va">testClassName</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">testObj</span><span class="op">$</span><span class="fu">getProperties</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "PropertyIntegerOne" "PropertyIntegerTwo"</span>
 <span class="r-in"><span><span class="va">testObj</span><span class="op">$</span><span class="fu">getProperties</span><span class="op">(</span><span class="st">"One"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "PropertyIntegerOne"</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span><span class="co">## Method `NetObject$getStaticProperties`</span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="fu"><a href="getRSharpSetting.html">getRSharpSetting</a></span><span class="op">(</span><span class="st">"testObjectTypeName"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">testObj</span> <span class="op">&lt;-</span> <span class="fu"><a href="newObjectFromName.html">newObjectFromName</a></span><span class="op">(</span><span class="va">testClassName</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">testObj</span><span class="op">$</span><span class="fu">getStaticProperties</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "StaticPropertyIntegerOne" "StaticPropertyIntegerTwo"</span>
 <span class="r-in"><span><span class="va">testObj</span><span class="op">$</span><span class="fu">getStaticProperties</span><span class="op">(</span><span class="st">"One"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "StaticPropertyIntegerOne"</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span><span class="co">## Method `NetObject$getMethods`</span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="fu"><a href="getRSharpSetting.html">getRSharpSetting</a></span><span class="op">(</span><span class="st">"testObjectTypeName"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">testObj</span> <span class="op">&lt;-</span> <span class="fu"><a href="newObjectFromName.html">newObjectFromName</a></span><span class="op">(</span><span class="va">testClassName</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">testObj</span><span class="op">$</span><span class="fu">getMethods</span><span class="op">(</span><span class="op">)</span></span></span>
@@ -523,11 +392,6 @@ Used for cases where .NET signature requires an integer. Ignored if `value` is n
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "GetFieldIntegerOne"      "GetFieldIntegerTwo"     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [3] "GetHashCode"             "GetMethodWithParameters"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [5] "GetPublicInt"            "GetType"                </span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span><span class="co">## Method `NetObject$getStaticMethods`</span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="fu"><a href="getRSharpSetting.html">getRSharpSetting</a></span><span class="op">(</span><span class="st">"testObjectTypeName"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">testObj</span> <span class="op">&lt;-</span> <span class="fu"><a href="newObjectFromName.html">newObjectFromName</a></span><span class="op">(</span><span class="va">testClassName</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">testObj</span><span class="op">$</span><span class="fu">getStaticMethods</span><span class="op">(</span><span class="op">)</span></span></span>
@@ -538,11 +402,6 @@ Used for cases where .NET signature requires an integer. Ignored if `value` is n
 <span class="r-in"><span><span class="va">testObj</span><span class="op">$</span><span class="fu">getStaticMethods</span><span class="op">(</span><span class="st">"Get"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "StaticGetFieldIntegerOne"      "StaticGetFieldIntegerTwo"     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [3] "StaticGetMethodWithParameters" "StaticGetPublicInt"           </span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span><span class="co">## Method `NetObject$getMemberSignature`</span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="fu"><a href="getRSharpSetting.html">getRSharpSetting</a></span><span class="op">(</span><span class="st">"testObjectTypeName"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">testObj</span> <span class="op">&lt;-</span> <span class="fu"><a href="newObjectFromName.html">newObjectFromName</a></span><span class="op">(</span><span class="va">testClassName</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">testObj</span><span class="op">$</span><span class="fu">getMemberSignature</span><span class="op">(</span><span class="st">"set_PropertyIntegerOne"</span><span class="op">)</span></span></span>
@@ -551,29 +410,14 @@ Used for cases where .NET signature requires an integer. Ignored if `value` is n
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Field FieldIntegerOne, Int32"</span>
 <span class="r-in"><span><span class="va">testObj</span><span class="op">$</span><span class="fu">getMemberSignature</span><span class="op">(</span><span class="st">"PropertyIntegerTwo"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Property PropertyIntegerTwo, Int32, can write: True"</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span><span class="co">## Method `NetObject$call`</span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="fu"><a href="getRSharpSetting.html">getRSharpSetting</a></span><span class="op">(</span><span class="st">"testObjectTypeName"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">testObj</span> <span class="op">&lt;-</span> <span class="fu"><a href="newObjectFromName.html">newObjectFromName</a></span><span class="op">(</span><span class="va">testClassName</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">testObj</span><span class="op">$</span><span class="fu">call</span><span class="op">(</span><span class="st">"GetFieldIntegerOne"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span><span class="co">## Method `NetObject$get`</span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="fu"><a href="getRSharpSetting.html">getRSharpSetting</a></span><span class="op">(</span><span class="st">"testObjectTypeName"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">testObj</span> <span class="op">&lt;-</span> <span class="fu"><a href="newObjectFromName.html">newObjectFromName</a></span><span class="op">(</span><span class="va">testClassName</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">testObj</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"FieldIntegerOne"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span><span class="co">## Method `NetObject$set`</span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">testClassName</span> <span class="op">&lt;-</span> <span class="fu"><a href="getRSharpSetting.html">getRSharpSetting</a></span><span class="op">(</span><span class="st">"testObjectTypeName"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">testObj</span> <span class="op">&lt;-</span> <span class="fu"><a href="newObjectFromName.html">newObjectFromName</a></span><span class="op">(</span><span class="va">testClassName</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">testObj</span><span class="op">$</span><span class="fu">set</span><span class="op">(</span><span class="st">"FieldIntegerOne"</span>, <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span><span class="op">)</span></span></span>
