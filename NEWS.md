@@ -1,3 +1,5 @@
+# rSharp (development version)
+
 # rSharp 1.2.3
 
 - `dotnetAvailable()` is a new exported function that reports whether the .NET runtime is available, so code, examples, and vignettes can run .NET only when a runtime is present.
