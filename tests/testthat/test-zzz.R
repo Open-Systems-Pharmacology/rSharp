@@ -36,3 +36,28 @@ test_that(".checkDotnetPrerequisites passes when the required major is present",
   )
   expect_null(.checkDotnetPrerequisites())
 })
+
+test_that(".ensureRuntime surfaces the recorded reason when native init fails", {
+  # Prerequisites pass, but the native host fails to load: `.loadAndInit()`
+  # records the reason and leaves `runtimeLoaded` unset instead of throwing.
+  # `.ensureRuntime()` must then abort with that recorded reason.
+  local_mocked_bindings(
+    .checkDotnetPrerequisites = function() NULL,
+    .loadAndInit = function() {
+      rSharpEnv$runtimeLoaded <- FALSE
+      rSharpEnv$loadError <- "boom"
+    }
+  )
+  withr::defer({
+    rSharpEnv$runtimeLoaded <- NULL
+    rSharpEnv$loadError <- NULL
+  })
+  rSharpEnv$runtimeLoaded <- NULL
+  expect_error(.ensureRuntime(), "boom", fixed = TRUE)
+})
+
+test_that("errorRuntimeInitFailed includes the underlying details", {
+  msg <- messages$errorRuntimeInitFailed("Failure: load_hostfxr()")
+  expect_match(msg, "could not be initialised", fixed = TRUE)
+  expect_match(msg, "Failure: load_hostfxr()", fixed = TRUE)
+})

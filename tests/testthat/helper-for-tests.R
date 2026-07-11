@@ -1,4 +1,16 @@
 # this file is automatically loaded by testthat when running tests
+
+# Skips a test when the .NET runtime is not actually available. Keyed off
+# whether the native runtime finished initialising (`rSharpEnv$runtimeLoaded`),
+# not merely whether a `dotnet` CLI is on PATH: build environments such as the
+# R-universe macOS runners ship the .NET SDK (so the CLI check passes) but the
+# native host cannot be loaded, and tests must skip in that case too.
+skip_if_no_dotnet <- function() {
+  if (!isTRUE(rSharpEnv$runtimeLoaded)) {
+    testthat::skip("The .NET runtime is not available.")
+  }
+}
+
 # Functions
 expectArrayTypeConv <- function(clrType, arrayLength, expectedRObj) {
   tn <- "ClrFacade.TestArrayMemoryHandling"

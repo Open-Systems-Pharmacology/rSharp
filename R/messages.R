@@ -26,6 +26,20 @@ messages$errorDotnetRuntimeNotFound <- function() {
   )
 }
 
+messages$errorRuntimeInitFailed <- function(details) {
+  paste(
+    "The .NET runtime could not be initialised.",
+    "rSharp is installed, but calls into .NET will fail until a working runtime is available.",
+    paste0(
+      "Install .NET ",
+      rSharpEnv$requiredDotnetVersion,
+      ": go to https://learn.microsoft.com/en-us/dotnet/core/install/ and follow the installation instructions."
+    ),
+    paste0("Details: ", details),
+    sep = "\n"
+  )
+}
+
 messages$errorPackageSettingNotFound <- function(settingName, globalEnv) {
   paste0(
     "No global setting with the name '",
