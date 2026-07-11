@@ -16,5 +16,7 @@ The names of the types exported by the assembly
 Get a list of .NET type names exported by an assembly
 }
 \examples{
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 getTypesInAssembly("ClrFacade")
+\dontshow{\}) # examplesIf}
 }

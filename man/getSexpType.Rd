@@ -16,7 +16,9 @@ the type code, an integer, as defined in Rinternals.h
 Get the type code for a SEXP, as returned by the TYPEOF macro
 }
 \examples{
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 getSexpType(1)
 getSexpType("a")
 getSexpType(1:10)
+\dontshow{\}) # examplesIf}
 }

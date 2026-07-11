@@ -1,5 +1,7 @@
 # rSharp (development version)
 
+- Documentation examples that call into .NET now run only when a runtime is available, so `R CMD check` no longer errors on machines without .NET while the examples still run where a runtime is present.
+
 # rSharp 1.2.3
 
 - `dotnetAvailable()` is a new exported function that reports whether the .NET runtime is available, so code, examples, and vignettes can run .NET only when a runtime is present.

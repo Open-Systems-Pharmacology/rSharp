@@ -5,7 +5,7 @@
 #'
 #' @param enable if true enable, otherwise disable
 #' @export
-#' @examples
+#' @examplesIf dotnetAvailable()
 #' library(rSharp)
 #' cTypename <- getRSharpSetting("testCasesTypeName")
 #' callStatic(cTypename, "CreateStringDictionary")
@@ -30,7 +30,7 @@ setConvertAdvancedTypes <- function(enable = TRUE) {
 #' @param x any R object, which is converted to a .NET object on which to call ToString
 #' @return The string representation of the object in .NET
 #' @export
-#' @examples
+#' @examplesIf dotnetAvailable()
 #' library(rSharp)
 #' dt <- as.POSIXct("2001-01-01 02:03:04", tz = "UTC")
 #' toStringNET(dt)

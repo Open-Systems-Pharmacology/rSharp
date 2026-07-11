@@ -2,7 +2,7 @@
 #'
 #' @param objOrType a .NET object, or type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
 #' @export
-#' @examples
+#' @examplesIf dotnetAvailable()
 #' cTypename <- getRSharpSetting("testCasesTypeName")
 #' getStaticMembers(cTypename)
 getStaticMembers <- function(objOrType) {
@@ -69,7 +69,7 @@ getStaticMethods <- function(objOrType, contains = "") {
 #' @param ... additional method arguments passed to .External (e.g., arguments to the method)
 #' @return an object resulting from the call. May be a `NetObject` object, or a native R object for common types. Can be NULL.
 #' @export
-#' @examples
+#' @examplesIf dotnetAvailable()
 #' cTypename <- getRSharpSetting("testCasesTypeName")
 #' callStatic(cTypename, "IsTrue", TRUE)
 callStatic <- function(typename, methodName, ...) {
@@ -94,7 +94,7 @@ callStatic <- function(typename, methodName, ...) {
 #' @param name the name of a field/property  of the object
 #' @return An object resulting from the call. May be a `NetObject` object, or a native R object for common types. Can be NULL.
 #' @export
-#' @examples
+#' @examplesIf dotnetAvailable()
 #' testClassName <- getRSharpSetting("testObjectTypeName")
 #' getStatic(testClassName, "StaticPropertyIntegerOne")
 getStatic <- function(type, name) {
@@ -115,7 +115,7 @@ getStatic <- function(type, name) {
 #' @param value The value to set the field with
 #'
 #' @export
-#' @examples
+#' @examplesIf dotnetAvailable()
 #' testClassName <- getRSharpSetting("testObjectTypeName")
 #' setStatic(testClassName, "StaticPropertyIntegerOne", as.integer(42))
 setStatic <- function(type, name, value, asInteger = FALSE) {

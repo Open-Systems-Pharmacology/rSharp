@@ -20,6 +20,8 @@ an object resulting from the call. May be a `NetObject` object, or a native R ob
 Call a static method on a .NET type
 }
 \examples{
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 cTypename <- getRSharpSetting("testCasesTypeName")
 callStatic(cTypename, "IsTrue", TRUE)
+\dontshow{\}) # examplesIf}
 }

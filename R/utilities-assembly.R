@@ -32,7 +32,7 @@ loadAssembly <- function(name) {
 #' @param filenames if TRUE, return a data frame where the second column is the URI (usually file path) of the loaded assembly. `FALSE` by default.
 #' @return the names of loaded assemblies
 #' @export
-#' @examples
+#' @examplesIf dotnetAvailable()
 #' getLoadedAssemblies()
 getLoadedAssemblies <- function(fullname = FALSE, filenames = FALSE) {
   assNames <- callStatic(
@@ -59,7 +59,7 @@ getLoadedAssemblies <- function(fullname = FALSE, filenames = FALSE) {
 #' @param assemblyName the name of the assembly
 #' @return The names of the types exported by the assembly
 #' @export
-#' @examples
+#' @examplesIf dotnetAvailable()
 #' getTypesInAssembly("ClrFacade")
 getTypesInAssembly <- function(assemblyName) {
   callStatic(rSharpEnv$clrFacadeTypeName, "GetTypesInAssembly", assemblyName)
@@ -73,7 +73,7 @@ getTypesInAssembly <- function(assemblyName) {
 #' @return TRUE if the assembly is loaded, FALSE otherwise
 #' @export
 #'
-#' @examples
+#' @examplesIf dotnetAvailable()
 #' isAssemblyLoaded("ClrFacade")
 isAssemblyLoaded <- function(assemblyName) {
   loadedAssemblies <- getLoadedAssemblies()
