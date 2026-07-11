@@ -17,7 +17,7 @@ methods to interact with the .NET objects.
 
 ### Public methods
 
-- [`NetObject$new()`](#method-NetObject-new)
+- [`NetObject$new()`](#method-NetObject-initialize)
 
 - [`NetObject$getFields()`](#method-NetObject-getFields)
 
@@ -47,7 +47,7 @@ methods to interact with the .NET objects.
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `NetObject$new()`
 
 Initializes the object.
 
@@ -65,16 +65,9 @@ Initializes the object.
 
 The initialized object
 
-#### Examples
-
-    testClassName <- "ClrFacade.Tests.RefClasses.LevelOneClass"
-    o <- .External("r_create_clr_object", testClassName, PACKAGE = getRSharpSetting("nativePkgName"))
-    x <- newObjectFromName(testClassName)
-    print(x)
-
 ------------------------------------------------------------------------
 
-### Method `getFields()`
+### `NetObject$getFields()`
 
 List the fields of the object
 
@@ -92,16 +85,9 @@ List the fields of the object
 
 a list of names of the fields of the object
 
-#### Examples
-
-    testClassName <- getRSharpSetting("testObjectTypeName")
-    testObj <- newObjectFromName(testClassName)
-    testObj$getFields()
-    testObj$getFields("ieldInt")
-
 ------------------------------------------------------------------------
 
-### Method [`getStaticFields()`](http://www.open-systems-pharmacology.org/rSharp/dev/reference/getStaticFields.md)
+### `NetObject$getStaticFields()`
 
 List the static fields of the object
 
@@ -119,16 +105,9 @@ List the static fields of the object
 
 a list of names of the static fields of the object
 
-#### Examples
-
-    testClassName <- getRSharpSetting("testObjectTypeName")
-    testObj <- newObjectFromName(testClassName)
-    testObj$getStaticFields()
-    testObj$getStaticFields("ieldInt")
-
 ------------------------------------------------------------------------
 
-### Method `getProperties()`
+### `NetObject$getProperties()`
 
 List the properties of the object
 
@@ -146,16 +125,9 @@ List the properties of the object
 
 a list of names of the properties of the object
 
-#### Examples
-
-    testClassName <- getRSharpSetting("testObjectTypeName")
-    testObj <- newObjectFromName(testClassName)
-    testObj$getProperties()
-    testObj$getProperties("One")
-
 ------------------------------------------------------------------------
 
-### Method [`getStaticProperties()`](http://www.open-systems-pharmacology.org/rSharp/dev/reference/getStaticProperties.md)
+### `NetObject$getStaticProperties()`
 
 List the static properties of the object
 
@@ -173,16 +145,9 @@ List the static properties of the object
 
 a list of names of the static properties of the object
 
-#### Examples
-
-    testClassName <- getRSharpSetting("testObjectTypeName")
-    testObj <- newObjectFromName(testClassName)
-    testObj$getStaticProperties()
-    testObj$getStaticProperties("One")
-
 ------------------------------------------------------------------------
 
-### Method `getMethods()`
+### `NetObject$getMethods()`
 
 List the methods the object
 
@@ -200,16 +165,9 @@ List the methods the object
 
 a list of names of the methods of the object
 
-#### Examples
-
-    testClassName <- getRSharpSetting("testObjectTypeName")
-    testObj <- newObjectFromName(testClassName)
-    testObj$getMethods()
-    testObj$getMethods("Get")
-
 ------------------------------------------------------------------------
 
-### Method [`getStaticMethods()`](http://www.open-systems-pharmacology.org/rSharp/dev/reference/getStaticMethods.md)
+### `NetObject$getStaticMethods()`
 
 List the static methods the object
 
@@ -227,16 +185,9 @@ List the static methods the object
 
 a list of names of the static methods of the object
 
-#### Examples
-
-    testClassName <- getRSharpSetting("testObjectTypeName")
-    testObj <- newObjectFromName(testClassName)
-    testObj$getStaticMethods()
-    testObj$getStaticMethods("Get")
-
 ------------------------------------------------------------------------
 
-### Method `getMemberSignature()`
+### `NetObject$getMemberSignature()`
 
 Gets a string representation of the signature of a member (i.e. field,
 property, method). Mostly used to interactively search for what
@@ -258,17 +209,9 @@ arguments to pass to a method.
 a character vector with summary information on the method/member
 signatures
 
-#### Examples
-
-    testClassName <- getRSharpSetting("testObjectTypeName")
-    testObj <- newObjectFromName(testClassName)
-    testObj$getMemberSignature("set_PropertyIntegerOne")
-    testObj$getMemberSignature("FieldIntegerOne")
-    testObj$getMemberSignature("PropertyIntegerTwo")
-
 ------------------------------------------------------------------------
 
-### Method [`call()`](https://rdrr.io/r/base/call.html)
+### `NetObject$call()`
 
 Call a method of the object
 
@@ -291,15 +234,9 @@ Call a method of the object
 An object resulting from the call. May be a \`NetObject\` object, or a
 native R object for common types. Can be NULL.
 
-#### Examples
-
-    testClassName <- getRSharpSetting("testObjectTypeName")
-    testObj <- newObjectFromName(testClassName)
-    testObj$call("GetFieldIntegerOne")
-
 ------------------------------------------------------------------------
 
-### Method [`get()`](https://rdrr.io/r/base/get.html)
+### `NetObject$get()`
 
 Gets the value of a field or property of the object
 
@@ -318,15 +255,9 @@ Gets the value of a field or property of the object
 An object resulting from the call. May be a \`NetObject\` object, or a
 native R object for common types. Can be NULL.
 
-#### Examples
-
-    testClassName <- getRSharpSetting("testObjectTypeName")
-    testObj <- newObjectFromName(testClassName)
-    testObj$get("FieldIntegerOne")
-
 ------------------------------------------------------------------------
 
-### Method `set()`
+### `NetObject$set()`
 
 Sets the value of a field or property of the object.
 
@@ -350,15 +281,9 @@ Sets the value of a field or property of the object.
   where .NET signature requires an integer. Ignored if \`value\` is not
   numeric.
 
-#### Examples
-
-    testClassName <- getRSharpSetting("testObjectTypeName")
-    testObj <- newObjectFromName(testClassName)
-    testObj$set("FieldIntegerOne", as.integer(42))
-
 ------------------------------------------------------------------------
 
-### Method `.printLine()`
+### `NetObject$.printLine()`
 
 DEPRECATED: Internal method for printing a line
 
@@ -382,7 +307,7 @@ DEPRECATED: Internal method for printing a line
 
 ------------------------------------------------------------------------
 
-### Method `.printClass()`
+### `NetObject$.printClass()`
 
 DEPRECATED: Internal method for printing class name
 
@@ -392,7 +317,7 @@ DEPRECATED: Internal method for printing class name
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `NetObject$print()`
 
 Prints a summary of the object.
 
@@ -403,11 +328,6 @@ Prints a summary of the object.
 ## Examples
 
 ``` r
-
-## ------------------------------------------------
-## Method `NetObject$new`
-## ------------------------------------------------
-
 testClassName <- "ClrFacade.Tests.RefClasses.LevelOneClass"
 o <- .External("r_create_clr_object", testClassName, PACKAGE = getRSharpSetting("nativePkgName"))
 x <- newObjectFromName(testClassName)
@@ -429,11 +349,6 @@ print(x)
 #> 
 #> ── Available Properties 
 #>   • SomeInt
-
-## ------------------------------------------------
-## Method `NetObject$getFields`
-## ------------------------------------------------
-
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 testObj$getFields()
@@ -441,44 +356,24 @@ testObj$getFields()
 #> [5] "PublicInt"      
 testObj$getFields("ieldInt")
 #> [1] "FieldIntegerOne" "FieldIntegerTwo"
-
-## ------------------------------------------------
-## Method `NetObject$getStaticFields`
-## ------------------------------------------------
-
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 testObj$getStaticFields()
 #> [1] "StaticFieldIntegerOne" "StaticFieldIntegerTwo" "StaticPublicInt"      
 testObj$getStaticFields("ieldInt")
 #> [1] "StaticFieldIntegerOne" "StaticFieldIntegerTwo"
-
-## ------------------------------------------------
-## Method `NetObject$getProperties`
-## ------------------------------------------------
-
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 testObj$getProperties()
 #> [1] "PropertyIntegerOne" "PropertyIntegerTwo"
 testObj$getProperties("One")
 #> [1] "PropertyIntegerOne"
-
-## ------------------------------------------------
-## Method `NetObject$getStaticProperties`
-## ------------------------------------------------
-
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 testObj$getStaticProperties()
 #> [1] "StaticPropertyIntegerOne" "StaticPropertyIntegerTwo"
 testObj$getStaticProperties("One")
 #> [1] "StaticPropertyIntegerOne"
-
-## ------------------------------------------------
-## Method `NetObject$getMethods`
-## ------------------------------------------------
-
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 testObj$getMethods()
@@ -493,11 +388,6 @@ testObj$getMethods("Get")
 #> [1] "GetFieldIntegerOne"      "GetFieldIntegerTwo"     
 #> [3] "GetHashCode"             "GetMethodWithParameters"
 #> [5] "GetPublicInt"            "GetType"                
-
-## ------------------------------------------------
-## Method `NetObject$getStaticMethods`
-## ------------------------------------------------
-
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 testObj$getStaticMethods()
@@ -508,11 +398,6 @@ testObj$getStaticMethods()
 testObj$getStaticMethods("Get")
 #> [1] "StaticGetFieldIntegerOne"      "StaticGetFieldIntegerTwo"     
 #> [3] "StaticGetMethodWithParameters" "StaticGetPublicInt"           
-
-## ------------------------------------------------
-## Method `NetObject$getMemberSignature`
-## ------------------------------------------------
-
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 testObj$getMemberSignature("set_PropertyIntegerOne")
@@ -521,29 +406,14 @@ testObj$getMemberSignature("FieldIntegerOne")
 #> [1] "Field FieldIntegerOne, Int32"
 testObj$getMemberSignature("PropertyIntegerTwo")
 #> [1] "Property PropertyIntegerTwo, Int32, can write: True"
-
-## ------------------------------------------------
-## Method `NetObject$call`
-## ------------------------------------------------
-
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 testObj$call("GetFieldIntegerOne")
 #> [1] 0
-
-## ------------------------------------------------
-## Method `NetObject$get`
-## ------------------------------------------------
-
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 testObj$get("FieldIntegerOne")
 #> [1] 0
-
-## ------------------------------------------------
-## Method `NetObject$set`
-## ------------------------------------------------
-
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 testObj$set("FieldIntegerOne", as.integer(42))
