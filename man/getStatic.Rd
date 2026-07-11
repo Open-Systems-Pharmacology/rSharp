@@ -18,6 +18,8 @@ An object resulting from the call. May be a `NetObject` object, or a native R ob
 Gets the value of a static field or property of a class
 }
 \examples{
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 testClassName <- getRSharpSetting("testObjectTypeName")
 getStatic(testClassName, "StaticPropertyIntegerOne")
+\dontshow{\}) # examplesIf}
 }

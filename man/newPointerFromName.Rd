@@ -18,8 +18,10 @@ an external pointer to a .NET object
 Create a new external pointer to a .NET object given the type name.
 }
 \examples{
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 testClassName <- getRSharpSetting("testObjectTypeName")
 testPtr <- newPointerFromName(testClassName)
 # Now we can create a NetObject from the pointer
 testObj <- NetObject$new(testPtr)
+\dontshow{\}) # examplesIf}
 }

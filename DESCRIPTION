@@ -50,6 +50,6 @@ Suggests:
     rmarkdown
 License: file LICENSE
 SystemRequirements: dotnet8
-RoxygenNote: 7.3.3
 VignetteBuilder: knitr
 Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0

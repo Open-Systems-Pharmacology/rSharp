@@ -16,5 +16,7 @@ A list, with columns including mode, type, class, length and the string of the c
 Gets the type of a .NET object resulting from converting an R object. This function is mostly for documentation purposes, but may be of use to end users.
 }
 \examples{
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 rToDotNetType(1)
+\dontshow{\}) # examplesIf}
 }

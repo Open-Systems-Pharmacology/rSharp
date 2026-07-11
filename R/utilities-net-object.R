@@ -12,7 +12,7 @@
 #' otherwise returned unchanged. If `recursive` is TRUE and `obj` is a list, the function is applied
 #' recursively to the list elements.
 #' @export
-#' @examples
+#' @examplesIf dotnetAvailable()
 #' castToRObject(1)
 #' castToRObject("a")
 #' castToRObject(TRUE)
@@ -56,7 +56,7 @@ castToRObject <- function(obj, recursive = TRUE) {
 #'
 #' @return a `NetObject` R6 object
 #' @export
-#' @examples
+#' @examplesIf dotnetAvailable()
 #' testClassName <- getRSharpSetting("testObjectTypeName")
 #' testObj <- newObjectFromName(testClassName)
 #' # object with a constructor that has parameters
@@ -78,7 +78,7 @@ newObjectFromName <- function(typename, ..., R6objectClass = NetObject) {
 #' @return an external pointer to a .NET object
 #' @export
 #'
-#' @examples
+#' @examplesIf dotnetAvailable()
 #' testClassName <- getRSharpSetting("testObjectTypeName")
 #' testPtr <- newPointerFromName(testClassName)
 #' # Now we can create a NetObject from the pointer

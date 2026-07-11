@@ -20,6 +20,7 @@ represents the type of the .NET object. To get a string representation
 of the type, call `toStringNET` on the returned object.
 }
 \examples{
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 testClassName <- "ClrFacade.TestObject"
 type <- getType(testClassName)
 toStringNET(type)
@@ -27,5 +28,5 @@ toStringNET(type)
 testObj <- newObjectFromName(testClassName)
 type <- getType(testObj)
 toStringNET(type)
-
+\dontshow{\}) # examplesIf}
 }

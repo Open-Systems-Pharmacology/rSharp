@@ -20,6 +20,8 @@ Used for cases where .NET signature requires an integer. Ignored if `value` is n
 Sets the value of a field or property of an object or class
 }
 \examples{
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 testClassName <- getRSharpSetting("testObjectTypeName")
 setStatic(testClassName, "StaticPropertyIntegerOne", as.integer(42))
+\dontshow{\}) # examplesIf}
 }

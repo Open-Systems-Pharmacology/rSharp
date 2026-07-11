@@ -18,7 +18,9 @@ This function is here to help quickly test object equivalence from the R interpr
  for instance on the tricky topic of date-time conversions
 }
 \examples{
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 library(rSharp)
 dt <- as.POSIXct("2001-01-01 02:03:04", tz = "UTC")
 toStringNET(dt)
+\dontshow{\}) # examplesIf}
 }

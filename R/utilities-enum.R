@@ -3,7 +3,7 @@
 #' @param enumType a .NET object, System.Type or type name, possibly namespace and assembly qualified type name, e.g. 'My.Namespace.MyClass,MyAssemblyName'.
 #' @return a character vector of the names for the enum
 #' @export
-#' @examples
+#' @examplesIf dotnetAvailable()
 #' enumName <- "ClrFacade.TestEnum"
 #' getEnumNames(enumName)
 #' # Get enum names from object

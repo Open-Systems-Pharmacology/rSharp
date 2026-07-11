@@ -13,6 +13,8 @@ getStaticMembers(objOrType)
 Gets the static members for a type
 }
 \examples{
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 cTypename <- getRSharpSetting("testCasesTypeName")
 getStaticMembers(cTypename)
+\dontshow{\}) # examplesIf}
 }
