@@ -1,3 +1,7 @@
+# All tests in this file call into .NET; skip the whole file when the
+# runtime is unavailable (see helper-for-tests.R).
+skip_if_no_dotnet()
+
 test_that("callStatic returns a NetObject when the static .NET method returns a non-primitive object", {
   testObj <- callTestCase("CreateTestObject")
   expect_true(inherits(testObj, "NetObject"))

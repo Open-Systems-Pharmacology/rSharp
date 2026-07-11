@@ -1,3 +1,7 @@
+# All tests in this file call into .NET; skip the whole file when the
+# runtime is unavailable (see helper-for-tests.R).
+skip_if_no_dotnet()
+
 ########## R to .NET tests##########
 test_that("Basic NULL is passed to .NET as null", {
   expect_true(callTestCase("IsNull", NULL))
