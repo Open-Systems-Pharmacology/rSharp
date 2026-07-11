@@ -1,3 +1,33 @@
+#' Check whether the .NET runtime is available
+#'
+#' Reports whether rSharp can currently call into .NET. The runtime is
+#' initialised when the package loads, but loading never fails when the runtime
+#' is missing or cannot be initialised (see the package startup message).
+#' `dotnetAvailable()` lets you branch on that state, for example to conditionally
+#' run code, examples, or vignette chunks that require .NET.
+#'
+#' If the runtime was not initialised at load time (for instance because .NET was
+#' installed afterwards), a single initialisation attempt is made. The attempt
+#' never raises an error; it only reports success or failure.
+#'
+#' @return A single logical: `TRUE` if the .NET runtime is available and
+#'   initialised, `FALSE` otherwise.
+#' @export
+#'
+#' @examples
+#' if (dotnetAvailable()) {
+#'   callStatic("System.Environment", "get_Version")
+#' }
+dotnetAvailable <- function() {
+  tryCatch(
+    {
+      .ensureRuntime()
+      isTRUE(rSharpEnv$runtimeLoaded)
+    },
+    error = function(e) FALSE
+  )
+}
+
 .onLoad <- function(...) {
   # nocov start
   # Detect the runtime prerequisites and initialise the .NET domain. Loading the

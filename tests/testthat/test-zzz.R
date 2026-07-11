@@ -61,3 +61,19 @@ test_that("errorRuntimeInitFailed includes the underlying details", {
   expect_match(msg, "could not be initialised", fixed = TRUE)
   expect_match(msg, "Failure: load_hostfxr()", fixed = TRUE)
 })
+
+test_that("dotnetAvailable reports FALSE without erroring when init fails", {
+  local_mocked_bindings(
+    .ensureRuntime = function() stop("no runtime")
+  )
+  expect_false(dotnetAvailable())
+})
+
+test_that("dotnetAvailable reports TRUE when the runtime is initialised", {
+  local_mocked_bindings(
+    .ensureRuntime = function() invisible()
+  )
+  withr::defer(rSharpEnv$runtimeLoaded <- NULL)
+  rSharpEnv$runtimeLoaded <- TRUE
+  expect_true(dotnetAvailable())
+})

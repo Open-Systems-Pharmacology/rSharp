@@ -1,6 +1,8 @@
 # rSharp (development version)
 
+- `dotnetAvailable()` is a new exported function that reports whether the .NET runtime is available, so code, examples, and vignettes can run .NET only when a runtime is present.
 - rSharp now also loads gracefully when a `dotnet` command is present but the native runtime host cannot be loaded (for example some build machines that ship the .NET SDK), extending the graceful handling of a missing runtime introduced in 1.2.2. The reason is reported when the package is attached and raised with an actionable message on the first call into .NET.
+- The user guide vignette now renders on machines without a .NET runtime, showing its .NET examples without executing them, so the package builds where no runtime is available.
 
 # rSharp 1.2.2
 
