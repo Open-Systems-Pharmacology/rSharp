@@ -1,3 +1,5 @@
+# rSharp (development version)
+
 # rSharp 1.2.2
 
 - rSharp now installs and loads even when a suitable .NET runtime is absent or cannot be initialised, instead of failing at load time. This covers both a missing runtime and an environment where a `dotnet` command is present but the native runtime host cannot be loaded (for example some build machines that ship the .NET SDK). The reason is reported when the package is attached and raised with an actionable message on the first call into .NET, which allows the package (and packages depending on it) to be built and checked in environments without a working .NET.
