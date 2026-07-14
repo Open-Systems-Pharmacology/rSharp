@@ -2,6 +2,8 @@
 
 ## rSharp (development version)
 
+## rSharp 1.2.2
+
 - rSharp now installs and loads even when a suitable .NET runtime is
   absent or cannot be initialised, instead of failing at load time. This
   covers both a missing runtime and an environment where a `dotnet`

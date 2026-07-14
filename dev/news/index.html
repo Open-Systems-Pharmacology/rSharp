@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rSharp</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">1.2.1.9002</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">1.2.2.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,6 +35,9 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="rsharp-development-version">rSharp (development version)<a class="anchor" aria-label="anchor" href="#rsharp-development-version"></a></h2>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.2.2" id="rsharp-122">rSharp 1.2.2<a class="anchor" aria-label="anchor" href="#rsharp-122"></a></h2>
 <ul><li>rSharp now installs and loads even when a suitable .NET runtime is absent or cannot be initialised, instead of failing at load time. This covers both a missing runtime and an environment where a <code>dotnet</code> command is present but the native runtime host cannot be loaded (for example some build machines that ship the .NET SDK). The reason is reported when the package is attached and raised with an actionable message on the first call into .NET, which allows the package (and packages depending on it) to be built and checked in environments without a working .NET.</li>
 <li>The user guide vignette now renders on machines without a .NET runtime, showing its .NET examples without executing them, so the package builds where no runtime is available.</li>
 <li>Documentation examples that call into .NET now run only when a runtime is available, so <code>R CMD check</code> no longer errors on machines without .NET while the examples still run where a runtime is present.</li>
