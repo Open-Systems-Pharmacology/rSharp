@@ -27,9 +27,9 @@ from source. For this, follow the instructions in section
 
 ## Installation
 
-### Windows
+### Prerequisites
 
-#### Prerequisites
+#### Windows
 
 - Latest Microsoft Visual C++ Redistributable for Visual Studio 2015,
   2017 and 2019 available
@@ -37,75 +37,13 @@ from source. For this, follow the instructions in section
 - .NET 8 runtime available
   [here](https://dotnet.microsoft.com/download/dotnet/8.0/runtime).
 
-#### Install from Github
-
-You can install the package from GitHub with pre-build binaries by
-running:
-
-``` r
-
-install.packages("pak")
-pak::pak("Open-Systems-Pharmacology/rSharp@*release")
-```
-
-Get the latest development version with:
-
-``` r
-
-pak::pak("Open-Systems-Pharmacology/rSharp")
-```
-
-#### Install from Binary
-
-Alternatively, download the attached binary file (`.zip`) from [latest
-release](https://github.com/Open-Systems-Pharmacology/rSharp/releases),
-and install it locally using:
-
-``` r
-
-install.packages("path/to/rSharp_X.zip",  type = "win.binary")
-```
-
-### MacOS
-
-#### Prerequisites
+#### MacOS
 
 - .NET 8 runtime available
   [here](https://dotnet.microsoft.com/download/dotnet/8.0/runtime)
   (click on the macOS tab).
 
-#### Install from Github
-
-You can install the package from GitHub with pre-build binaries by
-running:
-
-``` r
-
-install.packages("pak")
-pak::pak("Open-Systems-Pharmacology/rSharp@*release")
-```
-
-Get the latest development version with:
-
-``` r
-
-pak::pak("Open-Systems-Pharmacology/rSharp")
-```
-
-#### Install from Binary
-
-Alternatively, download the attached binary file (`.tgz`) from [latest
-release](https://github.com/Open-Systems-Pharmacology/rSharp/releases),
-and install it locally using:
-
-``` r
-
-install.packages("path/to/rSharp_X.tgz")
-```
-
-### Ubuntu
-
-#### Prerequisites
+#### Ubuntu
 
 Run the following commands to install the required dependencies:
 
@@ -115,34 +53,30 @@ sudo apt-get install libfontconfig1-dev libharfbuzz-dev libfribidi-dev
 sudo apt-get install libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
 ```
 
-#### Install from Github
+### Install the package
 
-You can install the package from GitHub with pre-build binaries by
-running:
+Once the prerequisites for your operating system are in place, install
+[rSharp](https://github.com/Open-Systems-Pharmacology/rsharp/) with
+pre-built binaries from the [OSP
+R-universe](https://open-systems-pharmacology.r-universe.dev):
 
 ``` r
 
-install.packages("pak")
-pak::pak("Open-Systems-Pharmacology/rSharp@*release")
+install.packages(
+  "rSharp",
+  repos = c(
+    OSP = "https://open-systems-pharmacology.r-universe.dev",
+    getOption("repos")
+  )
+)
 ```
 
-Get the latest development version with:
+Get the latest development version from GitHub with:
 
 ``` r
 
+# install.packages("pak")
 pak::pak("Open-Systems-Pharmacology/rSharp")
-```
-
-#### Install from Binary
-
-Alternatively, download the attached binary file (`.tar.gz`) from
-[latest
-release](https://github.com/Open-Systems-Pharmacology/rSharp/releases),
-and install it locally using:
-
-``` r
-
-install.packages("path/to/rSharp_X.tar.gz")
 ```
 
 ## Build
