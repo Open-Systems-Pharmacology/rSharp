@@ -568,6 +568,16 @@ namespace RDotNet.NativeLibrary
                return "R.dll";
 
             case PlatformID.MacOSX:
+               // R_HOME first: a non-framework install (uvr, conda, Homebrew, a source build with
+               // --prefix) keeps libR elsewhere, and loading the framework copy instead would add a
+               // second, uninitialised R runtime to the process and segfault on the first SEXP passed.
+               var rHome = GetRHomeEnvironmentVariable();
+               if (!string.IsNullOrEmpty(rHome))
+               {
+                  var libR = Path.Combine(rHome, "lib", "libR.dylib");
+                  if (File.Exists(libR))
+                     return libR;
+               }
                return "/Library/Frameworks/R.framework/Resources/lib/libR.dylib";
 
             case PlatformID.Unix:
