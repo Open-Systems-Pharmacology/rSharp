@@ -25,6 +25,7 @@ that wraps the external pointer to a .NET object.
 If `obj` is not a pointer, returns `obj` unchanged.
 }
 \examples{
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 castToRObject(1)
 castToRObject("a")
 castToRObject(TRUE)
@@ -34,4 +35,5 @@ castToRObject(1.1)
 castToRObject(1.1 + 1i)
 castToRObject(list(1, 2, 3))
 castToRObject(data.frame(a = 1:3, b = c("a", "b", "c")))
+\dontshow{\}) # examplesIf}
 }

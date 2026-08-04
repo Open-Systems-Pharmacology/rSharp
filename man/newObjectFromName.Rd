@@ -21,8 +21,10 @@ a `NetObject` R6 object
 Create a new NetObject R6 object given the type name.
 }
 \examples{
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 # object with a constructor that has parameters
 testObj <- newObjectFromName(testClassName, as.integer(123))
+\dontshow{\}) # examplesIf}
 }

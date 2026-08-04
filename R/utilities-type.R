@@ -4,7 +4,7 @@
 #' @param type .NET Type, or a (character) type name that can be successfully parsed
 #' @return a list of constructor signatures
 #' @export
-#' @examples
+#' @examplesIf dotnetAvailable()
 #' testClassName <- "ClrFacade.TestObject"
 #' getConstructors(testClassName)
 getConstructors <- function(type) {
@@ -18,7 +18,7 @@ getConstructors <- function(type) {
 #' of the type, call `toStringNET` on the returned object.
 #'
 #'
-#' @examples
+#' @examplesIf dotnetAvailable()
 #' testClassName <- "ClrFacade.TestObject"
 #' type <- getType(testClassName)
 #' toStringNET(type)

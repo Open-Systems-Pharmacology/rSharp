@@ -14,9 +14,11 @@ Turn on/off the conversion of advanced data types with R.NET. This will turn off
 as these are not bidirectional and you may want to see and manipulate external pointers to dictionaries in some circumstances.
 }
 \examples{
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 library(rSharp)
 cTypename <- getRSharpSetting("testCasesTypeName")
 callStatic(cTypename, "CreateStringDictionary")
 setConvertAdvancedTypes(FALSE)
 callStatic(cTypename, "CreateStringDictionary")
+\dontshow{\}) # examplesIf}
 }

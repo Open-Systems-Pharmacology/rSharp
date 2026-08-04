@@ -18,5 +18,7 @@ This function is mostly useful for R/rSharp developers. It is derived from the '
 example in the R extension manual
 }
 \examples{
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 inspectArgs(1, "a", 1:10)
+\dontshow{\}) # examplesIf}
 }

@@ -8,7 +8,7 @@
 #'
 #' @return the type code, an integer, as defined in Rinternals.h
 #' @export
-#' @examples
+#' @examplesIf dotnetAvailable()
 #' getSexpType(1)
 #' getSexpType("a")
 #' getSexpType(1:10)
@@ -31,7 +31,7 @@ getSexpType <- function(sexp) {
 #'
 #' @return NULL. Information is printed, not returned.
 #' @export
-#' @examples
+#' @examplesIf dotnetAvailable()
 #' inspectArgs(1, "a", 1:10)
 inspectArgs <- function(...) {
   invisible(.External("r_show_args", ..., PACKAGE = rSharpEnv$nativePkgName))
@@ -45,7 +45,7 @@ inspectArgs <- function(...) {
 #' @param x An R object
 #' @return A list, with columns including mode, type, class, length and the string of the corresponding .NET type.
 #' @export
-#' @examples
+#' @examplesIf dotnetAvailable()
 #' rToDotNetType(1)
 rToDotNetType <- function(x) {
   list(

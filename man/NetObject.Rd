@@ -8,515 +8,386 @@
 Base wrapper class for the pointers to .NET objects. Offers basic methods to interact with the .NET objects.
 }
 \examples{
-
-## ------------------------------------------------
-## Method `NetObject$new`
-## ------------------------------------------------
-
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 testClassName <- "ClrFacade.Tests.RefClasses.LevelOneClass"
 o <- .External("r_create_clr_object", testClassName, PACKAGE = getRSharpSetting("nativePkgName"))
 x <- newObjectFromName(testClassName)
 print(x)
-
-## ------------------------------------------------
-## Method `NetObject$getFields`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 testObj$getFields()
 testObj$getFields("ieldInt")
-
-## ------------------------------------------------
-## Method `NetObject$getStaticFields`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 testObj$getStaticFields()
 testObj$getStaticFields("ieldInt")
-
-## ------------------------------------------------
-## Method `NetObject$getProperties`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 testObj$getProperties()
 testObj$getProperties("One")
-
-## ------------------------------------------------
-## Method `NetObject$getStaticProperties`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 testObj$getStaticProperties()
 testObj$getStaticProperties("One")
-
-## ------------------------------------------------
-## Method `NetObject$getMethods`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 testObj$getMethods()
 testObj$getMethods("Get")
-
-## ------------------------------------------------
-## Method `NetObject$getStaticMethods`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 testObj$getStaticMethods()
 testObj$getStaticMethods("Get")
-
-## ------------------------------------------------
-## Method `NetObject$getMemberSignature`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 testObj$getMemberSignature("set_PropertyIntegerOne")
 testObj$getMemberSignature("FieldIntegerOne")
 testObj$getMemberSignature("PropertyIntegerTwo")
-
-## ------------------------------------------------
-## Method `NetObject$call`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 testObj$call("GetFieldIntegerOne")
-
-## ------------------------------------------------
-## Method `NetObject$get`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 testObj$get("FieldIntegerOne")
-
-## ------------------------------------------------
-## Method `NetObject$set`
-## ------------------------------------------------
-
+\dontshow{\}) # examplesIf}
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 testClassName <- getRSharpSetting("testObjectTypeName")
 testObj <- newObjectFromName(testClassName)
 testObj$set("FieldIntegerOne", as.integer(42))
+\dontshow{\}) # examplesIf}
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{type}}{String representation of the type of the .NET object. Read-only}
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{type}}{String representation of the type of the .NET object. Read-only}
 
-\item{\code{pointer}}{The external pointer to the .NET object. Read-only}
-}
-\if{html}{\out{</div>}}
+    \item{\code{pointer}}{The external pointer to the .NET object. Read-only}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-NetObject-new}{\code{NetObject$new()}}
-\item \href{#method-NetObject-getFields}{\code{NetObject$getFields()}}
-\item \href{#method-NetObject-getStaticFields}{\code{NetObject$getStaticFields()}}
-\item \href{#method-NetObject-getProperties}{\code{NetObject$getProperties()}}
-\item \href{#method-NetObject-getStaticProperties}{\code{NetObject$getStaticProperties()}}
-\item \href{#method-NetObject-getMethods}{\code{NetObject$getMethods()}}
-\item \href{#method-NetObject-getStaticMethods}{\code{NetObject$getStaticMethods()}}
-\item \href{#method-NetObject-getMemberSignature}{\code{NetObject$getMemberSignature()}}
-\item \href{#method-NetObject-call}{\code{NetObject$call()}}
-\item \href{#method-NetObject-get}{\code{NetObject$get()}}
-\item \href{#method-NetObject-set}{\code{NetObject$set()}}
-\item \href{#method-NetObject-.printLine}{\code{NetObject$.printLine()}}
-\item \href{#method-NetObject-.printClass}{\code{NetObject$.printClass()}}
-\item \href{#method-NetObject-print}{\code{NetObject$print()}}
-}
+  \itemize{
+    \item \href{#method-NetObject-initialize}{\code{NetObject$new()}}
+    \item \href{#method-NetObject-getFields}{\code{NetObject$getFields()}}
+    \item \href{#method-NetObject-getStaticFields}{\code{NetObject$getStaticFields()}}
+    \item \href{#method-NetObject-getProperties}{\code{NetObject$getProperties()}}
+    \item \href{#method-NetObject-getStaticProperties}{\code{NetObject$getStaticProperties()}}
+    \item \href{#method-NetObject-getMethods}{\code{NetObject$getMethods()}}
+    \item \href{#method-NetObject-getStaticMethods}{\code{NetObject$getStaticMethods()}}
+    \item \href{#method-NetObject-getMemberSignature}{\code{NetObject$getMemberSignature()}}
+    \item \href{#method-NetObject-call}{\code{NetObject$call()}}
+    \item \href{#method-NetObject-get}{\code{NetObject$get()}}
+    \item \href{#method-NetObject-set}{\code{NetObject$set()}}
+    \item \href{#method-NetObject-.printLine}{\code{NetObject$.printLine()}}
+    \item \href{#method-NetObject-.printClass}{\code{NetObject$.printClass()}}
+    \item \href{#method-NetObject-print}{\code{NetObject$print()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-NetObject-new"></a>}}
-\if{latex}{\out{\hypertarget{method-NetObject-new}{}}}
-\subsection{Method \code{new()}}{
-Initializes the object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{NetObject$new(pointer)}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-NetObject-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-NetObject-initialize}{}}}
+\subsection{\code{NetObject$new()}}{
+  Initializes the object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{NetObject$new(pointer)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{pointer}}{The external pointer to the .NET object}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    The initialized object
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{pointer}}{The external pointer to the .NET object}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-The initialized object
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{testClassName <- "ClrFacade.Tests.RefClasses.LevelOneClass"
-o <- .External("r_create_clr_object", testClassName, PACKAGE = getRSharpSetting("nativePkgName"))
-x <- newObjectFromName(testClassName)
-print(x)
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NetObject-getFields"></a>}}
 \if{latex}{\out{\hypertarget{method-NetObject-getFields}{}}}
-\subsection{Method \code{getFields()}}{
-List the fields of the object
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{NetObject$getFields(contains = "")}\if{html}{\out{</div>}}
+\subsection{\code{NetObject$getFields()}}{
+  List the fields of the object
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{NetObject$getFields(contains = "")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{contains}}{a string that the field names returned must contain}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    a list of names of the fields of the object
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{contains}}{a string that the field names returned must contain}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-a list of names of the fields of the object
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{testClassName <- getRSharpSetting("testObjectTypeName")
-testObj <- newObjectFromName(testClassName)
-testObj$getFields()
-testObj$getFields("ieldInt")
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NetObject-getStaticFields"></a>}}
 \if{latex}{\out{\hypertarget{method-NetObject-getStaticFields}{}}}
-\subsection{Method \code{getStaticFields()}}{
-List the static fields of the object
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{NetObject$getStaticFields(contains = "")}\if{html}{\out{</div>}}
+\subsection{\code{NetObject$getStaticFields()}}{
+  List the static fields of the object
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{NetObject$getStaticFields(contains = "")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{contains}}{a string that the field names returned must contain}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    a list of names of the static fields of the object
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{contains}}{a string that the field names returned must contain}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-a list of names of the static fields of the object
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{testClassName <- getRSharpSetting("testObjectTypeName")
-testObj <- newObjectFromName(testClassName)
-testObj$getStaticFields()
-testObj$getStaticFields("ieldInt")
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NetObject-getProperties"></a>}}
 \if{latex}{\out{\hypertarget{method-NetObject-getProperties}{}}}
-\subsection{Method \code{getProperties()}}{
-List the properties of the object
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{NetObject$getProperties(contains = "")}\if{html}{\out{</div>}}
+\subsection{\code{NetObject$getProperties()}}{
+  List the properties of the object
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{NetObject$getProperties(contains = "")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{contains}}{a string that the property names returned must contain}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    a list of names of the properties of the object
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{contains}}{a string that the property names returned must contain}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-a list of names of the properties of the object
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{testClassName <- getRSharpSetting("testObjectTypeName")
-testObj <- newObjectFromName(testClassName)
-testObj$getProperties()
-testObj$getProperties("One")
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NetObject-getStaticProperties"></a>}}
 \if{latex}{\out{\hypertarget{method-NetObject-getStaticProperties}{}}}
-\subsection{Method \code{getStaticProperties()}}{
-List the static properties of the object
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{NetObject$getStaticProperties(contains = "")}\if{html}{\out{</div>}}
+\subsection{\code{NetObject$getStaticProperties()}}{
+  List the static properties of the object
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{NetObject$getStaticProperties(contains = "")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{contains}}{a string that the property names returned must contain}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    a list of names of the static properties of the object
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{contains}}{a string that the property names returned must contain}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-a list of names of the static properties of the object
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{testClassName <- getRSharpSetting("testObjectTypeName")
-testObj <- newObjectFromName(testClassName)
-testObj$getStaticProperties()
-testObj$getStaticProperties("One")
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NetObject-getMethods"></a>}}
 \if{latex}{\out{\hypertarget{method-NetObject-getMethods}{}}}
-\subsection{Method \code{getMethods()}}{
-List the methods the object
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{NetObject$getMethods(contains = "")}\if{html}{\out{</div>}}
+\subsection{\code{NetObject$getMethods()}}{
+  List the methods the object
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{NetObject$getMethods(contains = "")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{contains}}{a string that the methods names returned must contain}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    a list of names of the methods of the object
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{contains}}{a string that the methods names returned must contain}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-a list of names of the methods of the object
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{testClassName <- getRSharpSetting("testObjectTypeName")
-testObj <- newObjectFromName(testClassName)
-testObj$getMethods()
-testObj$getMethods("Get")
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NetObject-getStaticMethods"></a>}}
 \if{latex}{\out{\hypertarget{method-NetObject-getStaticMethods}{}}}
-\subsection{Method \code{getStaticMethods()}}{
-List the static methods the object
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{NetObject$getStaticMethods(contains = "")}\if{html}{\out{</div>}}
+\subsection{\code{NetObject$getStaticMethods()}}{
+  List the static methods the object
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{NetObject$getStaticMethods(contains = "")}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{contains}}{a string that the methods names returned must contain}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    a list of names of the static methods of the object
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{contains}}{a string that the methods names returned must contain}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-a list of names of the static methods of the object
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{testClassName <- getRSharpSetting("testObjectTypeName")
-testObj <- newObjectFromName(testClassName)
-testObj$getStaticMethods()
-testObj$getStaticMethods("Get")
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NetObject-getMemberSignature"></a>}}
 \if{latex}{\out{\hypertarget{method-NetObject-getMemberSignature}{}}}
-\subsection{Method \code{getMemberSignature()}}{
-Gets a string representation of the signature of a member (i.e. field, property, method).
+\subsection{\code{NetObject$getMemberSignature()}}{
+  Gets a string representation of the signature of a member (i.e. field, property, method).
 Mostly used to interactively search for what arguments to pass to a method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{NetObject$getMemberSignature(memberName)}\if{html}{\out{</div>}}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{NetObject$getMemberSignature(memberName)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{memberName}}{The exact name of the member (i.e. field, property, method) to search for}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    a character vector with summary information on the method/member signatures
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{memberName}}{The exact name of the member (i.e. field, property, method) to search for}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-a character vector with summary information on the method/member signatures
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{testClassName <- getRSharpSetting("testObjectTypeName")
-testObj <- newObjectFromName(testClassName)
-testObj$getMemberSignature("set_PropertyIntegerOne")
-testObj$getMemberSignature("FieldIntegerOne")
-testObj$getMemberSignature("PropertyIntegerTwo")
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NetObject-call"></a>}}
 \if{latex}{\out{\hypertarget{method-NetObject-call}{}}}
-\subsection{Method \code{call()}}{
-Call a method of the object
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{NetObject$call(methodName, ...)}\if{html}{\out{</div>}}
+\subsection{\code{NetObject$call()}}{
+  Call a method of the object
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{NetObject$call(methodName, ...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{methodName}}{the name of a method of the object}
+      \item{\code{...}}{additional method arguments}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    An object resulting from the call. May be a `NetObject` object, or a native R object for common types. Can be NULL.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{methodName}}{the name of a method of the object}
-
-\item{\code{...}}{additional method arguments}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-An object resulting from the call. May be a `NetObject` object, or a native R object for common types. Can be NULL.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{testClassName <- getRSharpSetting("testObjectTypeName")
-testObj <- newObjectFromName(testClassName)
-testObj$call("GetFieldIntegerOne")
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NetObject-get"></a>}}
 \if{latex}{\out{\hypertarget{method-NetObject-get}{}}}
-\subsection{Method \code{get()}}{
-Gets the value of a field or property of the object
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{NetObject$get(name)}\if{html}{\out{</div>}}
+\subsection{\code{NetObject$get()}}{
+  Gets the value of a field or property of the object
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{NetObject$get(name)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{name}}{the name of a field/property  of the object}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    An object resulting from the call. May be a `NetObject` object, or a native R object for common types. Can be NULL.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{name}}{the name of a field/property  of the object}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-An object resulting from the call. May be a `NetObject` object, or a native R object for common types. Can be NULL.
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{testClassName <- getRSharpSetting("testObjectTypeName")
-testObj <- newObjectFromName(testClassName)
-testObj$get("FieldIntegerOne")
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NetObject-set"></a>}}
 \if{latex}{\out{\hypertarget{method-NetObject-set}{}}}
-\subsection{Method \code{set()}}{
-Sets the value of a field or property of the object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{NetObject$set(name, value, asInteger = FALSE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{name}}{the name of a field/property of the object}
-
-\item{\code{value}}{the value to set the field with}
-
-\item{\code{asInteger}}{Boolean whether to convert the value to an integer.
+\subsection{\code{NetObject$set()}}{
+  Sets the value of a field or property of the object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{NetObject$set(name, value, asInteger = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{name}}{the name of a field/property of the object}
+      \item{\code{value}}{the value to set the field with}
+      \item{\code{asInteger}}{Boolean whether to convert the value to an integer.
 Used for cases where .NET signature requires an integer. Ignored if `value` is not numeric.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{testClassName <- getRSharpSetting("testObjectTypeName")
-testObj <- newObjectFromName(testClassName)
-testObj$set("FieldIntegerOne", as.integer(42))
-}
-\if{html}{\out{</div>}}
-
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NetObject-.printLine"></a>}}
 \if{latex}{\out{\hypertarget{method-NetObject-.printLine}{}}}
-\subsection{Method \code{.printLine()}}{
-DEPRECATED: Internal method for printing a line
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{NetObject$.printLine(entry, value = NULL, addTab = TRUE)}\if{html}{\out{</div>}}
+\subsection{\code{NetObject$.printLine()}}{
+  DEPRECATED: Internal method for printing a line
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{NetObject$.printLine(entry, value = NULL, addTab = TRUE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{entry}}{The entry text}
+      \item{\code{value}}{The value to print}
+      \item{\code{addTab}}{Whether to add a tab before the entry}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{entry}}{The entry text}
-
-\item{\code{value}}{The value to print}
-
-\item{\code{addTab}}{Whether to add a tab before the entry}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NetObject-.printClass"></a>}}
 \if{latex}{\out{\hypertarget{method-NetObject-.printClass}{}}}
-\subsection{Method \code{.printClass()}}{
-DEPRECATED: Internal method for printing class name
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{NetObject$.printClass()}\if{html}{\out{</div>}}
+\subsection{\code{NetObject$.printClass()}}{
+  DEPRECATED: Internal method for printing class name
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{NetObject$.printClass()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-NetObject-print"></a>}}
 \if{latex}{\out{\hypertarget{method-NetObject-print}{}}}
-\subsection{Method \code{print()}}{
-Prints a summary of the object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{NetObject$print()}\if{html}{\out{</div>}}
+\subsection{\code{NetObject$print()}}{
+  Prints a summary of the object.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{NetObject$print()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 }
