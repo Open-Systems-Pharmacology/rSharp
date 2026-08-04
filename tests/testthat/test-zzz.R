@@ -20,13 +20,13 @@ test_that(".dotnetMajorVersions ignores non NETCore.App runtimes", {
 test_that(".checkDotnetPrerequisites reports a missing runtime when the required major is absent", {
   # Force the non-Windows branch so the check depends only on the runtime list.
   local_mocked_bindings(
-    .dotnetMajorVersions = function(...) 10L
+    .dotnetMajorVersions = function(...) 8L
   )
   withr::local_options(list(rSharp.test_os_type = NULL))
   skip_on_os("windows")
   msg <- .checkDotnetPrerequisites()
   expect_type(msg, "character")
-  expect_match(msg, "No .NET 8 runtime was found", fixed = TRUE)
+  expect_match(msg, "No .NET 10 runtime was found", fixed = TRUE)
 })
 
 test_that(".checkDotnetPrerequisites passes when the required major is present", {

@@ -66,10 +66,7 @@ dotnetAvailable <- function() {
     }
   }
 
-  # Require a runtime whose major version matches the bundled assemblies. A
-  # higher major (for example .NET 10) is not accepted: the assemblies target
-  # `net8.0` and do not roll forward across major versions, so a newer runtime
-  # would pass a naive check and then fail when .NET is actually called.
+  # Require a runtime whose major version matches the bundled assemblies.
   # `dotnet` may be absent entirely, in which case `system()` signals an error
   # rather than returning output, so guard the call and treat any failure as
   # "no runtime".
