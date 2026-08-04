@@ -3,6 +3,7 @@
 export(NetObject)
 export(callStatic)
 export(castToRObject)
+export(dotnetAvailable)
 export(getConstructors)
 export(getEnumNames)
 export(getLoadedAssemblies)

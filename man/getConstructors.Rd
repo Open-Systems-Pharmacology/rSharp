@@ -16,6 +16,8 @@ a list of constructor signatures
 List the public constructors of a CLR Type
 }
 \examples{
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 testClassName <- "ClrFacade.TestObject"
 getConstructors(testClassName)
+\dontshow{\}) # examplesIf}
 }

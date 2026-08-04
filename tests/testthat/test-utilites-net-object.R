@@ -20,6 +20,7 @@ test_that("It returns base R types as is", {
 })
 
 test_that("It returns a `NetObject` when a valid pointer is provided", {
+  skip_if_no_dotnet()
   testClassName <- "ClrFacade.Tests.RefClasses.LevelOneClass"
   o <- .External(
     "r_create_clr_object",
@@ -32,6 +33,7 @@ test_that("It returns a `NetObject` when a valid pointer is provided", {
 })
 
 test_that("It returns a list of `NetObject` when a list with valid pointers is provided", {
+  skip_if_no_dotnet()
   testClassName <- "ClrFacade.Tests.RefClasses.LevelOneClass"
   o <- .External(
     "r_create_clr_object",
@@ -49,6 +51,7 @@ test_that("It returns a list of `NetObject` when a list with valid pointers is p
 })
 
 test_that("It returns a list of `NetObject` and integer when a list is provided", {
+  skip_if_no_dotnet()
   testClassName <- "ClrFacade.Tests.RefClasses.LevelOneClass"
   o <- .External(
     "r_create_clr_object",

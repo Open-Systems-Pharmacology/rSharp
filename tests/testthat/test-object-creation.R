@@ -1,3 +1,7 @@
+# All tests in this file call into .NET; skip the whole file when the
+# runtime is unavailable (see helper-for-tests.R).
+skip_if_no_dotnet()
+
 test_that("newObjectFromName calls constructors when a valid name is provided", {
   tName <- "ClrFacade.TestObject"
   i1 <- as.integer(23)

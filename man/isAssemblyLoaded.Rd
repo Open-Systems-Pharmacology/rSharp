@@ -16,5 +16,7 @@ TRUE if the assembly is loaded, FALSE otherwise
 Is the assembly loaded?
 }
 \examples{
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 isAssemblyLoaded("ClrFacade")
+\dontshow{\}) # examplesIf}
 }

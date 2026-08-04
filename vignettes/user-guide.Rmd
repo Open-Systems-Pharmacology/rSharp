@@ -9,9 +9,14 @@ vignette: >
 ---
 
 ```{r setup, include = FALSE}
+library(rSharp)
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  # The examples below call into .NET. When no runtime is available (for example
+  # on CRAN or R-universe build machines without .NET) the code is shown but not
+  # executed, so the vignette still builds.
+  eval = dotnetAvailable()
 )
 ```
 

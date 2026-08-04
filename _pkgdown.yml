@@ -38,6 +38,7 @@ reference:
   contents: getEnumNames
 - title: Diagnostics
   contents:
+  - dotnetAvailable
   - toStringNET
   - getSexpType
   - getType

@@ -1,7 +1,7 @@
 Package: rSharp
 Type: Package
 Title: Accessing .NET from R
-Version: 1.2.1.9001
+Version: 1.2.2.9002
 Authors@R: c(
       person(given = "Open-Systems-Pharmacology Community",
              role = "cph"),
@@ -50,6 +50,6 @@ Suggests:
     rmarkdown
 License: file LICENSE
 SystemRequirements: dotnet10
-RoxygenNote: 7.3.3
 VignetteBuilder: knitr
 Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0

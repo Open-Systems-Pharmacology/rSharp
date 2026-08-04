@@ -16,9 +16,11 @@ a character vector of the names for the enum
 Gets the names of a .NET Enum value type
 }
 \examples{
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 enumName <- "ClrFacade.TestEnum"
 getEnumNames(enumName)
 # Get enum names from object
 enumObj <- newObjectFromName(enumName)
 getEnumNames(enumObj)
+\dontshow{\}) # examplesIf}
 }

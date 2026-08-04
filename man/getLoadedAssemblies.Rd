@@ -18,5 +18,7 @@ the names of loaded assemblies
 List the names of loaded assemblies
 }
 \examples{
+\dontshow{if (dotnetAvailable()) withAutoprint(\{ # examplesIf}
 getLoadedAssemblies()
+\dontshow{\}) # examplesIf}
 }

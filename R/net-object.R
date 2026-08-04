@@ -87,7 +87,7 @@ NetObject <- R6::R6Class(
     #' @param pointer The external pointer to the .NET object
     #' @return The initialized object
     #' @export
-    #' @examples
+    #' @examplesIf dotnetAvailable()
     #' testClassName <- "ClrFacade.Tests.RefClasses.LevelOneClass"
     #' o <- .External("r_create_clr_object", testClassName, PACKAGE = getRSharpSetting("nativePkgName"))
     #' x <- newObjectFromName(testClassName)
@@ -110,7 +110,7 @@ NetObject <- R6::R6Class(
     #' @param contains a string that the field names returned must contain
     #' @return a list of names of the fields of the object
     #' @export
-    #' @examples
+    #' @examplesIf dotnetAvailable()
     #' testClassName <- getRSharpSetting("testObjectTypeName")
     #' testObj <- newObjectFromName(testClassName)
     #' testObj$getFields()
@@ -131,7 +131,7 @@ NetObject <- R6::R6Class(
     #' @param contains a string that the field names returned must contain
     #' @return a list of names of the static fields of the object
     #' @export
-    #' @examples
+    #' @examplesIf dotnetAvailable()
     #' testClassName <- getRSharpSetting("testObjectTypeName")
     #' testObj <- newObjectFromName(testClassName)
     #' testObj$getStaticFields()
@@ -152,7 +152,7 @@ NetObject <- R6::R6Class(
     #' @param contains a string that the property names returned must contain
     #' @return a list of names of the properties of the object
     #' @export
-    #' @examples
+    #' @examplesIf dotnetAvailable()
     #' testClassName <- getRSharpSetting("testObjectTypeName")
     #' testObj <- newObjectFromName(testClassName)
     #' testObj$getProperties()
@@ -173,7 +173,7 @@ NetObject <- R6::R6Class(
     #' @param contains a string that the property names returned must contain
     #' @return a list of names of the static properties of the object
     #' @export
-    #' @examples
+    #' @examplesIf dotnetAvailable()
     #' testClassName <- getRSharpSetting("testObjectTypeName")
     #' testObj <- newObjectFromName(testClassName)
     #' testObj$getStaticProperties()
@@ -194,7 +194,7 @@ NetObject <- R6::R6Class(
     #' @param contains a string that the methods names returned must contain
     #' @return a list of names of the methods of the object
     #' @export
-    #' @examples
+    #' @examplesIf dotnetAvailable()
     #' testClassName <- getRSharpSetting("testObjectTypeName")
     #' testObj <- newObjectFromName(testClassName)
     #' testObj$getMethods()
@@ -215,7 +215,7 @@ NetObject <- R6::R6Class(
     #' @param contains a string that the methods names returned must contain
     #' @return a list of names of the static methods of the object
     #' @export
-    #' @examples
+    #' @examplesIf dotnetAvailable()
     #' testClassName <- getRSharpSetting("testObjectTypeName")
     #' testObj <- newObjectFromName(testClassName)
     #' testObj$getStaticMethods()
@@ -237,7 +237,7 @@ NetObject <- R6::R6Class(
     #' @param memberName The exact name of the member (i.e. field, property, method) to search for
     #' @return a character vector with summary information on the method/member signatures
     #' @export
-    #' @examples
+    #' @examplesIf dotnetAvailable()
     #' testClassName <- getRSharpSetting("testObjectTypeName")
     #' testObj <- newObjectFromName(testClassName)
     #' testObj$getMemberSignature("set_PropertyIntegerOne")
@@ -259,7 +259,7 @@ NetObject <- R6::R6Class(
     #' @param ... additional method arguments
     #' @return An object resulting from the call. May be a `NetObject` object, or a native R object for common types. Can be NULL.
     #' @export
-    #' @examples
+    #' @examplesIf dotnetAvailable()
     #' testClassName <- getRSharpSetting("testObjectTypeName")
     #' testObj <- newObjectFromName(testClassName)
     #' testObj$call("GetFieldIntegerOne")
@@ -292,7 +292,7 @@ NetObject <- R6::R6Class(
     #' @param name the name of a field/property  of the object
     #' @return An object resulting from the call. May be a `NetObject` object, or a native R object for common types. Can be NULL.
     #' @export
-    #' @examples
+    #' @examplesIf dotnetAvailable()
     #' testClassName <- getRSharpSetting("testObjectTypeName")
     #' testObj <- newObjectFromName(testClassName)
     #' testObj$get("FieldIntegerOne")
@@ -309,7 +309,7 @@ NetObject <- R6::R6Class(
     #' @param asInteger Boolean whether to convert the value to an integer.
     #' Used for cases where .NET signature requires an integer. Ignored if `value` is not numeric.
     #' @export
-    #' @examples
+    #' @examplesIf dotnetAvailable()
     #' testClassName <- getRSharpSetting("testObjectTypeName")
     #' testObj <- newObjectFromName(testClassName)
     #' testObj$set("FieldIntegerOne", as.integer(42))
