@@ -21,11 +21,6 @@ namespace RDotNet
          Assert.Equal(result, (new[] { 1d, 0, 0, 1, 1, 1 }));
       }
 
-      /// <summary>
-      ///    A non-framework R (managed by uvr, conda or Homebrew, or built from source with --prefix)
-      ///    keeps libR under its own R_HOME. Returning the framework copy instead loads a second,
-      ///    uninitialised R runtime into the process, which segfaults on the first SEXP that crosses.
-      /// </summary>
       [SkippableFact]
       public void MacOSRLibraryFileNameComesFromRHome()
       {
@@ -38,7 +33,6 @@ namespace RDotNet
          try
          {
             Environment.SetEnvironmentVariable("R_HOME", rHome);
-
             Assert.Equal(libR, NativeUtility.GetRLibraryFileName());
          }
          finally
