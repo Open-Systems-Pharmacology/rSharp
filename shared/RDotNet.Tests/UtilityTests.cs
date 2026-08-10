@@ -43,6 +43,35 @@ namespace RDotNet
       }
 
       [SkippableFact]
+      public void MacOSRLibraryFileNameResolvesARelativeRHomeToAnAbsolutePath()
+      {
+         Skip.IfNot(IsMacOS());
+         var rHome = CreateTemporaryDirectory();
+         var previousRHome = Environment.GetEnvironmentVariable("R_HOME");
+         var previousDirectory = Directory.GetCurrentDirectory();
+         try
+         {
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(rHome));
+            // Build the expected path from the current directory: SetCurrentDirectory resolves
+            // symlinks (on macOS the temp path /var/... is really /private/var/...), and the
+            // resolved path is what a relative R_HOME gets anchored to.
+            var libR = Path.Combine(Directory.GetCurrentDirectory(), Path.GetFileName(rHome), "lib", "libR.dylib");
+            Directory.CreateDirectory(Path.GetDirectoryName(libR));
+            File.WriteAllText(libR, string.Empty);
+
+            Environment.SetEnvironmentVariable("R_HOME", Path.GetFileName(rHome));
+
+            Assert.Equal(libR, NativeUtility.GetRLibraryFileName());
+         }
+         finally
+         {
+            Directory.SetCurrentDirectory(previousDirectory);
+            Environment.SetEnvironmentVariable("R_HOME", previousRHome);
+            Directory.Delete(rHome, true);
+         }
+      }
+
+      [SkippableFact]
       public void MacOSRLibraryFileNameFallsBackToFrameworkWithoutAnRHomeLibrary()
       {
          Skip.IfNot(IsMacOS());

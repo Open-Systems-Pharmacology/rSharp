@@ -576,7 +576,7 @@ namespace RDotNet.NativeLibrary
                var rHome = GetRHomeEnvironmentVariable();
                if (!string.IsNullOrEmpty(rHome))
                {
-                  var libR = Path.Combine(rHome, "lib", "libR.dylib");
+                  var libR = Path.GetFullPath(Path.Combine(rHome, "lib", "libR.dylib"));
                   if (File.Exists(libR))
                      return libR;
                }
