@@ -33,7 +33,7 @@ rToClrDataTransferFUNGEN <- function(numArray, arrLen) {
   if (arrLen <= 1) {
     stop("Not designed to cope with array length less than two")
   }
-  num_vec = rnorm(arrLen)
+  num_vec <- rnorm(arrLen)
   rToClrDataTransfer <- function() {
     clrCall(prof, 'CallMethodWithArrayDouble', num_vec)
   }
@@ -52,30 +52,30 @@ stopSw <- function() {
 }
 
 measure <- function(numReps, FUN, normalize = TRUE) {
-  blah = numeric(0)
+  blah <- numeric(0)
   if (numReps > 1) {
     startSw()
     for (i in 1:numReps) {
       blah <- FUN()
     }
-    e = stopSw()
-    delta = e
+    e <- stopSw()
+    delta <- e
     # Fiendish: the for() construct is surprisingly expensive compared to rSharp...
     startSw()
     for (i in 1:numReps) {
       blah <- 0
     }
-    e = stopSw()
-    delta = delta - e
+    e <- stopSw()
+    delta <- delta - e
   } else {
     startSw()
     blah <- FUN()
-    e = stopSw()
-    delta = e
+    e <- stopSw()
+    delta <- e
     # Remove the measurement.
     startSw()
-    e = stopSw()
-    delta = delta - e
+    e <- stopSw()
+    delta <- delta - e
   }
   delta <- as.numeric(delta)
   if (normalize) {
@@ -95,7 +95,7 @@ doMeasure <- function(trials, trow, FUNGEN, dataClass, direction, tag = NA) {
   # # } else if (arrLen < 100000) {
   # # innerReps <- 10
   # }
-  FUN = FUNGEN(nReps, arrLen)
+  FUN <- FUNGEN(nReps, arrLen)
   deltas <- numeric(0)
   for (i in 1:nReps) {
     deltas <- c(deltas, measure(numReps = innerReps, FUN = FUN))

@@ -8,9 +8,8 @@ rSharpEnv$packageName <- "rSharp"
 rSharpEnv$msvcrFileName <- "msvcp140.dll"
 # Major version of the .NET runtime the bundled assemblies target. The runtime
 # check requires this exact major version: the assemblies are built for
-# `net8.0` and their runtimeconfig does not roll forward across major versions,
-# so a higher major (for example .NET 10) is not a valid substitute.
-rSharpEnv$requiredDotnetVersion <- 8L
+# `net10.0`.
+rSharpEnv$requiredDotnetVersion <- 10L
 # The name of the package
 rSharpEnv$pkgName <- "rSharp"
 
@@ -24,11 +23,14 @@ rSharpEnv$nativePkgName <-
       paste0(rSharpEnv$pkgName, ".linux")
     },
     Darwin = {
-      paste0(
-        rSharpEnv$pkgName,
-        ".mac.",
-        if (info[['machine']] == 'arm64') 'arm64' else 'x64'
-      )
+      if (info[['machine']] != 'arm64') {
+        stop(
+          "Unsupported architecture for macOS: ",
+          info[['machine']],
+          ". Only arm64 (Apple Silicon) is supported."
+        )
+      }
+      paste0(rSharpEnv$pkgName, ".mac.arm64")
     }
   )
 

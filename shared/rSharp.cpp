@@ -1,5 +1,11 @@
 #include "rSharp.h"
 
+// Rebuild trigger: forces CI to recompile the net10 C# binaries so the shipped
+// assemblies pick up the #210 deferred-release fix (DeferredRelease.cs) that
+// came into V13 via the main merge, after which source and binaries had drifted.
+// The build workflow was also switched to the artifact + single-commit pattern
+// so the per-OS binary commits no longer race the caller's cancel-in-progress.
+
 //for logging
 #include <fstream>
 
@@ -1145,6 +1151,9 @@ RSharpGenericValue ConvertToRSharpGenericValue(SEXP s)
 	case EXTPTRSXP:
 		return *get_rSharp_generic_value_from_extptr(s);
 	case VECSXP:
+		// TODO(#208): R-list-as-argument support is slated for removal. Nested rdotnet-marshalled
+		// children currently leak their GCHandle because OBJECT_ARRAY recursion in
+		// free_params_array drops per-element ownership info. No live caller exercises this path.
 		result.type = RSharpValueType::OBJECT_ARRAY;
 		result.size = LENGTH(s);
 		auto sharp_generic_value = new RSharpGenericValue * [result.size];

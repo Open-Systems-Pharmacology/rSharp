@@ -44,20 +44,23 @@ from source. For this, follow the instructions in section
 - Latest Microsoft Visual C++ Redistributable for Visual Studio 2015,
   2017 and 2019 available
   [here](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-supported-redistributable-version)
-- .NET 8 runtime available
-  [here](https://dotnet.microsoft.com/download/dotnet/8.0/runtime).
+- [.NET 10 runtime for Windows
+  x64](https://dotnet.microsoft.com/download/dotnet/10.0/runtime)
 
 #### MacOS
 
-- .NET 8 runtime available
-  [here](https://dotnet.microsoft.com/download/dotnet/8.0/runtime)
-  (click on the macOS tab).
+Only Apple Silicon (`arm64`) is supported; no native binary is shipped
+for macOS x86_64.
+
+- [.NET 10 runtime for macOS
+  arm64](https://dotnet.microsoft.com/download/dotnet/10.0/runtime)
+  (select the macOS tab and the Arm64 installer)
 
 #### Ubuntu
 
 Run the following commands to install the required dependencies:
 
-    sudo apt-get install dotnet-runtime-8.0 libcurl4-openssl-dev libssl-dev libxml2-dev
+    sudo apt-get install dotnet-runtime-10.0 libcurl4-openssl-dev libssl-dev libxml2-dev
     sudo apt-get install libfontconfig1-dev libharfbuzz-dev libfribidi-dev
     sudo apt-get install libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
 
@@ -112,7 +115,7 @@ dependencies)
 
 Optionally set up to build the binaries
 
-    sudo apt-get install dotnet-sdk-8.0
+    sudo apt-get install dotnet-sdk-10.0
     sudo apt-get install nuget
 
 Navigate to the `rSharp\shared` directory and run
@@ -126,8 +129,10 @@ environment and run the following R commands
 
 ### MacOS
 
-Download and install [.NET SDK
-8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+Only Apple Silicon (`arm64`) is supported.
+
+Download and install the [.NET SDK 10 for macOS
+arm64](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
 
 Install Homebrew and use it to install build tools
 

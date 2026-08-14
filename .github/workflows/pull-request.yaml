@@ -72,8 +72,6 @@ jobs:
     needs: [sync-remotes, build-Csharp-binaries]
     if: ${{ !cancelled() }} # a skipped sync (fork PR) or C# build must not block the check
     uses: Open-Systems-Pharmacology/Workflows/.github/workflows/R-CMD-check-build.yaml@main
-    with:
-      os-matrix: '[{"os": "macos-latest", "r": "release"}, {"os": "macos-15-intel", "r": "release"}, {"os": "windows-latest", "r": "release"}, {"os": "ubuntu-latest", "r": "release"}]'
 
   test-coverage:
     needs: [sync-remotes, build-Csharp-binaries]

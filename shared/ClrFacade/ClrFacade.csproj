@@ -18,7 +18,7 @@
     <PackageReleaseNotes></PackageReleaseNotes>
     <!-- forces SDK to copy dependencies into build output to make packing easier -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <LangVersion>default</LangVersion>
   </PropertyGroup>
   <ItemGroup>

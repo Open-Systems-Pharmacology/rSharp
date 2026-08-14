@@ -133,7 +133,17 @@ public static class InternalRSharpFacade
          var tName = typeComponents[0];
          foreach (var item in loadedAssemblies)
          {
-            var types = item.GetTypes();
+            Type[] types;
+
+            // Tolerate when not all types are present. We can search the types that are present
+            try
+            {
+               types = item.GetTypes();
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+               types = ex.Types.Where(x => x != null).ToArray();
+            }
             t = types.FirstOrDefault((x => x.FullName == tName));
             if (t != null)
                return t;

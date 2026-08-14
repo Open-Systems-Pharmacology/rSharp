@@ -27,8 +27,6 @@ jobs:
   R-CMD-Check:
     needs: [guard-branch]
     uses: Open-Systems-Pharmacology/Workflows/.github/workflows/R-CMD-check-build.yaml@main
-    with:
-      os-matrix: '[{"os": "macos-latest", "r": "release"}, {"os": "macos-15-intel", "r": "release"}, {"os": "windows-latest", "r": "release"}, {"os": "ubuntu-latest", "r": "release"}]'
 
   publish-release:
     needs: [guard-branch, R-CMD-Check]
