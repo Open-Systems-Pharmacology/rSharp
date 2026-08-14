@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="index.html">rSharp</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">1.2.2.9002</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">1.2.2.9003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,21 +75,23 @@
 <ul>
 <li>Latest Microsoft Visual C++ Redistributable for Visual Studio 2015, 2017 and 2019 available <a href="https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-supported-redistributable-version" class="external-link">here</a>
 </li>
-<li>.NET 8 runtime available <a href="https://dotnet.microsoft.com/download/dotnet/8.0/runtime" class="external-link">here</a>.</li>
+<li><a href="https://dotnet.microsoft.com/download/dotnet/10.0/runtime" class="external-link">.NET 10 runtime for Windows x64</a></li>
 </ul>
 </div>
 <div class="section level4">
 <h4 id="macos">MacOS<a class="anchor" aria-label="anchor" href="#macos"></a>
 </h4>
+<p>Only Apple Silicon (<code>arm64</code>) is supported; no native binary is shipped for macOS x86_64.</p>
 <ul>
-<li>.NET 8 runtime available <a href="https://dotnet.microsoft.com/download/dotnet/8.0/runtime" class="external-link">here</a> (click on the macOS tab).</li>
+<li>
+<a href="https://dotnet.microsoft.com/download/dotnet/10.0/runtime" class="external-link">.NET 10 runtime for macOS arm64</a> (select the macOS tab and the Arm64 installer)</li>
 </ul>
 </div>
 <div class="section level4">
 <h4 id="ubuntu">Ubuntu<a class="anchor" aria-label="anchor" href="#ubuntu"></a>
 </h4>
 <p>Run the following commands to install the required dependencies:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>sudo apt<span class="sc">-</span>get install dotnet<span class="sc">-</span>runtime<span class="fl">-8.0</span> libcurl4<span class="sc">-</span>openssl<span class="sc">-</span>dev libssl<span class="sc">-</span>dev libxml2<span class="sc">-</span>dev</span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>sudo apt<span class="sc">-</span>get install dotnet<span class="sc">-</span>runtime<span class="fl">-10.0</span> libcurl4<span class="sc">-</span>openssl<span class="sc">-</span>dev libssl<span class="sc">-</span>dev libxml2<span class="sc">-</span>dev</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>sudo apt<span class="sc">-</span>get install libfontconfig1<span class="sc">-</span>dev libharfbuzz<span class="sc">-</span>dev libfribidi<span class="sc">-</span>dev</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>sudo apt<span class="sc">-</span>get install libfreetype6<span class="sc">-</span>dev libpng<span class="sc">-</span>dev libtiff5<span class="sc">-</span>dev libjpeg<span class="sc">-</span>dev</span></code></pre></div>
 </div>
@@ -130,7 +132,7 @@
 </h3>
 <p>Set up .NET SDK and <code>nuget</code> (the latter to get the required dependencies)</p>
 <p>Optionally set up to build the binaries</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>sudo apt<span class="sc">-</span>get install dotnet<span class="sc">-</span>sdk<span class="fl">-8.0</span></span>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>sudo apt<span class="sc">-</span>get install dotnet<span class="sc">-</span>sdk<span class="fl">-10.0</span></span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>sudo apt<span class="sc">-</span>get install nuget</span></code></pre></div>
 <p>Navigate to the <code>rSharp\shared</code> directory and run</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>make</span></code></pre></div>
@@ -140,7 +142,8 @@
 <div class="section level3">
 <h3 id="macos-1">MacOS<a class="anchor" aria-label="anchor" href="#macos-1"></a>
 </h3>
-<p>Download and install <a href="https://dotnet.microsoft.com/en-us/download/dotnet/8.0" class="external-link">.NET SDK 8</a></p>
+<p>Only Apple Silicon (<code>arm64</code>) is supported.</p>
+<p>Download and install the <a href="https://dotnet.microsoft.com/en-us/download/dotnet/10.0" class="external-link">.NET SDK 10 for macOS arm64</a></p>
 <p>Install Homebrew and use it to install build tools</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>brew install nuget</span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>brew install cmake</span>
