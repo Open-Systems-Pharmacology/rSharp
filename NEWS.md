@@ -7,6 +7,7 @@
   SDK package and download links in the README are now `dotnet-sdk-10.0`
   and the .NET 10 runtime page. macOS x86_64 support has been dropped;
   only arm64 macOS continues to ship a native binary (#201).
+- rSharp now works on macOS when R is installed outside `/Library/Frameworks/R.framework`, for example an R managed by uvr or conda, a Homebrew `r`, or a build from source with `--prefix`. The .NET side used to load the framework copy of `libR.dylib` instead of the one belonging to the running R, which put a second, uninitialised R runtime in the process and crashed the session on the first call into .NET that passed an R value; the library is now taken from `R_HOME` when it is found there (#233).
 
 # rSharp 1.2.2
 
