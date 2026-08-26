@@ -56,3 +56,10 @@ test_that("Garbage collection in R and the .NET behaves as expected", {
 # test_that("Garbage collection of R.NET objects", {
 #   testGarbageCollection( getObjCountMethodName = 'GetMemTestObjCounterRDotnet', createTestObjectMethodName = 'CreateMemTestObjRDotnet')
 # })
+
+# https://github.com/Open-Systems-Pharmacology/rSharp/issues/238
+# Server GC is set in the shipped RSharp.runtimeconfig.json; it can only be
+# chosen when CoreCLR starts, so this guards against the setting being lost.
+test_that("The embedded runtime uses server GC", {
+  expect_true(getStatic("System.Runtime.GCSettings", "IsServerGC"))
+})
