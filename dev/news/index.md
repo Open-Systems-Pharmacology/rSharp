@@ -2,6 +2,17 @@
 
 ## rSharp (development version)
 
+- The embedded .NET runtime now starts with server GC
+  (`System.GC.Server` in the shipped `RSharp.runtimeconfig.json`). The
+  GC mode is fixed when CoreCLR starts, which rSharp does in `.onLoad`,
+  so no R code could change it afterwards. Under the workstation GC the
+  parallel code paths in PK-Sim and MoBi that R drives (for example
+  `loadSimulationsFromSnapshot()`) gave back their entire speedup
+  waiting on the GC; a 60-simulation parallel snapshot load measured 121
+  s with server GC against roughly 700 s without. Peak working set is
+  unchanged, because DATAS scales the heap count with actual allocation
+  pressure by default from .NET 9 onwards
+  ([\#238](https://github.com/Open-Systems-Pharmacology/rsharp/issues/238)).
 - Bumped the .NET target from net8.0 to net10.0 so consumers can host
   net10.0 assemblies. The shipped `RSharp.runtimeconfig.json`, the
   native host packages (now 10.0.8), the Windows CI vcxproj/managed
