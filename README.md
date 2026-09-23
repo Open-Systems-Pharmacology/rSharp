@@ -61,12 +61,6 @@ install.packages("pak")
 pak::pak("Open-Systems-Pharmacology/rSharp@v1.2.3")
 ```
 
-Get the latest development version of the 1.2.x line with:
-
-``` r
-pak::pak("Open-Systems-Pharmacology/rSharp@1.2.x")
-```
-
 #### Install from Binary
 
 Alternatively, download the attached binary file (`.zip`) from [release
@@ -93,12 +87,6 @@ running:
 ``` r
 install.packages("pak")
 pak::pak("Open-Systems-Pharmacology/rSharp@v1.2.3")
-```
-
-Get the latest development version of the 1.2.x line with:
-
-``` r
-pak::pak("Open-Systems-Pharmacology/rSharp@1.2.x")
 ```
 
 #### Install from Binary
@@ -129,12 +117,6 @@ running:
 ``` r
 install.packages("pak")
 pak::pak("Open-Systems-Pharmacology/rSharp@v1.2.3")
-```
-
-Get the latest development version of the 1.2.x line with:
-
-``` r
-pak::pak("Open-Systems-Pharmacology/rSharp@1.2.x")
 ```
 
 #### Install from Binary
