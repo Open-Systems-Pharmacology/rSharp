@@ -48,6 +48,10 @@ For this, follow the instructions in section [Build](#build).
 
 ## Installation
 
+These instructions install rSharp 1.2.3, which requires the .NET 8 runtime and
+works with ospsuite 12.x. The development version on the `main` branch targets
+.NET 10 and continues as rSharp 2.0.0.
+
 ### Windows
 
 #### Prerequisites
@@ -61,18 +65,12 @@ You can install the package from GitHub with pre-build binaries by running:
 
 ```r
 install.packages("pak")
-pak::pak("Open-Systems-Pharmacology/rSharp@*release")
-```
-
-Get the latest development version with:
-
-```r
-pak::pak("Open-Systems-Pharmacology/rSharp")
+pak::pak("Open-Systems-Pharmacology/rSharp@v1.2.3")
 ```
 
 #### Install from Binary
 
-Alternatively, download the attached binary file (`.zip`) from [latest release](https://github.com/Open-Systems-Pharmacology/rSharp/releases), and install it locally using:
+Alternatively, download the attached binary file (`.zip`) from [release v1.2.3](https://github.com/Open-Systems-Pharmacology/rSharp/releases/tag/v1.2.3), and install it locally using:
 
 ```r
 install.packages("path/to/rSharp_X.zip",  type = "win.binary")
@@ -90,18 +88,12 @@ You can install the package from GitHub with pre-build binaries by running:
 
 ```r
 install.packages("pak")
-pak::pak("Open-Systems-Pharmacology/rSharp@*release")
-```
-
-Get the latest development version with:
-
-```r
-pak::pak("Open-Systems-Pharmacology/rSharp")
+pak::pak("Open-Systems-Pharmacology/rSharp@v1.2.3")
 ```
 
 #### Install from Binary
 
-Alternatively, download the attached binary file (`.tgz`) from [latest release](https://github.com/Open-Systems-Pharmacology/rSharp/releases), and install it locally using:
+Alternatively, download the attached binary file (`.tgz`) from [release v1.2.3](https://github.com/Open-Systems-Pharmacology/rSharp/releases/tag/v1.2.3), and install it locally using:
 
 ```r
 install.packages("path/to/rSharp_X.tgz")
@@ -125,18 +117,12 @@ You can install the package from GitHub with pre-build binaries by running:
 
 ```r
 install.packages("pak")
-pak::pak("Open-Systems-Pharmacology/rSharp@*release")
-```
-
-Get the latest development version with:
-
-```r
-pak::pak("Open-Systems-Pharmacology/rSharp")
+pak::pak("Open-Systems-Pharmacology/rSharp@v1.2.3")
 ```
 
 #### Install from Binary
 
-Alternatively, download the attached binary file (`.tar.gz`) from [latest release](https://github.com/Open-Systems-Pharmacology/rSharp/releases), and install it locally using:
+Alternatively, download the attached binary file (`.tar.gz`) from [release v1.2.3](https://github.com/Open-Systems-Pharmacology/rSharp/releases/tag/v1.2.3), and install it locally using:
 
 ```r
 install.packages("path/to/rSharp_X.tar.gz")

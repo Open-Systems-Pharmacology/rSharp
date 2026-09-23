@@ -1,3 +1,9 @@
+# rSharp 1.2.3
+
+## Minor improvements and bug fixes
+
+- rSharp now works on macOS when R is installed outside `/Library/Frameworks/R.framework`, for example an R managed by uvr or conda, a Homebrew `r`, or a build from source with `--prefix`. The .NET side used to load the framework copy of `libR.dylib` instead of the one belonging to the running R, which put a second, uninitialised R runtime in the process and crashed the session on the first call into .NET that passed an R value; the library is now taken from `R_HOME` when it is found there (#233).
+
 # rSharp 1.2.2
 
 - rSharp now installs and loads even when a suitable .NET runtime is absent or cannot be initialised, instead of failing at load time. This covers both a missing runtime and an environment where a `dotnet` command is present but the native runtime host cannot be loaded (for example some build machines that ship the .NET SDK). The reason is reported when the package is attached and raised with an actionable message on the first call into .NET, which allows the package (and packages depending on it) to be built and checked in environments without a working .NET.
