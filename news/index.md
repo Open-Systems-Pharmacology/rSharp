@@ -1,6 +1,49 @@
 # Changelog
 
+## rSharp 2.0.0
+
+### Breaking changes
+
+- Bumped the .NET target from net8.0 to net10.0 so consumers can host
+  net10.0 assemblies. The shipped `RSharp.runtimeconfig.json`, the
+  native host packages (now 10.0.8), the Windows CI vcxproj/managed
+  split, and the runtime check in `.onLoad` all moved together. The
+  published apt SDK package and download links in the README are now
+  `dotnet-sdk-10.0` and the .NET 10 runtime page. macOS x86_64 support
+  has been dropped; only arm64 macOS continues to ship a native binary
+  ([\#201](https://github.com/Open-Systems-Pharmacology/rsharp/issues/201)).
+
+### Major changes
+
+- The embedded .NET runtime now starts with server GC
+  (`System.GC.Server` in the shipped `RSharp.runtimeconfig.json`). The
+  GC mode is fixed when CoreCLR starts, which rSharp does in `.onLoad`,
+  so no R code could change it afterwards. Under the workstation GC the
+  parallel code paths in PK-Sim and MoBi that R drives (for example
+  `loadSimulationsFromSnapshot()`) gave back their entire speedup
+  waiting on the GC; a 60-simulation parallel snapshot load measured 121
+  s with server GC against roughly 700 s without. Peak working set is
+  unchanged, because DATAS scales the heap count with actual allocation
+  pressure by default from .NET 9 onwards
+  ([\#238](https://github.com/Open-Systems-Pharmacology/rsharp/issues/238)).
+
+## rSharp 1.2.3
+
+### Minor improvements and bug fixes
+
+- rSharp now works on macOS when R is installed outside
+  `/Library/Frameworks/R.framework`, for example an R managed by uvr or
+  conda, a Homebrew `r`, or a build from source with `--prefix`. The
+  .NET side used to load the framework copy of `libR.dylib` instead of
+  the one belonging to the running R, which put a second, uninitialised
+  R runtime in the process and crashed the session on the first call
+  into .NET that passed an R value; the library is now taken from
+  `R_HOME` when it is found there
+  ([\#233](https://github.com/Open-Systems-Pharmacology/rsharp/issues/233)).
+
 ## rSharp 1.2.2
+
+### Major changes
 
 - rSharp now installs and loads even when a suitable .NET runtime is
   absent or cannot be initialised, instead of failing at load time. This
@@ -11,16 +54,19 @@
   message on the first call into .NET, which allows the package (and
   packages depending on it) to be built and checked in environments
   without a working .NET.
+- [`dotnetAvailable()`](http://www.open-systems-pharmacology.org/rSharp/reference/dotnetAvailable.md)
+  is a new exported function that reports whether the .NET runtime is
+  available, so code, examples, and vignettes can run .NET only when a
+  runtime is present.
+
+### Minor improvements and bug fixes
+
 - The user guide vignette now renders on machines without a .NET
   runtime, showing its .NET examples without executing them, so the
   package builds where no runtime is available.
 - Documentation examples that call into .NET now run only when a runtime
   is available, so `R CMD check` no longer errors on machines without
   .NET while the examples still run where a runtime is present.
-- [`dotnetAvailable()`](http://www.open-systems-pharmacology.org/rSharp/reference/dotnetAvailable.md)
-  is a new exported function that reports whether the .NET runtime is
-  available, so code, examples, and vignettes can run .NET only when a
-  runtime is present.
 
 ## rSharp 1.2.1
 

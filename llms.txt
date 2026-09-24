@@ -27,122 +27,59 @@ from source. For this, follow the instructions in section
 
 ## Installation
 
-### Windows
+### Prerequisites
 
-#### Prerequisites
+#### Windows
 
 - Latest Microsoft Visual C++ Redistributable for Visual Studio 2015,
   2017 and 2019 available
   [here](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-supported-redistributable-version)
-- .NET 8 runtime available
-  [here](https://dotnet.microsoft.com/download/dotnet/8.0/runtime).
+- [.NET 10 runtime for Windows
+  x64](https://dotnet.microsoft.com/download/dotnet/10.0/runtime)
 
-#### Install from Github
+#### MacOS
 
-You can install the package from GitHub with pre-build binaries by
-running:
+Only Apple Silicon (`arm64`) is supported; no native binary is shipped
+for macOS x86_64.
 
-``` r
+- [.NET 10 runtime for macOS
+  arm64](https://dotnet.microsoft.com/download/dotnet/10.0/runtime)
+  (select the macOS tab and the Arm64 installer)
 
-install.packages("pak")
-pak::pak("Open-Systems-Pharmacology/rSharp@*release")
-```
-
-Get the latest development version with:
-
-``` r
-
-pak::pak("Open-Systems-Pharmacology/rSharp")
-```
-
-#### Install from Binary
-
-Alternatively, download the attached binary file (`.zip`) from [latest
-release](https://github.com/Open-Systems-Pharmacology/rSharp/releases),
-and install it locally using:
-
-``` r
-
-install.packages("path/to/rSharp_X.zip",  type = "win.binary")
-```
-
-### MacOS
-
-#### Prerequisites
-
-- .NET 8 runtime available
-  [here](https://dotnet.microsoft.com/download/dotnet/8.0/runtime)
-  (click on the macOS tab).
-
-#### Install from Github
-
-You can install the package from GitHub with pre-build binaries by
-running:
-
-``` r
-
-install.packages("pak")
-pak::pak("Open-Systems-Pharmacology/rSharp@*release")
-```
-
-Get the latest development version with:
-
-``` r
-
-pak::pak("Open-Systems-Pharmacology/rSharp")
-```
-
-#### Install from Binary
-
-Alternatively, download the attached binary file (`.tgz`) from [latest
-release](https://github.com/Open-Systems-Pharmacology/rSharp/releases),
-and install it locally using:
-
-``` r
-
-install.packages("path/to/rSharp_X.tgz")
-```
-
-### Ubuntu
-
-#### Prerequisites
+#### Ubuntu
 
 Run the following commands to install the required dependencies:
 
 ``` R
-sudo apt-get install dotnet-runtime-8.0 libcurl4-openssl-dev libssl-dev libxml2-dev
+sudo apt-get install dotnet-runtime-10.0 libcurl4-openssl-dev libssl-dev libxml2-dev
 sudo apt-get install libfontconfig1-dev libharfbuzz-dev libfribidi-dev
 sudo apt-get install libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
 ```
 
-#### Install from Github
+### Install the package
 
-You can install the package from GitHub with pre-build binaries by
-running:
+Once the prerequisites for your operating system are in place, install
+[rSharp](https://github.com/Open-Systems-Pharmacology/rsharp/) with
+pre-built binaries from the [OSP
+R-universe](https://open-systems-pharmacology.r-universe.dev):
 
 ``` r
 
-install.packages("pak")
-pak::pak("Open-Systems-Pharmacology/rSharp@*release")
+install.packages(
+  "rSharp",
+  repos = c(
+    OSP = "https://open-systems-pharmacology.r-universe.dev",
+    getOption("repos")
+  )
+)
 ```
 
-Get the latest development version with:
+Get the latest development version from GitHub with:
 
 ``` r
 
+# install.packages("pak")
 pak::pak("Open-Systems-Pharmacology/rSharp")
-```
-
-#### Install from Binary
-
-Alternatively, download the attached binary file (`.tar.gz`) from
-[latest
-release](https://github.com/Open-Systems-Pharmacology/rSharp/releases),
-and install it locally using:
-
-``` r
-
-install.packages("path/to/rSharp_X.tar.gz")
 ```
 
 ## Build
@@ -178,7 +115,7 @@ dependencies)
 Optionally set up to build the binaries
 
 ``` R
-sudo apt-get install dotnet-sdk-8.0
+sudo apt-get install dotnet-sdk-10.0
 sudo apt-get install nuget
 ```
 
@@ -197,8 +134,10 @@ devtools::install()
 
 ### MacOS
 
-Download and install [.NET SDK
-8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+Only Apple Silicon (`arm64`) is supported.
+
+Download and install the [.NET SDK 10 for macOS
+arm64](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
 
 Install Homebrew and use it to install build tools
 

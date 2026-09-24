@@ -35,9 +35,9 @@ callStatic(cTypename, "CreateStringDictionary")
 #> ── <NetObject> ──
 #> 
 #> Type: System.Collections.Generic.Dictionary`2[[System.String,
-#> System.Private.CoreLib, Version=8.0.0.0, Culture=neutral,
+#> System.Private.CoreLib, Version=10.0.0.0, Culture=neutral,
 #> PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib,
-#> Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]
+#> Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]
 #> 
 #> ── Available Methods 
 #>   • `Add()`
@@ -46,11 +46,13 @@ callStatic(cTypename, "CreateStringDictionary")
 #>   • `ContainsValue()`
 #>   • `EnsureCapacity()`
 #>   • `Equals()`
+#>   • `get_Capacity()`
 #>   • `get_Comparer()`
 #>   • `get_Count()`
 #>   • `get_Item()`
 #>   • `get_Keys()`
 #>   • `get_Values()`
+#>   • `GetAlternateLookup()`
 #>   • `GetEnumerator()`
 #>   • `GetHashCode()`
 #>   • `GetObjectData()`
@@ -63,9 +65,11 @@ callStatic(cTypename, "CreateStringDictionary")
 #>   • `TrimExcess()`
 #>   • `TrimExcess()`
 #>   • `TryAdd()`
+#>   • `TryGetAlternateLookup()`
 #>   • `TryGetValue()`
 #> 
 #> ── Available Properties 
+#>   • Capacity
 #>   • Comparer
 #>   • Count
 #>   • Item

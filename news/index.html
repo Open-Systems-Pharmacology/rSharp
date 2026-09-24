@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rSharp</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.2.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,13 +34,37 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.0" id="rsharp-200">rSharp 2.0.0<a class="anchor" aria-label="anchor" href="#rsharp-200"></a></h2>
+<div class="section level3">
+<h3 id="breaking-changes-2-0-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-2-0-0"></a></h3>
+<ul><li>Bumped the .NET target from net8.0 to net10.0 so consumers can host net10.0 assemblies. The shipped <code>RSharp.runtimeconfig.json</code>, the native host packages (now 10.0.8), the Windows CI vcxproj/managed split, and the runtime check in <code>.onLoad</code> all moved together. The published apt SDK package and download links in the README are now <code>dotnet-sdk-10.0</code> and the .NET 10 runtime page. macOS x86_64 support has been dropped; only arm64 macOS continues to ship a native binary (<a href="https://github.com/Open-Systems-Pharmacology/rsharp/issues/201" class="external-link">#201</a>).</li>
+</ul></div>
+<div class="section level3">
+<h3 id="major-changes-2-0-0">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-2-0-0"></a></h3>
+<ul><li>The embedded .NET runtime now starts with server GC (<code>System.GC.Server</code> in the shipped <code>RSharp.runtimeconfig.json</code>). The GC mode is fixed when CoreCLR starts, which rSharp does in <code>.onLoad</code>, so no R code could change it afterwards. Under the workstation GC the parallel code paths in PK-Sim and MoBi that R drives (for example <code>loadSimulationsFromSnapshot()</code>) gave back their entire speedup waiting on the GC; a 60-simulation parallel snapshot load measured 121 s with server GC against roughly 700 s without. Peak working set is unchanged, because DATAS scales the heap count with actual allocation pressure by default from .NET 9 onwards (<a href="https://github.com/Open-Systems-Pharmacology/rsharp/issues/238" class="external-link">#238</a>).</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.2.3" id="rsharp-123">rSharp 1.2.3<a class="anchor" aria-label="anchor" href="#rsharp-123"></a></h2>
+<div class="section level3">
+<h3 id="minor-improvements-and-bug-fixes-1-2-3">Minor improvements and bug fixes<a class="anchor" aria-label="anchor" href="#minor-improvements-and-bug-fixes-1-2-3"></a></h3>
+<ul><li>rSharp now works on macOS when R is installed outside <code>/Library/Frameworks/R.framework</code>, for example an R managed by uvr or conda, a Homebrew <code>r</code>, or a build from source with <code>--prefix</code>. The .NET side used to load the framework copy of <code>libR.dylib</code> instead of the one belonging to the running R, which put a second, uninitialised R runtime in the process and crashed the session on the first call into .NET that passed an R value; the library is now taken from <code>R_HOME</code> when it is found there (<a href="https://github.com/Open-Systems-Pharmacology/rsharp/issues/233" class="external-link">#233</a>).</li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.2.2" id="rsharp-122">rSharp 1.2.2<a class="anchor" aria-label="anchor" href="#rsharp-122"></a></h2>
+<div class="section level3">
+<h3 id="major-changes-1-2-2">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-1-2-2"></a></h3>
 <ul><li>rSharp now installs and loads even when a suitable .NET runtime is absent or cannot be initialised, instead of failing at load time. This covers both a missing runtime and an environment where a <code>dotnet</code> command is present but the native runtime host cannot be loaded (for example some build machines that ship the .NET SDK). The reason is reported when the package is attached and raised with an actionable message on the first call into .NET, which allows the package (and packages depending on it) to be built and checked in environments without a working .NET.</li>
-<li>The user guide vignette now renders on machines without a .NET runtime, showing its .NET examples without executing them, so the package builds where no runtime is available.</li>
-<li>Documentation examples that call into .NET now run only when a runtime is available, so <code>R CMD check</code> no longer errors on machines without .NET while the examples still run where a runtime is present.</li>
 <li>
 <code><a href="../reference/dotnetAvailable.html">dotnetAvailable()</a></code> is a new exported function that reports whether the .NET runtime is available, so code, examples, and vignettes can run .NET only when a runtime is present.</li>
 </ul></div>
+<div class="section level3">
+<h3 id="minor-improvements-and-bug-fixes-1-2-2">Minor improvements and bug fixes<a class="anchor" aria-label="anchor" href="#minor-improvements-and-bug-fixes-1-2-2"></a></h3>
+<ul><li>The user guide vignette now renders on machines without a .NET runtime, showing its .NET examples without executing them, so the package builds where no runtime is available.</li>
+<li>Documentation examples that call into .NET now run only when a runtime is available, so <code>R CMD check</code> no longer errors on machines without .NET while the examples still run where a runtime is present.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.2.1" id="rsharp-121">rSharp 1.2.1<a class="anchor" aria-label="anchor" href="#rsharp-121"></a></h2>
 <div class="section level3">
@@ -98,7 +122,7 @@
 <li>github actions for C# binary builds for windows and Ubuntu.</li>
 </ul><!-- Section Template
 
-## Breaking Changes
+## Breaking changes
 
 ## Major changes
 
