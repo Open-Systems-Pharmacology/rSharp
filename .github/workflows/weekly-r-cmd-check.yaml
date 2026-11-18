@@ -2,8 +2,8 @@ name: Weekly R CMD check (latest R)
 
 # Canary check against the latest released R, run weekly so that a new R
 # release breaking the shipped binaries is caught early rather than by users.
-# macOS runs on the newest GA image (macos-26) rather than the org default
-# (GHA_DEFAULT_RUNNER_MACOS), so a new macOS release is also caught early.
+# All platforms run on the -latest runner images rather than the org defaults
+# (GHA_DEFAULT_RUNNER_*), so a new OS image release is also caught early.
 
 on:
   schedule:
@@ -18,6 +18,6 @@ jobs:
     with:
       build-binary: false
       os-matrix: >-
-        [{"os": "${{ vars.GHA_DEFAULT_RUNNER_WINDOWS || 'windows-latest' }}", "r": "release"},
-        {"os": "${{ vars.GHA_DEFAULT_RUNNER_UBUNTU || 'ubuntu-latest' }}", "r": "release"},
-        {"os": "macos-26", "r": "release"}]
+        [{"os": "windows-latest", "r": "release"},
+        {"os": "ubuntu-latest", "r": "release"},
+        {"os": "macos-latest", "r": "release"}]
