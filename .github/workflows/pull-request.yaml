@@ -1,8 +1,6 @@
 name: Pull Request Workflow
 
-# Runs on every pull request. sync-remotes pins/unpins `Remotes:` in DESCRIPTION
-# to match the package Version and commits the fix to the PR branch; the checks
-# then run on that synced tree so what gets validated is what will be merged.
+# Runs on every pull request.
 #
 # rSharp-specific: when C# sources under shared/** change, build-Csharp-binaries
 # rebuilds the per-OS native binaries and commits them back to the PR branch.
@@ -21,12 +19,6 @@ concurrency:
 permissions: read-all
 
 jobs:
-  sync-remotes:
-    permissions:
-      contents: write # commits the synced Remotes back to the PR branch
-    uses: Open-Systems-Pharmacology/Workflows/.github/workflows/sync-remotes.yaml@main
-    secrets: inherit
-
   # Decide whether to rebuild C# binaries. Two conditions must both be true:
   # A) the PR as a whole introduces a net C# change vs the target branch, AND
   # B) this specific push touched shared/ (or the PR was just opened).
@@ -69,19 +61,19 @@ jobs:
   # been recomputed to include them. Dropping this edge would let R CMD check
   # load the previous binaries.
   R-CMD-Check:
-    needs: [sync-remotes, build-Csharp-binaries]
-    if: ${{ !cancelled() }} # a skipped sync (fork PR) or C# build must not block the check
+    needs: [build-Csharp-binaries]
+    if: ${{ !cancelled() }} # a skipped C# build must not block the check
     uses: Open-Systems-Pharmacology/Workflows/.github/workflows/R-CMD-check-build.yaml@main
 
   test-coverage:
-    needs: [sync-remotes, build-Csharp-binaries]
+    needs: [build-Csharp-binaries]
     if: ${{ !cancelled() }}
     uses: Open-Systems-Pharmacology/Workflows/.github/workflows/test-coverage.yaml@main
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   pkgdown:
-    needs: [sync-remotes, build-Csharp-binaries]
+    needs: [build-Csharp-binaries]
     if: ${{ !cancelled() }}
     permissions:
       contents: write # required by the pkgdown reusable workflow (no deploy on PRs)
